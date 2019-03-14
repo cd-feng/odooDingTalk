@@ -12,10 +12,15 @@ class ResConfigSettings(models.TransientModel):
     din_appkey = fields.Char(string=u'AppKey')
     din_appsecret = fields.Char(string=u'AppSecret')
     din_token = fields.Boolean(string="自动获取Token")
-    
     din_create_extcontact = fields.Boolean(string=u'添加外部联系人')
     din_update_extcontact = fields.Boolean(string=u'修改外部联系人')
     din_delete_extcontact = fields.Boolean(string=u'删除外部联系人')
+    din_create_employee = fields.Boolean(string=u'添加员工')
+    din_update_employee = fields.Boolean(string=u'修改员工')
+    din_delete_employee = fields.Boolean(string=u'删除员工')
+    din_create_department = fields.Boolean(string=u'添加部门')
+    din_update_department = fields.Boolean(string=u'修改部门')
+    din_delete_department = fields.Boolean(string=u'删除部门')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -27,6 +32,12 @@ class ResConfigSettings(models.TransientModel):
             din_create_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_extcontact'),
             din_update_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_extcontact'),
             din_delete_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_extcontact'),
+            din_create_employee=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_employee'),
+            din_update_employee=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_employee'),
+            din_delete_employee=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee'),
+            din_create_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_department'),
+            din_update_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_department'),
+            din_delete_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department'),
         )
         return res
 
@@ -38,6 +49,12 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_extcontact', self.din_create_extcontact)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_extcontact', self.din_update_extcontact)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_extcontact', self.din_delete_extcontact)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_employee', self.din_create_employee)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_employee', self.din_update_employee)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_employee', self.din_delete_employee)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_department', self.din_create_department)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_department', self.din_update_department)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_department', self.din_delete_department)
         super(ResConfigSettings, self).set_values()
         data = {
             'name': '钉钉-定时更新token值',

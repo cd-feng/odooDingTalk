@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ali_dindin.view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_phone']" position="after">
+                <field name="din_jobnumber"/>
+                <field name="din_hiredDate"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ali_dindin.dindin_synchronous_employee_form_view" model="ir.ui.view">
+        <field name="name">部门同步</field>
+        <field name="model">dindin.synchronous.employee</field>
+        <field name="arch" type="xml">
+            <form string="dindin">
+                <p class="alert alert-info">
+                    选择开始后，系统将自动获取钉钉系统中的部门员工信息！成功后请转到员工中查看
+                </p>
+                <footer>
+                    <button string="开始"
+                            name="start_synchronous_employee"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="取消" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ali_dindin.dindin_synchronous_employee_action" model="ir.actions.act_window">
+        <field name="name">部门同步</field>
+        <field name="res_model">dindin.synchronous.employee</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ali_dindin.dindin_synchronous_employee_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="部门员工同步" id="ali_dindin.employee_sy_menu"
+              parent="ali_dindin.department_menu"
+              sequence="2"
+              action="ali_dindin.dindin_synchronous_employee_action"/>
+
+
+</odoo>

@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2>钉钉外部联系人操作</h2>
+                    <h2>钉钉-外部联系人操作</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -85,7 +85,79 @@
                             <div class="o_setting_right_pane">
                                 <label for="din_delete_extcontact"/>
                                 <div class="text-muted">
-                                    删除联系人时自动上传至钉钉
+                                    删除联系人时同步上传至钉钉
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>钉钉-员工操作</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_create_employee"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_create_employee"/>
+                                <div class="text-muted">
+                                    创建员工时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_update_employee"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_update_employee"/>
+                                <div class="text-muted">
+                                    修改员工时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_delete_employee"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_delete_employee"/>
+                                <div class="text-muted">
+                                    删除员工时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>钉钉-部门操作</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_create_department"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_create_department"/>
+                                <div class="text-muted">
+                                    创建部门时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_update_department"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_update_department"/>
+                                <div class="text-muted">
+                                    修改部门时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_delete_department"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_delete_department"/>
+                                <div class="text-muted">
+                                    删除部门时自动同步至钉钉
                                 </div>
                             </div>
                         </div>
@@ -104,7 +176,7 @@
         <field name="context">{'module' : 'ali_dindin'}</field>
     </record>
 
-    <menuitem id="union_pay_config_settings_settings" name="银联基础设置"
+    <menuitem id="union_pay_config_settings_settings" name="基础设置"
               parent="ali_dindin.configure_menu"
               sequence="1"
               action="union_pay_config_settings_configuration_action"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+		<!--基础api-->
 		<record id="ali_dindin_system_conf_token" model="ali.dindin.system.conf">
 			<field name="name">阿里钉钉-Token值</field>
 			<field name="key">token</field>
@@ -19,6 +20,7 @@
 			<field name="value">https://oapi.dingtalk.com/user/getuserinfo</field>
 		</record>
 
+		<!--联系人api-->
 		<record id="ali_dindin_system_conf_get_listlabelgroups" model="ali.dindin.system.conf">
 			<field name="name">获取外部联系人标签列表</field>
 			<field name="key">listlabelgroups</field>
@@ -81,6 +83,34 @@
 			<field name="name">删除部门</field>
 			<field name="key">department_delete</field>
 			<field name="value">https://oapi.dingtalk.com/department/delete?access_token=</field>
+		</record>
+
+
+		<!--部门员工api-->
+		<record id="ali_dindin_system_conf_user_listbypage" model="ali.dindin.system.conf">
+			<field name="name">获取部门用户详情</field>
+			<field name="key">user_listbypage</field>
+			<field name="value">https://oapi.dingtalk.com/user/listbypage</field>
+		</record>
+		<record id="ali_dindin_system_conf_user_simplelist" model="ali.dindin.system.conf">
+			<field name="name">获取部门用户</field>
+			<field name="key">user_simplelist</field>
+			<field name="value">https://oapi.dingtalk.com/user/simplelist</field>
+		</record>
+		<record id="ali_dindin_system_conf_user_create" model="ali.dindin.system.conf">
+			<field name="name">创建部门用户</field>
+			<field name="key">user_create</field>
+			<field name="value">https://oapi.dingtalk.com/user/create?access_token=</field>
+		</record>
+		<record id="ali_dindin_system_conf_user_update" model="ali.dindin.system.conf">
+			<field name="name">更新部门用户</field>
+			<field name="key">user_update</field>
+			<field name="value">https://oapi.dingtalk.com/user/update?access_token=</field>
+		</record>
+		<record id="ali_dindin_system_conf_user_delete" model="ali.dindin.system.conf">
+			<field name="name">删除部门用户</field>
+			<field name="key">user_delete</field>
+			<field name="value">https://oapi.dingtalk.com/user/delete?access_token=</field>
 		</record>
 
 
