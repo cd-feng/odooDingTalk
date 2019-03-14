@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.union_pay</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="52"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" string="钉钉" data-string="钉钉" data-key="ali_dindin"
+                     groups="ali_dindin.group_ali_dindin_manager">
+                    <h2>钉钉API应用信息</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="din_agentid" placeholder="请输入AgentId！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_agentid"/>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="din_appkey" placeholder="请输入AppKey！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_appkey"/>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="din_appsecret" placeholder="请输入AppSecret！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_appsecret"/>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_token"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_token"/>
+                                <div class="text-muted">
+                                    自动获取Token，间隔为每60分钟
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>钉钉外部联系人操作</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_create_extcontact"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_create_extcontact"/>
+                                <div class="text-muted">
+                                    创建联系人时自动上传至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_update_extcontact"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_update_extcontact"/>
+                                <div class="text-muted">
+                                    修改联系人时自动上传至钉钉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="din_delete_extcontact"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_delete_extcontact"/>
+                                <div class="text-muted">
+                                    删除联系人时自动上传至钉钉
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="union_pay_config_settings_configuration_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'ali_dindin'}</field>
+    </record>
+
+    <menuitem id="union_pay_config_settings_settings" name="银联基础设置"
+              parent="ali_dindin.configure_menu"
+              sequence="1"
+              action="union_pay_config_settings_configuration_action"
+              groups="base.group_system"
+    />
+
+
+    <record id="ali_dindin_system_conf_tree_view" model="ir.ui.view">
+        <field name="name">系统参数列表</field>
+        <field name="model">ali.dindin.system.conf</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top" create="true">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="value"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ali_dindin_system_conf_action">
+        <field name="name">系统参数列表</field>
+        <field name="res_model">ali.dindin.system.conf</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="ali_dindin_system_conf_search">
+        <field name="model">ali.dindin.system.conf</field>
+        <field name="arch" type="xml">
+            <search string="系统参数列表">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="value"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="ali_dindin_system_conf_menu" name="系统参数列表"
+              parent="ali_dindin.configure_menu"
+              sequence="2"
+              action="ali_dindin_system_conf_action"
+              groups="ali_dindin.group_ali_dindin_manager"
+    />
+
+</odoo>

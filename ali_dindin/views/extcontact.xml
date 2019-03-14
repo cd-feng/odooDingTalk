@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ali_dindin.view_partner_category_form_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="before">
+                <field name="din_category_type" string="标签分类名"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ali_dindin.view_partner_category_tree_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="din_category_type" string="标签分类名"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ali_dindin.partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <newline/>
+                    <field name="din_company_name"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    <record id="ali_dindin.dindin_synchronous_extcontact_form_view" model="ir.ui.view">
+        <field name="name">联系人同步</field>
+        <field name="model">dindin.synchronous.extcontact</field>
+        <field name="arch" type="xml">
+            <form string="dindin">
+                <p class="alert alert-info">
+                    选择开始后，系统将自动获取钉钉系统中的联系人信息！成功后请转到联系人中查看
+                </p>
+                <group>
+                    <field name="sy_type" placeholder="请选择类型"/>
+                </group>
+                <footer>
+                    <button string="开始"
+                            name="start_synchronous"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="取消" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ali_dindin.dindin_synchronous_extcontact_action" model="ir.actions.act_window">
+        <field name="name">联系人同步</field>
+        <field name="res_model">dindin.synchronous.extcontact</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="ali_dindin.dindin_synchronous_extcontact_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="联系人" id="ali_dindin.extcontact_menu"
+              parent="ali_dindin.synchronous_menu"
+              sequence="2"
+    />
+
+    <menuitem name="联系人同步" id="ali_dindin.extcontact_category_menu"
+              parent="ali_dindin.extcontact_menu"
+              sequence="1"
+              action="ali_dindin.dindin_synchronous_extcontact_action"/>
+
+
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--银行卡信息查询-->
+    <t t-name="UnionPaySearchBankCardInfo">
+        <div class="container-fluid" style="background: white;">
+            <h2>银行卡信息查询</h2>
+            <br/>
+            <div style="width:100%; ">
+                <table>
+                    <tr>
+                        <td>银行卡号:</td>
+                        <td class="search_select" colspan="12">
+                            <input name="cardNo" id="cardNo" type="text" placeholder="请输入需要查询的银行卡号"/>
+                        </td>
+                        <td colspan="1">
+                            <button class="btn btn-sm btn btn-primary" id="search">查询</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div>
+                <h3 class="excel_title" id="excel_title">查询结果</h3>
+                <table class="table table-striped table-hover">
+                    <tbody id="search_result">
+                        <tr>
+                            <td>发卡行中文名称:</td>
+                            <td class="right" id="issNm"></td>
+                            <td>所属总行机构中文名称:</td>
+                            <td class="right" id="hdqrsInsCnNm"></td>
+                            <td>所属总行机构中文简称:</td>
+                            <td class="right" id="hdqrsInsCnAbbr"></td>
+                        </tr>
+                        <tr>
+                            <td>发卡行机构代码:</td>
+                            <td class="right" id="issInsId" ></td>
+                            <td>发卡行中文简称:</td>
+                            <td class="right" id="issAbbr"></td>
+                            <td>卡性质:</td>
+                            <td class="right" id="cardAttr"></td>
+                        </tr>
+                        <tr>
+                            <td>卡类别:</td>
+                            <td class="right" id="cardCata"></td>
+                            <td>卡种	:</td>
+                            <td class="right" id="cardClass"></td>
+                            <td>卡品牌:</td>
+                            <td class="right" id="cardBrand"></td>
+                        </tr>
+                        <tr>
+                            <td>卡产品	:</td>
+                            <td class="right" id="cardProd"></td>
+                            <td>卡等级:</td>
+                            <td class="right" id="cardLvl"></td>
+                            <td>卡介质:</td>
+                            <td class="right" id="cardMedia"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+
+
+</templates>
