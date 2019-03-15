@@ -145,6 +145,8 @@ class HrEmployee(models.Model):
     def update_employee_dindin(self):
         """手动上传至钉钉"""
         for res in self:
+            if res.din_id:
+                raise UserError("员工已有UserId,说明员工在钉钉中已存在！")
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_create')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
             # 获取部门din_id
