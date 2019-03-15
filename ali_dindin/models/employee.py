@@ -2,7 +2,6 @@
 import json
 import logging
 import time
-
 import requests
 from requests import ReadTimeout
 
@@ -47,15 +46,15 @@ class HrEmployee(models.Model):
         else:
             raise UserError("请选择员工部门!")
         data = {
-            'name': values.get('name'),   # 名称
-            'department': department_list,   # 部门
-            'position': values.get('job_title') if values.get('job_title') else '',   # 职位
-            'mobile': values.get('mobile_phone') if values.get('mobile_phone') else '',   # 手机
-            'tel': values.get('work_phone') if values.get('work_phone') else '',   # 手机
-            'workPlace': values.get('work_location') if values.get('work_location') else '',   # 办公地址
-            'remark': values.get('notes') if values.get('notes') else '',   # 备注
-            'email': values.get('work_email') if values.get('work_email') else '',   # 邮箱
-            'jobnumber': values.get('din_jobnumber') if values.get('din_jobnumber') else '',   # 工号
+            'name': values.get('name'),  # 名称
+            'department': department_list,  # 部门
+            'position': values.get('job_title') if values.get('job_title') else '',  # 职位
+            'mobile': values.get('mobile_phone') if values.get('mobile_phone') else '',  # 手机
+            'tel': values.get('work_phone') if values.get('work_phone') else '',  # 手机
+            'workPlace': values.get('work_location') if values.get('work_location') else '',  # 办公地址
+            'remark': values.get('notes') if values.get('notes') else '',  # 备注
+            'email': values.get('work_email') if values.get('work_email') else '',  # 邮箱
+            'jobnumber': values.get('din_jobnumber') if values.get('din_jobnumber') else '',  # 工号
         }
         headers = {'Content-Type': 'application/json'}
         try:
@@ -92,15 +91,15 @@ class HrEmployee(models.Model):
             raise UserError("请选择员工部门!")
         data = {
             'userid': emp.din_id,  # userid
-            'name': emp.name,   # 名称
-            'department': department_list.append(emp.department_id.din_id),   # 部门
-            'position': emp.job_title if emp.job_title else '',   # 职位
-            'mobile': emp.mobile_phone if emp.mobile_phone else '',   # 手机
-            'tel': emp.work_phone if emp.work_phone else '',   # 手机
-            'workPlace': emp.work_location if emp.work_location else '',   # 办公地址
-            'remark': emp.notes if emp.notes else '',   # 备注
-            'email': emp.work_email if emp.work_email else '',   # 邮箱
-            'jobnumber': emp.din_jobnumber if emp.din_jobnumber else '',   # 工号
+            'name': emp.name,  # 名称
+            'department': department_list.append(emp.department_id.din_id),  # 部门
+            'position': emp.job_title if emp.job_title else '',  # 职位
+            'mobile': emp.mobile_phone if emp.mobile_phone else '',  # 手机
+            'tel': emp.work_phone if emp.work_phone else '',  # 手机
+            'workPlace': emp.work_location if emp.work_location else '',  # 办公地址
+            'remark': emp.notes if emp.notes else '',  # 备注
+            'email': emp.work_email if emp.work_email else '',  # 邮箱
+            'jobnumber': emp.din_jobnumber if emp.din_jobnumber else '',  # 工号
         }
         headers = {'Content-Type': 'application/json'}
         try:
@@ -202,7 +201,7 @@ class DinDinSynchronousEmployee(models.TransientModel):
                 'size': 100,
             }
             result = requests.get(url=url, params=data, timeout=20)
-            logging.info(">>>获取钉钉部门{}员工结果:{}".format(department.name,result.text))
+            logging.info(">>>获取钉钉部门{}员工结果:{}".format(department.name, result.text))
             result = json.loads(result.text)
             if result.get('errcode') == 0:
                 for user in result.get('userlist'):
@@ -221,7 +220,7 @@ class DinDinSynchronousEmployee(models.TransientModel):
                         'din_sy_state': True,  # 同步标识
                     }
                     if user.get('hiredDate'):
-                        tl = time.localtime(float(user.get('hiredDate'))/1000)
+                        tl = time.localtime(float(user.get('hiredDate')) / 1000)
                         data.update({
                             'din_hiredDate': time.strftime('%Y-%m-%d', tl) if tl else False,  # 入职时间
                         })

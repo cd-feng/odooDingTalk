@@ -15,6 +15,7 @@ class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
     din_id = fields.Char(string='钉钉Id')
+    din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
 
 
 # 同步钉钉部门功能模型
@@ -27,9 +28,7 @@ class DinDinSynchronousDepartment(models.TransientModel):
         logging.info(">>>同步钉钉部门列表")
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_list')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        data = {
-            'id': 1,
-        }
+        data = {'id': 1}
         result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
         logging.info(">>>获取钉钉部门结果:{}".format(result.text))
         result = json.loads(result.text)
@@ -38,6 +37,7 @@ class DinDinSynchronousDepartment(models.TransientModel):
                 data = {
                     'name': res.get('name'),
                     'din_id': res.get('id'),
+                    'din_sy_state': True,  # 同步标识
                 }
                 if res.get('parentid') != 1:
                     partner_department = self.env['hr.department'].search([('din_id', '=', res.get('parentid'))])
