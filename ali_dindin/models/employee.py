@@ -74,10 +74,11 @@ class HrEmployee(models.Model):
     def write(self, values):
         id = self.id
         super(HrEmployee, self).write(values)
-        din_update_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_employee')
-        if din_update_employee:
-            emp = self.env['hr.employee'].sudo().search([('id', '=', id)])
-            self.update_din_employee(emp[0])
+        if not values.get('din_sy_state'):
+            din_update_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_employee')
+            if din_update_employee:
+                emp = self.env['hr.employee'].sudo().search([('id', '=', id)])
+                self.update_din_employee(emp[0])
         return True
 
     @api.model
