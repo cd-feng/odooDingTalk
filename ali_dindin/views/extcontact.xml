@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+    <!--联系人标签from-->
     <record id="ali_dindin.view_partner_category_form_inherit" model="ir.ui.view">
         <field name="name">Contact Tags</field>
         <field name="model">res.partner.category</field>
@@ -11,6 +13,7 @@
         </field>
     </record>
 
+    <!--联系人标签tree-->
     <record id="ali_dindin.view_partner_category_tree_inherit" model="ir.ui.view">
         <field name="name">Contact Tags</field>
         <field name="model">res.partner.category</field>
@@ -22,17 +25,19 @@
         </field>
     </record>
 
+    <!--联系人-->
     <record id="ali_dindin.partner_form_inherit" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="after">
-                    <newline/>
-                    <field name="din_company_name"/>
-                </xpath>
-            </field>
-        </record>
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <newline/>
+                <field name="din_company_name"/>
+                <field name="din_employee_id"/>
+            </xpath>
+        </field>
+    </record>
 
 
     <record id="ali_dindin.dindin_synchronous_extcontact_form_view" model="ir.ui.view">
