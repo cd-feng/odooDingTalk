@@ -67,7 +67,7 @@ class ResConfigSettings(models.TransientModel):
             'interval_type': 'minutes',
             'code': "env['ali.dindin.get.token'].get_token()",
         }
-        if self.auto_token:
+        if self.din_token:
             cron = self.env['ir.cron'].sudo().search([('code', '=', "env['ali.dindin.get.token'].get_token()")])
             if len(cron) >= 1:
                 cron.sudo().write(data)
