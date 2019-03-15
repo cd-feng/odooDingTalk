@@ -24,7 +24,7 @@ class DinDinSynchronousDepartment(models.TransientModel):
 
     @api.multi
     def start_synchronous_department(self):
-        logging.info("同步钉钉部门列表")
+        logging.info(">>>同步钉钉部门列表")
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_list')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
@@ -49,5 +49,6 @@ class DinDinSynchronousDepartment(models.TransientModel):
                 else:
                     self.env['hr.department'].create(data)
         else:
-            logging.info("获取部门失败，原因为:{}".format(result.get('errmsg')))
+            logging.info(">>>获取部门失败，原因为:{}".format(result.get('errmsg')))
             raise UserError("获取部门失败，原因为:{}".format(result.get('errmsg')))
+

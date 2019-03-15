@@ -141,6 +141,45 @@ class HrEmployee(models.Model):
         except ReadTimeout:
             raise UserError("上传员工至钉钉超时！")
 
+    @api.multi
+    def update_employee_dindin(self):
+        """手动上传至钉钉"""
+        for res in self:
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_create')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            # 获取部门din_id
+            department_list = list()
+            if res.department_id:
+                department = self.env['hr.department'].sudo().search([('id', '=', res.department_id.id)])
+                if department:
+                    department_list.append(department[0].din_id)
+            else:
+                raise UserError("请选择员工部门!")
+            data = {
+                'name': res.name,  # 名称
+                'department': department_list,  # 部门
+                'position': res.job_title if res.job_title else '',  # 职位
+                'mobile': res.mobile_phone if res.mobile_phone else '',  # 手机
+                'tel': res.work_phone if res.work_phone else '',  # 手机
+                'workPlace': res.work_location if res.work_location else '',  # 办公地址
+                'remark': res.notes if res.notes else '',  # 备注
+                'email': res.work_email if res.work_email else '',  # 邮箱
+                'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
+            }
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=30)
+                result = json.loads(result.text)
+                logging.info(result)
+                if result.get('errcode') == 0:
+                    res.sudo().write({'din_id': result.get('userid')})
+                    res.message_post(body=u"新的信息已同步更新至钉钉", message_type='notification')
+                else:
+                    raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("上传员工至钉钉超时！")
+
 
 # 同步钉钉与部门员工功能模型
 class DinDinSynchronousEmployee(models.TransientModel):

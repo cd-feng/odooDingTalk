@@ -10,6 +10,11 @@
                 <field name="din_jobnumber"/>
                 <field name="din_hiredDate"/>
             </xpath>
+            <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button name="update_employee_dindin" type="object" class="oe_stat_button" icon="fa-archive" >
+                    上传钉钉
+                </button>
+            </xpath>
         </field>
     </record>
 
