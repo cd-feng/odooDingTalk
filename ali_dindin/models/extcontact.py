@@ -244,6 +244,7 @@ class DinDinSynchronous(models.TransientModel):
                     'mobile': res.get('mobile'),  # 手机
                     'phone': res.get('mobile'),  # 电话
                     'din_company_name': res.get('company_name'),  # 钉钉公司名称
+                    'din_sy_state': True,  # 同步标识
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):
