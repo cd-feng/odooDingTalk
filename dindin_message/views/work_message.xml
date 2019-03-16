@@ -26,6 +26,10 @@
                     <button name="send_message" type="object" string="发送消息"
                                 states='0' class="oe_highlight"
                                 confirm="请确认消息内容,是否需要发送?"/>
+                    <button name="search_message_state" type="object" string="查询进度"
+                                states='1' class="oe_highlight"/>
+                    <button name="search_message_result" type="object" string="查询消息结果"
+                                states="1,2" class="oe_highlight"/>
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
@@ -47,14 +51,27 @@
                     </group>
                     <notebook>
                         <page string="消息内容">
-                            <field name="text_message" placeholder="请输入要发送的消息内容..." widget="html" nolabel="1"
+                            <field name="text_message" placeholder="请输入要发送的消息内容..."
                                    attrs="{'readonly': [('state', '!=', '0')]}"/>
                         </page>
                         <page string="接受消息用户列表">
-                            <field name="user_ids" attrs="{'readonly': [('state', '!=', '0')]}"/>
+                            <field name="user_ids" attrs="{'readonly': [('state', '!=', '0')]}">
+                                <tree editable="top">
+                                    <field name="emp_id"/>
+                                    <field name="department_id"/>
+                                    <field name="mobile_phone"/>
+                                    <field name="job_title"/>
+                                    <field name="msg_type"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="接受部门消息列表">
-                            <field name="dep_ids" attrs="{'readonly': [('state', '!=', '0')]}"/>
+                            <field name="dep_ids" attrs="{'readonly': [('state', '!=', '0')]}">
+                                <tree editable="top">
+                                    <field name="dept_id"/>
+                                    <field name="msg_type"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <group>
