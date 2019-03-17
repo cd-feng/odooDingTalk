@@ -10,13 +10,13 @@ _logger = logging.getLogger(__name__)
 
 MESSAGETYPE = [
     ('text', '文本消息'),
-    ('image', '图片消息'),
-    ('voice', '语音消息'),
-    ('file', '文件消息'),
     ('link', '链接消息'),
     ('oa', 'OA消息'),
     ('markdown', 'Markdown'),
     ('action_card', '卡片消息'),
+    ('image', '图片消息'),
+    ('voice', '语音消息'),
+    ('file', '文件消息'),
 ]
 
 
@@ -43,6 +43,19 @@ class DinDinWorkMessage(models.Model):
     card_message_ids = fields.One2many(comodel_name='dindin.work.card.message.list', inverse_name='message_id',
                                        string=u'按钮列表')
     markdown_message = fields.Text(string='Markdown消息内容', help="支持markdown语法")
+    link_url = fields.Char(string='链接URL', help="点击消息时链接URL")
+    link_image_url = fields.Char(string='链接图片URL', help="链接图片URL")
+    link_message = fields.Text(string='消息描述', help="支持markdown语法")
+
+    oa_head_msg = fields.Char(string='头部内容')
+    oa_link_url = fields.Char(string='oa链接地址')
+    oa_image_url = fields.Char(string='图片链接地址')
+    oa_body_title = fields.Char(string='正文标题')
+    oa_body_content = fields.Text(string='正文内容')
+    oa_message_ids = fields.One2many(comodel_name='dindin.work.oa.message.list', inverse_name='message_id',
+                                     string=u'OA表单列表')
+    oa_richunit = fields.Char(string='富文本单位')
+    oa_richnum = fields.Float(string='富文本数量')
 
     @api.onchange('user_ids', 'dep_ids')
     @api.constrains('user_ids', 'dep_ids')
@@ -131,12 +144,50 @@ class DinDinWorkMessage(models.Model):
                     "text": self.markdown_message  # 消息内容
                 }
             }
+        elif self.msg_type == 'link':
+            """链接消息"""
+            msg = {
+                "msgtype": "link",
+                "link": {
+                    "messageUrl": self.link_url,
+                    "picUrl": self.link_image_url,
+                    "title": self.name,
+                    "text": self.link_message
+                }
+            }
+        elif self.msg_type == 'oa':
+            """OA消息"""
+            msg_list = list()
+            for line in self.oa_message_ids:
+                msg_list.append({'key': "{}: ".format(line.key), 'value': line.value})
+            msg = {
+                "msgtype": "oa",
+                "oa": {
+                    "message_url": self.oa_link_url,
+                    "pc_message_url": self.oa_link_url,
+                    "head": {
+                        "text": self.name
+                    },
+                    "body": {
+                        "title": self.oa_body_title,
+                        "form": msg_list,
+                        "rich": {
+                            "num": self.oa_richnum if self.oa_richnum else '',
+                            "unit": self.oa_richunit if self.oa_richunit else ''
+                        },
+                        "content": self.oa_body_content if self.oa_body_content else '',
+                        "image": self.oa_image_url if self.oa_image_url else '',
+                        "author": self.env.user.name
+                    }
+                }
+            }
+        # 调用发送工作消息函数
         task_id = self.send_work_message(toall=self.to_all_user, userstr=user_str, deptstr=dept_str, msg=msg)
         self.write({
             'task_id': task_id,
             'state': '1'
         })
-        self.message_post(body=u"消息信息已推送到钉钉，钉钉正在加急处理中!", message_type='notification')
+        self.message_post(body=u"消息信息已推送到钉钉，正在加急处理中!", message_type='notification')
 
     @api.model
     def send_work_message(self, toall=None, userstr=None, deptstr=None, msg=None):
@@ -302,7 +353,18 @@ class DinDinWorkMessageDeptList(models.Model):
 class CardMessageList(models.Model):
     _name = 'dindin.work.card.message.list'
     _description = '卡片消息列表'
+    _rec_name = 'title'
 
-    title = fields.Char(string='标题')
-    value = fields.Char(string='标题链接地址')
+    title = fields.Char(string='标题', required=True)
+    value = fields.Char(string='标题链接地址', required=True)
+    message_id = fields.Many2one(comodel_name='dindin.work.message', string=u'消息', ondelete='cascade')
+
+
+class OaMessageList(models.Model):
+    _name = 'dindin.work.oa.message.list'
+    _description = "oa工作消息列表"
+    _rec_name = 'key'
+
+    key = fields.Char(string='关键字', required=True)
+    value = fields.Char(string='内容', required=True)
     message_id = fields.Many2one(comodel_name='dindin.work.message', string=u'消息', ondelete='cascade')

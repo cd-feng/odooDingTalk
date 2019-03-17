@@ -65,6 +65,42 @@
                             </field>
                             <field name="markdown_message" placeholder="请输入要发送的消息内容, 支持markdown语法..."
                                    attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'markdown')], 'required': [('msg_type', '=', 'markdown')]}"/>
+                            <field name="link_message" placeholder="请输入消息描述"
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
+                            <field name="link_url" placeholder="请输入点击消息时跳转的url地址..."
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
+                            <field name="link_image_url" placeholder="请输入消息图片url地址..."
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
+                            <group>
+                                <field name="oa_head_msg" placeholder="请输入头部内容..."
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')], 'required': [('msg_type', '=', 'oa')]}"/>
+                                <field name="oa_link_url" placeholder="请输入链接地址url..."
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')], 'required': [('msg_type', '=', 'oa')]}"/>
+                                <field name="oa_image_url" placeholder="请输入图片链接地址url..."
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')]}"/>
+                                <field name="oa_body_title" placeholder="请输入正文标题..."
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')], 'required': [('msg_type', '=', 'oa')]}"/>
+                                <field name="oa_body_content" placeholder="请输入正文内容..."
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')]}"/>
+                                <field name="oa_message_ids"
+                                       attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')], 'required': [('msg_type', '=', 'oa')]}">
+                                    <tree editable="top">
+                                        <field name="key"/>
+                                        <field name="value"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group>
+                                        <field name="oa_richunit"
+                                               attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="oa_richnum"
+                                               attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'oa')]}"/>
+                                    </group>
+                                </group>
+                            </group>
+
                         </page>
                         <page string="接受消息用户列表">
                             <field name="user_ids" attrs="{'readonly': [('state', '!=', '0')]}">
