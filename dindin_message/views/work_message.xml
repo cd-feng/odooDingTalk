@@ -24,18 +24,19 @@
             <form string="工作消息">
                 <header>
                     <button name="send_message" type="object" string="发送消息"
-                                states='0' class="oe_highlight"
-                                confirm="请确认消息内容,是否需要发送?"/>
+                            states='0' class="oe_highlight"
+                            confirm="请确认消息内容,是否需要发送?"/>
                     <button name="search_message_state" type="object" string="查询进度"
-                                states='1' class="oe_highlight"/>
+                            states='1' class="oe_highlight"/>
                     <button name="search_message_result" type="object" string="查询消息结果"
-                                states="1,2" class="oe_highlight"/>
+                            states="1,2" class="oe_highlight"/>
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="标题,如XX通知消息..." attrs="{'readonly': [('state', '!=', '0')]}"/>
+                            <field name="name" placeholder="标题,如XX通知消息..."
+                                   attrs="{'readonly': [('state', '!=', '0')]}"/>
                         </h1>
                         <h3>
                             <field name="company_id" placeholder="公司" attrs="{'readonly': [('state', '!=', '0')]}"/>
@@ -52,7 +53,18 @@
                     <notebook>
                         <page string="消息内容">
                             <field name="text_message" placeholder="请输入要发送的消息内容..."
-                                   attrs="{'readonly': [('state', '!=', '0')]}"/>
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'text')], 'required': [('msg_type', '=', 'text')]}"/>
+                            <field name="card_message" placeholder="请输入要发送的消息内容, 支持markdown语法..."
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'action_card')], 'required': [('msg_type', '=', 'action_card')]}"/>
+                            <field name="card_message_ids"
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'action_card')], 'required': [('msg_type', '=', 'action_card')]}">
+                                <tree editable="top">
+                                    <field name="title"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                            <field name="markdown_message" placeholder="请输入要发送的消息内容, 支持markdown语法..."
+                                   attrs="{'readonly': [('state', '!=', '0')], 'invisible': [('msg_type', '!=', 'markdown')], 'required': [('msg_type', '=', 'markdown')]}"/>
                         </page>
                         <page string="接受消息用户列表">
                             <field name="user_ids" attrs="{'readonly': [('state', '!=', '0')]}">

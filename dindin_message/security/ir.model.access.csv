@@ -3,3 +3,4 @@ access_dindin_message_type,dindin.message.type,model_dindin_message_type,base.gr
 access_dindin_work_message,dindin.work.message,model_dindin_work_message,base.group_user,1,1,1,1
 access_dindin_work_message_user_list,dindin.work.message.user.list,model_dindin_work_message_user_list,base.group_user,1,1,1,1
 access_dindin_work_message_dept_list,dindin.work.message.dept.list,model_dindin_work_message_dept_list,base.group_user,1,1,1,1
+access_dindin_work_card_message_list,dindin.work.card.message.list,model_dindin_work_card_message_list,base.group_user,1,1,1,1

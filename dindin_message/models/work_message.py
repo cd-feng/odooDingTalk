@@ -38,7 +38,11 @@ class DinDinWorkMessage(models.Model):
     task_id = fields.Char(string='任务Id')
     state = fields.Selection(string=u'发送状态', selection=[('0', '未开始'), ('1', '处理中'), ('2', '处理完毕')],
                              default='0')
-    text_message = fields.Text(string='文本消息内容', required=True)
+    text_message = fields.Text(string='文本消息内容')
+    card_message = fields.Text(string='卡片消息内容', help="支持markdown语法")
+    card_message_ids = fields.One2many(comodel_name='dindin.work.card.message.list', inverse_name='message_id',
+                                       string=u'按钮列表')
+    markdown_message = fields.Text(string='Markdown消息内容', help="支持markdown语法")
 
     @api.onchange('user_ids', 'dep_ids')
     @api.constrains('user_ids', 'dep_ids')
@@ -81,14 +85,57 @@ class DinDinWorkMessage(models.Model):
                 dept_str = dept_str + "{}".format(dept.dept_id.din_id)
             else:
                 dept_str = dept_str + ",{}".format(dept.dept_id.din_id)
-        msg = {
-            'msgtype': self.msg_type,  # 消息类型
-            'text': {
-                "content": self.text_message,  # 消息内容
+        msg = {}
+        # 判断消息类型，很具不同的类型封装不同的消息体
+        if self.msg_type == 'action_card':
+            """卡片类型"""
+            # 判断按钮数，若只是一个就封装整体跳转，反之独立跳转
+            if len(self.card_message_ids) == 1:
+                msg = {
+                    "msgtype": "action_card",
+                    "action_card": {
+                        "title": self.name,
+                        "markdown": self.card_message,
+                        "single_title": self.card_message_ids[0].title,
+                        "single_url": self.card_message_ids[0].value
+                    }
+                }
+            else:
+                btn_json_list = list()
+                for val in self.card_message_ids:
+                    btn_json_list.append({'title': val.title, 'action_url': val.value})
+                btn_orientation = "1" if len(self.card_message_ids) == 2 else "0"
+                msg = {
+                    "msgtype": "action_card",
+                    "action_card": {
+                        "title": self.name,
+                        "markdown": self.card_message,
+                        "btn_orientation": btn_orientation,
+                        "btn_json_list": btn_json_list
+                    }
+                }
+        elif self.msg_type == 'text':
+            """文本类型消息"""
+            msg = {
+                'msgtype': 'text',  # 消息类型
+                'text': {
+                    "content": self.text_message,  # 消息内容
+                }
             }
-        }
+        elif self.msg_type == 'markdown':
+            """markdown类型的消息"""
+            msg = {
+                'msgtype': 'markdown',  # 消息类型
+                "markdown": {
+                    "title": self.name,
+                    "text": self.markdown_message  # 消息内容
+                }
+            }
         task_id = self.send_work_message(toall=self.to_all_user, userstr=user_str, deptstr=dept_str, msg=msg)
-        self.write({'task_id': task_id, 'state': '1'})
+        self.write({
+            'task_id': task_id,
+            'state': '1'
+        })
         self.message_post(body=u"消息信息已推送到钉钉，钉钉正在加急处理中!", message_type='notification')
 
     @api.model
@@ -182,7 +229,7 @@ class DinDinWorkMessage(models.Model):
             if result.get('errcode') == 0:
                 send_result = result.get('send_result')
                 failed_user_id_list = send_result.get('failed_user_id_list')  # 失败的用户列表
-                read_user_id_list = send_result.get('read_user_id_list')      # 已读消息的用户id
+                read_user_id_list = send_result.get('read_user_id_list')  # 已读消息的用户id
                 unread_user_id_list = send_result.get('unread_user_id_list')  # 未读消息的用户id
                 invalid_dept_id_list = send_result.get('invalid_dept_id_list')  # 无效的部门id
                 for failed in failed_user_id_list:
@@ -249,4 +296,13 @@ class DinDinWorkMessageDeptList(models.Model):
 
     dept_id = fields.Many2one(comodel_name='hr.department', string=u'部门', ondelete='cascade', required=True)
     msg_type = fields.Selection(string=u'消息状态', selection=MESSGAETYPE, default='03')
+    message_id = fields.Many2one(comodel_name='dindin.work.message', string=u'消息', ondelete='cascade')
+
+
+class CardMessageList(models.Model):
+    _name = 'dindin.work.card.message.list'
+    _description = '卡片消息列表'
+
+    title = fields.Char(string='标题')
+    value = fields.Char(string='标题链接地址')
     message_id = fields.Many2one(comodel_name='dindin.work.message', string=u'消息', ondelete='cascade')
