@@ -5,11 +5,11 @@
                   id="ali_dindin.main_menu"
                   web_icon="ali_dindin,static/description/icon.png"/>
 
-        <menuitem name="消息管理" id="ali_dindin.message_menu"
+        <menuitem name="消息" id="ali_dindin.message_menu"
                   parent="ali_dindin.main_menu" sequence="10"
         />
 
-        <menuitem name="同步钉钉数据" id="ali_dindin.synchronous_menu"
+        <menuitem name="同步" id="ali_dindin.synchronous_menu"
                   parent="ali_dindin.main_menu" sequence="80"
         />
 
