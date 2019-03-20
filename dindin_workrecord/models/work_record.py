@@ -91,6 +91,7 @@ class DinDinWorkRecord(models.Model):
                         return False
                     else:
                         self.env['dindin.work.record'].create(data)
+        logging.info(">>>Stop getting to-do items")
 
     @api.model
     def get_workrecord_url(self, user_id, offset, limit):
@@ -115,7 +116,27 @@ class DinDinWorkRecord(models.Model):
     @api.multi
     def record_update(self):
         """待办更新"""
-        logging.info("待办更新")
+        for res in self:
+            logging.info("待办更新")
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'workrecord_update')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            data = {
+                'userid': res.emp_id.din_id,
+                'record_id': res.record_id,
+            }
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = json.loads(result.text)
+                logging.info(">>>{}".format(result))
+                if result.get('errcode') == 0:
+                    if result.get('result'):
+                        res.message_post(body=u"待办状态已更新!", message_type='notification')
+                        res.write({'record_state': '01'})
+                    else:
+                        res.message_post(body=u"待办状态更新失败!", message_type='notification')
+            except ReadTimeout:
+                logging.info("获取所有用户的待办事项网络连接超时")
 
 
 class DinDinWorkRecordList(models.Model):
