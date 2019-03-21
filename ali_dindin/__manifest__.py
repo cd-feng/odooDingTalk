@@ -7,7 +7,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dindin',
     'version': '1.1',
-    'depends': ['base', 'hr', 'contacts'],
+    'depends': ['base', 'hr', 'contacts', 'work_together'],
     'installable': True,
     'application': True,
     'auto_install': False,
@@ -21,8 +21,5 @@
         'views/employee.xml',
         'views/extcontact.xml',
     ],
-    # 'qweb': [
-    #     'static/xml/*.xml'
-    # ]
 
 }
