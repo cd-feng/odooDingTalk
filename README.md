@@ -5,8 +5,8 @@
 > 本应用主要基于OdooERP开发，支持社区版和企业版，当前版本仅支持12版本，github地址： https://github.com/suxuefeng20/odooDinDin  可自行下载后根据实际情况进行增加完善和调整功能。
 >
 > 在使用本模块前，请先将钉钉中你创建的E应用或微应用权限放开和配置出口ip，得到钉钉应用的 **AppKey**和 **AppSecret**， 至于钉钉后台中的配置请参照：https://open-doc.dingtalk.com/microapp/bgb96b
->
-> 安装模块完成后，需要转到设置中为用户分配权限（用户、管理员），用户可操作功能、管理员可配置参数和设置项
+
+至v1.5版本开始，将依赖OA协同办公模块，地址： [oa协同办公](https://github.com/suxuefeng20/Odoo12-OA)
 
 **主要功能：**
 
