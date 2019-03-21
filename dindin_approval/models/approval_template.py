@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
 import json
 import logging
-import time
-
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
@@ -24,54 +21,38 @@ class DinDinApprovalTemplate(models.Model):
     company_id = fields.Many2one(comodel_name='res.company',
                                  string=u'公司', default=lambda self: self.env.user.company_id.id)
 
-    @api.multi
-    def find_department_sign(self):
-        """获取部门签到记录"""
-        logging.info(">>>获取部门用户签到记录...")
-        for res in self:
-            res.line_ids = False
-            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_dept_checkin')]).value
-            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-            start_time = datetime.datetime.strptime("{}.42".format(str(res.start_time)),
-                                                    "%Y-%m-%d %H:%M:%S.%f").timetuple()
-            end_time = datetime.datetime.strptime("{}.42".format(str(res.end_time)), "%Y-%m-%d %H:%M:%S.%f").timetuple()
-            data = {
-                'department_id': res.department_id.din_id,
-                'start_time': "{}000".format(int(time.mktime(start_time))),
-                'end_time': "{}000".format(int(time.mktime(end_time))),
-            }
-            if res.is_root:
-                data.update({'department_id': '1'})
-            try:
-                result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
-                result = json.loads(result.text)
-                if result.get('errcode') == 0:
-                    line_list = list()
-                    for data in result.get('data'):
-                        emp = self.env['hr.employee'].sudo().search([('din_id', '=', data.get('userId'))])
-                        timestamp = self.get_time_stamp(data.get('timestamp'))
-                        line_list.append({
-                            'emp_id': emp.id if emp else False,
-                            'timestamp': timestamp,
-                            'place': data.get('place'),
-                            'detailPlace': data.get('detailPlace'),
-                            'remark': data.get('remark'),
-                            'latitude': data.get('latitude'),
-                            'longitude': data.get('longitude'),
-                            'avatar': data.get('avatar'),
-                        })
-                    res.line_ids = line_list
-            except ReadTimeout:
-                raise UserError("获取部门签到记录网络连接超时")
-
     @api.model
-    def get_time_stamp(self, timeNum):
-        """
-        将13位时间戳转换为时间
-        :param timeNum:
-        :return:
-        """
-        timeStamp = float(timeNum / 1000)
-        timeArray = time.localtime(timeStamp)
-        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-        return otherStyleTime
+    def get_template(self):
+        """获取审批模板"""
+        logging.info(">>>获取审批模板...")
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'process_listbyuserid')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'offset': 0,
+            'size': 100,
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=20)
+            result = json.loads(result.text)
+            # logging.info(">>>获取审批模板返回结果{}".format(result))
+            if result.get('errcode') == 0:
+                d_res = result.get('result')
+                for process in d_res.get('process_list'):
+                    data = {
+                        'name': process.get('name'),
+                        'icon_url': process.get('icon_url'),
+                        'process_code': process.get('process_code'),
+                        'url': process.get('url'),
+                    }
+                    template = self.env['dindin.approval.template'].search(
+                        [('process_code', '=', process.get('process_code'))])
+                    if template:
+                        template.write(data)
+                    else:
+                        self.env['dindin.approval.template'].create(data)
+            else:
+                raise UserError('获取审批模板失败，详情为:{}'.format(result.get('errmsg')))
+        except ReadTimeout:
+            raise UserError("网络连接超时！")
+        logging.info(">>>获取审批模板结束...")

@@ -5,22 +5,21 @@ odoo.define('dindin_approval.pull_dindin_approval_button', function (require) {
     let Dialog = require('web.Dialog');
     let core = require('web.core');
     let QWeb = core.qweb;
+    let rpc = require('web.rpc');
 
     let save_data = function () {
-             alert("ok");
+        this.do_notify("请稍后...", "查询完成后需要刷新界面方可查看！!");
+        getTemplate();
     };
-    let searchBankCardInfo = function(){
-        let self = this;
-            var def = rpc.query({
-                model: 'union.pay.search.bank.card.info',
-                method: 'search_bank_card_info',
-                args: [cardNo],
-            }).then(function (data) {
-                // Result
-                console.log(data);
-                self.do_notify(_t("查询成功.")), _t("查询成功...");
-                self.setSearchResult(data)
-            });
+
+    let getTemplate = function () {
+        let def = rpc.query({
+            model: 'dindin.approval.template',
+            method: 'get_template',
+            args: [],
+        }).then(function () {
+            console.log("查询成功");
+        });
     };
 
     ListController.include({
