@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="dindin_approval_template" name="DinDin Approval Template" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/dindin_approval/static/src/js/approval_template.js"></script>
-        </xpath>
-    </template>
-
     <record id="dindin_approval_template_tree_view" model="ir.ui.view">
         <field name="name">审批模板</field>
         <field name="model">dindin.approval.template</field>
@@ -27,7 +21,7 @@
         <field name="view_mode">tree</field>
     </record>
 
-     <record model="ir.ui.view" id="ali_dindin_system_conf_search">
+    <record model="ir.ui.view" id="dindin_approval_template_search">
         <field name="model">dindin.approval.template</field>
         <field name="arch" type="xml">
             <search string="审批模板">

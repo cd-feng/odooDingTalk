@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_backend" name="Combined Statements assets" inherit_id="web.assets_backend">
+    <template id="dindin_approval_template" name="DinDin Approval Template" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-            <!--<script type="text/javascript" src="/dindin_approval/static/src/js/approval_template.js"/>-->
+            <script type="text/javascript" src="/dindin_approval/static/src/js/approval_template.js"></script>
         </xpath>
     </template>
 

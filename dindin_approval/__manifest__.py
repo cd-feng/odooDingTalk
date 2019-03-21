@@ -16,6 +16,7 @@
         'data/system_conf.xml',
         'views/asset.xml',
         'views/approval_template.xml',
+        'views/approval_control.xml',
     ],
     'qweb': [
         'static/xml/*.xml',
