@@ -20,6 +20,12 @@
 			<field name="value">https://oapi.dingtalk.com/user/getuserinfo</field>
 		</record>
 
+		<record id="ali_dindin_system_conf_getUseridByUnionid" model="ali.dindin.system.conf">
+			<field name="name">根据unionid获取userid</field>
+			<field name="key">getUseridByUnionid</field>
+			<field name="value">https://oapi.dingtalk.com/user/getUseridByUnionid?access_token=</field>
+		</record>
+
 		<!--联系人api-->
 		<record id="ali_dindin_system_conf_get_listlabelgroups" model="ali.dindin.system.conf">
 			<field name="name">获取外部联系人标签列表</field>
