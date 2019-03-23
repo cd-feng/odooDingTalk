@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" string="钉钉" data-string="钉钉" data-key="ali_dindin"
+                <div class="app_settings_block dindin_settings_block" string="钉钉" data-string="钉钉" data-key="ali_dindin"
                      groups="ali_dindin.group_ali_dindin_manager">
                     <h2>钉钉API应用信息</h2>
                     <div class="row mt16 o_settings_container">
@@ -158,6 +158,29 @@
                                 <label for="din_delete_department"/>
                                 <div class="text-muted">
                                     删除部门时自动同步至钉钉
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>钉钉-扫码登录参数设置</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="din_login_appid" placeholder="请输入扫码登录appId！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_login_appid"/>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="din_login_appsecret" placeholder="请输入扫码登录appSecret！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_login_appsecret"/>
+                                <div class="text-muted">
                                 </div>
                             </div>
                         </div>

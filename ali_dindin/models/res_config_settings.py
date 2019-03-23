@@ -21,6 +21,8 @@ class ResConfigSettings(models.TransientModel):
     din_create_department = fields.Boolean(string=u'添加部门')
     din_update_department = fields.Boolean(string=u'修改部门')
     din_delete_department = fields.Boolean(string=u'删除部门')
+    din_login_appid = fields.Char(string=u'扫码登录appId')
+    din_login_appsecret = fields.Char(string=u'扫码登录appSecret')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -38,6 +40,8 @@ class ResConfigSettings(models.TransientModel):
             din_create_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_department'),
             din_update_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_department'),
             din_delete_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department'),
+            din_login_appid=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid'),
+            din_login_appsecret=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appsecret'),
         )
         return res
 
@@ -55,6 +59,8 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_department', self.din_create_department)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_department', self.din_update_department)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_department', self.din_delete_department)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appid', self.din_login_appid)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appsecret', self.din_login_appsecret)
         super(ResConfigSettings, self).set_values()
         data = {
             'name': '钉钉-定时更新token值',
