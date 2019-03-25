@@ -4,7 +4,6 @@ import hashlib
 import json
 import logging
 import time
-import urllib
 import requests
 from requests import ReadTimeout
 from odoo import http, _
@@ -43,10 +42,42 @@ class DinDinLogin(Home, http.Controller):
         if not code:
             logging.info("错误的访问地址,请输入正确的访问地址")
         logging.info(">>>获取的code为：{}".format(code))
-        userid = False
-        # ------------------------
-        #   获取用户信息
-        # ------------------------
+        result = self.getUserInfobyDincode(code)
+        if not result['state']:
+            logging.info(result['msg'])
+        user = result['user']
+        ensure_db()
+        request.params['login_success'] = False
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
+        if user:
+            uid = request.session.authenticate(request.session.db, user.login, user.password)
+            if uid is not False:
+                request.params['login_success'] = True
+                if not redirect:
+                    redirect = '/web'
+                return http.redirect_with_hash(redirect)
+        message = u"您还没有绑定账号,请扫码绑定账号并登录"
+        return self._do_err_redirect(message)
+
+    def _do_err_redirect(self, errmsg, user_info=None):
+        err_values = request.params.copy()
+        if user_info is not None:
+            errmsg = errmsg + """
+                    <input type="hidden" name="name" value=%s id="name">
+                    <input type="hidden" name="mobile" value=%s id="mobile">
+                    <button type="submit" class="btn btn-primary">发送请求帮助</button>
+                """ % (user_info['name'], user_info['mobile'])
+        err_values['error'] = _(errmsg)
+        http.redirect_with_hash('/web/login')
+        return request.render('dindin_login.signup', err_values)
+
+    def getUserInfobyDincode(self, d_code):
+        """
+        根据返回的临时授权码获取用户信息
+        :param d_code:
+        :return:
+        """
         url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'getuserinfo_bycode')]).value
         login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
         key = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appsecret')
@@ -58,7 +89,7 @@ class DinDinLogin(Home, http.Controller):
         signature = hmac.new(key.encode('utf-8'), msg.encode('utf-8'), hashlib.sha256).digest()
         signature = quote(base64.b64encode(signature), 'utf-8')
         data = {
-            'tmp_auth_code': code
+            'tmp_auth_code': d_code
         }
         headers = {'Content-Type': 'application/json'}
         new_url = "{}signature={}&timestamp={}&accessKey={}".format(url, signature, msg, login_appid)
@@ -68,13 +99,20 @@ class DinDinLogin(Home, http.Controller):
             logging.info(">>>扫码登录获取用户信息返回结果{}".format(result))
             if result.get('errcode') == 0:
                 user_info = result.get('user_info')
-                userid = self.getUseridByUnionid(user_info.get('unionid'))
+                # 通过unionid获取userid并得到系统的user
+                # userid = self.getUseridByUnionid(user_info.get('unionid'))
+                employee = request.env['hr.employee'].sudo().search([('din_unionid', '=', user_info.get('unionid'))])
+                if employee:
+                    if employee.user_id:
+                        return {'state': True, 'user': employee.user_id}
+                    else:
+                        return {'state': False, 'msg': '员工{}没有关联系统用户，请联系管理员维护!'.format(employee.name)}
+                else:
+                    return {'state': False, 'msg': '钉钉员工{}在系统中不存在,请联系管理员维护!'.format(user_info.get('nick'))}
             else:
-                logging.info('>>>扫码登录获取用户信息失败，详情为:{}'.format(result.get('errmsg')))
+                return {'state': False, 'msg': '扫码登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
         except ReadTimeout:
-            logging.info("网络连接超时！")
-        print(userid)
-        return json.dumps({"state": 'OK了'}, ensure_ascii=False)
+            return {'state': False, 'msg': '网络连接超时'}
 
     def getUseridByUnionid(self, unionid):
         """根据unionid获取userid"""
@@ -88,3 +126,4 @@ class DinDinLogin(Home, http.Controller):
             return result.get('userid')
         else:
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
+
