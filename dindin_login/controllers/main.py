@@ -56,8 +56,9 @@ class DinDinLogin(Home, http.Controller):
         logging.info(">>>zhuang-----------1")
         if user:
             request.session.uid = user.id
+            uid = user.id
             logging.info(">>>zhuang-----------2")
-            uid = request.session.authenticate(request.session.db, user.login, user.password)
+            # uid = request.session.authenticate(request.session.db, user.login, user.password)
             logging.info(">>>zhuang-----------3")
             if uid is not False:
                 request.params['login_success'] = True
