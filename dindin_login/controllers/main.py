@@ -76,9 +76,10 @@ class DinDinLogin(Home, http.Controller):
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
-
+        logging.info("-----------1")
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
+        logging.info("-----------2")
 
         values = request.params.copy()
         try:
@@ -86,8 +87,10 @@ class DinDinLogin(Home, http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
+        logging.info("-----------3")
         old_uid = request.uid
         uid = request.session.authenticate(request.session.db, user.login, user.password)
+        logging.info("-----------4")
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
