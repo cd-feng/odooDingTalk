@@ -19,12 +19,12 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/dindin_login', type='http', auth='public', website=True, sitemap=False)
     def web_dindin_login(self, *args, **kw):
-        # err_values = request.params.copy()
-        # return request.render('dindin_login.signup', err_values)
-        qcontext = self.get_auth_signup_qcontext()
-        response = request.render('dindin_login.signup', qcontext)
-        response.headers['X-Frame-Options'] = 'DENY'
-        return response
+        values = request.params.copy()
+        return request.render('dindin_login.signup', values)
+        # qcontext = self.get_auth_signup_qcontext()
+        # response = request.render('dindin_login.signup', qcontext)
+        # response.headers['X-Frame-Options'] = 'DENY'
+        # return response
 
     @http.route('/dindin_login/get_url', type='http', auth="none")
     def get_url(self, **kw):
