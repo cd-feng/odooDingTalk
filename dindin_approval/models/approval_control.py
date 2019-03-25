@@ -18,3 +18,11 @@ class DinDinApprovalControl(models.Model):
     _sql_constraints = [
         ('oa_model_id_uniq', 'unique(oa_model_id)', u'已存在OA协同单据对应的审批模板!'),
     ]
+
+    @api.model
+    def get_oa_model(self):
+        oa_models = self.env['dindin.approval.control'].sudo().search([])
+        model_list = list()
+        for oa_model in oa_models:
+            model_list.append(oa_model.oa_model_id.model)
+        return model_list

@@ -2,3 +2,4 @@
 
 from . import approval_template
 from . import approval_control
+from . import main

@@ -7,7 +7,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dindin',
     'version': '1.1',
-    'depends': ['base', 'hr', 'contacts', 'work_together'],
+    'depends': ['base', 'hr', 'contacts'],
     'installable': True,
     'application': True,
     'auto_install': False,
