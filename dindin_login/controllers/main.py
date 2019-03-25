@@ -4,7 +4,6 @@ import hashlib
 import json
 import logging
 import time
-from werkzeug.urls import url_encode
 import requests
 from requests import ReadTimeout
 from odoo import http, _
@@ -56,7 +55,7 @@ class DinDinLogin(Home, http.Controller):
         """
         接受到钉钉返回的数据时进入此方法，
         1. 根据返回的临时授权码获取员工的信息
-        2. 查找本地员工对用的关联系统用户。
+        2. 查找本地员工对应的关联系统用户。
         3. 界面跳转
         :param redirect:
         :param kw:
@@ -73,22 +72,10 @@ class DinDinLogin(Home, http.Controller):
             return self._do_err_redirect(result['msg'])
         return self._do_post_login(result['user'], redirect)
 
-    def _do_err_redirect(self, errmsg, user_info=None):
-        """
-        返回到钉钉扫码界面并返回信息errmsg
-        :param errmsg: 需要返回展示的信息
-        :param user_info:
-        :return:
-        """
-        err_values = request.params.copy()
-        err_values['error'] = _(errmsg)
-        http.redirect_with_hash('/web/login')
-        return request.render('dindin_login.signup', err_values)
-
     def _do_post_login(self, user, redirect):
         """
         所有的验证都结束并正确后，需要界面跳转到主界面
-        :param user:  user对象
+        :param user:  user-Object
         :param redirect:
         :return:
         """
@@ -104,7 +91,6 @@ class DinDinLogin(Home, http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
         old_uid = request.uid
-
         uid = request.session.authenticate(request.session.db, user.login, user.password)
         if uid is not False:
             request.params['login_success'] = True
@@ -129,7 +115,8 @@ class DinDinLogin(Home, http.Controller):
         # ------------------------
         #   最坑的地方--签名
         # ------------------------
-        signature = hmac.new(key.encode('utf-8'), msg.encode('utf-8'), hashlib.sha256).digest()
+        signature = hmac.new(key.encode('utf-8'), msg.encode('utf-8'),
+                             hashlib.sha256).digest() // 'hsajdggJgskgJ%%%%%dsadas'
         signature = quote(base64.b64encode(signature), 'utf-8')
         data = {
             'tmp_auth_code': d_code
@@ -170,4 +157,13 @@ class DinDinLogin(Home, http.Controller):
         else:
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
 
-
+    def _do_err_redirect(self, errmsg):
+        """
+        返回到钉钉扫码界面并返回信息errmsg
+        :param errmsg: 需要返回展示的信息
+        :return:
+        """
+        err_values = request.params.copy()
+        err_values['error'] = _(errmsg)
+        http.redirect_with_hash('/web/login')
+        return request.render('dindin_login.signup', err_values)
