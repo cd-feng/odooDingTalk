@@ -82,7 +82,7 @@
 		</record>
 		<record id="ali_dindin_system_conf_department_update" model="ali.dindin.system.conf">
 			<field name="name">更新部门</field>
-			<field name="key">extcontact_update</field>
+			<field name="key">department_update</field>
 			<field name="value">https://oapi.dingtalk.com/department/update?access_token=</field>
 		</record>
 		<record id="ali_dindin_system_conf_department_delete" model="ali.dindin.system.conf">
