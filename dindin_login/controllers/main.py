@@ -11,6 +11,7 @@ from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request
 from urllib.parse import quote
 import hmac
+import odoo
 
 _logger = logging.getLogger(__name__)
 
@@ -40,32 +41,28 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/action_login', type='http', auth="none")
     def action_ding_login(self, redirect=None, **kw):
-        try:
-            code = request.params['code']
-            if not code:
-                logging.info("错误的访问地址,请输入正确的访问地址")
-            logging.info(">>>获取的code为：{}".format(code))
-            result = self.getUserInfobyDincode(code)
-            logging.info(">>>result:{}".format(result))
-            if not result['state']:
-                logging.info(result['msg'])
-            user = result['user']
-            ensure_db()
-            request.params['login_success'] = False
-            if request.httprequest.method == 'GET' and redirect and request.session.uid:
-                return http.redirect_with_hash(redirect)
-            if user:
-                # request.session.uid = user.id
-                uid = request.session.authenticate(request.session.db, uid=user[0].id)
-                if uid is not False:
-                    request.params['login_success'] = True
-                    if not redirect:
-                        redirect = '/web'
-                    return http.redirect_with_hash(redirect)
-        except TypeError as e:
-            return self._do_err_redirect("TypeError,{}".format(e.message))
-        except KeyError as e:
-            return self._do_err_redirect("KeyError,扫码登录系统错误！请联系管理员..{}".format(e.message))
+        code = request.params['code']
+        if not code:
+            logging.info("错误的访问地址,请输入正确的访问地址")
+        logging.info(">>>获取的code为：{}".format(code))
+        result = self.getUserInfobyDincode(code)
+        logging.info(">>>result:{}".format(result))
+        if not result['state']:
+            logging.info(result['msg'])
+        self._do_post_login(result['user'], redirect)
+        # user = result['user']
+        # ensure_db()
+        # request.params['login_success'] = False
+        # if request.httprequest.method == 'GET' and redirect and request.session.uid:
+        #     return http.redirect_with_hash(redirect)
+        # if user:
+        #     # request.session.uid = user.id
+        #     uid = request.session.authenticate(request.session.db, uid=user[0].id)
+        #     if uid is not False:
+        #         request.params['login_success'] = True
+        #         if not redirect:
+        #             redirect = '/web'
+        #         return http.redirect_with_hash(redirect)
         return self._do_err_redirect("您还没有绑定账号,请扫码绑定账号并登录")
 
     def _do_err_redirect(self, errmsg, user_info=None):
@@ -73,6 +70,31 @@ class DinDinLogin(Home, http.Controller):
         err_values['error'] = _(errmsg)
         http.redirect_with_hash('/web/login')
         return request.render('dindin_login.signup', err_values)
+
+    def _do_post_login(self, user, redirect):
+        ensure_db()
+        request.params['login_success'] = False
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
+
+        if not request.uid:
+            request.uid = odoo.SUPERUSER_ID
+
+        values = request.params.copy()
+        try:
+            values['databases'] = http.db_list()
+        except odoo.exceptions.AccessDenied:
+            values['databases'] = None
+
+        old_uid = request.uid
+        uid = request.session.authenticate(request.session.db, user.login, user.password)
+        if uid is not False:
+            request.params['login_success'] = True
+            if not redirect:
+                redirect = '/web'
+            return http.redirect_with_hash(redirect)
+        request.uid = old_uid
+        return self._do_err_redirect("用户不存在或用户信息错误，无法完成登录，请联系管理员。")
 
     def getUserInfobyDincode(self, d_code):
         """
