@@ -40,35 +40,35 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/action_login', type='http', auth="none")
     def action_ding_login(self, redirect=None, **kw):
-        code = request.params['code']
-        if not code:
-            logging.info("错误的访问地址,请输入正确的访问地址")
-        logging.info(">>>获取的code为：{}".format(code))
-        result = self.getUserInfobyDincode(code)
-        logging.info(">>>result:{}".format(result))
-        if not result['state']:
-            logging.info(result['msg'])
-        user = result['user']
-        ensure_db()
-        request.params['login_success'] = False
-        if request.httprequest.method == 'GET' and redirect and request.session.uid:
-            return http.redirect_with_hash(redirect)
-        logging.info(">>>zhuang-----------1")
-        if user:
-            request.session.uid = user.id
-            uid = user.id
-            logging.info(">>>zhuang-----------2")
-            # uid = request.session.authenticate(request.session.db, user.login, user.password)
-            logging.info(">>>zhuang-----------3")
-            if uid is not False:
-                logging.info(">>>zhuang-----------4")
-                request.params['login_success'] = True
-                if not redirect:
-                    redirect = '/web'
-                    logging.info(">>>zhuang-----------5")
+        try:
+            code = request.params['code']
+            if not code:
+                logging.info("错误的访问地址,请输入正确的访问地址")
+            logging.info(">>>获取的code为：{}".format(code))
+            result = self.getUserInfobyDincode(code)
+            logging.info(">>>result:{}".format(result))
+            if not result['state']:
+                logging.info(result['msg'])
+            user = result['user']
+            ensure_db()
+            request.params['login_success'] = False
+            if request.httprequest.method == 'GET' and redirect and request.session.uid:
                 return http.redirect_with_hash(redirect)
-        message = u"您还没有绑定账号,请扫码绑定账号并登录"
-        return self._do_err_redirect(message)
+            logging.info(">>>zhuang-----------1")
+            if user:
+                request.session.uid = user.id
+                uid = user.id
+                # uid = request.session.authenticate(request.session.db, user.login, user.password)
+                if uid is not False:
+                    request.params['login_success'] = True
+                    if not redirect:
+                        redirect = '/web'
+                    return http.redirect_with_hash(redirect)
+        except TypeError as e:
+            return self._do_err_redirect("TypeError,{}".format(e.message))
+        except KeyError as e:
+            return self._do_err_redirect("KeyError,扫码登录系统错误！请联系管理员..{}".format(e.message))
+        return self._do_err_redirect("您还没有绑定账号,请扫码绑定账号并登录")
 
     def _do_err_redirect(self, errmsg, user_info=None):
         err_values = request.params.copy()
