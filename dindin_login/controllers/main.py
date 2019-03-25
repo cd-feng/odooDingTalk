@@ -84,17 +84,16 @@ class DinDinLogin(Home, http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
         old_uid = request.uid
-        logging.info(request.session.db)
-        logging.info(user.login)
-        logging.info(user.password)
-        return http.redirect_with_hash('/web')
-        uid = request.session.authenticate(request.session.db, user.login, user.password)
+        request.uid = user.id
+        uid = user.id
+        # return http.redirect_with_hash('/web')
+        # uid = request.session.authenticate(request.session.db, user.login, user.password)
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
-                redirect = '/web/login'
-            # return http.redirect_with_hash(redirect)
-            return http.local_redirect(redirect)
+                redirect = '/web'
+            return http.redirect_with_hash(redirect)
+            # return http.local_redirect(redirect)
         request.uid = old_uid
         return self._do_err_redirect("用户不存在或用户信息错误，无法完成登录，请联系管理员。")
 
