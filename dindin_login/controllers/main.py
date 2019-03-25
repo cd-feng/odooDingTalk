@@ -54,7 +54,6 @@ class DinDinLogin(Home, http.Controller):
             request.params['login_success'] = False
             if request.httprequest.method == 'GET' and redirect and request.session.uid:
                 return http.redirect_with_hash(redirect)
-            logging.info(">>>zhuang-----------1")
             if user:
                 request.session.uid = user.id
                 uid = user.id
@@ -62,7 +61,7 @@ class DinDinLogin(Home, http.Controller):
                 if uid is not False:
                     request.params['login_success'] = True
                     if not redirect:
-                        redirect = '/web'
+                        redirect = '/web/dindin_login'
                     return http.redirect_with_hash(redirect)
         except TypeError as e:
             return self._do_err_redirect("TypeError,{}".format(e.message))
