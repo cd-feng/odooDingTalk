@@ -19,10 +19,12 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/dindin_login', type='http', auth='public', website=True, sitemap=False)
     def web_dindin_login(self, *args, **kw):
-        qcontext = self.get_auth_signup_qcontext()
-        response = request.render('dindin_login.signup', qcontext)
-        response.headers['X-Frame-Options'] = 'DENY'
-        return response
+        err_values = request.params.copy()
+        return request.render('dindin_login.signup', err_values)
+        # qcontext = self.get_auth_signup_qcontext()
+        # response = request.render('dindin_login.signup', qcontext)
+        # response.headers['X-Frame-Options'] = 'DENY'
+        # return response
 
     @http.route('/dindin_login/get_url', type='http', auth="none")
     def get_url(self, **kw):
@@ -43,6 +45,7 @@ class DinDinLogin(Home, http.Controller):
             logging.info("错误的访问地址,请输入正确的访问地址")
         logging.info(">>>获取的code为：{}".format(code))
         result = self.getUserInfobyDincode(code)
+        logging.info(">>>result:{}".format(result))
         if not result['state']:
             logging.info(result['msg'])
         user = result['user']
@@ -51,6 +54,7 @@ class DinDinLogin(Home, http.Controller):
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
         if user:
+            request.session.uid = user.id
             uid = request.session.authenticate(request.session.db, user.login, user.password)
             if uid is not False:
                 request.params['login_success'] = True
@@ -62,12 +66,6 @@ class DinDinLogin(Home, http.Controller):
 
     def _do_err_redirect(self, errmsg, user_info=None):
         err_values = request.params.copy()
-        if user_info is not None:
-            errmsg = errmsg + """
-                    <input type="hidden" name="name" value=%s id="name">
-                    <input type="hidden" name="mobile" value=%s id="mobile">
-                    <button type="submit" class="btn btn-primary">发送请求帮助</button>
-                """ % (user_info['name'], user_info['mobile'])
         err_values['error'] = _(errmsg)
         http.redirect_with_hash('/web/login')
         return request.render('dindin_login.signup', err_values)
