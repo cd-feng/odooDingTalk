@@ -21,6 +21,12 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/dindin_login', type='http', auth='public', website=True, sitemap=False)
     def web_dindin_login(self, *args, **kw):
+        """
+        主页点击钉钉扫码登录route 将返回到扫码页面
+        :param args:
+        :param kw:
+        :return:
+        """
         values = request.params.copy()
         return request.render('dindin_login.signup', values)
         # qcontext = self.get_auth_signup_qcontext()
@@ -30,6 +36,11 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/dindin_login/get_url', type='http', auth="none")
     def get_url(self, **kw):
+        """
+        拼接访问钉钉的验证用户的url
+        :param kw:
+        :return:
+        """
         url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'sns_authorize')]).value
         login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
         # 获取传递过来当前的url和端口信息
@@ -42,37 +53,45 @@ class DinDinLogin(Home, http.Controller):
 
     @http.route('/web/action_login', type='http', auth="none")
     def action_ding_login(self, redirect=None, **kw):
+        """
+        接受到钉钉返回的数据时进入此方法，
+        1. 根据返回的临时授权码获取员工的信息
+        2. 查找本地员工对用的关联系统用户。
+        3. 界面跳转
+        :param redirect:
+        :param kw:
+        :return:
+        """
         code = request.params['code']
         if not code:
-            logging.info("错误的访问地址,请输入正确的访问地址")
+            return self._do_err_redirect("错误的访问地址,请输入正确的访问地址")
         logging.info(">>>获取的code为：{}".format(code))
         result = self.getUserInfobyDincode(code)
         logging.info(">>>result:{}".format(result))
         if not result['state']:
             logging.info(result['msg'])
+            return self._do_err_redirect(result['msg'])
         return self._do_post_login(result['user'], redirect)
-        # user = result['user']
-        # ensure_db()
-        # request.params['login_success'] = False
-        # if request.httprequest.method == 'GET' and redirect and request.session.uid:
-        #     return http.redirect_with_hash(redirect)
-        # if user:
-        #     # request.session.uid = user.id
-        #     uid = request.session.authenticate(request.session.db, uid=user[0].id)
-        #     if uid is not False:
-        #         request.params['login_success'] = True
-        #         if not redirect:
-        #             redirect = '/web'
-        #         return http.redirect_with_hash(redirect)
-        # return self._do_err_redirect("您还没有绑定账号,请扫码绑定账号并登录")
 
     def _do_err_redirect(self, errmsg, user_info=None):
+        """
+        返回到钉钉扫码界面并返回信息errmsg
+        :param errmsg: 需要返回展示的信息
+        :param user_info:
+        :return:
+        """
         err_values = request.params.copy()
         err_values['error'] = _(errmsg)
         http.redirect_with_hash('/web/login')
         return request.render('dindin_login.signup', err_values)
 
     def _do_post_login(self, user, redirect):
+        """
+        所有的验证都结束并正确后，需要界面跳转到主界面
+        :param user:  user对象
+        :param redirect:
+        :return:
+        """
         ensure_db()
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
@@ -85,10 +104,7 @@ class DinDinLogin(Home, http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
         old_uid = request.uid
-        uid = user.id
-        # request.uid = uid
 
-        # return http.redirect_with_hash('/web')
         uid = request.session.authenticate(request.session.db, user.login, user.password)
         if uid is not False:
             request.params['login_success'] = True
@@ -155,23 +171,3 @@ class DinDinLogin(Home, http.Controller):
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
 
 
-class OAuthLogin(Home):
-    def list_providers(self):
-        # 获取所有的OAuth服务商
-        providers = super(OAuthLogin, self).list_providers()
-        login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
-        for provider in providers:
-            # provider['auth_endpoint']获取的就是身份验证网址
-            # 服务商的相关字段信息可以在数据库结构中搜索模型auth就可以找到了
-            if "钉钉扫码登录" in provider['name']:
-                # 构造微信请求参数
-                params = dict(
-                    appid=login_appid,  # 你也可以通过provider['client_id']获得，前提是你在界面配置过
-                    response_type='code',
-                    scope='snsapi_login',
-                    state='STATE',
-                    redirect_uri='http://odoo.cdooc.cn/web/action_login',  # 微信回调处理url，后面的wechat是我自己添加的，可改，但要与下面的路径一致
-                )
-                # 最终的微信登入请求链接
-                provider['auth_link'] = "{}?{}#wechat_redirect".format(provider['auth_endpoint'], url_encode(params))
-        return providers
