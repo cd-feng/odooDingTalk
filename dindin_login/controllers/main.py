@@ -76,30 +76,25 @@ class DinDinLogin(Home, http.Controller):
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
-        logging.info("-----------1")
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
-        logging.info("-----------2")
-
         values = request.params.copy()
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
-
-        logging.info("-----------3")
         old_uid = request.uid
-        logging.info("-----------4")
         logging.info(request.session.db)
         logging.info(user.login)
         logging.info(user.password)
+        return http.local_redirect('/web/login')
         uid = request.session.authenticate(request.session.db, user.login, user.password)
-        logging.info("-----------5")
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
-                redirect = '/web'
-            return http.redirect_with_hash(redirect)
+                redirect = '/web/login'
+            # return http.redirect_with_hash(redirect)
+            return http.local_redirect(redirect)
         request.uid = old_uid
         return self._do_err_redirect("用户不存在或用户信息错误，无法完成登录，请联系管理员。")
 
