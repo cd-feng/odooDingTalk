@@ -49,7 +49,7 @@ class DinDinLogin(Home, http.Controller):
         logging.info(">>>result:{}".format(result))
         if not result['state']:
             logging.info(result['msg'])
-        self._do_post_login(result['user'], redirect)
+        return self._do_post_login(result['user'], redirect)
         # user = result['user']
         # ensure_db()
         # request.params['login_success'] = False
@@ -63,7 +63,7 @@ class DinDinLogin(Home, http.Controller):
         #         if not redirect:
         #             redirect = '/web'
         #         return http.redirect_with_hash(redirect)
-        return self._do_err_redirect("您还没有绑定账号,请扫码绑定账号并登录")
+        # return self._do_err_redirect("您还没有绑定账号,请扫码绑定账号并登录")
 
     def _do_err_redirect(self, errmsg, user_info=None):
         err_values = request.params.copy()
