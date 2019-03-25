@@ -87,7 +87,7 @@ class DinDinLogin(Home, http.Controller):
         logging.info(request.session.db)
         logging.info(user.login)
         logging.info(user.password)
-        return http.local_redirect('/web/login')
+        return http.redirect_with_hash('/web')
         uid = request.session.authenticate(request.session.db, user.login, user.password)
         if uid is not False:
             request.params['login_success'] = True
