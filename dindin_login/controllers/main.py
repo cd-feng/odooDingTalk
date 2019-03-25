@@ -61,9 +61,11 @@ class DinDinLogin(Home, http.Controller):
             # uid = request.session.authenticate(request.session.db, user.login, user.password)
             logging.info(">>>zhuang-----------3")
             if uid is not False:
+                logging.info(">>>zhuang-----------4")
                 request.params['login_success'] = True
                 if not redirect:
                     redirect = '/web'
+                    logging.info(">>>zhuang-----------5")
                 return http.redirect_with_hash(redirect)
         message = u"您还没有绑定账号,请扫码绑定账号并登录"
         return self._do_err_redirect(message)
