@@ -56,7 +56,7 @@ class DinDinLogin(Home, http.Controller):
                 return http.redirect_with_hash(redirect)
             if user:
                 # request.session.uid = user.id
-                uid = request.session.authenticate(request.session.db, user.login, user.password)
+                uid = request.session.authenticate(request.session.db, uid=user[0].id)
                 if uid is not False:
                     request.params['login_success'] = True
                     if not redirect:
