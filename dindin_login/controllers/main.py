@@ -4,6 +4,7 @@ import hashlib
 import json
 import logging
 import time
+from werkzeug.urls import url_encode
 import requests
 from requests import ReadTimeout
 from odoo import http, _
@@ -85,11 +86,10 @@ class DinDinLogin(Home, http.Controller):
             values['databases'] = None
         old_uid = request.uid
         uid = user.id
-        request.uid = user.id
-        request.session.uid = uid
+        # request.uid = uid
 
         # return http.redirect_with_hash('/web')
-        # uid = request.session.authenticate(request.session.db, user.login, user.password)
+        uid = request.session.authenticate(request.session.db, user.login, user.password)
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
@@ -154,3 +154,24 @@ class DinDinLogin(Home, http.Controller):
         else:
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
 
+
+class OAuthLogin(Home):
+    def list_providers(self):
+        # 获取所有的OAuth服务商
+        providers = super(OAuthLogin, self).list_providers()
+        login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
+        for provider in providers:
+            # provider['auth_endpoint']获取的就是身份验证网址
+            # 服务商的相关字段信息可以在数据库结构中搜索模型auth就可以找到了
+            if "钉钉扫码登录" in provider['name']:
+                # 构造微信请求参数
+                params = dict(
+                    appid=login_appid,  # 你也可以通过provider['client_id']获得，前提是你在界面配置过
+                    response_type='code',
+                    scope='snsapi_login',
+                    state='STATE',
+                    redirect_uri='http://odoo.cdooc.cn/web/action_login',  # 微信回调处理url，后面的wechat是我自己添加的，可改，但要与下面的路径一致
+                )
+                # 最终的微信登入请求链接
+                provider['auth_link'] = "{}?{}#wechat_redirect".format(provider['auth_endpoint'], url_encode(params))
+        return providers
