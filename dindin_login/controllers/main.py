@@ -89,8 +89,12 @@ class DinDinLogin(Home, http.Controller):
 
         logging.info("-----------3")
         old_uid = request.uid
-        uid = request.session.authenticate(request.session.db, user.login, user.password)
         logging.info("-----------4")
+        logging.info(request.session.db)
+        logging.info(user.login)
+        logging.info(user.password)
+        uid = request.session.authenticate(request.session.db, user.login, user.password)
+        logging.info("-----------5")
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
