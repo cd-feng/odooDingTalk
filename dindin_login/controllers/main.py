@@ -93,8 +93,12 @@ class DinDinLogin(Home, http.Controller):
         old_uid = request.uid
         # 解密钉钉登录密码
         password = base64.b64decode(user.din_password)
-        uid = request.session.authenticate(request.session.db,
-                                           user.login, password.decode(encoding='utf-8', errors='strict'))
+        password = password.decode(encoding='utf-8', errors='strict')
+        if password == '123456':
+            user.password = '123456'
+            user.sudo()._set_password()
+            return self._do_err_redirect("用户'{}'密码已重置为123456,请再次扫描进行登录!".format(user.login))
+        uid = request.session.authenticate(request.session.db, user.login, password)
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
