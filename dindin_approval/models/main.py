@@ -16,7 +16,7 @@ class DinDinApprovalMain(models.Model):
         ('02', '审批完成'),
     ]
 
-    process_code = fields.Char(string='审批编号')
+    process_code = fields.Char(string='单据编号')
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
     originator_user_id = fields.Many2one(comodel_name='hr.employee', string=u'发起人', required=True)
