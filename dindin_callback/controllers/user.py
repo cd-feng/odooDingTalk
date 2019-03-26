@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class CallBack(Home, http.Controller):
 
-    @http.route('/callback/user_add_org', type='json', auth='public', methods=['get', 'post'], csrf=False)
+    @http.route('/callback/user_add_org', type='json', auth='public')
     def callback_user_add_org(self, redirect=None, **kw):
         data = request.params.data
         logging.info("data: {}".format(data))
