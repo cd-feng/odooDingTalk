@@ -91,7 +91,10 @@ class DinDinLogin(Home, http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
         old_uid = request.uid
-        uid = request.session.authenticate(request.session.db, user.login, '*sxf3625')
+        # 解密钉钉登录密码
+        password = base64.b64decode(user.din_password)
+        uid = request.session.authenticate(request.session.db,
+                                           user.login, password.decode(encoding='utf-8', errors='strict'))
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
