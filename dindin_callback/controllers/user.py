@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class CallBack(Home, http.Controller):
 
     @http.route('/callback/user_add_org', type='http', auth='public', methods=['get', 'post'], csrf=False)
-    def action_ding_login(self, redirect=None, **kw):
+    def callback_user_add_org(self, redirect=None, **kw):
         data = request.params.data
         logging.info("data: {}".format(data))
         signature = request.params['signature']
