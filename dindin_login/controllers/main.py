@@ -94,7 +94,7 @@ class DinDinLogin(Home, http.Controller):
         # 解密钉钉登录密码
         password = base64.b64decode(user.din_password)
         password = password.decode(encoding='utf-8', errors='strict')
-        if password == '123456':
+        if not password:
             user.password = '123456'
             user.sudo()._set_password()
             return self._do_err_redirect("用户'{}'密码已重置为123456,请再次扫描进行登录!".format(user.login))
