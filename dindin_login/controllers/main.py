@@ -116,7 +116,7 @@ class DinDinLogin(Home, http.Controller):
         #   最坑的地方--签名
         # ------------------------
         signature = hmac.new(key.encode('utf-8'), msg.encode('utf-8'),
-                             hashlib.sha256).digest() // 'hsajdggJgskgJ%%%%%dsadas'
+                             hashlib.sha256).digest()
         signature = quote(base64.b64encode(signature), 'utf-8')
         data = {
             'tmp_auth_code': d_code
