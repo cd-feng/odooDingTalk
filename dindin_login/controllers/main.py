@@ -97,14 +97,13 @@ class DinDinLogin(Home, http.Controller):
         if password == '123456':
             user.password = '123'
             user.sudo()._set_password()
-            return self._do_err_redirect("用户'{}'密码已重置为123,请再次扫描进行登录!".format(user.login))
+            return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login))
         uid = request.session.authenticate(request.session.db, user.login, password)
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
                 redirect = '/web'
             return http.redirect_with_hash(redirect)
-            # return http.local_redirect(redirect)
         request.uid = old_uid
         return self._do_err_redirect("用户不存在或用户信息错误，无法完成登录，请联系管理员。")
 
@@ -143,9 +142,9 @@ class DinDinLogin(Home, http.Controller):
                     if employee.user_id:
                         return {'state': True, 'user': employee.user_id}
                     else:
-                        return {'state': False, 'msg': '员工{}没有关联系统用户，请联系管理员维护!'.format(employee.name)}
+                        return {'state': False, 'msg': "员工'{}'没有关联系统用户，请联系管理员维护!".format(employee.name)}
                 else:
-                    return {'state': False, 'msg': '钉钉员工{}在系统中不存在,请联系管理员维护!'.format(user_info.get('nick'))}
+                    return {'state': False, 'msg': "钉钉员工'{}'在系统中不存在,请联系管理员维护!".format(user_info.get('nick'))}
             else:
                 return {'state': False, 'msg': '扫码登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
         except ReadTimeout:
