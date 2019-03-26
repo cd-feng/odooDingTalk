@@ -14,12 +14,14 @@ class CallBack(Home, http.Controller):
 
     @http.route('/callback/user_add_org', type='json', auth='public')
     def callback_user_add_org(self, redirect=None, **kw):
-        data = request.params.data
-        logging.info("data: {}".format(data))
+        json_str = request.jsonrequest
+        logging.info("json_str: {}".format(json_str))
         signature = request.params['signature']
         logging.info("signature: {}".format(signature))
         timestamp = request.params['timestamp']
         logging.info("timestamp: {}".format(timestamp))
         nonce = request.params['nonce']
         logging.info("nonce: {}".format(nonce))
+        data = request.params.data
+        logging.info("data: {}".format(data))
 
