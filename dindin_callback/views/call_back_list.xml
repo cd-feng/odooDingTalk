@@ -8,6 +8,7 @@
             <tree default_order="id desc" editable="top" create="true">
                 <field name="name"/>
                 <field name="value"/>
+                <field name="call_back_url"/>
                 <field name="value_type"/>
             </tree>
         </field>

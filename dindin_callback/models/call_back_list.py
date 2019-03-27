@@ -19,6 +19,7 @@ class DinDinCallbackList(models.Model):
 
     name = fields.Char(string='类型名')
     value = fields.Char(string='类型代码')
+    call_back_url = fields.Char(string='回调地址函数')
     value_type = fields.Selection(string=u'事件分类', selection=ValueType, default='')
     company_id = fields.Many2one(comodel_name='res.company',
                                  string=u'公司', default=lambda self: self.env.user.company_id.id)
