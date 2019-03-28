@@ -15,6 +15,29 @@
         </field>
     </record>
 
+    <record id="dindin_simple_groups_form_view" model="ir.ui.view">
+        <field name="name">考勤组</field>
+        <field name="model">dindin.simple.groups</field>
+        <field name="arch" type="xml">
+            <form string="工作消息">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="group_id" />
+                            <field name="s_type"/>
+                        </group>
+                        <group>
+                            <field name="member_count"/>
+                            <field name="manager_list" widget="many2many_tags"/>
+                            <field name="dept_name_list" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="dindin_simple_groups_action">
         <field name="name">考勤组</field>
         <field name="res_model">dindin.simple.groups</field>
