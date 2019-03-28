@@ -44,13 +44,13 @@ class CallBack(Home, http.Controller):
         logging.info("actual_sig：{}".format(actual_sig))
         logging.info("actual_time：{}".format(actual_time))
         logging.info("actual_nonce：{}".format(actual_nonce))
-        logging.info("msg：{}".format(msg))
+        logging.info("encrypt_msg：{}".format(encrypt_msg))
         logging.info("--------------------------------------------")
         return {
                 "msg_signature": actual_sig,
                 "timeStamp": actual_time,
                 "nonce": actual_nonce,
-                "encrypt": quote(msg)
+                "encrypt": quote(msg.encode())
             }
 
 
