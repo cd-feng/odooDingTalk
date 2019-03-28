@@ -9,7 +9,6 @@ import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from dingtalk.client.api.base import DingTalkBaseAPI
 _logger = logging.getLogger(__name__)
 
 
