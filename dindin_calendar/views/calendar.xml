@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="calendar_event_form_form_inherit" model="ir.ui.view">
+            <field name="name">calendar.event.form</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']" position="after">
+                    <h2>
+                        <field name="number" placeholder="日程编号,自动生成.." />
+                    </h2>
+                </xpath>
+                <xpath expr="//field[@name='allday']" position="after">
+                    <newline/>
+                    <field name="d_minutes"/>
+                </xpath>
+            </field>
+    </record>
+
+
+</odoo>
