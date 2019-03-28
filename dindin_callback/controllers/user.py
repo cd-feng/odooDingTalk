@@ -1,12 +1,8 @@
-import base64
 import logging
-from dingtalk.client.api.base import DingTalkBaseAPI
 from odoo import http, _
 from odoo.addons.web.controllers.main import Home
 from odoo.exceptions import UserError
 from odoo.http import request
-from Crypto.Cipher import AES
-from dingtalk.client.api.callback import Callback
 from urllib.parse import quote
 _logger = logging.getLogger(__name__)
 import json
@@ -41,13 +37,13 @@ class CallBack(Home, http.Controller):
         msg = json.loads(msg)
         logging.info(">>>解密后的消息结果:{}".format(msg))
         # 返回加密结果
-        # encrypt_msg = crypto.encrypt('success')
-        # print(encrypt_msg)
-        # randstr, length, msg, suite_key = crypto.decrypt2(encrypt_msg)
-        # print(randstr)
-        # # print(length)
-        # # print(msg)
-        # # print(suite_key)
+        encrypt_msg = crypto.encrypt('success')
+        print(encrypt_msg)
+        randstr, length, msg, suite_key = crypto.decrypt2(encrypt_msg)
+        print(randstr)
+        # print(length)
+        # print(msg)
+        # print(suite_key)
 
         return {
                 "msg_signature": "111108bb8e6dbce3c9671d6fdb69d15066227608",
