@@ -37,6 +37,11 @@ class DinDinCallback(models.Model):
         ('vcall_id_uniq', 'unique(call_id)', u'回调类型重复!'),
     ]
 
+    @api.onchange('call_id')
+    def onchage_call_type(self):
+        if self.call_id:
+            self.url = self.call_id.call_back_url
+
     @api.multi
     def register_call_back(self):
         """
