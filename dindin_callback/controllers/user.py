@@ -46,11 +46,11 @@ class CallBack(Home, http.Controller):
         logging.info("actual_nonce：{}".format(actual_nonce))
         logging.info("encrypt_msg：{}".format(encrypt_msg))
         logging.info("--------------------------------------------")
-        return json.dumps({
+        return {
                 "msg_signature": actual_sig,
                 "timeStamp": actual_time,
                 "nonce": actual_nonce,
                 "encrypt": encrypt_msg
-            })
+            }
 
 
