@@ -16,6 +16,7 @@
         'data/system_conf.xml',
         'views/asset.xml',
         'views/simplegroups.xml',
+        'views/attendance_list.xml',
     ],
     'qweb': [
         'static/xml/*.xml'
