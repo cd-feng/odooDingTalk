@@ -23,6 +23,16 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
+                                <field name="din_corpId" placeholder="请输入钉钉CorpId！"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="din_corpId"/>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
                                 <field name="din_appkey" placeholder="请输入AppKey！"/>
                             </div>
                             <div class="o_setting_right_pane">

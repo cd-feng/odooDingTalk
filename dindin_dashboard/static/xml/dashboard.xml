@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="DindinDashboardInfo">
+        <div>
+            <div>
+                <!-- Start Content-->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-6">
+                            <div class="card widget-flat">
+                                <div class="card-body p-0">
+                                    <div class="p-3 pb-0">
+                                        <div class="float-right">
+                                            <i class="mdi mdi-cart text-primary widget-icon"></i>
+                                        </div>
+                                        <h5 class="text-muted font-weight-normal mt-0">我的待办</h5>
+                                        <h3 class="mt-2">3,543</h3>
+                                    </div>
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div> <!-- end col-->
+
+                        <div class="col-xl-3 col-lg-6">
+                            <div class="card widget-flat">
+                                <div class="card-body p-0">
+                                    <div class="p-3 pb-0">
+                                        <div class="float-right">
+                                            <i class="mdi mdi-currency-usd text-danger widget-icon"></i>
+                                        </div>
+                                        <h5 class="text-muted font-weight-normal mt-0">公告数</h5>
+                                        <h3 class="mt-2">21,287</h3>
+                                    </div>
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div> <!-- end col-->
+
+                        <div class="col-xl-3 col-lg-6">
+                            <div class="card widget-flat">
+                                <div class="card-body p-0">
+                                    <div class="p-3 pb-0">
+                                        <div class="float-right">
+                                            <i class="mdi mdi-account-multiple text-primary widget-icon"></i>
+                                        </div>
+                                        <h5 class="text-muted font-weight-normal mt-0">待审批数</h5>
+                                        <h3 class="mt-2">5,387</h3>
+                                    </div>
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div> <!-- end col-->
+
+                        <div class="col-xl-3 col-lg-6">
+                            <div class="card widget-flat">
+                                <div class="card-body p-0">
+                                    <div class="p-3 pb-0">
+                                        <div class="float-right">
+                                            <i class="mdi mdi-eye-outline text-danger widget-icon"></i>
+                                        </div>
+                                        <h5 class="text-muted font-weight-normal mt-0">消息</h5>
+                                        <h3 class="mt-2">74,315</h3>
+                                    </div>
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row -->
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="header-title">公告列表</h4>
+                                    <div class="table-responsive mt-3">
+                                        <table class="table table-hover table-centered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>发布时间</th>
+                                                    <th>公告标题</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="blackboard-list">
+                                                <tr>
+                                                    <td><b>2019-03-27</b></td>
+                                                    <td>
+                                                        <p class="mb-0 font-weight-bold"><a href="javascript: void(0);">George Lanes</a></p>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group dropdown">
+                                                            <a href="javascript: void(0);"
+                                                               class="dropdown-toggle arrow-none btn btn-light btn-sm"
+                                                               data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item"
+                                                                   href="#"><i class="mdi mdi-pencil mr-1 text-muted"></i>
+                                                                    回复</a>
+                                                                <a class="dropdown-item"
+                                                                   href="#"><i class="mdi mdi-delete mr-1 text-muted"></i>
+                                                                    不感兴趣</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>2019-03-27</b></td>
+                                                    <td>
+                                                        <p class="mb-0 font-weight-bold"><a href="javascript: void(0);">George Lanes</a></p>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group dropdown">
+                                                            <a href="javascript: void(0);"
+                                                               class="dropdown-toggle arrow-none btn btn-light btn-sm"
+                                                               data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item"
+                                                                   href="#"><i class="mdi mdi-pencil mr-1 text-muted"></i>
+                                                                    回复</a>
+                                                                <a class="dropdown-item"
+                                                                   href="#"><i class="mdi mdi-delete mr-1 text-muted"></i>
+                                                                    不感兴趣</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                </div> <!-- container -->
+            </div>
+        </div>
+
+    </t>
+</templates>

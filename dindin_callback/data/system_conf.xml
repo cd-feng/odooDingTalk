@@ -3,6 +3,18 @@
     <data noupdate="1">
 
         <!--业务事件回调接口-->
+        <record id="ali_dindin_system_conf_send_encode_aes_key" model="ali.dindin.system.conf">
+            <field name="name">数据加密密钥。用于回调数据的加密</field>
+            <field name="key">encode_aes_key</field>
+            <field name="value">oCe9N0gfYScZGIvmiHPj2OD5U78LQk3WwxqKrpE4A1h</field>
+        </record>
+
+        <record id="ali_dindin_system_conf_send_call_back_token" model="ali.dindin.system.conf">
+            <field name="name">用于验证签名的Token</field>
+            <field name="key">call_back_token</field>
+            <field name="value">GH23YScZGIvmiU78LQkH1h</field>
+        </record>
+
         <record id="ali_dindin_system_conf_send_register_call_back" model="ali.dindin.system.conf">
             <field name="name">注册业务事件回调接口</field>
             <field name="key">register_call_back</field>

@@ -21,11 +21,13 @@ class DinDinCallback(models.Model):
 
     @api.model
     def _get_default_aes_key(self):
-        return ''.join(random.sample(string.ascii_letters + string.digits, 43))
+        encode_aes_key = self.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'encode_aes_key')]).value
+        return encode_aes_key
 
     @api.model
     def _get_default_token(self):
-        return ''.join(random.sample(string.ascii_letters + string.digits, 10))
+        token = self.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'call_back_token')]).value
+        return token
 
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
@@ -45,7 +47,7 @@ class DinDinCallback(models.Model):
         注册事件
         :return:
         """
-        logging.info("注册事件...")
+        logging.info(">>>注册事件...")
         for res in self:
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'register_call_back')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
@@ -63,10 +65,11 @@ class DinDinCallback(models.Model):
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
-                    logging.info(result)
+                    self.write({'state': '01'})
                 else:
-                    raise UserError("注册失败！原因{}".format(result.get('errmsg')))
+                    raise UserError("注册失败！原因:{}".format(result.get('errmsg')))
             except ReadTimeout:
                 raise UserError("网络连接超时")
+        logging.info(">>>注册事件End...")
 
 
