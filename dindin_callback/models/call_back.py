@@ -5,11 +5,15 @@ import logging
 import random
 import string
 import time
+from urllib.parse import quote
+
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
+import json
+from .dingtalk_crypto import DingTalkCrypto
 
 
 class DinDinCallback(models.Model):

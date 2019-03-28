@@ -38,18 +38,19 @@ class CallBack(Home, http.Controller):
         logging.info(">>>解密后的消息结果:{}".format(msg))
         # 返回加密结果
         encrypt_msg = crypto.encrypt('success')
-        print(encrypt_msg)
-        randstr, length, msg, suite_key = crypto.decrypt2(encrypt_msg)
-        print(randstr)
-        # print(length)
-        # print(msg)
-        # print(suite_key)
-
+        encrypt_msg = encrypt_msg.decode()
+        actual_sig, actual_time, actual_nonce = crypto.sign(encrypt_msg)
+        logging.info("--------------------------------------------")
+        logging.info("actual_sig：{}".format(actual_sig))
+        logging.info("actual_time：{}".format(actual_time))
+        logging.info("actual_nonce：{}".format(actual_nonce))
+        logging.info("msg：{}".format(msg))
+        logging.info("--------------------------------------------")
         return {
-                "msg_signature": "111108bb8e6dbce3c9671d6fdb69d15066227608",
-                "timeStamp": "1783610513",
-                "nonce": "123456",
-                "encrypt": quote("1ojQf0NSvw2WPvW7LijxS8UvISr8pdDP+rXpPbcLGOmIBNbWetRg7IP0vdhVgkVwSoZBJeQwY2zhROsJq/HJ+q6tp1qhl9L1+ccC9ZjKs1wV5bmA9NoAWQiZ+7MpzQVq+j74rJQljdVyBdI/dGOvsnBSCxCVW0ISWX0vn9lYTuuHSoaxwCGylH9xRhYHL9bRDskBc7bO0FseHQQasdfghjkl")
+                "msg_signature": actual_sig,
+                "timeStamp": actual_time,
+                "nonce": actual_nonce,
+                "encrypt": quote(msg)
             }
 
 
