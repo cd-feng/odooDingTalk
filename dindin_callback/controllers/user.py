@@ -36,6 +36,7 @@ class CallBack(Home, http.Controller):
         randstr, length, msg, suite_key = crypto.decrypt(json_str.get('encrypt'))
         msg = json.loads(msg)
         logging.info(">>>解密后的消息结果:{}".format(msg))
+
         # 返回加密结果
         encrypt_msg = crypto.encrypt('success')
         encrypt_msg = encrypt_msg.decode()

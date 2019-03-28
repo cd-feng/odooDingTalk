@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
-import datetime
 import json
 import logging
-import random
-import string
-import time
-from urllib.parse import quote
-
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
 _logger = logging.getLogger(__name__)
-import json
-from .dingtalk_crypto import DingTalkCrypto
 
 
 class DinDinCallback(models.Model):
@@ -39,7 +32,7 @@ class DinDinCallback(models.Model):
     aes_key = fields.Char(string='数据加密密钥', default=_get_default_aes_key, size=50)
     url = fields.Char(string='回调URL', size=200)
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00')
-    
+
     _sql_constraints = [
         ('vcall_id_uniq', 'unique(call_id)', u'回调类型重复!'),
     ]
@@ -64,7 +57,8 @@ class DinDinCallback(models.Model):
             }
             try:
                 headers = {'Content-Type': 'application/json'}
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=30)
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
@@ -74,5 +68,3 @@ class DinDinCallback(models.Model):
             except ReadTimeout:
                 raise UserError("网络连接超时")
         logging.info(">>>注册事件End...")
-
-

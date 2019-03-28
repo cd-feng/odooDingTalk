@@ -72,7 +72,6 @@ class DingTalkCrypto(object):
         key = text[msg_end_pos:]
         return rand_str, length, msg, key
 
-
     @staticmethod
     def _length(text):
         """
