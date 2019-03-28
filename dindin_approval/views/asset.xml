@@ -3,11 +3,8 @@
 
     <template id="dindin_approval_template" name="DinDin Approval Template" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script src="https://cdn.jsdelivr.net/npm/vue"></script>
             <script type="text/javascript" src="/dindin_approval/static/src/js/approval_template.js"></script>
-            <!--<script type="text/javascript" src="/dindin_approval/static/src/js/approval_button.js"></script>-->
         </xpath>
     </template>
-
 
 </odoo>

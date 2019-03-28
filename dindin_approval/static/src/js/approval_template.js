@@ -1,4 +1,4 @@
-odoo.define('dindin_approval.pull_dindin_approval_button', function (require) {
+odoo.define('dindin_approval.pull.dindin.approval.button', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');
@@ -19,6 +19,7 @@ odoo.define('dindin_approval.pull_dindin_approval_button', function (require) {
             args: [],
         }).then(function () {
             console.log("查询成功");
+            location.reload();
         });
     };
 
@@ -36,11 +37,11 @@ odoo.define('dindin_approval.pull_dindin_approval_button', function (require) {
         },
         open_action: function () {
             new Dialog(this, {
-                title: "开始拉取审批模板",
+                title: "拉取审批模板",
                 size: 'medium',
                 buttons: [
                     {
-                        text: "确定",
+                        text: "开始拉取",
                         classes: 'btn-primary',
                         close: true,
                         click: save_data
