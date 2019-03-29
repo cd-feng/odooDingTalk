@@ -2,7 +2,6 @@
 import json
 import logging
 import time
-
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
@@ -78,36 +77,54 @@ class DinDinAttendanceList(models.Model):
             if emp_len <= 50:
                 for e in emps:
                     user_list.append(e.din_id)
-            # elif emp_len > 50:
-            #     i = emp_len / 50  # 总共需要生成list条数
-            #     n = 1  # list计数
-            #     start_n = 0  # 开始下标
-            #     start_e = 50 + 1  # 结束下标
-            #     for e in emps:
-            #         if n < i:
-            #             record_list.append(records[start_n:start_e])
-            #             start_n = start_e
-            #             start_e += start_e
-            #             n += 1
-            #         elif n == i:
-            #             record_list.append(records[start_n:rec_len])
-            #             break
-
-        offset = 0
-        limit = 50
-        while True:
-            data = {
-                'workDateFrom': start_date + ' 00:00:00',  # 开始日期
-                'workDateTo': end_date + ' 00:00:00',  # 结束日期
-                'userIdList': user_list,  # 员工列表
-                'offset': offset,  # 开始日期
-                'limit': limit,  # 开始日期
-            }
-            has_more = self.send_post_dindin(data)
-            if not has_more:
+            elif emp_len > 50:
+                n = 1
+                e_list = list()
+                for e in emps:
+                    if n <= 50:
+                        e_list.append(e.din_id)
+                        n = n + 1
+                    else:
+                        user_list.append(e_list)
+                        e_list = list()
+                        e_list.append(e.din_id)
+                        n = 2
+                user_list.append(e_list)
+        logging.info(user_list)
+        for u in user_list:
+            if isinstance(u, str):
+                offset = 0
+                limit = 50
+                while True:
+                    data = {
+                        'workDateFrom': start_date + ' 00:00:00',  # 开始日期
+                        'workDateTo': end_date + ' 00:00:00',  # 结束日期
+                        'userIdList': user_list,  # 员工列表
+                        'offset': offset,  # 开始日期
+                        'limit': limit,  # 开始日期
+                    }
+                    has_more = self.send_post_dindin(data)
+                    if not has_more:
+                        break
+                    else:
+                        offset = offset + limit
                 break
-            else:
-                offset = offset + limit
+            elif isinstance(u, list):
+                offset = 0
+                limit = 50
+                while True:
+                    data = {
+                        'workDateFrom': start_date + ' 00:00:00',  # 开始日期
+                        'workDateTo': end_date + ' 00:00:00',  # 结束日期
+                        'userIdList': u,  # 员工列表
+                        'offset': offset,  # 开始日期
+                        'limit': limit,  # 开始日期
+                    }
+                    has_more = self.send_post_dindin(data)
+                    if not has_more:
+                        break
+                    else:
+                        offset = offset + limit
         logging.info(">>>根据日期获取员工打卡信息结束...")
         return {'state': True, 'msg': '执行成功'}
 
@@ -139,7 +156,7 @@ class DinDinAttendanceList(models.Model):
                     if emp_id:
                         data.update({'emp_id': emp_id[0].id})
                     a_list = self.env['dindin.attendance.list'].search(
-                        [('recordId', '=', rec.get('recordId')), ('recordId', '!=', '')])
+                        [('recordId', '=', rec.get('recordId'))])
                     if a_list:
                         a_list.sudo().write(data)
                     else:

@@ -4,7 +4,7 @@
         <field name="name">打卡列表</field>
         <field name="model">dindin.attendance.list</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" editable="top" create="false" edit="false">
+            <tree default_order="workDate desc" editable="top" create="false" edit="false">
                 <field name="group_id"/>
                 <field name="emp_id"/>
                 <field name="recordId"/>

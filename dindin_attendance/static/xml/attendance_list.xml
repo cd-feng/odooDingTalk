@@ -7,12 +7,14 @@
                 <div class="form-group">
                     <label for="startDate">开始日期</label>
                     <em>必填项!</em>
-                    <input type="date" required="required" class="form-control" name="startDate" id="startDate" value="2019-03-13"/>
+                    <input type="date" required="required" class="form-control" name="startDate" id="startDate"
+                           value="2019-03-13"/>
                 </div>
                 <div class="form-group">
                     <label for="endDate">结束日期</label>
                     <em>必填项!</em>
-                    <input type="date" required="required" class="form-control" name="endDate" id="endDate" value="2019-03-20"/>
+                    <input type="date" required="required" class="form-control" name="endDate" id="endDate"
+                           value="2019-03-20"/>
                 </div>
             </div>
             <div class="col-md-10">
@@ -23,7 +25,7 @@
                 </div>
             </div>
             <div class="alert alert-info">
-                开始和结束日期不能大于7天!!!
+                注意:开始和结束日期不能大于7天!!!
             </div>
         </div>
 	</t>
