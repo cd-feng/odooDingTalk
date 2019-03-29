@@ -9,6 +9,10 @@
                   parent="ali_dindin.main_menu" sequence="10"
         />
 
+        <menuitem name="报表" id="ali_dindin.report_menu"
+                  parent="ali_dindin.main_menu" sequence="75"
+        />
+
         <menuitem name="同步" id="ali_dindin.synchronous_menu"
                   parent="ali_dindin.main_menu" sequence="80"
         />
