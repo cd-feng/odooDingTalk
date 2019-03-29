@@ -6,57 +6,57 @@
             <div>
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xl-3 col-lg-6">
-                            <div class="card widget-flat">
+                        <div class="col-xl-3 col-lg-6 da-div1">
+                            <div class="card widget-flat da-div1-1">
                                 <div class="card-body p-0">
                                     <div class="p-3 pb-0">
                                         <div class="float-right">
                                             <i class="mdi mdi-cart text-primary widget-icon"></i>
                                         </div>
                                         <h5 class="text-muted font-weight-normal mt-0">我的待办</h5>
-                                        <h3 class="mt-2">3,543</h3>
+                                        <h3 class="mt-2 my-val1">0</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-xl-3 col-lg-6">
-                            <div class="card widget-flat">
+                        <div class="col-xl-3 col-lg-6 da-div2">
+                            <div class="card widget-flat da-div2-1">
                                 <div class="card-body p-0">
                                     <div class="p-3 pb-0">
                                         <div class="float-right">
                                             <i class="mdi mdi-currency-usd text-danger widget-icon"></i>
                                         </div>
                                         <h5 class="text-muted font-weight-normal mt-0">公告数</h5>
-                                        <h3 class="mt-2">21,287</h3>
+                                        <h3 class="mt-2 my-val2">0</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-xl-3 col-lg-6">
-                            <div class="card widget-flat">
+                        <div class="col-xl-3 col-lg-6 da-div3">
+                            <div class="card widget-flat da-div3-1">
                                 <div class="card-body p-0">
                                     <div class="p-3 pb-0">
                                         <div class="float-right">
                                             <i class="mdi mdi-account-multiple text-primary widget-icon"></i>
                                         </div>
                                         <h5 class="text-muted font-weight-normal mt-0">待审批数</h5>
-                                        <h3 class="mt-2">5,387</h3>
+                                        <h3 class="mt-2 my-val3">0</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-xl-3 col-lg-6">
-                            <div class="card widget-flat">
+                        <div class="col-xl-3 col-lg-6 da-div4">
+                            <div class="card widget-flat da-div4-1">
                                 <div class="card-body p-0">
                                     <div class="p-3 pb-0">
                                         <div class="float-right">
                                             <i class="mdi mdi-eye-outline text-danger widget-icon"></i>
                                         </div>
-                                        <h5 class="text-muted font-weight-normal mt-0">消息</h5>
-                                        <h3 class="mt-2">74,315</h3>
+                                        <h5 class="text-muted font-weight-normal da-div4-4">消息</h5>
+                                        <h3 class="mt-2 my-val4">0</h3>
                                     </div>
                                 </div>
                             </div>
@@ -64,11 +64,11 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
+                        <div class="col-12 row01">
+                            <div class="card row02">
+                                <div class="card-body row03">
                                     <h4 class="header-title">公告列表</h4>
-                                    <div class="table-responsive mt-3">
+                                    <div class="table-responsive mt-3 row04">
                                         <table class="table table-hover table-centered mb-0">
                                             <thead>
                                                 <tr>
@@ -88,9 +88,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="container-fluid div-foot">
+                    <h5 class="text-muted font-weight-normal">待规划区</h5>
+                </div>
             </div>
         </div>
-
     </t>
 
     <t t-name="DindinDashboardInfoLine">

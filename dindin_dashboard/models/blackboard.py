@@ -36,7 +36,7 @@ class DinDinBlackboard(models.TransientModel):
                     line_list = list()
                     for line in result.get('blackboard_list'):
                         line_list.append(line)
-                    return {'state': True, 'data': line_list, 'msg': ''}
+                    return {'state': True, 'data': line_list, 'msg': '', 'number': len(line_list)}
                 else:
                     return {'state': False, 'msg': '获取公告失败,详情为:{}'.format(result.get('errmsg'))}
             except ReadTimeout:

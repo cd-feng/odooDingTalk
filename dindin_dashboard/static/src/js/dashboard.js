@@ -31,9 +31,19 @@ odoo.define('dindin.blackboard.info', function (require) {
                 data: [],
             }));
         },
+        setWorkRecordNumber: function (result) {
+            this.$('.my-val1').html(result);
+        },
 
         start: function () {
             let self = this;
+            rpc.query({
+                model: 'dindin.work.record',
+                method: 'get_record_number',
+                args: [],
+            }).then(function (result) {
+                self.setWorkRecordNumber(result);
+            });
             let def = rpc.query({
                 model: 'dindin.blackboard',
                 method: 'get_blackboard_by_user',
@@ -44,6 +54,7 @@ odoo.define('dindin.blackboard.info', function (require) {
                         self.setBlackboardDataNull();
                     } else {
                         self.setBlackboardData(result.data);
+                        self.$('.my-val2').html(result.number);
                     }
                 } else {
                     self.setBlackboardFalseData(result);

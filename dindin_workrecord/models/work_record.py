@@ -126,7 +126,8 @@ class DinDinWorkRecord(models.Model):
             }
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=30)
                 result = json.loads(result.text)
                 logging.info(">>>{}".format(result))
                 if result.get('errcode') == 0:
@@ -137,6 +138,19 @@ class DinDinWorkRecord(models.Model):
                         res.message_post(body=u"待办状态更新失败!", message_type='notification')
             except ReadTimeout:
                 logging.info("获取所有用户的待办事项网络连接超时")
+
+    @api.model
+    def get_record_number(self):
+        """
+        获取当前用户的待办事项
+        :return: 待办数量
+        """
+        user = self.env['res.users'].sudo().search([('id', '=', self.env.user.id)])
+        emp = self.env['hr.employee'].sudo().search([('user_id', '=', user.id)])
+        if emp:
+            record = self.env['dindin.work.record'].sudo().search(
+                [('emp_id', '=', emp[0].id), ('record_state', '=', '00'), ('record_type', '=', 'put')])
+            return len(record)
 
 
 class DinDinWorkRecordList(models.Model):
