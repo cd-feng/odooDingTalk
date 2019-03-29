@@ -9,6 +9,13 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
+# 拓展员工
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    din_group_id = fields.Many2one(comodel_name='dindin.simple.groups', string=u'考勤组')
+
+
 class DinDinSimpleGroups(models.Model):
     _name = 'dindin.simple.groups'
     _description = '考勤组'
@@ -23,6 +30,7 @@ class DinDinSimpleGroups(models.Model):
                                     column1='group_id', column2='emp_id', string=u'负责人')
     dept_name_list = fields.Many2many(comodel_name='hr.department', relation='dindin_simple_group_hr_dept_rel',
                                       column1='group_id', column2='dept_id', string=u'关联部门')
+    emp_ids = fields.One2many(comodel_name='hr.employee', inverse_name='din_group_id', string=u'成员列表')
 
     @api.model
     def get_simple_groups(self):
@@ -57,8 +65,6 @@ class DinDinSimpleGroups(models.Model):
                         if emp_res:
                             manager_ids.append(emp_res.id)
                     data.update({'manager_list': [(6, 0, manager_ids)]})
-                    # for dept in group.get('dept_name_list'):
-                    #     print(dept)
                     self_group = self.env['dindin.simple.groups'].search([('group_id', '=', group.get('group_id'))])
                     if self_group:
                         self_group.sudo().write(data)
@@ -70,3 +76,38 @@ class DinDinSimpleGroups(models.Model):
             raise UserError("网络连接超时！")
         logging.info(">>>获取考勤组结束...")
         return True
+
+    @api.model
+    def get_sim_emps(self):
+        """
+        获取考勤组成员
+        :return:
+        """
+        emps = self.env['hr.employee'].sudo().search([('din_id', '!=', '')])
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'a_getusergroup')]).value
+        headers = {'Content-Type': 'application/json'}
+        for emp in emps:
+            data = {
+                'userid': emp.din_id
+            }
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=10)
+                result = json.loads(result.text)
+                logging.info(result)
+                if result.get('errcode') == 0:
+                    res = result.get('result')
+                    groups = self.env['dindin.simple.groups'].sudo().search([('group_id', '=', res.get('group_id'))])
+                    if groups:
+                        self._cr.execute(
+                            """UPDATE hr_employee SET din_group_id = {} WHERE id = {}""".format(groups[0].id, emp.id))
+                    else:
+                        return {'state': False, 'msg': '考勤组有更新,请先拉取最新的考勤组!'}
+                else:
+                    return {'state': False, 'msg': '请求失败,原因为:{}'.format(result.get('errmsg'))}
+            except ReadTimeout:
+                return {'state': False, 'msg': '网络连接超时!'}
+        return {'state': True, 'msg': '执行成功!'}
+
+

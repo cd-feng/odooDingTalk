@@ -7,6 +7,12 @@
         </div>
 	</t>
 
+    <t t-name="GetDinDinSimpleGroupsEmps">
+        <div class="alert alert-info">
+            <p>即将获取考勤组成员信息！</p>
+        </div>
+	</t>
+
 </template>
 
 

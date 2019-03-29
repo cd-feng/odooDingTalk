@@ -11,6 +11,7 @@
                 <field name="member_count"/>
                 <field name="manager_list"/>
                 <field name="dept_name_list"/>
+                <field name="emp_ids"/>
             </tree>
         </field>
     </record>
@@ -24,7 +25,7 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="group_id" />
+                            <field name="group_id"/>
                             <field name="s_type"/>
                         </group>
                         <group>
@@ -32,6 +33,14 @@
                             <field name="manager_list" widget="many2many_tags"/>
                             <field name="dept_name_list" widget="many2many_tags"/>
                         </group>
+                        <field name="emp_ids">
+                            <tree editable="top" create="false" edit="false">
+                                <field name="name"/>
+                                <field name="department_id"/>
+                                <field name="mobile_phone"/>
+                                <field name="job_title"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
@@ -73,5 +82,16 @@
               action="dindin_simple_groups_action"
     />
 
+
+    <record id="dindin_attendance.hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_phone']" position="after">
+                <field name="din_group_id"/>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

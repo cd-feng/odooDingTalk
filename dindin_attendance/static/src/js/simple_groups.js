@@ -12,6 +12,22 @@ odoo.define('dindin.simple.groups.button', function (require) {
         getSimpleGroups();
     };
 
+    let get_sim_emps_data = function () {
+        let def = rpc.query({
+            model: 'dindin.simple.groups',
+            method: 'get_sim_emps',
+            args: [],
+        }).then(function (result) {
+            if (result.state) {
+                location.reload();
+            } else {
+                new Dialog.confirm(this, result.msg, {
+                    'title': '结果提示',
+                });
+            }
+        });
+    };
+
     let getSimpleGroups = function () {
         let def = rpc.query({
             model: 'dindin.simple.groups',
@@ -32,6 +48,9 @@ odoo.define('dindin.simple.groups.button', function (require) {
                 let but = "<button type=\"button\" t-if=\"widget.modelName == 'dindin.simple.groups'\" class=\"btn btn-primary o_pull_dindin_simple_groups\">拉取考勤组</button>";
                 let button2 = $(but).click(this.proxy('open_simple_action'));
                 this.$buttons.append(button2);
+                let but3 = "<button type=\"button\" t-if=\"widget.modelName == 'dindin.simple.groups'\" class=\"btn btn-secondary\">获取考勤组成员</button>";
+                let button3 = $(but3).click(this.proxy('get_simple_emps_action'));
+                this.$buttons.append(button3);
             }
             return $buttons;
         },
@@ -53,6 +72,25 @@ odoo.define('dindin.simple.groups.button', function (require) {
                 $content: $(QWeb.render('PullDinDinSimpleGroups', {widget: this, data: []}))
             }).open();
         },
+        get_simple_emps_action: function () {
+            new Dialog(this, {
+                title: "获取考勤组成员",
+                size: 'medium',
+                buttons: [
+                    {
+                        text: "确定",
+                        classes: 'btn-primary',
+                        close: true,
+                        click: get_sim_emps_data
+                    }, {
+                        text: "取消",
+                        close: true
+                    }
+                ],
+                $content: $(QWeb.render('GetDinDinSimpleGroupsEmps', {widget: this, data: []}))
+            }).open();
+        },
+
 
     });
 });
