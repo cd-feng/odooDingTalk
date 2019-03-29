@@ -41,7 +41,7 @@ class DinDinAttendanceList(models.Model):
                                  default=lambda self: self.env.user.company_id.id)
     group_id = fields.Many2one(comodel_name='dindin.simple.groups', string=u'考勤组')
     recordId = fields.Char(string='记录ID')
-    workDate = fields.Datetime(string=u'工作日')
+    workDate = fields.Date(string=u'工作日')
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
     checkType = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')])
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult)
