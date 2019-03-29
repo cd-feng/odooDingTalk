@@ -156,7 +156,7 @@ class DinDinAttendanceList(models.Model):
                     if emp_id:
                         data.update({'emp_id': emp_id[0].id})
                     a_list = self.env['dindin.attendance.list'].search(
-                        [('recordId', '=', rec.get('recordId'))])
+                        [('recordId', '=', rec.get('recordId')),('emp_id', '=',  emp_id[0].id),  ('baseCheckTime', '=', self.get_time_stamp(rec.get('baseCheckTime')))])
                     if a_list:
                         a_list.sudo().write(data)
                     else:
