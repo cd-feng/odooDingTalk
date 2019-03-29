@@ -4,7 +4,6 @@
     <t t-name="DindinDashboardInfo">
         <div>
             <div>
-                <!-- Start Content-->
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-3 col-lg-6">
@@ -17,9 +16,9 @@
                                         <h5 class="text-muted font-weight-normal mt-0">我的待办</h5>
                                         <h3 class="mt-2">3,543</h3>
                                     </div>
-                                </div> <!-- end card-body-->
-                            </div> <!-- end card-->
-                        </div> <!-- end col-->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-xl-3 col-lg-6">
                             <div class="card widget-flat">
@@ -31,9 +30,9 @@
                                         <h5 class="text-muted font-weight-normal mt-0">公告数</h5>
                                         <h3 class="mt-2">21,287</h3>
                                     </div>
-                                </div> <!-- end card-body-->
-                            </div> <!-- end card-->
-                        </div> <!-- end col-->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-xl-3 col-lg-6">
                             <div class="card widget-flat">
@@ -45,9 +44,9 @@
                                         <h5 class="text-muted font-weight-normal mt-0">待审批数</h5>
                                         <h3 class="mt-2">5,387</h3>
                                     </div>
-                                </div> <!-- end card-body-->
-                            </div> <!-- end card-->
-                        </div> <!-- end col-->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-xl-3 col-lg-6">
                             <div class="card widget-flat">
@@ -59,11 +58,10 @@
                                         <h5 class="text-muted font-weight-normal mt-0">消息</h5>
                                         <h3 class="mt-2">74,315</h3>
                                     </div>
-                                </div> <!-- end card-body-->
-                            </div> <!-- end card-->
-                        </div> <!-- end col-->
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- end row -->
 
                     <div class="row">
                         <div class="col-12">
@@ -74,54 +72,14 @@
                                         <table class="table table-hover table-centered mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th>发布时间</th>
-                                                    <th>公告标题</th>
+                                                    <th>公告日期</th>
+                                                    <th>标题</th>
+                                                    <th>发布人</th>
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="blackboard-list">
-                                                <tr>
-                                                    <td><b>2019-03-27</b></td>
-                                                    <td>
-                                                        <p class="mb-0 font-weight-bold"><a href="javascript: void(0);">George Lanes</a></p>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group dropdown">
-                                                            <a href="javascript: void(0);"
-                                                               class="dropdown-toggle arrow-none btn btn-light btn-sm"
-                                                               data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item"
-                                                                   href="#"><i class="mdi mdi-pencil mr-1 text-muted"></i>
-                                                                    回复</a>
-                                                                <a class="dropdown-item"
-                                                                   href="#"><i class="mdi mdi-delete mr-1 text-muted"></i>
-                                                                    不感兴趣</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>2019-03-27</b></td>
-                                                    <td>
-                                                        <p class="mb-0 font-weight-bold"><a href="javascript: void(0);">George Lanes</a></p>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group dropdown">
-                                                            <a href="javascript: void(0);"
-                                                               class="dropdown-toggle arrow-none btn btn-light btn-sm"
-                                                               data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item"
-                                                                   href="#"><i class="mdi mdi-pencil mr-1 text-muted"></i>
-                                                                    回复</a>
-                                                                <a class="dropdown-item"
-                                                                   href="#"><i class="mdi mdi-delete mr-1 text-muted"></i>
-                                                                    不感兴趣</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <tbody class="blackboard_list" id="blackboard_list">
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -129,11 +87,53 @@
                             </div>
                         </div>
                     </div>
-                    <!-- end row -->
-
-                </div> <!-- container -->
+                </div>
             </div>
         </div>
 
     </t>
+
+    <t t-name="DindinDashboardInfoLine">
+        <t t-foreach="data" t-as="line">
+            <tr>
+                <td><b><t t-esc="line.gmt_create"/></b></td>
+                <td>
+                    <p class="mb-0 font-weight-bold"><t t-esc="line.title"/></p>
+                </td>
+                <td>
+                    <p class="mb-0 font-weight-bold">暂无信息</p>
+                </td>
+                <td>
+                    <div class="btn-group dropdown">
+                        <a href="javascript: void(0);" class="dropdown-toggle arrow-none btn btn-light btn-sm"
+                           data-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-dots-horizontal"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                           <a class="dropdown-item" t-att-href="line.url" target="_blank">
+                                <i class="mdi mdi-pencil mr-1 text-muted"></i>
+                               原网页
+                            </a>
+                            <a class="dropdown-item" href="javascript: void(alert('未开发此功能!'));"><i class="mdi mdi-delete mr-1 text-muted"></i>
+                                不感兴趣
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="DindinDashboardInfoLineFalse">
+        <tr>
+            <td colspan="4"><p class="mb-0 font-weight-bold"><t t-esc="data.msg"/></p></td>
+        </tr>
+    </t>
+
+    <t t-name="DindinDashboardInfoLineNull">
+        <tr>
+            <td colspan="4"><p class="mb-0 font-weight-bold">您没有公告消息...</p></td>
+        </tr>
+    </t>
+
 </templates>
