@@ -75,7 +75,6 @@ class DinDinApprovalTemplate(models.Model):
             try:
                 result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=5)
                 result = json.loads(result.text)
-                logging.info(">>>返回结果{}".format(result))
                 if result.get('errcode') == 0:
                     return {'state': True, 'number': result.get('count')}
                 else:

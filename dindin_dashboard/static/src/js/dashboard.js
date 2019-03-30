@@ -60,6 +60,7 @@ odoo.define('dindin.blackboard.info', function (require) {
             }).then(function (result) {
                 self.getUserApprovalNumber(result);
             });
+
             let def = rpc.query({
                 model: 'dindin.blackboard',
                 method: 'get_blackboard_by_user',
