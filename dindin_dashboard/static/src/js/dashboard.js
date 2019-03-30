@@ -34,15 +34,31 @@ odoo.define('dindin.blackboard.info', function (require) {
         setWorkRecordNumber: function (result) {
             this.$('.my-val1').html(result);
         },
+        getUserApprovalNumber: function (result) {
+            if (result.state) {
+                this.$('.my-val3').html(result.number);
+            } else {
+                this.$('.my-val3').html(result.msg);
+            }
+        },
 
         start: function () {
             let self = this;
+            //获取我的待办
             rpc.query({
                 model: 'dindin.work.record',
                 method: 'get_record_number',
                 args: [],
             }).then(function (result) {
                 self.setWorkRecordNumber(result);
+            });
+            //获取待审批数
+            rpc.query({
+                model: 'dindin.approval.template',
+                method: 'get_get_template_number_by_user',
+                args: [],
+            }).then(function (result) {
+                self.getUserApprovalNumber(result);
             });
             let def = rpc.query({
                 model: 'dindin.blackboard',
