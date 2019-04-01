@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-import time
+import random
+import string
 
 import requests
 from requests import ReadTimeout
@@ -19,13 +20,11 @@ class DinDinCallback(models.Model):
 
     @api.model
     def _get_default_aes_key(self):
-        encode_aes_key = self.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'encode_aes_key')]).value
-        return encode_aes_key
+        return ''.join(random.sample(string.ascii_letters + string.digits, 43))
 
     @api.model
     def _get_default_token(self):
-        token = self.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'call_back_token')]).value
-        return token
+        return ''.join(random.sample(string.ascii_letters + string.digits, 8))
 
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
@@ -70,9 +69,40 @@ class DinDinCallback(models.Model):
                 logging.info(result)
                 if result.get('errcode') == 0:
                     self.write({'state': '01'})
+                    self.message_post(body=u"注册事件成功")
                 else:
                     raise UserError("注册失败！原因:{}".format(result.get('errmsg')))
             except ReadTimeout:
                 raise UserError("网络连接超时")
         logging.info(">>>注册事件End...")
 
+    @api.multi
+    def unlink(self):
+        """
+        重写删除方法
+        :return:
+        """
+        for res in self:
+            if res.state == '01':
+                self.delete_call_back(res.token)
+        super(DinDinCallback, self).unlink()
+
+    @api.model
+    def delete_call_back(self, call_token):
+        logging.info(">>>删除事件...")
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'delete_call_back')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'access_token': call_token,
+        }
+        try:
+            result = requests.get(url="{}{}".format(url, token), params=data, timeout=5)
+            result = json.loads(result.text)
+            logging.info(result)
+            if result.get('errcode') == 0:
+                logging.info("已删除token为{}的回调事件".format(token))
+            else:
+                raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
+        except ReadTimeout:
+            raise UserError("网络连接超时")
+        logging.info(">>>删除事件End...")
