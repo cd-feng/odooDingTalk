@@ -54,23 +54,20 @@ class CallBack(Home, http.Controller):
         # 加密数据
         encrypt = dingtalkCrypto.encrypt('success')
         # 获取当前时间戳
-        timestamp = str(int(round(time.time() * 1000)))
+        timestamp = str(int(round(time.time())))
         # 获取随机字符串
         nonce = dingtalkCrypto.generateRandomKey(8)
         # 生成签名
         signature = dingtalkCrypto.generateSignature(nonce, timestamp, token, encrypt)
-        data = {
-            'msg_signature': signature,
-            'timeStamp': timestamp,
-            'nonce': nonce,
-            'encrypt': encrypt
-        }
         new_data = {
-            'data': data
+            'json': True,
+            'data': {
+                'msg_signature': signature,
+                'timeStamp': timestamp,
+                'nonce': nonce,
+                'encrypt': encrypt
+            }
         }
-        logging.info("----------------")
-        logging.info(new_data)
-        logging.info("----------------")
         return json.dumps(new_data)
 
 
