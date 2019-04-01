@@ -39,7 +39,9 @@ class CallBack(Home, http.Controller):
         msg = json.loads(msg)
         logging.info(">>>解密后的消息结果:{}".format(msg))
         # 返回加密结果
-        return self.result()
+        result = self.result()
+        logging.info(result)
+        return result
 
     def result(self):
         from .dingtalk.crypto import DingTalkCrypto as dtc
