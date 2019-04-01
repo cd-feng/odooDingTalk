@@ -68,12 +68,6 @@ class CallBack(Home, http.Controller):
                 'encrypt': encrypt
             }
         }
-        # return new_data
-        return {
-                'msg_signature': signature,
-                'timeStamp': timestamp,
-                'nonce': nonce,
-                'encrypt': encrypt
-            }
+        return new_data
 
 
