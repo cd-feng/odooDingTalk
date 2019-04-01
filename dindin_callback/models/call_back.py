@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
+import time
+
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
@@ -49,6 +51,8 @@ class DinDinCallback(models.Model):
         :return:
         """
         logging.info(">>>注册事件...")
+        # self.test_encode()
+        # return False
         for res in self:
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'register_call_back')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
@@ -73,3 +77,46 @@ class DinDinCallback(models.Model):
             except ReadTimeout:
                 raise UserError("网络连接超时")
         logging.info(">>>注册事件End...")
+
+    # def test_encode(self):
+    #     """
+    #     测试加密数据
+    #     :return:
+    #     """
+    #     from .dingtalk_crypto import DingTalkCrypto
+    #     # 解密
+    #     din_corpId = 'suite4xxxxxxxxxxxxxxx'
+    #     encode_aes_key = '4g5j64qlyl3zvetqxz5jiocdr586fn2zvjpa8zls3ij'
+    #     token = '123456'
+    #
+    #     encrypt = '1a3NBxmCFwkCJvfoQ7WhJHB+iX3qHPsc9JbaDznE1i03peOk1LaOQoRz3+nlyGNhwmwJ3vDMG+OzrHMeiZI7gTRWVdUBmfxjZ8Ej23JVYa9VrYeJ5as7XM/ZpulX8NEQis44w53h1qAgnC3PRzM7Zc/D6Ibr0rgUathB6zRHP8PYrfgnNOS9PhSBdHlegK+AGGanfwjXuQ9+0pZcy0w9lQ=='
+    #     crypto = DingTalkCrypto(
+    #         encode_aes_key,
+    #         token,
+    #         din_corpId
+    #     )
+    #     randstr, length, msg, suite_key = crypto.decrypt(encrypt)
+    #     msg = json.loads(msg)
+    #     logging.info(">>>解密后的消息结果:{}".format(msg))
+    #
+    #     from .dingtalk.main import DingTalk
+    #     from .dingtalk.crypto import DingTalkCrypto
+    #     dingtalkCrypto = DingTalkCrypto(encode_aes_key, din_corpId)
+    #     # 加密数据
+    #     encrypt = dingtalkCrypto.encrypt('success')
+    #     # 获取当前时间戳
+    #     timestamp = str(int(round(time.time() * 1000)))
+    #     # 获取随机字符串
+    #     nonce = dingtalkCrypto.generateRandomKey(8)
+    #     # 生成签名
+    #     signature = dingtalkCrypto.generateSignature(nonce, timestamp, token, encrypt)
+    #     result = {
+    #         'json': True,
+    #         'data': {
+    #             'msg_signature': signature,
+    #             'timeStamp': timestamp,
+    #             'nonce': nonce,
+    #             'encrypt': encrypt
+    #         }
+    #     }
+    #     print(result)

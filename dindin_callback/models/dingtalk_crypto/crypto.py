@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import binascii
 import hashlib
 import struct
 
@@ -31,7 +32,8 @@ class DingTalkCrypto(object):
         :param encrypt_text: encoded text
         :return: rand_str, length, msg, corp_id
         """
-        aes_msg = base64.decodebytes(encrypt_text.encode('utf-8'))
+        # aes_msg = base64.decodebytes(encrypt_text.encode('utf-8'))
+        aes_msg = base64.b64decode(encrypt_text)
         pkcs7_text = self._cipher.decrypt(aes_msg)
         text = self._pkcs7.decode(pkcs7_text)
         rand_str = text[:16]  # 16字节随机字符串
@@ -47,14 +49,19 @@ class DingTalkCrypto(object):
         :param text: text
         :return: encrypt text
         """
+        # import os
+        # rand_str = os.urandom(16)
         rand_str = self._random.read(16)
+        rand_str = binascii.hexlify(rand_str)
         length = self._length(text)
         key = self._key
-        text = text.encode()
-        key = key.encode()
-        full_text = self._pkcs7.encode(rand_str + length + text + key)
+        # text = text.encode()
+        # key = key.encode()
+        rand_str = "{}{}{}{}".format(rand_str, length, text, key)
+        full_text = self._pkcs7.encode(rand_str)
         aes_text = self._cipher.encrypt(full_text)
-        return base64.encodestring(aes_text)
+        # return base64.encodestring(aes_text)
+        return base64.b64encode(aes_text)
 
     def decrypt2(self, encrypt_text):
         """
@@ -62,7 +69,7 @@ class DingTalkCrypto(object):
         :param encrypt_text: encoded text
         :return: rand_str, length, msg, corp_id
         """
-        aes_msg = base64.encodestring(encrypt_text)
+        aes_msg = base64.decodebytes(encrypt_text.encode())
         pkcs7_text = self._cipher.decrypt(aes_msg)
         text = self._pkcs7.decode2(pkcs7_text)
         rand_str = text[:16]  # 16字节随机字符串

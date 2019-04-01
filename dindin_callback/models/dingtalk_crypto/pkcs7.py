@@ -32,7 +32,7 @@ class PKCS7(object):
         :param text: str
         :return: str
         """
-        text = text.decode('utf-8')  # new
+        # text = text.decode('utf-8')  # new
         n1 = len(text)
         val = int(binascii.hexlify(text[-1].encode('utf-8')), 16)
         if val > self.k:
@@ -51,4 +51,5 @@ class PKCS7(object):
         val = self.k - (l % self.k)
         for _ in range(val):
             output.write('%02x' % val)
-        return text + binascii.unhexlify(output.getvalue())
+        # return text + binascii.unhexlify(output.getvalue())
+        return "{}{}".format(text, binascii.unhexlify(output.getvalue()))

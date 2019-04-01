@@ -1,4 +1,6 @@
 import logging
+import time
+
 from odoo import http, _
 from odoo.addons.web.controllers.main import Home
 from odoo.exceptions import UserError
@@ -38,20 +40,33 @@ class CallBack(Home, http.Controller):
         logging.info(">>>解密后的消息结果:{}".format(msg))
 
         # 返回加密结果
-        encrypt_msg = crypto.encrypt('success')
-        encrypt_msg = encrypt_msg.decode()
-        actual_sig, actual_time, actual_nonce = crypto.sign(encrypt_msg)
-        logging.info("--------------------------------------------")
-        logging.info("actual_sig：{}".format(actual_sig))
-        logging.info("actual_time：{}".format(actual_time))
-        logging.info("actual_nonce：{}".format(actual_nonce))
-        logging.info("encrypt_msg：{}".format(encrypt_msg))
-        logging.info("--------------------------------------------")
-        return {
-                "msg_signature": actual_sig,
-                "timeStamp": actual_time,
-                "nonce": actual_nonce,
-                "encrypt": encrypt_msg
+
+        return self.result()
+
+    def result(self):
+        from .dingtalk.crypto import DingTalkCrypto
+        din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
+        encode_aes_key = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'encode_aes_key')]).value
+        token = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'call_back_token')]).value
+
+        dingtalkCrypto = DingTalkCrypto(encode_aes_key, din_corpId)
+        # 加密数据
+        encrypt = dingtalkCrypto.encrypt('success')
+        # 获取当前时间戳
+        timestamp = str(int(round(time.time() * 1000)))
+        # 获取随机字符串
+        nonce = dingtalkCrypto.generateRandomKey(8)
+        # 生成签名
+        signature = dingtalkCrypto.generateSignature(nonce, timestamp, token, encrypt)
+        result = {
+            'json': True,
+            'data': {
+                'msg_signature': signature,
+                'timeStamp': timestamp,
+                'nonce': nonce,
+                'encrypt': encrypt
             }
+        }
+        return result
 
 
