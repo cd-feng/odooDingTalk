@@ -65,9 +65,12 @@ class CallBack(Home, http.Controller):
             'nonce': nonce,
             'encrypt': encrypt
         }
+        new_data = {
+            'data': data
+        }
         logging.info("----------------")
-        logging.info(data)
+        logging.info(new_data)
         logging.info("----------------")
-        return json.dumps(data)
+        return json.dumps(new_data)
 
 
