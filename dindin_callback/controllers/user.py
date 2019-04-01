@@ -38,18 +38,17 @@ class CallBack(Home, http.Controller):
         randstr, length, msg, suite_key = crypto.decrypt(json_str.get('encrypt'))
         msg = json.loads(msg)
         logging.info(">>>解密后的消息结果:{}".format(msg))
-
         # 返回加密结果
-
         return self.result()
 
     def result(self):
-        from .dingtalk.crypto import DingTalkCrypto
+        from .dingtalk.crypto import DingTalkCrypto as dtc
+
         din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
         encode_aes_key = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'encode_aes_key')]).value
         token = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'call_back_token')]).value
 
-        dingtalkCrypto = DingTalkCrypto(encode_aes_key, din_corpId)
+        dingtalkCrypto = dtc(encode_aes_key, din_corpId)
         # 加密数据
         encrypt = dingtalkCrypto.encrypt('success')
         # 获取当前时间戳
@@ -64,6 +63,9 @@ class CallBack(Home, http.Controller):
             'nonce': nonce,
             'encrypt': encrypt
         }
+        logging.info("----------------")
+        logging.info(data)
+        logging.info("----------------")
         return json.dumps(data)
 
 
