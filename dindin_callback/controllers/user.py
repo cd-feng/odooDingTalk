@@ -67,6 +67,9 @@ class CallBack(Home, http.Controller):
                 'encrypt': encrypt
             }
         }
+        logging.info("----------------------")
+        logging.info(result)
+        logging.info("----------------------")
         return result
 
 
