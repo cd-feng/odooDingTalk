@@ -58,18 +58,12 @@ class CallBack(Home, http.Controller):
         nonce = dingtalkCrypto.generateRandomKey(8)
         # 生成签名
         signature = dingtalkCrypto.generateSignature(nonce, timestamp, token, encrypt)
-        result = {
-            'json': True,
-            'data': {
-                'msg_signature': signature,
-                'timeStamp': timestamp,
-                'nonce': nonce,
-                'encrypt': encrypt
-            }
+        data = {
+            'msg_signature': signature,
+            'timeStamp': timestamp,
+            'nonce': nonce,
+            'encrypt': encrypt
         }
-        logging.info("----------------------")
-        logging.info(result)
-        logging.info("----------------------")
-        return result
+        return json.dumps(data)
 
 
