@@ -16,7 +16,7 @@ class CallBack(Home, http.Controller):
     def callback_user_add_org(self, **kw):
         logging.info(">>>钉钉回调-用户增加事件")
         json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr()
+        call_back, din_corpId = self.get_bash_attr('user_add_org')
         # ----------result-------------------------------
         signature = request.httprequest.args['signature']
         logging.info(">>>signature: {}".format(signature))
@@ -42,7 +42,7 @@ class CallBack(Home, http.Controller):
     def user_modify_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户变更事件")
         json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr()
+        call_back, din_corpId = self.get_bash_attr('user_modify_org')
         # 返回加密结果
         msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
         logging.info("-------------------------------------------")
@@ -60,7 +60,7 @@ class CallBack(Home, http.Controller):
     def user_leave_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户离职事件")
         json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr()
+        call_back, din_corpId = self.get_bash_attr('user_leave_org')
         # 返回加密结果
         msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
         logging.info("-------------------------------------------")
@@ -112,8 +112,13 @@ class CallBack(Home, http.Controller):
         dc = dtc(encode_aes_key, din_corpid)
         return dc.decrypt(encrypt)
 
-    def get_bash_attr(self):
-        call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', 'user_add_org')])
+    def get_bash_attr(self, call_type):
+        """
+
+        :param call_type:
+        :return:
+        """
+        call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', call_type)])
         call_back = request.env['dindin.users.callback'].sudo().search([('call_id', '=', call_back_list[0].id)])
         if not call_back:
             raise UserError("钉钉回调管理单据错误，无法获取token和encode_aes_key值!")
