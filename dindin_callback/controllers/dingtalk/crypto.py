@@ -42,7 +42,7 @@ class DingTalkCrypto:
 
     def pks7decode(self, content):
         nl = len(content)
-        val = int(binascii.hexlify(content[-1]), 16)
+        val = int(binascii.hexlify(content[-1].encode()), 16)
         if val > 32:
             raise ValueError('Input is not padded or padding is corrupt')
         l = nl - val
@@ -53,10 +53,10 @@ class DingTalkCrypto:
         解密数据
         """
         # 钉钉返回的消息体
-        content = base64.decode(content)
-        iv = self.aesKey[:16]  ##初始向量
+        content = base64.b64decode(content)
+        iv = self.aesKey[:16]  # 初始向量
         aesDecode = AES.new(self.aesKey, AES.MODE_CBC, iv)
-        decodeRes = aesDecode.decrypt(content)[20:].replace(self.key, '')
+        decodeRes = aesDecode.decrypt(content)[20:].decode().replace(self.key, '')
         # 获取去除初始向量，四位msg长度以及尾部corpid
         return self.pks7decode(decodeRes)
 

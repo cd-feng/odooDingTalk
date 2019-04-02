@@ -1,10 +1,10 @@
+import json
 import logging
 import time
 from odoo import http, _
 from odoo.addons.web.controllers.main import Home
 from odoo.exceptions import UserError
 from odoo.http import request
-from .dingtalk_crypto import DingTalkCrypto
 
 _logger = logging.getLogger(__name__)
 
@@ -12,10 +12,9 @@ _logger = logging.getLogger(__name__)
 class CallBack(Home, http.Controller):
 
     # 通讯录用户增加
-    @http.route('/callback/user_add_org', type='json', auth='public')
+    @http.route('/callback/user_add_org', type='json', auth='none', methods=['POST'], csrf=False)
     def callback_user_add_org(self, **kw):
         json_str = request.jsonrequest
-        logging.info(">>>encrypt:{}".format(json_str.get('encrypt')))
         call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', 'user_add_org')])
         call_back = request.env['dindin.users.callback'].sudo().search([('call_id', '=', call_back_list[0].id)])
         if not call_back:
@@ -23,23 +22,18 @@ class CallBack(Home, http.Controller):
         din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
         if not din_corpId:
             raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
-        signature = request.httprequest.args['signature']
-        logging.info(">>>signature: {}".format(signature))
-        timestamp = request.httprequest.args['timestamp']
-        logging.info(">>>timestamp: {}".format(timestamp))
-        nonce = request.httprequest.args['nonce']
-        logging.info(">>>nonce: {}".format(nonce))
-        # 解密
-        # crypto = DingTalkCrypto(
-        #     call_back[0].aes_key,
-        #     call_back[0].token,
-        #     din_corpId
-        # )
-        # randstr, length, msg, suite_key = crypto.decrypt(json_str.get('encrypt'))
-        # msg = json.loads(msg)
-        # logging.info(">>>解密后的消息结果:{}".format(msg))
-        # 返回加密结果
-        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
+        # signature = request.httprequest.args['signature']
+        # logging.info(">>>signature: {}".format(signature))
+        # timestamp = request.httprequest.args['timestamp']
+        # logging.info(">>>timestamp: {}".format(timestamp))
+        # nonce = request.httprequest.args['nonce']
+        # logging.info(">>>nonce: {}".format(nonce))
+        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
+        logging.info(">>>解密后的消息结果:{}".format(msg))
+        msg = json.loads(msg)
+        if msg.get('EventType') == 'check_url':
+            # 返回加密结果
+            return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     def result_success(self, encode_aes_key, token, din_corpid):
         """
@@ -67,3 +61,15 @@ class CallBack(Home, http.Controller):
             }
         }
         return new_data
+
+    def encrypt_result(self, encrypt, encode_aes_key, din_corpid):
+        """
+        解密钉钉回调返回的值
+        :param encrypt:
+        :param encode_aes_key:
+        :param din_corpid:
+        :return: json-string
+        """
+        from .dingtalk.crypto import DingTalkCrypto as dtc
+        dc = dtc(encode_aes_key, din_corpid)
+        return dc.decrypt(encrypt)
