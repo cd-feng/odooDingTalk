@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="dindin_users_callback_assets" name="Dindin Users Callback" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dindin_callback/static/src/js/users_callback.js"></script>
+        </xpath>
+    </template>
+
     <record id="dindin_users_callback_tree_view" model="ir.ui.view">
         <field name="name">钉钉回调管理</field>
         <field name="model">dindin.users.callback</field>
@@ -24,18 +31,20 @@
                     <button name="register_call_back" type="object" string="注册事件"
                             states='00' class="oe_highlight"
                             confirm="确认注册事件到钉钉服务器吗？"/>
+                    <button name="update_call_back" type="object" string="更新事件"
+                            states='01' class="oe_highlight"
+                            confirm="确认要更新事件到钉钉服务器吗？"/>
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="call_id" attrs="{'readonly': [('state', '!=', '00')]}"
-                                   options="{'horizontal': true, 'no_create_edit': True}"/>
-                            <field name="url" attrs="{'readonly': [('state', '!=', '00')]}"/>
+                            <field name="call_id" options="{'horizontal': true, 'no_create_edit': True}"/>
+                            <field name="url" />
                         </group>
                         <group>
                             <field name="token" attrs="{'readonly': [('state', '!=', '00')]}"/>
-                            <field name="aes_key" attrs="{'readonly': [('state', '!=', '00')]}"/>
+                            <field name="aes_key"/>
                         </group>
                     </group>
                     <group>

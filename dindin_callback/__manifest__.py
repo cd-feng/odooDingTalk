@@ -18,8 +18,8 @@
         'views/call_back_list.xml',
         'views/call_back.xml',
     ],
-    # 'qweb': [
-    #     'static/xml/*.xml'
-    # ]
+    'qweb': [
+        'static/xml/*.xml'
+    ]
 
 }
