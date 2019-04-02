@@ -145,7 +145,7 @@ class DinDinCallback(models.Model):
             result = json.loads(result.text)
             logging.info(result)
             if result.get('errcode') == 0:
-                logging.info("已删除token为{}的回调事件".format(token))
+                logging.info("已删除token为{}的回调事件".format(call_token))
             else:
                 raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
         except ReadTimeout:
