@@ -29,11 +29,16 @@ class CallBack(Home, http.Controller):
         # nonce = request.httprequest.args['nonce']
         # logging.info(">>>nonce: {}".format(nonce))
         msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
+        logging.info("-------------------------------------------")
         logging.info(">>>解密后的消息结果:{}".format(msg))
+        logging.info("-------------------------------------------")
         msg = json.loads(msg)
-        if msg.get('EventType') == 'check_url':
-            # 返回加密结果
-            return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
+        if msg.get('EventType') == 'user_add_org':
+            logging.info("-------------------------------------------")
+            logging.info(">>>钉钉回调-用户增加事件")
+            logging.info("-------------------------------------------")
+        # 返回加密结果
+        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     def result_success(self, encode_aes_key, token, din_corpid):
         """
