@@ -39,7 +39,7 @@ class CallBack(Home, http.Controller):
 
     # 通讯录用户变更事件
     @http.route('/callback/user_modify_org', type='json', auth='public')
-    def callback_user_add_org(self, **kw):
+    def user_modify_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户变更事件")
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr()
@@ -48,7 +48,7 @@ class CallBack(Home, http.Controller):
 
     # 通讯录用户离职事件
     @http.route('/callback/user_leave_org', type='json', auth='public')
-    def callback_user_add_org(self, **kw):
+    def user_leave_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户离职事件")
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr()
