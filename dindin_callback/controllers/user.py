@@ -11,12 +11,12 @@ _logger = logging.getLogger(__name__)
 
 class CallBack(Home, http.Controller):
 
-    # 通讯录用户增加
-    @http.route('/callback/user_add_org', type='json', auth='public')
-    def callback_user_add_org(self, **kw):
-        logging.info(">>>钉钉回调-用户增加事件")
+    # 通讯录事件
+    @http.route('/callback/users', type='json', auth='none', methods=['POST'], csrf=False)
+    def callback_users(self, **kw):
+        logging.info(">>>钉钉回调-通讯录事件")
         json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr('user_add_org')
+        call_back, din_corpId = self.get_bash_attr('00')
         # ----------result-------------------------------
         signature = request.httprequest.args['signature']
         logging.info(">>>signature: {}".format(signature))
@@ -32,45 +32,9 @@ class CallBack(Home, http.Controller):
         msg = json.loads(msg)
         if msg.get('EventType') == 'user_add_org':
             logging.info("-------------------------------------------")
-            logging.info(">>>钉钉回调-用户增加事件")
+            logging.info(">>>钉钉回调-通讯录事件")
             logging.info("-------------------------------------------")
         # 返回加密结果
-        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
-
-    # 通讯录用户变更事件
-    @http.route('/callback/user_modify_org', type='json', auth='none', methods=['POST'], csrf=False)
-    def user_modify_org(self, **kw):
-        logging.info(">>>钉钉回调-通讯录用户变更事件")
-        json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr('user_modify_org')
-        # 返回加密结果
-        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
-        logging.info("-------------------------------------------")
-        logging.info(">>>解密后的消息结果:{}".format(msg))
-        logging.info("-------------------------------------------")
-        msg = json.loads(msg)
-        if msg.get('EventType') == 'user_modify_org':
-            logging.info("-------------------------------------------")
-            logging.info(">>>钉钉回调-通讯录用户变更事件")
-            logging.info("-------------------------------------------")
-        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
-
-    # 通讯录用户离职事件
-    @http.route('/callback/user_leave_org', type='json', auth='none', methods=['POST'], csrf=False)
-    def user_leave_org(self, **kw):
-        logging.info(">>>钉钉回调-通讯录用户离职事件")
-        json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr('user_leave_org')
-        # 返回加密结果
-        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
-        logging.info("-------------------------------------------")
-        logging.info(">>>解密后的消息结果:{}".format(msg))
-        logging.info("-------------------------------------------")
-        msg = json.loads(msg)
-        if msg.get('EventType') == 'user_leave_org':
-            logging.info("-------------------------------------------")
-            logging.info(">>>钉钉回调-通讯录用户离职事件")
-            logging.info("-------------------------------------------")
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     def result_success(self, encode_aes_key, token, din_corpid):
@@ -112,14 +76,12 @@ class CallBack(Home, http.Controller):
         dc = dtc(encode_aes_key, din_corpid)
         return dc.decrypt(encrypt)
 
-    def get_bash_attr(self, call_type):
+    def get_bash_attr(self, value_type):
         """
-
-        :param call_type:
+        :param value_type:
         :return:
         """
-        call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', call_type)])
-        call_back = request.env['dindin.users.callback'].sudo().search([('call_id', '=', call_back_list[0].id)])
+        call_back = request.env['dindin.users.callback'].sudo().search([('value_type', '=', value_type)])
         if not call_back:
             raise UserError("钉钉回调管理单据错误，无法获取token和encode_aes_key值!")
         din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')

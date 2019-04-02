@@ -13,7 +13,7 @@
         <field name="arch" type="xml">
             <tree default_order="id desc">
                 <field name="company_id"/>
-                <field name="call_id"/>
+                <field name="value_type"/>
                 <field name="token"/>
                 <field name="aes_key"/>
                 <field name="url"/>
@@ -39,13 +39,14 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="call_id" options="{'horizontal': true, 'no_create_edit': True}"/>
+                            <field name="value_type"/>
                             <field name="url" />
                         </group>
                         <group>
                             <field name="token" attrs="{'readonly': [('state', '!=', '00')]}"/>
                             <field name="aes_key"/>
                         </group>
+                        <field name="call_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', '00')]}"/>
                     </group>
                     <group>
                         <group>
