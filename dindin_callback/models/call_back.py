@@ -128,7 +128,7 @@ class DinDinCallback(models.Model):
         :return:
         """
         for res in self:
-            if res.state == '00':
+            if res.state == '01':
                 self.delete_call_back(res.token)
         super(DinDinCallback, self).unlink()
 
@@ -138,8 +138,7 @@ class DinDinCallback(models.Model):
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'delete_call_back')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
-            # 'access_token': call_token,
-            'access_token': 'ZdLtSrgv',
+            'access_token': call_token,
         }
         try:
             result = requests.get(url="{}{}".format(url, token), params=data, timeout=5)
