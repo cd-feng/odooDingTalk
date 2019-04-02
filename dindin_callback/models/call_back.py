@@ -46,6 +46,7 @@ class DinDinCallback(models.Model):
     
     _sql_constraints = [
         ('value_type_uniq', 'unique(value_type)', u'事件类型重复!'),
+        ('company_id_uniq', 'unique(company_id)', u'公司只能创建一个回调管理!'),
     ]
 
     @api.onchange('value_type')
