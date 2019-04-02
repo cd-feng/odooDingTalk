@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class CallBack(Home, http.Controller):
 
     # 通讯录用户增加
-    @http.route('/callback/user_add_org', type='json', auth='none', methods=['POST'], csrf=False)
+    @http.route('/callback/user_add_org', type='json', auth='public')
     def callback_user_add_org(self, **kw):
         logging.info(">>>钉钉回调-用户增加事件")
         json_str = request.jsonrequest
@@ -38,7 +38,7 @@ class CallBack(Home, http.Controller):
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     # 通讯录用户变更事件
-    @http.route('/callback/user_modify_org', type='json', auth='none', methods=['POST'], csrf=False)
+    @http.route('/callback/user_modify_org', type='json', auth='public')
     def callback_user_add_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户变更事件")
         json_str = request.jsonrequest
@@ -47,7 +47,7 @@ class CallBack(Home, http.Controller):
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     # 通讯录用户离职事件
-    @http.route('/callback/user_leave_org', type='json', auth='none', methods=['POST'], csrf=False)
+    @http.route('/callback/user_leave_org', type='json', auth='public')
     def callback_user_add_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户离职事件")
         json_str = request.jsonrequest
