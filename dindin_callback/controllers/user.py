@@ -22,12 +22,14 @@ class CallBack(Home, http.Controller):
         din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
         if not din_corpId:
             raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
-        # signature = request.httprequest.args['signature']
-        # logging.info(">>>signature: {}".format(signature))
-        # timestamp = request.httprequest.args['timestamp']
-        # logging.info(">>>timestamp: {}".format(timestamp))
-        # nonce = request.httprequest.args['nonce']
-        # logging.info(">>>nonce: {}".format(nonce))
+        # ----------result-------------------------------
+        signature = request.httprequest.args['signature']
+        logging.info(">>>signature: {}".format(signature))
+        timestamp = request.httprequest.args['timestamp']
+        logging.info(">>>timestamp: {}".format(timestamp))
+        nonce = request.httprequest.args['nonce']
+        logging.info(">>>nonce: {}".format(nonce))
+        # ----------result-end---------------------------
         msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
         logging.info("-------------------------------------------")
         logging.info(">>>解密后的消息结果:{}".format(msg))
