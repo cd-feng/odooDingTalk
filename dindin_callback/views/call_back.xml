@@ -46,7 +46,7 @@
                             <field name="token" attrs="{'readonly': [('state', '!=', '00')]}"/>
                             <field name="aes_key"/>
                         </group>
-                        <field name="call_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', '00')]}"/>
+                        <field name="call_ids" widget="many2many_tags"/>
                     </group>
                     <group>
                         <group>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import logging
 import time
@@ -17,23 +18,13 @@ class CallBack(Home, http.Controller):
         logging.info(">>>钉钉回调-通讯录事件")
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr('00')
-        # ----------result-------------------------------
-        signature = request.httprequest.args['signature']
-        logging.info(">>>signature: {}".format(signature))
-        timestamp = request.httprequest.args['timestamp']
-        logging.info(">>>timestamp: {}".format(timestamp))
-        nonce = request.httprequest.args['nonce']
-        logging.info(">>>nonce: {}".format(nonce))
-        # ----------result-end---------------------------
         msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
         logging.info("-------------------------------------------")
-        logging.info(">>>解密后的消息结果:{}".format(msg))
+        logging.info(">>>解密消息结果:{}".format(msg))
         logging.info("-------------------------------------------")
         msg = json.loads(msg)
         if msg.get('EventType') == 'user_add_org':
-            logging.info("-------------------------------------------")
-            logging.info(">>>钉钉回调-通讯录事件")
-            logging.info("-------------------------------------------")
+            logging.info(">>>钉钉回调-用户增加事件")
         # 返回加密结果
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
