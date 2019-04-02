@@ -14,14 +14,9 @@ class CallBack(Home, http.Controller):
     # 通讯录用户增加
     @http.route('/callback/user_add_org', type='json', auth='none', methods=['POST'], csrf=False)
     def callback_user_add_org(self, **kw):
+        logging.info(">>>钉钉回调-用户增加事件")
         json_str = request.jsonrequest
-        call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', 'user_add_org')])
-        call_back = request.env['dindin.users.callback'].sudo().search([('call_id', '=', call_back_list[0].id)])
-        if not call_back:
-            raise UserError("钉钉回调管理单据错误，无法获取token和encode_aes_key值!")
-        din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
-        if not din_corpId:
-            raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
+        call_back, din_corpId = self.get_bash_attr()
         # ----------result-------------------------------
         signature = request.httprequest.args['signature']
         logging.info(">>>signature: {}".format(signature))
@@ -39,6 +34,24 @@ class CallBack(Home, http.Controller):
             logging.info("-------------------------------------------")
             logging.info(">>>钉钉回调-用户增加事件")
             logging.info("-------------------------------------------")
+        # 返回加密结果
+        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
+
+    # 通讯录用户变更事件
+    @http.route('/callback/user_modify_org', type='json', auth='none', methods=['POST'], csrf=False)
+    def callback_user_add_org(self, **kw):
+        logging.info(">>>钉钉回调-通讯录用户变更事件")
+        json_str = request.jsonrequest
+        call_back, din_corpId = self.get_bash_attr()
+        # 返回加密结果
+        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
+
+    # 通讯录用户离职事件
+    @http.route('/callback/user_leave_org', type='json', auth='none', methods=['POST'], csrf=False)
+    def callback_user_add_org(self, **kw):
+        logging.info(">>>钉钉回调-通讯录用户离职事件")
+        json_str = request.jsonrequest
+        call_back, din_corpId = self.get_bash_attr()
         # 返回加密结果
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
@@ -80,3 +93,13 @@ class CallBack(Home, http.Controller):
         from .dingtalk.crypto import DingTalkCrypto as dtc
         dc = dtc(encode_aes_key, din_corpid)
         return dc.decrypt(encrypt)
+
+    def get_bash_attr(self):
+        call_back_list = request.env['dindin.users.callback.list'].sudo().search([('value', '=', 'user_add_org')])
+        call_back = request.env['dindin.users.callback'].sudo().search([('call_id', '=', call_back_list[0].id)])
+        if not call_back:
+            raise UserError("钉钉回调管理单据错误，无法获取token和encode_aes_key值!")
+        din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
+        if not din_corpId:
+            raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
+        return call_back, din_corpId

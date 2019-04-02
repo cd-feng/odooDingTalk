@@ -138,6 +138,7 @@ class DinDinCallback(models.Model):
             raise UserError("网络连接超时")
         logging.info(">>>删除事件End...")
 
+    # TODO 未完善
     @api.model
     def get_all_call_back(self):
         """
