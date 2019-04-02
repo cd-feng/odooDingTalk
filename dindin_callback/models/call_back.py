@@ -68,7 +68,7 @@ class DinDinCallback(models.Model):
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
             call_list = list()
             for call in res.call_ids:
-                call_list.append(call.name)
+                call_list.append(call.value)
             data = {
                 'call_back_tag': call_list if call_list else '',
                 'token': res.token if res.token else '',
@@ -100,7 +100,7 @@ class DinDinCallback(models.Model):
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
             call_list = list()
             for call in res.call_ids:
-                call_list.append(call.name)
+                call_list.append(call.value)
             data = {
                 'call_back_tag': call_list if call_list else '',
                 'token': res.token if res.token else '',
