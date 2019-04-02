@@ -38,21 +38,39 @@ class CallBack(Home, http.Controller):
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     # 通讯录用户变更事件
-    @http.route('/callback/user_modify_org', type='json', auth='public')
+    @http.route('/callback/user_modify_org', type='json', auth='none', methods=['POST'], csrf=False)
     def user_modify_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户变更事件")
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr()
         # 返回加密结果
+        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
+        logging.info("-------------------------------------------")
+        logging.info(">>>解密后的消息结果:{}".format(msg))
+        logging.info("-------------------------------------------")
+        msg = json.loads(msg)
+        if msg.get('EventType') == 'user_modify_org':
+            logging.info("-------------------------------------------")
+            logging.info(">>>钉钉回调-通讯录用户变更事件")
+            logging.info("-------------------------------------------")
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     # 通讯录用户离职事件
-    @http.route('/callback/user_leave_org', type='json', auth='public')
+    @http.route('/callback/user_leave_org', type='json', auth='none', methods=['POST'], csrf=False)
     def user_leave_org(self, **kw):
         logging.info(">>>钉钉回调-通讯录用户离职事件")
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr()
         # 返回加密结果
+        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
+        logging.info("-------------------------------------------")
+        logging.info(">>>解密后的消息结果:{}".format(msg))
+        logging.info("-------------------------------------------")
+        msg = json.loads(msg)
+        if msg.get('EventType') == 'user_leave_org':
+            logging.info("-------------------------------------------")
+            logging.info(">>>钉钉回调-通讯录用户离职事件")
+            logging.info("-------------------------------------------")
         return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
 
     def result_success(self, encode_aes_key, token, din_corpid):
