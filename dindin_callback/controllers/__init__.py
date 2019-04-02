@@ -2,5 +2,4 @@
 
 from . import dingtalk
 from . import tool
-from . import user
-from . import bpms
+from . import eventreceive

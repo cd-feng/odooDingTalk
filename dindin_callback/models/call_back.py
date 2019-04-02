@@ -15,7 +15,7 @@ class DinDinCallback(models.Model):
     _name = 'dindin.users.callback'
     _inherit = ['mail.thread']
     _description = "钉钉回调管理"
-    _rec_name = 'value_type'
+    _rec_name = 'company_id'
 
     @api.model
     def _get_default_aes_key(self):
@@ -26,6 +26,7 @@ class DinDinCallback(models.Model):
         return ''.join(random.sample(string.ascii_letters + string.digits, 10))
 
     ValueType = [
+        ('all', '所有事件'),
         ('00', '通讯录事件'),
         ('01', '群会话事件'),
         ('02', '签到事件'),
@@ -35,10 +36,10 @@ class DinDinCallback(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
     call_id = fields.Many2one(comodel_name='dindin.users.callback.list', string=u'回调类型', ondelete='cascade')
-    value_type = fields.Selection(string=u'注册事件类型', selection=ValueType, default='00', required=True, copy=False)
+    value_type = fields.Selection(string=u'注册事件类型', selection=ValueType, default='all', required=True, copy=False)
     token = fields.Char(string='Token', default=_get_default_token, size=50)
     aes_key = fields.Char(string='数据加密密钥', default=_get_default_aes_key, size=50)
-    url = fields.Char(string='回调URL', size=200)
+    url = fields.Char(string='回调URL', size=200, default='/callback/eventreceive')
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00', copy=False)
     call_ids = fields.Many2many(comodel_name='dindin.users.callback.list', relation='dindin_users_callback_and_list_ref',
                                 column1='call_id', column2='list_id', string=u'回调类型', copy=False)
@@ -51,9 +52,12 @@ class DinDinCallback(models.Model):
     def onchange_value_type(self):
         if self.value_type:
             call_ids = list()
-            for li in self.env['dindin.users.callback.list'].sudo().search([('value_type', '=', self.value_type)]):
-                call_ids.append(li.id)
-                self.url = li.call_back_url
+            if self.value_type == 'all':
+                for li in self.env['dindin.users.callback.list'].sudo().search([]):
+                    call_ids.append(li.id)
+            else:
+                for li in self.env['dindin.users.callback.list'].sudo().search([('value_type', '=', self.value_type)]):
+                    call_ids.append(li.id)
             self.call_ids = [(6, 0, call_ids)]
 
     @api.multi

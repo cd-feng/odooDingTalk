@@ -12,8 +12,8 @@ _logger = logging.getLogger(__name__)
 
 class CallBack(Home, http.Controller):
 
-    # 通讯录事件
-    @http.route('/callback/users', type='json', auth='none', methods=['POST'], csrf=False)
+    # 钉钉回调
+    @http.route('/callback/eventreceive', type='json', auth='none', methods=['POST'], csrf=False)
     def callback_users(self, **kw):
         logging.info(">>>钉钉回调-通讯录事件")
         json_str = request.jsonrequest
