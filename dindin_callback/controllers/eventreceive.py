@@ -2,6 +2,7 @@
 import json
 import logging
 import time
+import threading
 from odoo import http, _
 from odoo.addons.web.controllers.main import Home
 from odoo.exceptions import UserError
@@ -19,12 +20,11 @@ class CallBack(Home, http.Controller):
         json_str = request.jsonrequest
         call_back, din_corpId = self.get_bash_attr()
         msg = self.encrypt_result(json_str.get('encrypt'), call_back.aes_key, din_corpId)
-        logging.info("-------------------------------------------")
         logging.info(">>>解密消息结果:{}".format(msg))
-        logging.info("-------------------------------------------")
         msg = json.loads(msg)
-        if msg.get('EventType') == 'user_add_org':
-            logging.info(">>>钉钉回调-用户增加事件")
+        # 开启线程
+        dindin_thread = DinDinThread('解析钉钉回调', msg)
+        dindin_thread.start()
         # 返回加密结果
         return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
@@ -78,3 +78,43 @@ class CallBack(Home, http.Controller):
         if not din_corpId:
             raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
         return call_back[0], din_corpId
+
+
+class DinDinThread(threading.Thread):
+    """
+    钉钉回调线程，用于处理返回的事件对应需要处理的事项
+    """
+    msg = None
+
+    def __init__(self, name, msg):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.msg = msg
+
+    def run(self):
+        logging.info(">>>开始线程:".format(self.name))
+        event_type = self.msg.get('EventType')
+        if event_type == 'user_add_org' or event_type == 'user_modify_org' or event_type == 'user_leave_org':
+            logging.info(">>>钉钉回调-用户增加、更改、离职")
+            UserId = self.msg.get('UserId')
+            if event_type == 'user_leave_org':
+                for user_id in UserId:
+                    emp = request.env['hr.employee'].sudo().search([('din_id', '=', user_id)])
+                    if emp:
+                        emp.sudo().unlink()
+            else:
+                request.env['dindin.synchronous.employee'].start_synchronous_employee()
+        elif event_type == 'org_dept_create' or event_type == 'org_dept_modify' or event_type == 'org_dept_remove':
+            logging.info(">>>钉钉回调-通讯录企业部门创建/修改/删除")
+            DeptId = self.msg.get('DeptId')
+            if event_type == 'org_dept_remove':
+                for dept in DeptId:
+                    hr_depat = request.env['hr.department'].sudo().search([('din_id', '=', dept)])
+                    if hr_depat:
+                        hr_depat.sudo().unlink()
+            else:
+                request.env['dindin.synchronous.department'].start_synchronous_department()
+        elif event_type == 'label_user_change' or event_type == 'label_conf_add' or event_type == 'label_conf_del' \
+                or event_type == 'label_conf_modify':
+            logging.info(">>>钉钉回调-员工角色信息发生变更/增加/删除/修改")
+        logging.info(">>>退出线程:".format(self.name))
