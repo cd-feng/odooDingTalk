@@ -15,10 +15,10 @@ class CallBack(Home, http.Controller):
     # 钉钉回调
     @http.route('/callback/eventreceive', type='json', auth='none', methods=['POST'], csrf=False)
     def callback_users(self, **kw):
-        logging.info(">>>钉钉回调-通讯录事件")
+        logging.info(">>>钉钉回调事件")
         json_str = request.jsonrequest
-        call_back, din_corpId = self.get_bash_attr('00')
-        msg = self.encrypt_result(json_str.get('encrypt'), call_back[0].aes_key, din_corpId)
+        call_back, din_corpId = self.get_bash_attr()
+        msg = self.encrypt_result(json_str.get('encrypt'), call_back.aes_key, din_corpId)
         logging.info("-------------------------------------------")
         logging.info(">>>解密消息结果:{}".format(msg))
         logging.info("-------------------------------------------")
@@ -26,7 +26,7 @@ class CallBack(Home, http.Controller):
         if msg.get('EventType') == 'user_add_org':
             logging.info(">>>钉钉回调-用户增加事件")
         # 返回加密结果
-        return self.result_success(call_back[0].aes_key, call_back[0].token, din_corpId)
+        return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
     def result_success(self, encode_aes_key, token, din_corpid):
         """
@@ -67,15 +67,14 @@ class CallBack(Home, http.Controller):
         dc = dtc(encode_aes_key, din_corpid)
         return dc.decrypt(encrypt)
 
-    def get_bash_attr(self, value_type):
+    def get_bash_attr(self):
         """
-        :param value_type:
         :return:
         """
-        call_back = request.env['dindin.users.callback'].sudo().search([('value_type', '=', value_type)])
+        call_back = request.env['dindin.users.callback'].sudo().search([])
         if not call_back:
             raise UserError("钉钉回调管理单据错误，无法获取token和encode_aes_key值!")
         din_corpId = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')
         if not din_corpId:
             raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
-        return call_back, din_corpId
+        return call_back[0], din_corpId
