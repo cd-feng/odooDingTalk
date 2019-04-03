@@ -159,7 +159,7 @@ class CallBack(Home, http.Controller):
                 emp = request.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
                 if msg.get('type') == 'start' and oa_model:
                     oa_model.sudo().write({'oa_message': "待审批人'{}'".format(emp.name if emp else '')})
-                    dobys = "审批时间:{}; 审批人:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name)
+                    dobys = "审批时间:{}; 待审批人:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
                     dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name, msg.get('content'))
