@@ -128,6 +128,7 @@ class CallBack(Home, http.Controller):
         :param msg:
         :return:
         """
+        dn = datetime.datetime.now()
         temp = request.env['dindin.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
         if temp:
             appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
@@ -135,11 +136,11 @@ class CallBack(Home, http.Controller):
                 oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
                 if msg.get('type') == 'start' and oa_model:
                     oa_model.sudo().write({'oa_state': '01'})
-                    dobys = "审批开始-时间:{}".format(datetime.datetime.now())
+                    dobys = "审批开始-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 else:
                     oa_model.sudo().write({'oa_state': '02'})
-                    dobys = "审批结束-时间:{}".format(datetime.datetime.now())
+                    dobys = "审批结束-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True
 
@@ -149,6 +150,7 @@ class CallBack(Home, http.Controller):
         :param msg:
         :return:
         """
+        dn = datetime.datetime.now()
         temp = request.env['dindin.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
         if temp:
             appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
@@ -157,14 +159,14 @@ class CallBack(Home, http.Controller):
                 emp = request.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
                 if msg.get('type') == 'start' and oa_model:
                     oa_model.sudo().write({'oa_message': "待审批人'{}'".format(emp.name if emp else '')})
-                    dobys = "审批时间:{}; 审批人:{}".format(datetime.datetime.now(), emp.name)
+                    dobys = "审批时间:{}; 审批人:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
-                    dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(datetime.datetime.now(), emp.name, msg.get('content'))
+                    dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name, msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'finish' and oa_model:
 
-                    dobys = "审批时间:{}; 审批人:{}; 审批结果:{}; 审批意见:{}".format(datetime.datetime.now(), emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
+                    dobys = "审批时间:{}; 审批人:{}; 审批结果:{}; 审批意见:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                     oa_model.sudo().write({
                         'oa_message': "审批人'{}'".format(emp.name if emp else ''),
