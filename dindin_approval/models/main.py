@@ -13,7 +13,12 @@ class DinDinApprovalMain(models.Model):
     OASTATE = [
         ('00', '草稿'),
         ('01', '审批中'),
-        ('02', '审批完成'),
+        ('02', '审批结束'),
+    ]
+    OARESULT = [
+        ('agree', '同意'),
+        ('refuse', '拒绝'),
+        ('redirect', '转交'),
     ]
 
     process_code = fields.Char(string='单据编号')
@@ -24,6 +29,7 @@ class DinDinApprovalMain(models.Model):
     oa_message = fields.Char(string='审批消息')
     process_instance_id = fields.Char(string='钉钉审批实例id')
     reason_leave = fields.Text(string=u'事由')
+    oa_result = fields.Selection(string=u'审批结果', selection=OARESULT)
 
     @api.multi
     def summit_approval(self):
