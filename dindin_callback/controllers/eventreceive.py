@@ -135,11 +135,11 @@ class CallBack(Home, http.Controller):
             if appro:
                 oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
                 if msg.get('type') == 'start' and oa_model:
-                    oa_model.sudo().write({'oa_state': '01'})
+                    oa_model.sudo().write({'oa_state': '01', 'oa_url': msg.get('url')})
                     dobys = "审批开始-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 else:
-                    oa_model.sudo().write({'oa_state': '02'})
+                    oa_model.sudo().write({'oa_state': '02', 'oa_url': msg.get('url')})
                     dobys = "审批结束-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True

@@ -30,6 +30,7 @@ class DinDinApprovalMain(models.Model):
     process_instance_id = fields.Char(string='钉钉审批实例id')
     reason_leave = fields.Text(string=u'事由')
     oa_result = fields.Selection(string=u'审批结果', selection=OARESULT)
+    oa_url = fields.Char(string='钉钉单据url')
 
     @api.multi
     def summit_approval(self):
