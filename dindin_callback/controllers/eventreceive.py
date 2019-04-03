@@ -23,6 +23,9 @@ class CallBack(Home, http.Controller):
         logging.info(">>>解密消息结果:{}".format(msg))
         msg = json.loads(msg)
         event_type = msg.get('EventType')
+        # -------------------
+        # -----通讯录---------
+        # -------------------
         if event_type == 'user_add_org' or event_type == 'user_modify_org' or event_type == 'user_leave_org':
             logging.info(">>>钉钉回调-用户增加、更改、离职")
             if event_type == 'user_leave_org':
@@ -43,9 +46,19 @@ class CallBack(Home, http.Controller):
                         hr_depat.sudo().unlink()
             else:
                 request.env['dindin.synchronous.department'].start_synchronous_department()
+        # -------------------
+        # -----员工角色-------
+        # -------------------
         elif event_type == 'label_user_change' or event_type == 'label_conf_add' or event_type == 'label_conf_del' \
                 or event_type == 'label_conf_modify':
             logging.info(">>>钉钉回调-员工角色信息发生变更/增加/删除/修改")
+        # -------------------
+        # -----审批-----------
+        # -------------------
+        elif event_type == 'bpms_task_change':
+            logging.info(">>>钉钉回调-审批任务开始/结束/转交")
+        elif event_type == 'bpms_instance_change':
+            logging.info(">>>钉钉回调-审批实例开始/结束")
         # 返回加密结果
         return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
