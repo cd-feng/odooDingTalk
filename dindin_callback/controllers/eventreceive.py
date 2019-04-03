@@ -126,7 +126,7 @@ class CallBack(Home, http.Controller):
         if temp:
             appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
             if appro:
-                oa_model = self.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+                oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
                 if msg.get('type') == 'start' and oa_model:
                     oa_model.sudo().write({'oa_state': '01'})
                 else:
@@ -143,8 +143,8 @@ class CallBack(Home, http.Controller):
         if temp:
             appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
             if appro:
-                oa_model = self.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
-                emp = self.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
+                oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+                emp = request.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
                 if msg.get('type') == 'start' and oa_model:
                     oa_model.sudo().write({'oa_message': "审批人'{}'".format(emp.name if emp else '')})
                     dobys = "流程开始-时间:{} 审批人:{}".format(datetime.datetime.now(), emp.name)
