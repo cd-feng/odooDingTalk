@@ -150,7 +150,7 @@ class CallBack(Home, http.Controller):
                     dobys = "审批中-时间:{}; 审批人:{}".format(datetime.datetime.now(), emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
-                    dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(datetime.datetime.now(), emp.name, msg.get('comment'))
+                    dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(datetime.datetime.now(), emp.name, msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 else:
                     dobys = "时间:{}; 审批人:{}; 意见:{}".format(datetime.datetime.now(), emp.name, msg.get('remark'))
