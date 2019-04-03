@@ -165,7 +165,6 @@ class CallBack(Home, http.Controller):
                     dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name, msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'finish' and oa_model:
-
                     dobys = "审批时间:{}; 审批人:{}; 审批结果:{}; 审批意见:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                     oa_model.sudo().write({
