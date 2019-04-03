@@ -81,3 +81,61 @@ class DinDinApprovalTemplate(models.Model):
                     return {'state': False, 'number': 0, 'msg': result.get('errmsg')}
             except ReadTimeout:
                 return {'state': False, 'number': 0, 'msg': '网络连接超时'}
+
+    # TODO 需要进步完善获取单个实例后写入到odoo对应的单据中
+    @api.model
+    def get_processinstance(self, pid, pcode):
+        """
+        获取单个审批实例
+        :param pid:
+        :param pcode:
+        :return:
+        """
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'processinstance_get')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'process_instance_id': pid,
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=5)
+            result = json.loads(result.text)
+            if result.get('errcode') == 0:
+                process_instance = result.get('process_instance')
+                temp = self.env['dindin.approval.template'].sudo().search([('process_code', '=', pcode)])
+                if temp:
+                    appro = self.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+                    if appro:
+                        oa_model = self.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', pid)])
+                        if not oa_model:
+                            # 获取发起人
+                            emp = self.env['hr.employee'].sudo().search([('din_id', '=', process_instance.get("originator_userid"))])
+                            data = {
+                                'title': process_instance.get('title'),
+                                'create_date': process_instance.get("create_time"),
+                                'originator_user_id': emp.id if emp else False,
+                            }
+                            # 审批状态
+                            if process_instance.get("status") == 'NEW':
+                                data.update({'oa_state': '00'})
+                            elif process_instance.get("status") == 'RUNNING':
+                                data.update({'oa_state': '01'})
+                            else:
+                                data.update({'oa_state': '02'})
+
+            else:
+                logging.info('>>>获取单个审批实例-失败，原因为:{}'.format(result.get('errmsg')))
+        except ReadTimeout:
+            logging.info('>>>获取单个审批实例-网络连接超时')
+
+        # {
+        #     "EventType": "bpms_instance_change",
+        #     "processInstanceId": "ad253df6-e175caf-68085c60ba8a",
+        #     "corpId": "ding2c4d8175651",
+        #     "createTime": 1495592259000,
+        #     "title": "自测-1016",
+        #     "type": "start",
+        #     "staffId": "er5875",
+        #     "url": "https://aflow.dingtalk.com/dingtalk/mobile/homepage.htm",
+        #     "processCode": "xxx"
+        # }
