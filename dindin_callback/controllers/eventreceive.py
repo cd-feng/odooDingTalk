@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 import logging
 import time
@@ -57,8 +58,10 @@ class CallBack(Home, http.Controller):
         # -------------------
         elif event_type == 'bpms_task_change':
             logging.info(">>>钉钉回调-审批任务开始/结束/转交")
+            self.bpms_task_change(msg)
         elif event_type == 'bpms_instance_change':
             logging.info(">>>钉钉回调-审批实例开始/结束")
+            self.bpms_instance_change(msg)
         # 返回加密结果
         return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
@@ -112,6 +115,63 @@ class CallBack(Home, http.Controller):
         if not din_corpId:
             raise UserError("钉钉CorpId值为空，请前往设置中进行配置!")
         return call_back[0], din_corpId
+
+    def bpms_instance_change(self, msg):
+        """
+        钉钉回调-钉钉回调-审批实例开始/结束
+        :param msg:
+        :return:
+        """
+        temp = request.env['dindin.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
+        if temp:
+            appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+            if appro:
+                oa_model = self.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+                if msg.get('type') == 'start' and oa_model:
+                    oa_model.sudo().write({'oa_state': '01'})
+                else:
+                    oa_model.sudo().write({'oa_state': '02'})
+        return True
+
+    def bpms_task_change(self, msg):
+        """
+        钉钉回调-审批任务开始/结束/转交
+        :param msg:
+        :return:
+        """
+        temp = request.env['dindin.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
+        if temp:
+            appro = request.env['dindin.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+            if appro:
+                oa_model = self.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+                emp = self.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
+                if msg.get('type') == 'start' and oa_model:
+                    oa_model.sudo().write({'oa_message': "审批人'{}'".format(emp.name if emp else '')})
+                    dobys = "流程开始-时间:{} 审批人:{}".format(datetime.datetime.now(), emp.name)
+                    oa_model.sudo().message_post(body=dobys, message_type='notification')
+                else:
+                    dobys = "时间:{} 审批人:{} 意见为:{}".format(datetime.datetime.now(), emp.name, msg.get('remark'))
+                    oa_model.sudo().message_post(body=dobys, message_type='notification')
+                    oa_model.sudo().write({
+                        'oa_message': "审批人'{}'".format(emp.name if emp else ''),
+                        'oa_result': msg.get('result'),
+                    })
+        return True
+
+# 钉钉回调-审批任务开始/结束/转交
+# {"taskId":61056035232,"createTime":1554266952000,
+# "staffId":"021038163631880229",
+# "bizCategoryId":"",
+# "EventType":"bpms_task_change",
+# "type":"start","title":"燕春提交的Odoo请假单",
+# "processCode":"PROC-EFYJFT8W-5KX30J3T41S0QC2H1TH32-S7SHPITJ-53",
+# "processInstanceId":"e3f9c4c9-2fbf-4a0e-9098-40cb21e91d47","corpId":""}
+
+# {"taskId":61056035232,"result":"agree","createTime":1554266952000,
+# "staffId":"021038163631880229","remark":"","bizCategoryId":"",
+# "EventType":"bpms_task_change","type":"finish","title":"燕春提交的Odoo请假单",
+# "processCode":"PROC-EFYJFT8W-5KX30J3T41S0QC2H1TH32-S7SHPITJ-53",
+# "processInstanceId":"e3f9c4c9-2fbf-4a0e-9098-40cb21e91d47","finishTime":1554267241000,"corpId":""}
 
 
 # class DinDinThread(threading.Thread):
