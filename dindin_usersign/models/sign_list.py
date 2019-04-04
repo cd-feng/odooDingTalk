@@ -44,6 +44,8 @@ class DinDinSignList(models.Model):
         :param signtime:
         :return:
         """
+        logging.info("签到用户id:{}".format(userid))
+        logging.info("签到时间id:{}".format(signtime))
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_user_checkin')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
@@ -56,6 +58,7 @@ class DinDinSignList(models.Model):
         try:
             result = requests.get(url="{}{}".format(url, token), params=data, timeout=5)
             result = json.loads(result.text)
+            logging.info("获取用户签到结果:{}".format(result))
             if result.get('errcode') == 0:
                 r_result = result.get('result')
                 for data in r_result.get('page_list'):
