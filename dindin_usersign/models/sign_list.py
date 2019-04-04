@@ -50,8 +50,8 @@ class DinDinSignList(models.Model):
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
             'userid_list': userid,
-            'start_time': signtime,
-            'end_time': signtime,
+            'start_time': '1554354911000',
+            'end_time': '1554362111000',
             'cursor': 0,
             'size': 100,
         }
