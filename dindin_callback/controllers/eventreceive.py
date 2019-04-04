@@ -72,7 +72,7 @@ class CallBack(Home, http.Controller):
         # -----用户签到-----------
         # -----------------------
         elif event_type == 'check_in':
-            request.env['dindin.signs.list'].sudo().get_signs_by_user(msg.get('StaffId', msg.get('TimeStamp')))
+            request.env['dindin.signs.list'].sudo().get_signs_by_user(msg.get('StaffId'), msg.get('TimeStamp'))
         # 返回加密结果
         return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
