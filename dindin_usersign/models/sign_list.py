@@ -44,14 +44,14 @@ class DinDinSignList(models.Model):
         :param signtime:
         :return:
         """
-        logging.info("签到用户id:{}".format(userid))
-        logging.info("签到时间id:{}".format(signtime))
+        start_time = int(signtime) - 10000
+        end_time = int(signtime) + 10000
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_user_checkin')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
             'userid_list': userid,
-            'start_time': '1554354911000',
-            'end_time': '1554362111000',
+            'start_time': str(start_time),
+            'end_time': str(end_time),
             'cursor': 0,
             'size': 100,
         }
