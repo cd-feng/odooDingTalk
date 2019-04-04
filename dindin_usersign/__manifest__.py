@@ -16,6 +16,7 @@
         'data/system_conf.xml',
         'views/department_sign.xml',
         'views/users_sign.xml',
+        'views/sign_list.xml',
     ],
     # 'qweb': [
     #     'static/xml/*.xml'
