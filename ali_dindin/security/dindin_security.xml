@@ -3,7 +3,7 @@
 
     <record model="ir.module.category" id="ali_dindin.main_group">
         <field name="name">钉钉管理</field>
-        <field name="visible" eval="0" />
+        <field name="visible" eval="0"/>
     </record>
 
     <record id="group_ali_dindin_user" model="res.groups">
@@ -16,6 +16,11 @@
         <field name="name">管理员</field>
         <field name="category_id" ref="ali_dindin.main_group"/>
         <field name="implied_ids" eval="[(4, ref('ali_dindin.group_ali_dindin_user'))]"/>
+    </record>
+
+    <!-- 默认用户权限 -->
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('group_ali_dindin_user'))]"/>
     </record>
 
 </odoo>
