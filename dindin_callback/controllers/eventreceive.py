@@ -3,7 +3,6 @@ import datetime
 import json
 import logging
 import time
-import threading
 from odoo import http, _
 from odoo.addons.web.controllers.main import Home
 from odoo.exceptions import UserError
@@ -31,7 +30,7 @@ class CallBack(Home, http.Controller):
         msg = json.loads(msg)
         event_type = msg.get('EventType')
         # -------------------
-        # -----通讯录---------
+        # --------通讯录------
         # -------------------
         if event_type == 'user_add_org' or event_type == 'user_modify_org' or event_type == 'user_leave_org':
             logging.info(">>>钉钉回调-用户增加、更改、离职")
@@ -183,55 +182,3 @@ class CallBack(Home, http.Controller):
                     })
         return True
 
-# 钉钉回调-审批任务开始/结束/转交
-# {"taskId":61056035232,"createTime":1554266952000,
-# "staffId":"021038163631880229",
-# "bizCategoryId":"",
-# "EventType":"bpms_task_change",
-# "type":"start","title":"燕春提交的Odoo请假单",
-# "processCode":"PROC-EFYJFT8W-5KX30J3T41S0QC2H1TH32-S7SHPITJ-53",
-# "processInstanceId":"e3f9c4c9-2fbf-4a0e-9098-40cb21e91d47","corpId":""}
-
-# {"taskId":61056035232,"result":"agree","createTime":1554266952000,
-# "staffId":"021038163631880229","remark":"","bizCategoryId":"",
-# "EventType":"bpms_task_change","type":"finish","title":"燕春提交的Odoo请假单",
-# "processCode":"PROC-EFYJFT8W-5KX30J3T41S0QC2H1TH32-S7SHPITJ-53",
-# "processInstanceId":"e3f9c4c9-2fbf-4a0e-9098-40cb21e91d47","finishTime":1554267241000,"corpId":""}
-
-
-# class DinDinThread(threading.Thread):
-#     """
-#     钉钉回调线程
-#     """
-#     encode_aes_key = None
-#     token = None
-#     din_corpid = None
-#
-#     def __init__(self, name, encode_aes_key, token, din_corpid):
-#         threading.Thread.__init__(self)
-#         self.name = name
-#         self.encode_aes_key = encode_aes_key
-#         self.token = token
-#         self.din_corpid = din_corpid
-#
-#     def run(self):
-#         logging.info(">>>开始线程:".format(self.name))
-#         from .dingtalk.crypto import DingTalkCrypto as dtc
-#         dc = dtc(self.encode_aes_key, self.din_corpid)
-#         # 加密数据
-#         encrypt = dc.encrypt('success')
-#         timestamp = str(int(round(time.time())))
-#         nonce = dc.generateRandomKey(8)
-#         # 生成签名
-#         signature = dc.generateSignature(nonce, timestamp, self.token, encrypt)
-#         new_data = {
-#             'json': True,
-#             'data': {
-#                 'msg_signature': signature,
-#                 'timeStamp': timestamp,
-#                 'nonce': nonce,
-#                 'encrypt': encrypt
-#             }
-#         }
-#         logging.info(">>>退出线程:".format(self.name))
-#         return new_data
