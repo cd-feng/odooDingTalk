@@ -72,7 +72,7 @@ class ResConfigSettings(models.TransientModel):
             'state': 'code',
             'user_id': self.env.user.id,
             'numbercall': -1,
-            'interval_number': 30,
+            'interval_number': 90,
             'interval_type': 'minutes',
             'code': "env['ali.dindin.get.token'].get_token()",
         }
