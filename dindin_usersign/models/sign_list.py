@@ -44,8 +44,8 @@ class DinDinSignList(models.Model):
         :param signtime:
         :return:
         """
-        start_time = int(signtime) - 10000
-        end_time = int(signtime) + 10000
+        start_time = int(signtime) - 1002
+        end_time = int(signtime) + 1002
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_user_checkin')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         data = {
@@ -67,6 +67,7 @@ class DinDinSignList(models.Model):
                         'emp_id': emp.id if emp else False,
                         'checkin_time': self.get_time_stamp(data.get('checkin_time')),
                         'place': data.get('place'),
+                        'visit_user': data.get('visit_user'),
                         'detail_place': data.get('detail_place'),
                         'remark': data.get('remark'),
                         'latitude': data.get('latitude'),
