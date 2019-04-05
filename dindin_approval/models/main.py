@@ -45,6 +45,13 @@ class DinDinApprovalMain(models.Model):
         """
         pass
 
+    @api.multi
+    def unlink(self):
+        for res in self:
+            if res.oa_state != '00':
+                raise UserError('非草稿单据不能删除!')
+        super(DinDinApprovalMain, self).unlink()
+
     @api.model
     def _summit_din_approval(self, process_code, user_id, dept_id, approvers, cc_list, form_values):
         """

@@ -14,6 +14,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/system_conf.xml',
+        'data/mail_channel.xml',
         'views/asset.xml',
         'views/approval_template.xml',
         'views/approval_control.xml',
