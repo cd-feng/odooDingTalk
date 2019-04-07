@@ -132,6 +132,19 @@ class DinDinApprovalMain(models.Model):
         for res in self:
             return res.originator_user_id.din_id, res.originator_user_id.department_id.din_id
 
+    def _check_lines(self, approval_users_ids, cc_ids):
+        """
+        检查审批人列表和抄送人是否为空
+        :param approval_users_ids:
+        :param cc_ids:
+        :return:
+        """
+        if len(approval_users_ids) == 0:
+            raise UserError("审批人列表不能为空!")
+        if len(cc_ids) == 0:
+            raise UserError("抄送人列表不能为空!")
+        return True
+
 
 class DinDinApproversUsers(models.Model):
     _name = 'dindin.approval.users'
@@ -179,4 +192,3 @@ class DinDinApproversCc(models.Model):
     @api.onchange('sequence')
     def onchange_sequence(self):
         self.number = self.sequence + 1
-
