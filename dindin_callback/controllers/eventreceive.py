@@ -141,11 +141,11 @@ class CallBack(Home, http.Controller):
                     [('process_instance_id', '=', msg.get('processInstanceId'))])
                 if oa_model:
                     if msg.get('type') == 'start':
-                        dobys = "审批开始-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
+                        dobys = "审批流程开始-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
                     else:
-                        oa_model.sudo().write({'oa_state': '02', 'oa_message': "审批结束"})
-                        dobys = "审批结束-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
+                        oa_model.sudo().write({'oa_state': '02', 'oa_message': "审批结束", 'oa_result': msg.get('result')})
+                        dobys = "审批流程结束-时间:{}".format(dn.strftime('%Y/%m/%d %H:%M:%S'))
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True
 
@@ -164,21 +164,22 @@ class CallBack(Home, http.Controller):
                     [('process_instance_id', '=', msg.get('processInstanceId'))])
                 emp = request.env['hr.employee'].sudo().search([('din_id', '=', msg.get('staffId'))])
                 if msg.get('type') == 'start' and oa_model:
-                    oa_model.sudo().write({'oa_message': "待审批人'{}'".format(emp.name if emp else '')})
-                    dobys = "审批时间:{}; 待审批人:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name)
+                    if oa_model.sudo().oa_state != '02':
+                        oa_model.sudo().write({'oa_message': "等待{}审批".format(emp.name if emp else '')})
+                    dobys = "{}: 等待{}审批".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
-                    dobys = "评论消息-时间:{}; 评论人:{}; 内容:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name,
+                    dobys = "{}: (评论消息)-评论人:{}; 评论内容:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name,
                                                                msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'finish' and oa_model:
-                    dobys = "审批时间:{}; 审批人:{}; 审批结果:{}; 审批意见:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name,
+                    dobys = "{}: {}已审批; 审批结果:{}; 审批意见:{}".format(dn.strftime('%Y-%m-%d %H:%M:%S'), emp.name,
                                                                        OARESULT.get(msg.get('result')),
                                                                        msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
-                    oa_model.sudo().write({
-                        'oa_message': "审批人'{}'".format(emp.name if emp else ''),
-                        'oa_result': msg.get('result'),
-                    })
+                    # oa_model.sudo().write({
+                        # 'oa_message': "审批人'{}'".format(emp.name if emp else ''),
+                        # 'oa_result': msg.get('result'),
+                    # })
         return True
 
