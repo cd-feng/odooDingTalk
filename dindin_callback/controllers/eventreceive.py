@@ -177,9 +177,5 @@ class CallBack(Home, http.Controller):
                                                                        OARESULT.get(msg.get('result')),
                                                                        msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
-                    # oa_model.sudo().write({
-                        # 'oa_message': "审批人'{}'".format(emp.name if emp else ''),
-                        # 'oa_result': msg.get('result'),
-                    # })
         return True
 
