@@ -71,26 +71,36 @@ class DinDinWorkRecord(models.Model):
         offset = 0  # 分页游标
         limit = 50  # 分页大小
         for emp in din_ids:
-            result = self.get_workrecord_url(emp.get('din_id'), offset, limit)
-            if 'list' in result:
-                for res in result.get('list'):
-                    record = self.env['dindin.work.record'].search(
-                        [('record_id', '=', res.get('record_id')), ('record_type', '!=', 'out')])
-                    rec_line = list()
-                    for res_line in res.get('forms'):
-                        rec_line.append((0, 0, {'title': res_line.get('title'), 'content': res_line.get('content')}))
-                    data = {
-                        'name': res.get('title'),
-                        'emp_id': emp.get('id'),
-                        'record_url': res.get('url'),
-                        'record_type': 'put',
-                        'record_id': res.get('record_id'),
-                        'line_ids': rec_line,
-                    }
-                    if record:
-                        return False
+            while True:
+                result = self.get_workrecord_url(emp.get('din_id'), offset, limit)
+                try:
+                    if 'list' in result:
+                        for res in result.get('list'):
+                            record = self.env['dindin.work.record'].search(
+                                [('record_id', '=', res.get('record_id')), ('record_type', '!=', 'out')])
+                            rec_line = list()
+                            for res_line in res.get('forms'):
+                                rec_line.append((0, 0, {'title': res_line.get('title'), 'content': res_line.get('content')}))
+                            data = {
+                                'name': res.get('title'),
+                                'emp_id': emp.get('id'),
+                                'record_url': res.get('url'),
+                                'record_type': 'put',
+                                'record_id': res.get('record_id'),
+                                'line_ids': rec_line,
+                            }
+                            if not record:
+                                self.env['dindin.work.record'].create(data)
+                    if not result.get('has_more'):
+                        break
                     else:
-                        self.env['dindin.work.record'].create(data)
+                        offset = offset + limit
+                except TypeError:
+                    logging.info(">>>TypeError: argument of type 'NoneType' is not iterable")
+                    break
+                except ValueError:
+                    logging.info(">>>ValueError：NoneType' is not iterable")
+                    break
         logging.info(">>>Stop getting to-do items")
 
     @api.model
