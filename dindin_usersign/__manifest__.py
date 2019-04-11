@@ -5,7 +5,7 @@
     'description': """ 钉钉办公-用户签到记录 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
-    'category': 'dindin',
+    'category': 'dingding',
     'version': '1.0',
     'depends': ['base', 'ali_dindin'],
     'installable': True,

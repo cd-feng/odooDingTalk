@@ -5,7 +5,7 @@
     'description': """ 阿里-钉钉办公集成 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
-    'category': 'dindin',
+    'category': 'dingding',
     'version': '1.1',
     'depends': ['base', 'hr', 'contacts'],
     'installable': True,
