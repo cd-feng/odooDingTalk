@@ -48,6 +48,7 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
+        super(ResConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_agentid', self.din_agentid)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_corpId', self.din_corpId)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_appkey', self.din_appkey)
@@ -64,7 +65,6 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_department', self.din_delete_department)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appid', self.din_login_appid)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appsecret', self.din_login_appsecret)
-        super(ResConfigSettings, self).set_values()
         data = {
             'name': '钉钉-定时更新token值',
             'active': True,
@@ -77,7 +77,7 @@ class ResConfigSettings(models.TransientModel):
             'code': "env['ali.dindin.get.token'].get_token()",
         }
         if self.din_token:
-            cron = self.env['ir.cron'].sudo().search([('code', '=', "env['ali.dindin.get.token'].get_token()")])
+            cron = self.env['ir.cron'].sudo().search([('name', '=', "钉钉-定时更新token值")])
             if len(cron) >= 1:
                 cron.sudo().write(data)
             else:

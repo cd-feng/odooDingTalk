@@ -81,6 +81,8 @@ class DinDinApprovalTemplate(models.Model):
                     return {'state': False, 'number': 0, 'msg': result.get('errmsg')}
             except ReadTimeout:
                 return {'state': False, 'number': 0, 'msg': '网络连接超时'}
+        else:
+            return {'state': False, 'number': 0, 'msg': 'None'}
 
     # TODO 需要进步完善获取单个实例后写入到odoo对应的单据中
     @api.model
