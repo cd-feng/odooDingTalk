@@ -24,7 +24,8 @@ class ResConfigSettings(models.TransientModel):
     din_delete_department = fields.Boolean(string=u'删除部门')
     din_login_appid = fields.Char(string=u'扫码登录appId')
     din_login_appsecret = fields.Char(string=u'扫码登录appSecret')
-
+    auto_calendar_event = fields.Boolean(string=u'自动上传日程')
+    
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
@@ -44,6 +45,7 @@ class ResConfigSettings(models.TransientModel):
             din_delete_department=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department'),
             din_login_appid=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid'),
             din_login_appsecret=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appsecret'),
+            auto_calendar_event=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.auto_calendar_event'),
         )
         return res
 
@@ -65,6 +67,7 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_department', self.din_delete_department)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appid', self.din_login_appid)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appsecret', self.din_login_appsecret)
+        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.auto_calendar_event', self.auto_calendar_event)
         data = {
             'name': '钉钉-定时更新token值',
             'active': True,
@@ -87,16 +90,3 @@ class ResConfigSettings(models.TransientModel):
                 [('code', '=', "env['ali.dindin.get.token'].get_token()")])
             cron.sudo().unlink()
 
-
-class UnionPayConfig(models.Model):
-    _description = '系统参数列表'
-    _name = 'ali.dindin.system.conf'
-
-    name = fields.Char(string='名称')
-    key = fields.Char(string='key值')
-    value = fields.Char(string='参数值')
-    state = fields.Selection(string=u'有效', selection=[('y', '是'), ('n', '否'), ], default='y')
-
-    _sql_constraints = [
-        ('key_uniq', 'unique(key)', u'系统参数中key值不允许重复!'),
-    ]

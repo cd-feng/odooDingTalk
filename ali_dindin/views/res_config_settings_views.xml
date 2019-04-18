@@ -195,6 +195,20 @@
                             </div>
                         </div>
                     </div>
+                    <h2>钉钉-日程管理</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_calendar_event"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_calendar_event"/>
+                                <div class="text-muted">
+                                    开启创建Odoo日历时自动上传至钉钉Ding日程
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
         </field>
@@ -214,45 +228,6 @@
               sequence="1"
               action="union_pay_config_settings_configuration_action"
               groups="base.group_system"
-    />
-
-
-    <record id="ali_dindin_system_conf_tree_view" model="ir.ui.view">
-        <field name="name">系统参数列表</field>
-        <field name="model">ali.dindin.system.conf</field>
-        <field name="arch" type="xml">
-            <tree default_order="id desc" editable="top" create="true">
-                <field name="name"/>
-                <field name="key"/>
-                <field name="value"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="ali_dindin_system_conf_action">
-        <field name="name">系统参数列表</field>
-        <field name="res_model">ali.dindin.system.conf</field>
-        <field name="view_mode">tree</field>
-    </record>
-
-    <record model="ir.ui.view" id="ali_dindin_system_conf_search">
-        <field name="model">ali.dindin.system.conf</field>
-        <field name="arch" type="xml">
-            <search string="系统参数列表">
-                <field name="name"/>
-                <field name="key"/>
-                <field name="value"/>
-                <field name="state"/>
-            </search>
-        </field>
-    </record>
-
-    <menuitem id="ali_dindin_system_conf_menu" name="系统参数列表"
-              parent="ali_dindin.configure_menu"
-              sequence="2"
-              action="ali_dindin_system_conf_action"
-              groups="ali_dindin.group_ali_dindin_manager"
     />
 
 </odoo>

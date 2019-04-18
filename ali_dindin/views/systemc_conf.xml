@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ali_dindin_system_conf_tree_view" model="ir.ui.view">
+        <field name="name">系统参数列表</field>
+        <field name="model">ali.dindin.system.conf</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top" create="true">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="value"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ali_dindin_system_conf_action">
+        <field name="name">系统参数列表</field>
+        <field name="res_model">ali.dindin.system.conf</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="ali_dindin_system_conf_search">
+        <field name="model">ali.dindin.system.conf</field>
+        <field name="arch" type="xml">
+            <search string="系统参数列表">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="value"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="ali_dindin_system_conf_menu" name="系统参数列表"
+              parent="ali_dindin.configure_menu"
+              sequence="2"
+              action="ali_dindin_system_conf_action"
+              groups="ali_dindin.group_ali_dindin_manager"
+    />
+
+</odoo>

@@ -16,6 +16,7 @@
         'security/dindin_security.xml',
         'data/system_conf.xml',
         'views/menu.xml',
+        'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
         'views/department.xml',
         'views/employee.xml',
