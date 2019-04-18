@@ -41,7 +41,7 @@ class CallBack(Home, http.Controller):
                     if emp:
                         emp.sudo().unlink()
             else:
-                request.env['dindin.synchronous.employee'].start_synchronous_employee()
+                request.env['hr.employee'].sudo().synchronous_dingding_employee()
         elif event_type == 'org_dept_create' or event_type == 'org_dept_modify' or event_type == 'org_dept_remove':
             logging.info(">>>钉钉回调-通讯录企业部门创建/修改/删除")
             DeptId = self.msg.get('DeptId')
@@ -51,7 +51,7 @@ class CallBack(Home, http.Controller):
                     if hr_depat:
                         hr_depat.sudo().unlink()
             else:
-                request.env['dindin.synchronous.department'].start_synchronous_department()
+                request.env['hr.department'].synchronous_dingding_department()
         # -------------------
         # -----员工角色-------
         # -------------------

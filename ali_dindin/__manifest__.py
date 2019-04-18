@@ -21,7 +21,7 @@
         'views/asset.xml',
         'views/department.xml',
         'views/employee.xml',
-        'views/extcontact.xml',
+        'views/partner.xml',
     ],
     'qweb': [
         'static/xml/*.xml',

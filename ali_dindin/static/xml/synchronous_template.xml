@@ -7,7 +7,17 @@
         </div>
 	</t>
 
+     <t t-name="SynchronousDingDepartmentTemplate">
+        <div class="alert alert-info">
+            <p>选择开始后，系统将自动获取钉钉系统中的部门信息！</p>
+        </div>
+	</t>
 
+     <t t-name="SynchronousDingEmployeeTemplate">
+        <div class="alert alert-info">
+            <p>选择开始后，系统将获取钉钉系统中的部门员工信息! 请确保已先同步了部门数据!!!</p>
+        </div>
+	</t>
 
 </template>
 
