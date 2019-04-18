@@ -51,17 +51,6 @@
 - 钉钉运动(v1.5)
 
 
-
-**自动同步参数设置列表****或使用钉钉回调实时更新**
-
-| 动作名称       | 模型                          | Python代码                                                   |
-| :------------- | ----------------------------- | :----------------------------------------------------------- |
-| 同步用户       | dindin.synchronous.employee   | env['dindin.synchronous.employee'].start_synchronous_employee() |
-| 同步部门       | dindin.synchronous.department | env['dindin.synchronous.department'].start_synchronous_department() |
-| 同步联系人标签 | dindin.synchronous.extcontact | env['dindin.synchronous.extcontact'].start_synchronous_category() |
-| 同步联系人列表 | dindin.synchronous.extcontact | env['dindin.synchronous.extcontact'].start_synchronous_partner |
-|                |                               |                                                              |
-
 ### 常见问题：
 
 - **钉钉扫码登录后会报错：Internal Server Error**

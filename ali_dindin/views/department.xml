@@ -12,7 +12,6 @@
         </field>
     </record>
 
-
     <record id="ali_dindin.dindin_synchronous_department_form_view" model="ir.ui.view">
         <field name="name">部门同步</field>
         <field name="model">dindin.synchronous.department</field>
@@ -42,15 +41,15 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="部门" id="ali_dindin.department_menu"
-              parent="ali_dindin.synchronous_menu"
-              sequence="3"
-    />
+<!--    <menuitem name="部门" id="ali_dindin.department_menu"-->
+<!--              parent="ali_dindin.synchronous_menu"-->
+<!--              sequence="3"-->
+<!--    />-->
 
-    <menuitem name="部门同步" id="ali_dindin.department_sy_menu"
-              parent="ali_dindin.department_menu"
-              sequence="1"
-              action="ali_dindin.dindin_synchronous_department_action"/>
+<!--    <menuitem name="部门同步" id="ali_dindin.department_sy_menu"-->
+<!--              parent="ali_dindin.department_menu"-->
+<!--              sequence="1"-->
+<!--              action="ali_dindin.dindin_synchronous_department_action"/>-->
 
 
 </odoo>

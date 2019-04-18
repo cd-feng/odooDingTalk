@@ -48,10 +48,10 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="部门员工同步" id="ali_dindin.employee_sy_menu"
-              parent="ali_dindin.department_menu"
-              sequence="2"
-              action="ali_dindin.dindin_synchronous_employee_action"/>
+<!--    <menuitem name="部门员工同步" id="ali_dindin.employee_sy_menu"-->
+<!--              parent="ali_dindin.department_menu"-->
+<!--              sequence="2"-->
+<!--              action="ali_dindin.dindin_synchronous_employee_action"/>-->
 
 
 </odoo>

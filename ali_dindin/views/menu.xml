@@ -13,9 +13,9 @@
                   parent="ali_dindin.main_menu" sequence="75"
         />
 
-        <menuitem name="同步" id="ali_dindin.synchronous_menu"
-                  parent="ali_dindin.main_menu" sequence="80"
-        />
+<!--        <menuitem name="同步" id="ali_dindin.synchronous_menu"-->
+<!--                  parent="ali_dindin.main_menu" sequence="80"-->
+<!--        />-->
 
         <menuitem name="设置" id="ali_dindin.configure_menu"
                   parent="ali_dindin.main_menu" sequence="100"

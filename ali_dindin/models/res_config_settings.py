@@ -13,8 +13,6 @@ class ResConfigSettings(models.TransientModel):
     din_appkey = fields.Char(string=u'AppKey')
     din_appsecret = fields.Char(string=u'AppSecret')
     din_token = fields.Boolean(string="自动获取Token")
-    din_create_extcontact = fields.Boolean(string=u'添加外部联系人')
-    din_update_extcontact = fields.Boolean(string=u'修改外部联系人')
     din_delete_extcontact = fields.Boolean(string=u'删除外部联系人')
     din_create_employee = fields.Boolean(string=u'添加员工')
     din_update_employee = fields.Boolean(string=u'修改员工')
@@ -34,8 +32,6 @@ class ResConfigSettings(models.TransientModel):
             din_appkey=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_appkey'),
             din_appsecret=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_appsecret'),
             din_token=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_token'),
-            din_create_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_extcontact'),
-            din_update_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_extcontact'),
             din_delete_extcontact=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_extcontact'),
             din_create_employee=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_create_employee'),
             din_update_employee=self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_update_employee'),
@@ -56,8 +52,6 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_appkey', self.din_appkey)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_appsecret', self.din_appsecret)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_token', self.din_token)
-        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_extcontact', self.din_create_extcontact)
-        self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_extcontact', self.din_update_extcontact)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_delete_extcontact', self.din_delete_extcontact)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_create_employee', self.din_create_employee)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_update_employee', self.din_update_employee)

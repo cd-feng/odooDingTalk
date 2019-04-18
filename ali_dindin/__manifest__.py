@@ -18,9 +18,12 @@
         'views/menu.xml',
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
+        'views/asset.xml',
         'views/department.xml',
         'views/employee.xml',
         'views/extcontact.xml',
     ],
-
+    'qweb': [
+        'static/xml/*.xml',
+    ]
 }

@@ -36,51 +36,15 @@
                 <field name="din_company_name"/>
                 <field name="din_employee_id"/>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="create_ding_partner" type="object" string="上传钉钉联系人" class="oe_highlight"
+                                confirm="确认要讲此联系人上传至钉钉吗？若不是新创建的联系人则无法上传!"/>
+                    <button name="update_ding_partner" type="object" string="修改钉钉联系人" class="oe_highlight"
+                                confirm="系统将新的信息上传至钉钉,确认?"/>
+                </header>
+            </xpath>
         </field>
     </record>
-
-
-    <record id="ali_dindin.dindin_synchronous_extcontact_form_view" model="ir.ui.view">
-        <field name="name">联系人同步</field>
-        <field name="model">dindin.synchronous.extcontact</field>
-        <field name="arch" type="xml">
-            <form string="dindin">
-                <p class="alert alert-info">
-                    选择开始后，系统将自动获取钉钉系统中的联系人信息！成功后请转到联系人中查看
-                </p>
-                <group>
-                    <field name="sy_type" placeholder="请选择类型"/>
-                </group>
-                <footer>
-                    <button string="开始"
-                            name="start_synchronous"
-                            type="object"
-                            class="btn-primary"/>
-                    <button string="取消" class="btn-default" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
-    <record id="ali_dindin.dindin_synchronous_extcontact_action" model="ir.actions.act_window">
-        <field name="name">联系人同步</field>
-        <field name="res_model">dindin.synchronous.extcontact</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="ali_dindin.dindin_synchronous_extcontact_form_view"/>
-        <field name="target">new</field>
-    </record>
-
-    <menuitem name="联系人" id="ali_dindin.extcontact_menu"
-              parent="ali_dindin.synchronous_menu"
-              sequence="2"
-    />
-
-    <menuitem name="联系人同步" id="ali_dindin.extcontact_category_menu"
-              parent="ali_dindin.extcontact_menu"
-              sequence="1"
-              action="ali_dindin.dindin_synchronous_extcontact_action"/>
-
 
 </odoo>

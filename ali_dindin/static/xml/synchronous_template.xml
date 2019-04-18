@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="SynchronousDingPartnerTemplate">
+        <div class="alert alert-info">
+            <p>选择开始后，系统将自动获取钉钉系统中的联系人信息！</p>
+        </div>
+	</t>
+
+
+
+</template>
+
+
+
+
