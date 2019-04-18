@@ -28,10 +28,6 @@ class DinDinLogin(Home, http.Controller):
         """
         values = request.params.copy()
         return request.render('dindin_login.signup', values)
-        # qcontext = self.get_auth_signup_qcontext()
-        # response = request.render('dindin_login.signup', qcontext)
-        # response.headers['X-Frame-Options'] = 'DENY'
-        # return response
 
     @http.route('/dindin_login/get_url', type='http', auth="none")
     def get_url(self, **kw):
@@ -53,7 +49,7 @@ class DinDinLogin(Home, http.Controller):
     @http.route('/web/action_login', type='http', auth="none")
     def action_ding_login(self, redirect=None, **kw):
         """
-        接受到钉钉返回的数据时进入此方法，
+        接受到钉钉返回的数据时进入此方法
         1. 根据返回的临时授权码获取员工的信息
         2. 查找本地员工对应的关联系统用户。
         3. 界面跳转
@@ -92,20 +88,25 @@ class DinDinLogin(Home, http.Controller):
             values['databases'] = None
         old_uid = request.uid
         # 解密钉钉登录密码
+        logging.info(u'>>>:解密钉钉登录密码')
         password = base64.b64decode(user.din_password)
         password = password.decode(encoding='utf-8', errors='strict')
+        if password == '' or not password:
+            return self._do_err_redirect("用户:'{}'无法进行登录,请修改该用户登录密码并关联员工!".format(user.login))
         if password == '123456':
             user.password = '123'
             user.sudo()._set_password()
             return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login))
         uid = request.session.authenticate(request.session.db, user.login, password)
+        logging.info(u'>>>:uid: {}'.format(uid))
         if uid is not False:
             request.params['login_success'] = True
             if not redirect:
                 redirect = '/web'
+            logging.info(u'>>>:用户{}登录成功,将跳转到主界面'.format(user.login))
             return http.redirect_with_hash(redirect)
         request.uid = old_uid
-        return self._do_err_redirect("用户不存在或用户信息错误，无法完成登录，请联系管理员。")
+        return self._do_err_redirect("用户不存在或用户信息错误,无法完成登录,请联系管理员")
 
     def getUserInfobyDincode(self, d_code):
         """
@@ -119,7 +120,7 @@ class DinDinLogin(Home, http.Controller):
         current_milli_time = lambda: int(round(time.time() * 1000))
         msg = str(current_milli_time())
         # ------------------------
-        #   最坑的地方--签名
+        # 签名
         # ------------------------
         signature = hmac.new(key.encode('utf-8'), msg.encode('utf-8'),
                              hashlib.sha256).digest()
