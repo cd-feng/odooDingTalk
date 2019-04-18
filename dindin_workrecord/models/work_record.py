@@ -3,7 +3,6 @@ import datetime
 import json
 import logging
 import time
-
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
@@ -24,7 +23,7 @@ class DinDinWorkRecord(models.Model):
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'待办用户', required=True)
     record_time = fields.Datetime(string=u'待办时间', default=datetime.datetime.now())
     record_url = fields.Char(string='待办URL链接', required=True)
-    state = fields.Selection(string=u'发送状态', selection=[('00', '草稿'), ('01', '已发送'), ('02', '完成')], default='00')
+    state = fields.Selection(string=u'发送状态', selection=[('00', '草稿'), ('01', '已发送')], default='00')
     line_ids = fields.One2many(comodel_name='dindin.work.record.list', inverse_name='record_id', string=u'待办事项表单')
     record_id = fields.Char(string='待办任务ID', help="用于发送到钉钉后接受返回的id，通过id可以修改待办")
     record_type = fields.Selection(string=u'待办类型', selection=[('out', '发起'), ('put', '接收'), ], default='out')
@@ -80,11 +79,13 @@ class DinDinWorkRecord(models.Model):
                                 [('record_id', '=', res.get('record_id')), ('record_type', '!=', 'out')])
                             rec_line = list()
                             for res_line in res.get('forms'):
-                                rec_line.append((0, 0, {'title': res_line.get('title'), 'content': res_line.get('content')}))
+                                rec_line.append(
+                                    (0, 0, {'title': res_line.get('title'), 'content': res_line.get('content')}))
                             data = {
                                 'name': res.get('title'),
                                 'emp_id': emp.get('id'),
                                 'record_url': res.get('url'),
+                                'record_time': self.get_time_stamp(res.get('create_time')),
                                 'record_type': 'put',
                                 'record_id': res.get('record_id'),
                                 'line_ids': rec_line,
@@ -161,6 +162,18 @@ class DinDinWorkRecord(models.Model):
             record = self.env['dindin.work.record'].sudo().search(
                 [('emp_id', '=', emp[0].id), ('record_state', '=', '00'), ('record_type', '=', 'put')])
             return len(record)
+
+    @api.model
+    def get_time_stamp(self, timeNum):
+        """
+        将10位时间戳转换为时间
+        :param timeNum:
+        :return:
+        """
+        timeStamp = float(timeNum)
+        timeArray = time.localtime(timeStamp)
+        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+        return otherStyleTime
 
 
 class DinDinWorkRecordList(models.Model):

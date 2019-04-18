@@ -96,7 +96,7 @@
         <field name="name">获取待办</field>
         <field name="model">dindin.work.record</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc">
+            <tree default_order="id desc" create="false" edit="false">
                 <field name="name"/>
                 <field name="emp_id"/>
                 <field name="record_time"/>
