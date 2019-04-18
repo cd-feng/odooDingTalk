@@ -19,59 +19,57 @@ class HrDepartment(models.Model):
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
 
     @api.multi
-    def create_din_department(self, values):
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_create')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取父部门din_id
-        parent_id = False
-        if values.get('parent_id'):
-            department = self.env['hr.department'].sudo().search([('id', '=', values.get('parent_id'))])
-            parent_id = department[0].din_id if department[0].din_id else ''
-        else:
-            raise UserError("请选择上级部门!")
-        data = {
-            'name': values.get('name'),  # 部门名称
-            'parentid': parent_id,  # 父部门id
-        }
-        headers = {'Content-Type': 'application/json'}
-        try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
-            result = json.loads(result.text)
-            logging.info(">>>新增部门返回结果:{}".format(result))
-            if result.get('errcode') == 0:
-                return result.get('id')
+    def create_ding_department(self):
+        for res in self:
+            if res.din_id:
+                raise UserError("该部门已在钉钉中存在！")
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_create')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            data = {
+                'name': res.name,  # 部门名称
+            }
+            # 获取父部门din_id
+            if res.parent_id:
+                data.update({'parentid': res.parent_id.din_id if res.parent_id.din_id else ''})
             else:
-                raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("上传至钉钉超时！")
+                raise UserError("请选择上级部门!")
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = json.loads(result.text)
+                logging.info(">>>新增部门返回结果:{}".format(result))
+                if result.get('errcode') == 0:
+                    res.write({'din_id': result.get('id')})
+                    res.message_post(body=u"钉钉消息：部门信息已上传至钉钉", message_type='notification')
+                else:
+                    raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("上传至钉钉网络超时！")
 
     @api.multi
-    def update_din_department(self, department):
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_update')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取部门din_id
-        if department.parent_id:
-            dep = self.env['hr.department'].sudo().search([('id', '=', department.parent_id.id)])
-            parent_id = dep[0].din_id if dep[0].din_id else ''
-        else:
-            raise UserError("请选择上级部门!")
-        data = {
-            'id': department.din_id,  # id
-            'name': department.name,  # 部门名称
-            'parentid': parent_id,  # 父部门id
-        }
-        headers = {'Content-Type': 'application/json'}
-        try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
-                                   timeout=20)
-            result = json.loads(result.text)
-            logging.info(">>>修改部门时钉钉返回结果:{}".format(result))
-            if result.get('errcode') == 0:
-                department.message_post(body=u"修改信息已同步更新至钉钉", message_type='notification')
-            else:
-                raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("上传至钉钉超时！")
+    def update_ding_department(self):
+        for res in self:
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_update')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            # 获取部门din_id
+            if not res.parent_id:
+                raise UserError("请选择上级部门!")
+            data = {
+                'id': res.din_id,  # id
+                'name': res.name,  # 部门名称
+                'parentid': res.parent_id.din_id,  # 父部门id
+            }
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = json.loads(result.text)
+                logging.info(">>>修改部门时钉钉返回结果:{}".format(result))
+                if result.get('errcode') == 0:
+                    res.message_post(body=u"钉钉消息：新的信息已同步更新至钉钉", message_type='notification')
+                else:
+                    raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("上传至钉钉超时！")
 
     # 重写删除方法
     @api.multi

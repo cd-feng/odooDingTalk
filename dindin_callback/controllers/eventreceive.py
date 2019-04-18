@@ -44,14 +44,14 @@ class CallBack(Home, http.Controller):
                 request.env['hr.employee'].sudo().synchronous_dingding_employee()
         elif event_type == 'org_dept_create' or event_type == 'org_dept_modify' or event_type == 'org_dept_remove':
             logging.info(">>>钉钉回调-通讯录企业部门创建/修改/删除")
-            DeptId = self.msg.get('DeptId')
+            DeptId = msg.get('DeptId')
             if event_type == 'org_dept_remove':
                 for dept in DeptId:
                     hr_depat = request.env['hr.department'].sudo().search([('din_id', '=', dept)])
                     if hr_depat:
                         hr_depat.sudo().unlink()
             else:
-                request.env['hr.department'].synchronous_dingding_department()
+                request.env['hr.department'].sudo().synchronous_dingding_department()
         # -------------------
         # -----员工角色-------
         # -------------------

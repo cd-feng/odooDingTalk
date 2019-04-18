@@ -25,73 +25,76 @@ class HrEmployee(models.Model):
 
     # 上传员工到钉钉
     @api.multi
-    def create_din_employee(self, values):
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_create')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取部门din_id
-        department_list = list()
-        if values.get('department_id'):
-            department = self.env['hr.department'].sudo().search([('id', '=', values.get('department_id'))])
-            if department:
-                department_list.append(department[0].din_id)
-        else:
-            raise UserError("请选择员工部门!")
-        data = {
-            'name': values.get('name'),  # 名称
-            'department': department_list,  # 部门
-            'position': values.get('job_title') if values.get('job_title') else '',  # 职位
-            'mobile': values.get('mobile_phone') if values.get('mobile_phone') else '',  # 手机
-            'tel': values.get('work_phone') if values.get('work_phone') else '',  # 手机
-            'workPlace': values.get('work_location') if values.get('work_location') else '',  # 办公地址
-            'remark': values.get('notes') if values.get('notes') else '',  # 备注
-            'email': values.get('work_email') if values.get('work_email') else '',  # 邮箱
-            'jobnumber': values.get('din_jobnumber') if values.get('din_jobnumber') else '',  # 工号
-        }
-        headers = {'Content-Type': 'application/json'}
-        try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
-            result = json.loads(result.text)
-            logging.info(result)
-            if result.get('errcode') == 0:
-                return result.get('userid')
+    def create_ding_employee(self):
+        for res in self:
+            if res.din_id:
+                raise UserError("该员工已在钉钉中存在！")
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_create')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            # 获取部门din_id
+            department_list = list()
+            if res.department_id:
+                department_list.append(res.department_id.din_id)
             else:
-                raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("上传员工至钉钉超时！")
+                raise UserError("请选择员工部门!")
+            data = {
+                'name': res.name,  # 名称
+                'department': department_list,  # 部门
+                'position': res.job_title if res.job_title else '',  # 职位
+                'mobile': res.mobile_phone if res.mobile_phone else '',  # 手机
+                'tel': res.work_phone if res.work_phone else '',  # 手机
+                'workPlace': res.work_location if res.work_location else '',  # 办公地址
+                'remark': res.notes if res.notes else '',  # 备注
+                'email': res.work_email if res.work_email else '',  # 邮箱
+                'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
+            }
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = json.loads(result.text)
+                logging.info(result)
+                if result.get('errcode') == 0:
+                    res.write({'din_id': result.get('userid')})
+                    res.message_post(body=u"钉钉消息：员工信息已上传至钉钉", message_type='notification')
+                else:
+                    raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("上传员工至钉钉超时！")
 
     # 修改员工同步到钉钉
     @api.multi
-    def update_din_employee(self, emp):
+    def update_ding_employee(self):
         """修改员工时同步至钉钉"""
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_update')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取部门din_id
-        department_list = list()
-        if not emp.department_id:
-            raise UserError("请选择员工部门!")
-        data = {
-            'userid': emp.din_id,  # userid
-            'name': emp.name,  # 名称
-            'department': department_list.append(emp.department_id.din_id),  # 部门
-            'position': emp.job_title if emp.job_title else '',  # 职位
-            'mobile': emp.mobile_phone if emp.mobile_phone else '',  # 手机
-            'tel': emp.work_phone if emp.work_phone else '',  # 手机
-            'workPlace': emp.work_location if emp.work_location else '',  # 办公地址
-            'remark': emp.notes if emp.notes else '',  # 备注
-            'email': emp.work_email if emp.work_email else '',  # 邮箱
-            'jobnumber': emp.din_jobnumber if emp.din_jobnumber else '',  # 工号
-        }
-        headers = {'Content-Type': 'application/json'}
-        try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
-            result = json.loads(result.text)
-            logging.info(result)
-            if result.get('errcode') == 0:
-                emp.message_post(body=u"新的信息已同步更新至钉钉", message_type='notification')
-            else:
-                raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("上传员工至钉钉超时！")
+        for res in self:
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_update')]).value
+            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            # 获取部门din_id
+            department_list = list()
+            if not res.department_id:
+                raise UserError("请选择员工部门!")
+            data = {
+                'userid': res.din_id,  # userid
+                'name': res.name,  # 名称
+                'department': department_list.append(res.department_id.din_id),  # 部门
+                'position': res.job_title if res.job_title else '',  # 职位
+                'mobile': res.mobile_phone if res.mobile_phone else '',  # 手机
+                'tel': res.work_phone if res.work_phone else '',  # 手机
+                'workPlace': res.work_location if res.work_location else '',  # 办公地址
+                'remark': res.notes if res.notes else '',  # 备注
+                'email': res.work_email if res.work_email else '',  # 邮箱
+                'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
+            }
+            headers = {'Content-Type': 'application/json'}
+            try:
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = json.loads(result.text)
+                logging.info(result)
+                if result.get('errcode') == 0:
+                    res.message_post(body=u"新的信息已同步更新至钉钉", message_type='notification')
+                else:
+                    raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("上传员工至钉钉超时！")
 
     # 重写删除方法
     @api.multi
