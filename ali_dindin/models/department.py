@@ -130,7 +130,7 @@ class HrDepartment(models.Model):
             return {'state': False, 'msg': "获取部门失败，原因为:{}".format(result.get('errmsg'))}
 
 
-# 同步钉钉部门功能模型
+# 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousDepartment(models.TransientModel):
     _name = 'dindin.synchronous.department'
     _description = "同步钉钉部门功能模型"

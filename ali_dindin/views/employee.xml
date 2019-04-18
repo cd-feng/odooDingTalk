@@ -10,11 +10,13 @@
                 <field name="din_jobnumber"/>
                 <field name="din_hiredDate"/>
             </xpath>
-            <xpath expr="//div[@class='oe_button_box']" position="inside">
-                <button name="update_employee_dindin" type="object" class="oe_stat_button" icon="fa-archive"
-                        groups="ali_dindin.group_ali_dindin_user">
-                    上传钉钉
-                </button>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="create_ding_employee" type="object" string="上传至钉钉" class="oe_highlight"
+                                confirm="确认要将此员工上传至钉钉吗？若不是新创建的员工则无法上传!"/>
+                    <button name="update_ding_employee" type="object" string="更新至钉钉" class="oe_highlight"
+                                confirm="系统将新的信息上传至钉钉,确认?"/>
+                </header>
             </xpath>
         </field>
     </record>
