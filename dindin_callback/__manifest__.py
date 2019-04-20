@@ -20,6 +20,8 @@
     ],
     'qweb': [
         'static/xml/*.xml'
-    ]
-
+    ],
+    'price': '100',
+    'currency': 'EUR',
+    'images':  ['static/description/app1.png', 'static/description/app2.png']
 }
