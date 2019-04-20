@@ -17,5 +17,8 @@
         'data/defaulr_num.xml',
         'views/calendar.xml',
     ],
+    'price': '5',
+    'currency': 'EUR',
+    'images':  ['static/description/app1.png', 'static/description/app2.png']
 
 }
