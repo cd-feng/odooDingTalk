@@ -25,5 +25,6 @@
     ],
     'qweb': [
         'static/xml/*.xml',
-    ]
+    ],
+    'images': ['static/description/index2.png','static/description/index1.png']
 }
