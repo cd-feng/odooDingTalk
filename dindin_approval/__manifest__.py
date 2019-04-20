@@ -23,6 +23,6 @@
         'static/xml/*.xml',
     ],
     'price': '100',
-    'currency': 'CNY',
+    'currency': 'EUR',
     'images':  ['static/description/app1.png', 'static/description/app2.png']
 }
