@@ -18,6 +18,7 @@
         'views/menu.xml',
         'views/assets.xml',
         'views/hrm_list.xml',
+        'views/hrm_dimission_list.xml',
     ],
     'qweb': [
          'static/xml/*.xml',

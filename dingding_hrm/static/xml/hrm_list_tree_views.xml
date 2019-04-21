@@ -18,4 +18,17 @@
         </t>
     </t>
 
+
+    <t t-name="HrmListView.get_hrm_dimission_button">
+        <button type="button" class="btn btn-secondary o_button_get_dingding_hrm_dimission_list">
+            获取离职员工信息
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="HrmListView.hrm_dimission_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-call="HrmListView.get_hrm_dimission_button"/>
+        </t>
+    </t>
+
 </templates>

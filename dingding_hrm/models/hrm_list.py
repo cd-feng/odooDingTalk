@@ -101,3 +101,6 @@ class GetDingDingHrmList(models.TransientModel):
         except ReadTimeout:
             raise UserError("网络连接超时")
         logging.info(">>>获取钉钉员工花名册end")
+        action = self.env.ref('dingding_hrm.dingding_hrm_list_action')
+        action_dict = action.read()[0]
+        return action_dict

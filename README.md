@@ -6,8 +6,6 @@
 >
 > 在使用本模块前，请先将钉钉中你创建的E应用或微应用权限放开和配置出口ip，得到钉钉应用的 **AppKey**和 **AppSecret**， 至于钉钉后台中的配置请参照：https://open-doc.dingtalk.com/microapp/bgb96b
 
-至v1.5版本开始，将依赖OA协同办公模块，地址： [oa协同办公](https://github.com/suxuefeng20/Odoo12-OA)
-
 博客地址： https://sxfblog.com/index.php/archives/371.html
 
 主要功能：**
@@ -42,8 +40,9 @@
 
 - 待办事项(v1.5)
 
-- 审批(v2.0)
+- 审批(v2.0) 需结合oa协同办公模块使用
 
+- 智能人事
 
 
 ### 常见问题：
