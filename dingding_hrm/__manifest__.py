@@ -22,7 +22,7 @@
     'qweb': [
          'static/xml/*.xml',
     ],
-    'price': '20',
+    'price': '50',
     'currency': 'EUR',
     'images':  ['static/description/app1.png']
 }
