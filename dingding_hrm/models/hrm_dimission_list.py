@@ -2,7 +2,6 @@
 import json
 import logging
 import time
-
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models

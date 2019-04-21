@@ -19,6 +19,7 @@
         'views/assets.xml',
         'views/hrm_list.xml',
         'views/hrm_dimission_list.xml',
+        'views/add_employee.xml',
     ],
     'qweb': [
          'static/xml/*.xml',

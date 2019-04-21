@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="dingding_add_employee_form_view" model="ir.ui.view">
+        <field name="name">dingding.add.employee.form</field>
+        <field name="model">dingding.add.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="mobile"/>
+                    </group>
+                    <group>
+                        <field name="pre_entry_time"/>
+                        <field name="dept_id" options="{'horizontal': true, 'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="确认" name="add_employee" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_add_employee_action" model="ir.actions.act_window">
+        <field name="name">DingDing Add Employee</field>
+        <field name="res_model">dingding.add.employee</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

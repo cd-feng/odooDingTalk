@@ -9,6 +9,7 @@
             <xpath expr="//field[@name='work_phone']" position="after">
                 <field name="din_jobnumber"/>
                 <field name="din_hiredDate"/>
+                <field name="work_status"/>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <header>

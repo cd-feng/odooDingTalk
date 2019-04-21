@@ -22,13 +22,12 @@ class HrEmployee(models.Model):
     din_jobnumber = fields.Char(string='钉钉员工工号')
     din_hiredDate = fields.Date(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
+    work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
 
     # 上传员工到钉钉
     @api.multi
     def create_ding_employee(self):
         for res in self:
-            if res.din_id:
-                raise UserError("该员工已在钉钉中存在！")
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_create')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
             # 获取部门din_id
