@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingding_hrm_list,dingding.hrm.list,model_dingding_hrm_list,dingding_hrm.personnel,1,1,1,1
+access_dingding_hrm_list_line,dingding.hrm.list.line,model_dingding_hrm_list_line,dingding_hrm.personnel,1,1,1,1
+
+

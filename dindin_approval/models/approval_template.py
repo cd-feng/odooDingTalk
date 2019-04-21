@@ -81,6 +81,8 @@ class DinDinApprovalTemplate(models.Model):
                     return {'state': False, 'number': 0, 'msg': result.get('errmsg')}
             except ReadTimeout:
                 return {'state': False, 'number': 0, 'msg': '网络连接超时'}
+            except Exception:
+                return {'state': False, 'number': 0, 'msg': "网络连接失败"}
         else:
             return {'state': False, 'number': 0, 'msg': 'None'}
 

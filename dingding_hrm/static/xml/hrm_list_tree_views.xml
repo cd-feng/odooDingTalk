@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="HrmListView.get_hrm_button">
+        <button type="button" class="btn btn-secondary o_button_get_dingding_hrm_list">
+            获取钉钉员工花名册
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="HrmListView.hrm_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="HrmListView.get_hrm_button"/>
+        </t>
+    </t>
+
+</templates>

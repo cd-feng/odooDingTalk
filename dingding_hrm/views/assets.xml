@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingding_hrm_template" name="DingDing Hrm Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_list.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

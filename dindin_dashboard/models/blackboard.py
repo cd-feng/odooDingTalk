@@ -41,4 +41,6 @@ class DinDinBlackboard(models.TransientModel):
                     return {'state': False, 'msg': '获取公告失败,详情为:{}'.format(result.get('errmsg'))}
             except ReadTimeout:
                 return {'state': False, 'msg': '获取公告网络连接超时'}
+            except Exception:
+                return {'state': False, 'msg': "获取用户'{}'的公告失败".format(self.env.user.name)}
         logging.info(">>>获取用户公告信息结束...")
