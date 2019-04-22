@@ -53,7 +53,10 @@
 >
 > 2.检查钉钉后台中的。移动接入应用并配置好回调地址(即odoo地址) http://ip:port/web/action_login
 >
-> Ip:port为对应的IP地址和端口    /web/action_login 为回调函数。
+> Ip:port为对应的IP地址和端口    /web/action_login 为回调函数。（现阶段未做优化，在回调管理中创建回调事件的时候请填写对应服务器地址）
+>
+> 安装扫码登录以后，记得修改当前账号的密码，不然会出现Internal Server Error错误！！！！！
+
 
 - **仪表盘：获取公告失败,详情为:无效的USERID、代审批数、公告数**
 
