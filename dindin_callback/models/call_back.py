@@ -36,17 +36,16 @@ class DinDinCallback(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
     call_id = fields.Many2one(comodel_name='dindin.users.callback.list', string=u'回调类型', ondelete='cascade')
-    value_type = fields.Selection(string=u'注册事件类型', selection=ValueType, default='all', required=True, copy=False)
+    value_type = fields.Selection(string=u'注册事件类型', selection=ValueType, default='all', copy=False)
     token = fields.Char(string='Token', default=_get_default_token, size=50)
     aes_key = fields.Char(string='数据加密密钥', default=_get_default_aes_key, size=50)
-    url = fields.Char(string='回调URL', size=200, default='/callback/eventreceive')
+    url = fields.Char(string='回调URL', size=200, default='http://ip:port/callback/eventreceive')
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00', copy=False)
     call_ids = fields.Many2many(comodel_name='dindin.users.callback.list', relation='dindin_users_callback_and_list_ref',
                                 column1='call_id', column2='list_id', string=u'回调类型', copy=False)
     
     _sql_constraints = [
         ('value_type_uniq', 'unique(value_type)', u'事件类型重复!'),
-        ('company_id_uniq', 'unique(company_id)', u'公司只能创建一个回调管理!'),
     ]
 
     @api.onchange('value_type')
@@ -157,7 +156,6 @@ class DinDinCallback(models.Model):
             raise UserError("网络连接超时")
         logging.info(">>>删除事件End...")
 
-    # TODO 未完善
     @api.model
     def get_all_call_back(self):
         """
@@ -173,7 +171,24 @@ class DinDinCallback(models.Model):
             if result.get('errcode') != 0:
                 return {'state': False, 'msg': result.get('errmsg')}
             else:
-                print(result)
+                tag_list = list()
+                for tag in result.get('call_back_tag'):
+                    callback_list = self.env['dindin.users.callback.list'].search([('value', '=', tag)])
+                    if callback_list:
+                        tag_list.append(callback_list[0].id)
+                callback = self.env['dindin.users.callback'].search([('company_id', '=', self.env.user.company_id.id)])
+                data = {
+                    'call_ids': [(6, 0, tag_list)],
+                    'url': result.get('url'),
+                    'aes_key': result.get('aes_key'),
+                    'token': result.get('token'),
+                    'company_id': self.env.user.company_id.id,
+                    'state': '01',
+                }
+                if callback:
+                    callback.write(data)
+                else:
+                    self.env['dindin.users.callback'].create(data)
                 return {'state': True}
         except ReadTimeout:
             return {'state': False, 'msg': '网络连接超时'}
