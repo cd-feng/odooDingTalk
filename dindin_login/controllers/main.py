@@ -91,13 +91,19 @@ class DinDinLogin(Home, http.Controller):
         logging.info(u'>>>:解密钉钉登录密码')
         password = base64.b64decode(user.din_password)
         password = password.decode(encoding='utf-8', errors='strict')
+        logging.info(">>>d1")
         if password == '' or not password:
+            logging.info(">>>d2")
             return self._do_err_redirect("用户:'{}'无法进行登录,请修改该用户登录密码并关联员工!".format(user.login))
         if password == '123456':
-            user.password = '123'
+            logging.info(">>>d3")
+            user.sudo().password = '123'
             user.sudo()._set_password()
+            logging.info(">>>d4")
             return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login))
+        logging.info(">>>d5")
         uid = request.session.authenticate(request.session.db, user.login, password)
+        logging.info(">>>d6")
         logging.info(u'>>>:uid: {}'.format(uid))
         if uid is not False:
             request.params['login_success'] = True
