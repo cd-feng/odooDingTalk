@@ -19,4 +19,5 @@
         'views/work_message.xml',
         'views/message_template.xml',
     ],
+    'images':  ['static/description/msg4.png', 'static/description/msg3.png', 'static/description/msg2.png']
 }
