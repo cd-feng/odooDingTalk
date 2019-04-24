@@ -17,12 +17,6 @@
         'data/config.xml',
         'views/config.xml',
         'views/work_message.xml',
-        # 'views/department.xml',
-        # 'views/employee.xml',
-        # 'views/extcontact.xml',
+        'views/message_template.xml',
     ],
-    # 'qweb': [
-    #     'static/xml/*.xml'
-    # ]
-
 }
