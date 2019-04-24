@@ -19,6 +19,8 @@ models.BaseModel.create = create
 
 
 def check_model_send_message(self, record):
+    if not self.env.registry.models.get('dindin.message.template'):
+        return
     model = self._name
     res_id = record.id
     check_result = self.env['dindin.message.template'].check_message_template(model, 'create')
