@@ -207,3 +207,4 @@ class DinDinLogin(Home, http.Controller):
         logging.info(">>>result:{}".format(result))
         if not result['state']:
             logging.info(result['msg'])
+        return self._do_post_login(result['user'], redirect)
