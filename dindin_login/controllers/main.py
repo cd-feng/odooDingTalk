@@ -178,18 +178,15 @@ class DinDinLogin(Home, http.Controller):
     @http.route('/web/dingding/account_login', type='http', auth='public', website=True, sitemap=False)
     def web_dingding_account_login(self, *args, **kw):
         """
-        主页点击钉钉扫码登录route 将返回到扫码页面
+        主页点击钉钉账号密码登录 重定向到钉钉登录页
         :param args:
         :param kw:
         :return:
         """
-        # 拼接url
         url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'sns_authorize')]).value
         appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
-        # 回调地址
         redirect_url = '{}web/dingding/account_action_login'.format(request.httprequest.host_url)
         new_url = '{}appid={}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri={}'.format(url, appid, redirect_url)
-        # 重定向
         return http.redirect_with_hash(new_url)
 
     @http.route('/web/dingding/account_action_login', type='http', auth="none")
