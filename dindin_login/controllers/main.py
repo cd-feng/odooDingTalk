@@ -133,7 +133,7 @@ class DinDinLogin(Home, http.Controller):
         try:
             result = requests.post(url=new_url, headers=headers, data=json.dumps(data), timeout=15)
             result = json.loads(result.text)
-            logging.info(">>>扫码登录获取用户信息返回结果{}".format(result))
+            logging.info(">>>钉钉登录获取用户信息返回结果{}".format(result))
             if result.get('errcode') == 0:
                 user_info = result.get('user_info')
                 # 通过unionid获取userid并得到系统的user
@@ -147,7 +147,7 @@ class DinDinLogin(Home, http.Controller):
                 else:
                     return {'state': False, 'msg': "钉钉员工'{}'在系统中不存在,请联系管理员维护!".format(user_info.get('nick'))}
             else:
-                return {'state': False, 'msg': '扫码登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
+                return {'state': False, 'msg': '钉钉登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
         except ReadTimeout:
             return {'state': False, 'msg': '网络连接超时'}
 
@@ -174,3 +174,36 @@ class DinDinLogin(Home, http.Controller):
         err_values['error'] = _(errmsg)
         http.redirect_with_hash('/web/login')
         return request.render('dindin_login.signup', err_values)
+
+    @http.route('/web/dingding/account_login', type='http', auth='public', website=True, sitemap=False)
+    def web_dingding_account_login(self, *args, **kw):
+        """
+        主页点击钉钉扫码登录route 将返回到扫码页面
+        :param args:
+        :param kw:
+        :return:
+        """
+        # 拼接url
+        url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'sns_authorize')]).value
+        appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
+        # 回调地址
+        redirect_url = '{}web/dingding/account_action_login'.format(request.httprequest.host_url)
+        new_url = '{}appid={}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri={}'.format(url, appid, redirect_url)
+        # 重定向
+        return http.redirect_with_hash(new_url)
+
+    @http.route('/web/dingding/account_action_login', type='http', auth="none")
+    def dingding_account_action_login(self, redirect=None, **kw):
+        """
+        :param redirect:
+        :param kw:
+        :return:
+        """
+        code = request.params['code']
+        if not code:
+            return self._do_err_redirect("错误的访问地址,请输入正确的访问地址")
+        logging.info(">>>获取的code为：{}".format(code))
+        result = self.getUserInfobyDincode(code)
+        logging.info(">>>result:{}".format(result))
+        if not result['state']:
+            logging.info(result['msg'])

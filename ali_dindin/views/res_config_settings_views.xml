@@ -104,7 +104,7 @@
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="din_login_appid" placeholder="请输入扫码登录appId！"/>
+                                <field name="din_login_appid" placeholder="请输入钉钉登录appId！"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="din_login_appid"/>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="din_login_appsecret" placeholder="请输入扫码登录appSecret！"/>
+                                <field name="din_login_appsecret" placeholder="请输入钉钉登录appSecret！"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="din_login_appsecret"/>
