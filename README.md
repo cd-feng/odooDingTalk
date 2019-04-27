@@ -7,7 +7,8 @@
 > 在使用本模块前，请先将钉钉中你创建的E应用或微应用权限放开和配置出口ip，得到钉钉应用的 **AppKey**和 **AppSecret**， 至于钉钉后台中的配置请参照：>https://open-doc.dingtalk.com/microapp/bgb96b
 >odoo-DingDing模块组成：  
 >
-> **博客地址： https://sxfblog.com/index.php/archives/371.html**
+> **博客地址： https://sxfblog.com/index.php/archives/371.html**  
+
 > **QQ群：1019231617 若你会odoo开发、或有好的建议欢迎加入群共同努力完善集成钉钉的功能**
 
 -**主要功能：**
