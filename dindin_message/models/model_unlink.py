@@ -23,7 +23,10 @@ def check_model_send_message(self):
         if res.id:
             model = res._name
             res_id = res.id
-            check_result = self.env['dindin.message.template'].check_message_template(model, 'delete')
+            try:
+                check_result = self.env['dindin.message.template'].check_message_template(model, 'delete')
+            except Exception as e:
+                return
             if not check_result:
                 return
             logging.info(">>>model:{}-记录id:{},进行发送模板消息".format(model, res_id))
