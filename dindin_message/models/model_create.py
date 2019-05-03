@@ -27,6 +27,8 @@ def check_model_send_message(self, record):
         check_result = self.env['dindin.message.template'].check_message_template(model, 'create')
     except ProgrammingError as e:
         return
+    except Exception as e:
+        return
     if not check_result:
         return
     logging.info(">>>model:{}-记录id:{},进行发送模板消息".format(model, res_id))
