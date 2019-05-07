@@ -60,10 +60,11 @@ class DinDinSimpleGroups(models.Model):
                         'member_count': int(group.get('member_count')),
                     }
                     manager_ids = list()
-                    for emp in group.get('manager_list'):
-                        emp_res = self.env['hr.employee'].sudo().search([('din_id', '=', emp)])
-                        if emp_res:
-                            manager_ids.append(emp_res.id)
+                    if group.get('manager_list'):
+                        for emp in group.get('manager_list'):
+                            emp_res = self.env['hr.employee'].sudo().search([('din_id', '=', emp)])
+                            if emp_res:
+                                manager_ids.append(emp_res.id)
                     data.update({'manager_list': [(6, 0, manager_ids)]})
                     self_group = self.env['dindin.simple.groups'].search([('group_id', '=', group.get('group_id'))])
                     if self_group:
