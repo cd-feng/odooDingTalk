@@ -111,7 +111,7 @@ class HrEmployee(models.Model):
             din_delete_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee')
             if din_delete_employee:
                 self.delete_din_employee(userid)
-        return True
+            return True
 
     @api.model
     def delete_din_employee(self, userid):
