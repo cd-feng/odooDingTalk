@@ -59,7 +59,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="din_token"/>
                                 <div class="text-muted">
-                                    自动获取Token，间隔为每60分钟
+                                    自动获取Token，间隔为每90分钟
                                 </div>
                             </div>
                         </div>
