@@ -74,11 +74,12 @@ class HrDepartment(models.Model):
     # 重写删除方法
     @api.multi
     def unlink(self):
-        din_id = self.din_id
-        super(HrDepartment, self).unlink()
-        din_delete_department = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department')
-        if din_delete_department:
-            self.delete_din_department(din_id)
+        for res in self:
+            din_id = res.din_id
+            super(HrDepartment, self).unlink()
+            din_delete_department = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department')
+            if din_delete_department:
+                self.delete_din_department(din_id)
         return True
 
     @api.model

@@ -95,14 +95,22 @@ class HrEmployee(models.Model):
             except ReadTimeout:
                 raise UserError("上传员工至钉钉超时！")
 
+    @api.constrains('user_id')
+    def constrains_dingding_user_id(self):
+        """当选择了相关用户时，需要检查系统用户是否只对应一个员工"""
+        emps = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)])
+        if len(emps) > 1:
+            raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
+
     # 重写删除方法
     @api.multi
     def unlink(self):
-        userid = self.din_id
-        super(HrEmployee, self).unlink()
-        din_delete_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee')
-        if din_delete_employee:
-            self.delete_din_employee(userid)
+        for res in self:
+            userid = res.din_id
+            super(HrEmployee, self).unlink()
+            din_delete_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee')
+            if din_delete_employee:
+                self.delete_din_employee(userid)
         return True
 
     @api.model

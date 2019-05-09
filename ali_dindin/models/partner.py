@@ -116,10 +116,11 @@ class ResPartner(models.Model):
     # 重写删除方法
     @api.multi
     def unlink(self):
-        din_userid = self.din_userid
-        super(ResPartner, self).unlink()
-        if self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_extcontact'):
-            self.delete_din_extcontact(din_userid)
+        for res in self:
+            din_userid = res.din_userid
+            super(ResPartner, self).unlink()
+            if self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_extcontact'):
+                self.delete_din_extcontact(din_userid)
         return True
 
     @api.model
