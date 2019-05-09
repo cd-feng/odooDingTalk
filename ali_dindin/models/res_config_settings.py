@@ -82,5 +82,6 @@ class ResConfigSettings(models.TransientModel):
         else:
             cron = self.env['ir.cron'].sudo().search(
                 [('code', '=', "env['ali.dindin.get.token'].get_token()")])
-            cron.sudo().unlink()
+            if len(cron) >= 1:
+                cron.sudo().unlink()
 
