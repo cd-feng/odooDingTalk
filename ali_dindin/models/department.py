@@ -80,7 +80,7 @@ class HrDepartment(models.Model):
             din_delete_department = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_department')
             if din_delete_department:
                 self.delete_din_department(din_id)
-        return True
+            return True
 
     @api.model
     def delete_din_department(self, din_id):
