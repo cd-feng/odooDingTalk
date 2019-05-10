@@ -98,9 +98,10 @@ class HrEmployee(models.Model):
     @api.constrains('user_id')
     def constrains_dingding_user_id(self):
         """当选择了相关用户时，需要检查系统用户是否只对应一个员工"""
-        emps = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)])
-        if len(emps) > 1:
-            raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
+        if self.user_id:
+            emps = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)])
+            if len(emps) > 1:
+                raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
 
     # 重写删除方法
     @api.multi
