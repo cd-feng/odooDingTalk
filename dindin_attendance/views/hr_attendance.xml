@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_out']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_in']" position="after">
+                <field name="ding_group_id"/>
+                <field name="recordId"/>
+                <field name="workDate"/>
+                <field name="checkType"/>
+                <field name="timeResult"/>
+                <field name="locationResult"/>
+                <field name="baseCheckTime"/>
+                <field name="sourceType"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_form_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_out']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <group>
+                        <field name="ding_group_id"/>
+                        <field name="recordId"/>
+                        <field name="workDate"/>
+                        <field name="checkType"/>
+                    </group>
+                    <group>
+                        <field name="timeResult"/>
+                        <field name="locationResult"/>
+                        <field name="baseCheckTime"/>
+                        <field name="sourceType"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter_inherit" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="ding_group_id"/>
+                <field name="recordId"/>
+                <field name="workDate"/>
+                <field name="checkType"/>
+                <field name="timeResult"/>
+                <field name="locationResult"/>
+                <field name="baseCheckTime"/>
+                <field name="sourceType"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_check_out']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_check_out']" position="after">
+                <filter name="groupby_checkType" string="考勤类型" context="{'group_by': 'checkType'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

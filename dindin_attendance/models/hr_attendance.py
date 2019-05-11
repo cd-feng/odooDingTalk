@@ -4,18 +4,15 @@ import logging
 import time
 import requests
 from requests import ReadTimeout
-from odoo import api, fields, models
 from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
-# 已弃用，已经钉钉考勤整合至odoo考勤
+from odoo import models, fields, api
 
 
-class DinDinAttendanceList(models.Model):
-    _name = 'dindin.attendance.list'
-    _description = '打卡列表'
-    _rec_name = 'emp_id'
+class HrAttendance(models.Model):
+    _inherit = "hr.attendance"
+    _description = "Attendance"
 
+    check_in = fields.Datetime(string="打卡时间", default=fields.Datetime.now, required=False)
     TimeResult = [
         ('Normal', '正常'),
         ('Early', '早退'),
@@ -36,19 +33,15 @@ class DinDinAttendanceList(models.Model):
         ('APPROVE', '审批系统'),
         ('SYSTEM', '考勤系统'),
         ('AUTO_CHECK', '自动打卡'),
+        ('odoo', 'Odoo系统'),
     ]
-
-    company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
-                                 default=lambda self: self.env.user.company_id.id)
-    group_id = fields.Many2one(comodel_name='dindin.simple.groups', string=u'考勤组')
+    ding_group_id = fields.Many2one(comodel_name='dindin.simple.groups', string=u'钉钉考勤组')
     recordId = fields.Char(string='记录ID')
     workDate = fields.Date(string=u'工作日')
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
     checkType = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')])
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult)
     locationResult = fields.Selection(string=u'位置结果', selection=LocationResult)
     baseCheckTime = fields.Datetime(string=u'基准时间')
-    userCheckTime = fields.Datetime(string=u'实际打卡时间')
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
 
     @api.model
@@ -147,7 +140,7 @@ class DinDinAttendanceList(models.Model):
                         'timeResult': rec.get('timeResult'),  # 时间结果
                         'locationResult': rec.get('locationResult'),  # 考勤类型
                         'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
-                        'userCheckTime': self.get_time_stamp(rec.get('userCheckTime')),  # 实际打卡时间
+                        'check_in': self.get_time_stamp(rec.get('userCheckTime')),  # 实际打卡时间
                         'sourceType': rec.get('sourceType'),  # 数据来源
                     }
                     groups = self.env['dindin.simple.groups'].sudo().search([('group_id', '=', rec.get('groupId'))])
@@ -155,13 +148,14 @@ class DinDinAttendanceList(models.Model):
                         data.update({'group_id': groups[0].id})
                     emp_id = self.env['hr.employee'].sudo().search([('din_id', '=', rec.get('userId'))])
                     if emp_id:
-                        data.update({'emp_id': emp_id[0].id})
-                    a_list = self.env['dindin.attendance.list'].search(
-                        [('recordId', '=', rec.get('recordId')),('emp_id', '=',  emp_id[0].id),  ('baseCheckTime', '=', self.get_time_stamp(rec.get('baseCheckTime')))])
+                        data.update({'employee_id': emp_id[0].id})
+                    a_list = self.env['hr.attendance'].search(
+                        [('recordId', '=', rec.get('recordId')), ('employee_id', '=', emp_id[0].id),
+                         ('baseCheckTime', '=', self.get_time_stamp(rec.get('baseCheckTime')))])
                     if a_list:
                         a_list.sudo().write(data)
                     else:
-                        self.env['dindin.attendance.list'].sudo().create(data)
+                        self.env['hr.attendance'].sudo().create(data)
                 if result.get('hasMore'):
                     return True
                 else:
@@ -182,3 +176,41 @@ class DinDinAttendanceList(models.Model):
         timeArray = time.localtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
+
+    @api.constrains('check_in', 'check_out', 'employee_id')
+    def _check_validity(self):
+        """
+        取消系统自带验证出勤记录的有效性的验证
+        :return:
+        """
+        return True
+
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    @api.multi
+    def attendance_action_change(self):
+        """ Check In/Check Out action
+            Check In: create a new attendance record
+            Check Out: modify check_out field of appropriate attendance record
+        """
+        if len(self) > 1:
+            raise requests.exceptions.UserError('无法对多名员工进行登记或签退')
+        action_date = fields.Datetime.now()
+        if self.attendance_state != 'checked_in':
+            return self.env['hr.attendance'].create({
+                'employee_id': self.id,
+                'check_in': action_date,
+                'workDate': fields.datetime.now(),
+                'checkType': 'OffDuty',
+                'sourceType': 'odoo',
+            })
+        else:
+            return self.env['hr.attendance'].create({
+                'employee_id': self.id,
+                'check_in': action_date,
+                'workDate': fields.datetime.now(),
+                'checkType': 'OnDuty',
+                'sourceType': 'odoo',
+            })
