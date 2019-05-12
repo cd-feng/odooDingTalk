@@ -1,4 +1,4 @@
-odoo.define('dindin.attendance.list.button', function (require) {
+odoo.define('ding.hr.attendance.list.button', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');
@@ -13,14 +13,11 @@ odoo.define('dindin.attendance.list.button', function (require) {
         let endDate = self.$el.find('#endDate').val();
         let username = self.$el.find('#username').val();
         let def = rpc.query({
-            model: 'dindin.attendance.list',
+            model: 'hr.attendance',
             method: 'get_attendance_list',
             args: [startDate, endDate, username],
         }).then(function (result) {
             if (result) {
-                new Dialog.confirm(this, result.msg, {
-                        'title': '结果提示',
-                    });
                 location.reload();
             }
         });
@@ -30,8 +27,8 @@ odoo.define('dindin.attendance.list.button', function (require) {
         renderButtons: function ($node) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
-            if (tree_model == 'dindin.attendance.list') {
-                let but = "<button type=\"button\" t-if=\"widget.modelName == 'dindin.attendance.list'\" class=\"btn btn-primary o_pull_dindin_simple_groups\">获取打卡信息</button>";
+            if (tree_model == 'hr.attendance') {
+                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.attendance'\" class=\"btn btn-primary o_pull_dindin_simple_groups\">获取钉钉考勤信息</button>";
                 let button2 = $(but).click(this.proxy('open_attendance_list_action'));
                 this.$buttons.append(button2);
             }
@@ -39,7 +36,7 @@ odoo.define('dindin.attendance.list.button', function (require) {
         },
         open_attendance_list_action: function () {
             new Dialog(this, {
-                title: "获取打卡信息",
+                title: "获取钉钉考勤信息",
                 size: 'medium',
                 buttons: [
                     {
