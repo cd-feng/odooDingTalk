@@ -132,30 +132,39 @@ class HrAttendance(models.Model):
             result = json.loads(result.text)
             logging.info(result)
             if result.get('errcode') == 0:
+                OnDuty_list = list()
+                OffDuty_list = list()
                 for rec in result.get('recordresult'):
+                    baseCheckTime = self.get_time_stamp(rec.get('baseCheckTime'))
                     data = {
                         'recordId': rec.get('recordId'),
                         'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
-                        'checkType': rec.get('checkType'),  # 考勤类型
                         'timeResult': rec.get('timeResult'),  # 时间结果
                         'locationResult': rec.get('locationResult'),  # 考勤类型
-                        'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
-                        'check_in': self.get_time_stamp(rec.get('userCheckTime')),  # 实际打卡时间
+                        'baseCheckTime': baseCheckTime,  # 基准时间
                         'sourceType': rec.get('sourceType'),  # 数据来源
+                        'check_in': self.get_time_stamp(rec.get('userCheckTime'))
                     }
                     groups = self.env['dindin.simple.groups'].sudo().search([('group_id', '=', rec.get('groupId'))])
-                    if groups:
-                        data.update({'group_id': groups[0].id})
+                    data.update({'ding_group_id': groups[0].id if groups else False})
                     emp_id = self.env['hr.employee'].sudo().search([('din_id', '=', rec.get('userId'))])
-                    if emp_id:
-                        data.update({'employee_id': emp_id[0].id})
-                    a_list = self.env['hr.attendance'].search(
-                        [('recordId', '=', rec.get('recordId')), ('employee_id', '=', emp_id[0].id),
-                         ('baseCheckTime', '=', self.get_time_stamp(rec.get('baseCheckTime')))])
-                    if a_list:
-                        a_list.sudo().write(data)
+                    data.update({'employee_id': emp_id[0].id if emp_id else False})
+
+                    if rec.get('checkType') == 'OnDuty':
+                        data.update({'check_in': self.get_time_stamp(rec.get('userCheckTime'))})
+                        OnDuty_list.append(data)
                     else:
-                        self.env['hr.attendance'].sudo().create(data)
+                        data.update({'check_out': self.get_time_stamp(rec.get('userCheckTime'))})
+                        OffDuty_list.append(data)
+                for onduy in OnDuty_list:
+                    attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', onduy.get('employee_id')),
+                                                                          ('workDate', '=', onduy.get('workDate'))])
+                    if not attendance:
+                        self.env['hr.attendance'].sudo().create(OnDuty_list)
+                for off in OffDuty_list:
+                    attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', off.get('employee_id')),
+                                                                          ('workDate', '=', off.get('workDate'))])
+                    attendance.write(off)
                 if result.get('hasMore'):
                     return True
                 else:
@@ -184,33 +193,3 @@ class HrAttendance(models.Model):
         :return:
         """
         return True
-
-
-class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
-
-    @api.multi
-    def attendance_action_change(self):
-        """ Check In/Check Out action
-            Check In: create a new attendance record
-            Check Out: modify check_out field of appropriate attendance record
-        """
-        if len(self) > 1:
-            raise requests.exceptions.UserError('无法对多名员工进行登记或签退')
-        action_date = fields.Datetime.now()
-        if self.attendance_state != 'checked_in':
-            return self.env['hr.attendance'].create({
-                'employee_id': self.id,
-                'check_in': action_date,
-                'workDate': fields.datetime.now(),
-                'checkType': 'OffDuty',
-                'sourceType': 'odoo',
-            })
-        else:
-            return self.env['hr.attendance'].create({
-                'employee_id': self.id,
-                'check_in': action_date,
-                'workDate': fields.datetime.now(),
-                'checkType': 'OnDuty',
-                'sourceType': 'odoo',
-            })

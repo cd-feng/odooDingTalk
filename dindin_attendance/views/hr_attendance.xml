@@ -6,14 +6,10 @@
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='check_out']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='check_in']" position="after">
+            <xpath expr="//field[@name='check_out']" position="after">
                 <field name="ding_group_id"/>
                 <field name="recordId"/>
                 <field name="workDate"/>
-                <field name="checkType"/>
                 <field name="timeResult"/>
                 <field name="locationResult"/>
                 <field name="baseCheckTime"/>
@@ -27,16 +23,12 @@
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='check_out']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//sheet" position="inside">
                 <group>
                     <group>
                         <field name="ding_group_id"/>
                         <field name="recordId"/>
                         <field name="workDate"/>
-                        <field name="checkType"/>
                     </group>
                     <group>
                         <field name="timeResult"/>
@@ -68,10 +60,11 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//filter[@name='groupby_check_out']" position="after">
-                <filter name="groupby_checkType" string="考勤类型" context="{'group_by': 'checkType'}"/>
+                <filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>
+                <filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>
+                <filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/>
             </xpath>
         </field>
     </record>
-
 
 </odoo>
