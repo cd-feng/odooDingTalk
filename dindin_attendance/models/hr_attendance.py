@@ -44,8 +44,33 @@ class HrAttendance(models.Model):
     baseCheckTime = fields.Datetime(string=u'基准时间')
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
 
-    @api.model
-    def get_attendance_list(self, start_date, end_date, user=None):
+    @api.constrains('check_in', 'check_out', 'employee_id')
+    def _check_validity(self):
+        """
+        取消系统自带验证出勤记录的有效性的验证
+        :return:
+        """
+        return True
+
+
+class HrAttendanceTransient(models.TransientModel):
+    _name = 'hr.attendance.tran'
+    _description = '获取钉钉考勤信息'
+
+    start_date = fields.Date(string=u'开始日期', required=True)
+    stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
+    emp_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_dingding_attendance_and_hr_employee_rel',
+                               column1='attendance_id', column2='emp_id', string=u'员工', required=True)
+    is_all_emp = fields.Boolean(string=u'全部员工')
+
+    @api.onchange('is_all_emp')
+    def onchange_all_emp(self):
+        if self.is_all_emp:
+            emps = self.env['hr.employee'].search([('din_id', '!=', '')])
+            self.emp_ids = [(6, 0, emps.ids)]
+
+    @api.multi
+    def get_attendance_list(self):
         """
         根据日期获取员工打卡信息，当user存在时将获取指定user的打卡，若不存在时，将获取所有员工的打卡信息，钉钉限制每次传递员工数最大为50个
         :param start_date:
@@ -53,74 +78,67 @@ class HrAttendance(models.Model):
         :param user:
         :return:
         """
-        if not start_date and not end_date:
-            raise UserError("必须选择要查询的开始日期和结束日期!")
         logging.info(">>>开始获取员工打卡信息...")
-        user_list = list()
-        if user:
-            h_emp = self.env['hr.employee'].sudo().search([('name', '=', user)])
-            if not h_emp:
-                raise UserError("员工{}不存在！".format(user))
-            for h in h_emp:
-                if not h.din_id:
-                    raise UserError("员工{}的钉钉ID无效,请输入其他员工或不填！".format(user))
-                user_list.append(h.din_id)
-        else:
-            emps = self.env['hr.employee'].sudo().search([('din_id', '!=', '')])
-            emp_len = len(emps)
-            if emp_len <= 50:
-                for e in emps:
-                    user_list.append(e.din_id)
-            elif emp_len > 50:
+        for res in self:
+            user_list = list()
+            emp_len = len(res.emp_ids)
+            if emp_len > 50:
                 n = 1
                 e_list = list()
-                for e in emps:
+                for emp in res.emp_ids:
                     if n <= 50:
-                        e_list.append(e.din_id)
+                        e_list.append(emp.din_id)
                         n = n + 1
                     else:
                         user_list.append(e_list)
                         e_list = list()
-                        e_list.append(e.din_id)
+                        e_list.append(emp.din_id)
                         n = 2
                 user_list.append(e_list)
-        logging.info(user_list)
-        for u in user_list:
-            if isinstance(u, str):
-                offset = 0
-                limit = 50
-                while True:
-                    data = {
-                        'workDateFrom': start_date + ' 00:00:00',  # 开始日期
-                        'workDateTo': end_date + ' 00:00:00',  # 结束日期
-                        'userIdList': user_list,  # 员工列表
-                        'offset': offset,  # 开始日期
-                        'limit': limit,  # 开始日期
-                    }
-                    has_more = self.send_post_dindin(data)
-                    if not has_more:
-                        break
-                    else:
-                        offset = offset + limit
-                break
-            elif isinstance(u, list):
-                offset = 0
-                limit = 50
-                while True:
-                    data = {
-                        'workDateFrom': start_date + ' 00:00:00',  # 开始日期
-                        'workDateTo': end_date + ' 00:00:00',  # 结束日期
-                        'userIdList': u,  # 员工列表
-                        'offset': offset,  # 开始日期
-                        'limit': limit,  # 开始日期
-                    }
-                    has_more = self.send_post_dindin(data)
-                    if not has_more:
-                        break
-                    else:
-                        offset = offset + limit
-        logging.info(">>>根据日期获取员工打卡信息结束...")
-        return {'state': True, 'msg': '执行成功'}
+            else:
+                for emp in res.emp_ids:
+                    if not emp.din_id:
+                        raise UserError("员工{}的钉钉ID无效,请输入其他员工或不填！".format(emp.name))
+                    user_list.append(emp.din_id)
+            logging.info(user_list)
+            for u in user_list:
+                if isinstance(u, str):
+                    offset = 0
+                    limit = 50
+                    while True:
+                        data = {
+                            'workDateFrom': "{} 00:00:00".format(res.start_date),  # 开始日期
+                            'workDateTo': "{} 00:00:00".format(res.stop_date),  # 结束日期
+                            'userIdList': user_list,  # 员工列表
+                            'offset': offset,  # 开始日期
+                            'limit': limit,  # 开始日期
+                        }
+                        has_more = self.send_post_dindin(data)
+                        if not has_more:
+                            break
+                        else:
+                            offset = offset + limit
+                    break
+                elif isinstance(u, list):
+                    offset = 0
+                    limit = 50
+                    while True:
+                        data = {
+                            'workDateFrom': "{} 00:00:00".format(res.start_date),  # 开始日期
+                            'workDateTo': "{} 00:00:00".format(res.stop_date),  # 结束日期
+                            'userIdList': u,  # 员工列表
+                            'offset': offset,  # 开始日期
+                            'limit': limit,  # 开始日期
+                        }
+                        has_more = self.send_post_dindin(data)
+                        if not has_more:
+                            break
+                        else:
+                            offset = offset + limit
+            logging.info(">>>根据日期获取员工打卡信息结束...")
+        action = self.env.ref('hr_attendance.hr_attendance_action')
+        action_dict = action.read()[0]
+        return action_dict
 
     @api.model
     def send_post_dindin(self, data):
@@ -149,7 +167,6 @@ class HrAttendance(models.Model):
                     data.update({'ding_group_id': groups[0].id if groups else False})
                     emp_id = self.env['hr.employee'].sudo().search([('din_id', '=', rec.get('userId'))])
                     data.update({'employee_id': emp_id[0].id if emp_id else False})
-
                     if rec.get('checkType') == 'OnDuty':
                         data.update({'check_in': self.get_time_stamp(rec.get('userCheckTime'))})
                         OnDuty_list.append(data)
@@ -157,13 +174,15 @@ class HrAttendance(models.Model):
                         data.update({'check_out': self.get_time_stamp(rec.get('userCheckTime'))})
                         OffDuty_list.append(data)
                 for onduy in OnDuty_list:
-                    attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', onduy.get('employee_id')),
-                                                                          ('baseCheckTime', '=', onduy.get('baseCheckTime'))])
+                    attendance = self.env['hr.attendance'].sudo().search(
+                        [('employee_id', '=', onduy.get('employee_id')),
+                         ('baseCheckTime', '=', onduy.get('baseCheckTime'))])
                     if not attendance:
                         self.env['hr.attendance'].sudo().create(OnDuty_list)
                 for off in OffDuty_list:
                     attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', off.get('employee_id')),
-                                                                          ('baseCheckTime', '=', off.get('baseCheckTime'))])
+                                                                          ('baseCheckTime', '=',
+                                                                           off.get('baseCheckTime'))])
                     for attend in attendance:
                         if not attend.check_out:
                             attend.write({'check_out': off.get('check_out')})
@@ -187,11 +206,3 @@ class HrAttendance(models.Model):
         timeArray = time.localtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
-
-    @api.constrains('check_in', 'check_out', 'employee_id')
-    def _check_validity(self):
-        """
-        取消系统自带验证出勤记录的有效性的验证
-        :return:
-        """
-        return True
