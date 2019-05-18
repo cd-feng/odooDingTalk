@@ -185,7 +185,7 @@ class HrEmployee(models.Model):
                     data.update({
                         'din_hiredDate': time_stamp,  # 入职时间
                     })
-                employee = self.env['hr.employee'].search([('din_id', '=', user.get('userid'))])
+                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
                 if employee:
                     employee.sudo().write(data)
                 else:
