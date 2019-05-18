@@ -158,13 +158,15 @@ class HrAttendance(models.Model):
                         OffDuty_list.append(data)
                 for onduy in OnDuty_list:
                     attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', onduy.get('employee_id')),
-                                                                          ('workDate', '=', onduy.get('workDate'))])
+                                                                          ('baseCheckTime', '=', onduy.get('baseCheckTime'))])
                     if not attendance:
                         self.env['hr.attendance'].sudo().create(OnDuty_list)
                 for off in OffDuty_list:
                     attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', off.get('employee_id')),
-                                                                          ('workDate', '=', off.get('workDate'))])
-                    attendance.write(off)
+                                                                          ('baseCheckTime', '=', off.get('baseCheckTime'))])
+                    for attend in attendance:
+                        if not attend.check_out:
+                            attend.write({'check_out': off.get('check_out')})
                 if result.get('hasMore'):
                     return True
                 else:
