@@ -118,7 +118,7 @@ class HrDepartment(models.Model):
                     partner_department = self.env['hr.department'].search([('din_id', '=', res.get('parentid'))])
                     if partner_department:
                         data.update({'parent_id': partner_department[0].id})
-                h_department = self.env['hr.department'].search([('din_id', '=', res.get('id'))])
+                h_department = self.env['hr.department'].search(['|', ('din_id', '=', res.get('id')), ('name', '=', res.get('name'))])
                 if h_department:
                     h_department.sudo().write(data)
                 else:

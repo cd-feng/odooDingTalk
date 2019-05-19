@@ -225,7 +225,7 @@ class ResPartner(models.Model):
                         [('din_id', '=', res.get('follower_user_id'))])
                     data.update({'din_employee_id': follower_user[0].id if follower_user else ''})
                 # 根据userid查询联系人是否存在
-                partner = self.env['res.partner'].sudo().search([('din_userid', '=', res.get('userid'))])
+                partner = self.env['res.partner'].sudo().search(['|', ('din_userid', '=', res.get('userid')), ('name', '=', res.get('name'))])
                 if partner:
                     partner.sudo().write(data)
                 else:
