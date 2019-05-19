@@ -8,6 +8,17 @@ from odoo.exceptions import UserError
 from odoo import models, fields, api
 
 
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
+    _description = "Employee"
+
+    def dingding_attendance_action_employee(self):
+        for res in self:
+            action = self.env.ref('dindin_attendance.dingding_attendance_action').read()[0]
+            action['domain'] = [('emp_id', '=', res.id)]
+            return action
+
+
 class DingDingAttendance(models.Model):
     _name = "dingding.attendance"
     _rec_name = 'emp_id'
