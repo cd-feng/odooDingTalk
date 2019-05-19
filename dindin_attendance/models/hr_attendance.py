@@ -8,11 +8,11 @@ from odoo.exceptions import UserError
 from odoo import models, fields, api
 
 
-class HrAttendance(models.Model):
-    _inherit = "hr.attendance"
-    _description = "Attendance"
+class DingDingAttendance(models.Model):
+    _name = "dingding.attendance"
+    _rec_name = 'emp_id'
+    _description = "钉钉出勤"
 
-    check_in = fields.Datetime(string="打卡时间", default=fields.Datetime.now, required=False)
     TimeResult = [
         ('Normal', '正常'),
         ('Early', '早退'),
@@ -35,22 +35,17 @@ class HrAttendance(models.Model):
         ('AUTO_CHECK', '自动打卡'),
         ('odoo', 'Odoo系统'),
     ]
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
+    check_in = fields.Datetime(string="打卡时间", default=fields.Datetime.now, required=True)
     ding_group_id = fields.Many2one(comodel_name='dindin.simple.groups', string=u'钉钉考勤组')
     recordId = fields.Char(string='记录ID')
-    workDate = fields.Date(string=u'工作日')
+    workDate = fields.Datetime(string=u'工作日')
     checkType = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')])
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult)
     locationResult = fields.Selection(string=u'位置结果', selection=LocationResult)
     baseCheckTime = fields.Datetime(string=u'基准时间')
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
-
-    @api.constrains('check_in', 'check_out', 'employee_id')
-    def _check_validity(self):
-        """
-        取消系统自带验证出勤记录的有效性的验证
-        :return:
-        """
-        return True
+    attendance_id = fields.Char(string='钉钉id')
 
 
 class HrAttendanceTransient(models.TransientModel):
@@ -136,7 +131,7 @@ class HrAttendanceTransient(models.TransientModel):
                         else:
                             offset = offset + limit
             logging.info(">>>根据日期获取员工打卡信息结束...")
-        action = self.env.ref('hr_attendance.hr_attendance_action')
+        action = self.env.ref('dindin_attendance.dingding_attendance_action')
         action_dict = action.read()[0]
         return action_dict
 
@@ -148,44 +143,30 @@ class HrAttendanceTransient(models.TransientModel):
         try:
             result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=15)
             result = json.loads(result.text)
-            logging.info(result)
             if result.get('errcode') == 0:
-                OnDuty_list = list()
-                OffDuty_list = list()
                 for rec in result.get('recordresult'):
-                    baseCheckTime = self.get_time_stamp(rec.get('baseCheckTime'))
-                    data = {
-                        'recordId': rec.get('recordId'),
-                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
-                        'timeResult': rec.get('timeResult'),  # 时间结果
-                        'locationResult': rec.get('locationResult'),  # 考勤类型
-                        'baseCheckTime': baseCheckTime,  # 基准时间
-                        'sourceType': rec.get('sourceType'),  # 数据来源
-                        'check_in': self.get_time_stamp(rec.get('userCheckTime'))
-                    }
-                    groups = self.env['dindin.simple.groups'].sudo().search([('group_id', '=', rec.get('groupId'))])
-                    data.update({'ding_group_id': groups[0].id if groups else False})
-                    emp_id = self.env['hr.employee'].sudo().search([('din_id', '=', rec.get('userId'))])
-                    data.update({'employee_id': emp_id[0].id if emp_id else False})
-                    if rec.get('checkType') == 'OnDuty':
-                        data.update({'check_in': self.get_time_stamp(rec.get('userCheckTime'))})
-                        OnDuty_list.append(data)
-                    else:
-                        data.update({'check_out': self.get_time_stamp(rec.get('userCheckTime'))})
-                        OffDuty_list.append(data)
-                for onduy in OnDuty_list:
-                    attendance = self.env['hr.attendance'].sudo().search(
-                        [('employee_id', '=', onduy.get('employee_id')),
-                         ('baseCheckTime', '=', onduy.get('baseCheckTime'))])
-                    if not attendance:
-                        self.env['hr.attendance'].sudo().create(OnDuty_list)
-                for off in OffDuty_list:
-                    attendance = self.env['hr.attendance'].sudo().search([('employee_id', '=', off.get('employee_id')),
-                                                                          ('baseCheckTime', '=',
-                                                                           off.get('baseCheckTime'))])
-                    for attend in attendance:
-                        if not attend.check_out:
-                            attend.write({'check_out': off.get('check_out')})
+                        data = {
+                            'recordId': rec.get('recordId'),
+                            'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                            'timeResult': rec.get('timeResult'),  # 时间结果
+                            'locationResult': rec.get('locationResult'),  # 考勤结果
+                            'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
+                            'sourceType': rec.get('sourceType'),  # 数据来源
+                            'checkType': rec.get('checkType'),
+                            'check_in': self.get_time_stamp(rec.get('userCheckTime')),
+                            'attendance_id': rec.get('id'),
+                        }
+                        groups = self.env['dindin.simple.groups'].sudo().search(
+                            [('group_id', '=', rec.get('groupId'))])
+                        data.update({'ding_group_id': groups[0].id if groups else False})
+                        emp_id = self.env['hr.employee'].sudo().search([('din_id', '=', rec.get('userId'))])
+                        data.update({'emp_id': emp_id[0].id if emp_id else False})
+                        attendance = self.env['dingding.attendance'].sudo().search(
+                            [('emp_id', '=', emp_id[0].id),
+                             ('check_in', '=', self.get_time_stamp(rec.get('userCheckTime'))),
+                             ('checkType', '=', rec.get('checkType'))])
+                        if not attendance:
+                            self.env['dingding.attendance'].sudo().create(data)
                 if result.get('hasMore'):
                     return True
                 else:
