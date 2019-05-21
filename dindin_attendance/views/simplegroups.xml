@@ -79,7 +79,6 @@
     <menuitem id="dingding_attendance_menu" name="钉钉出勤"
               parent="hr_attendance.menu_hr_attendance_root"
               sequence="10"
-              action="dingding_attendance_action"
     />
 
     <menuitem id="dindin_simple_groups_menu" name="考勤组"
