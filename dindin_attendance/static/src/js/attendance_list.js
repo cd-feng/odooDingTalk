@@ -7,8 +7,8 @@ odoo.define('ding.hr.attendance.list.button', function (require) {
         renderButtons: function ($node) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
-            if (tree_model == 'hr.attendance') {
-                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.attendance'\" class=\"btn o_pull_dindin_simple_groups\">获取钉钉考勤信息</button>";
+            if (tree_model == 'dingding.attendance') {
+                let but = "<button type=\"button\" t-if=\"widget.modelName == 'dingding.attendance'\" class=\"btn o_pull_dindin_simple_groups\">获取钉钉考勤信息</button>";
                 let button2 = $(but).click(this.proxy('open_attendance_list_action'));
                 this.$buttons.append(button2);
             }
