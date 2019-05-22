@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dingding_chat_tree_view" model="ir.ui.view">
+        <field name="name">群会话</field>
+        <field name="model">dingding.chat</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" js_class="dingding_chat_list_tree">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="show_history_type"/>
+                <field name="searchable"/>
+                <field name="validation_type"/>
+                <field name="mention_all_authority"/>
+                <field name="chat_banned_type"/>
+                <field name="management_ype"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingding_chat_form_view" model="ir.ui.view">
+        <field name="name">群会话</field>
+        <field name="model">dingding.chat</field>
+        <field name="arch" type="xml">
+            <form string="钉钉群会话">
+                <header>
+                    <button name="create_dingding_chat" type="object" string="创建钉钉群" states="new" class="oe_highlight"
+                            confirm="即将创建钉钉群会话,确认?"/>
+                    <button name="write_dingding_chat" type="object" string="更新钉钉群" states="normal" class="oe_highlight"/>
+                    <button name="add_chat_users" type="object" string="添加群成员" states="normal"/>
+                    <button name="del_chat_users" type="object" string="删除群成员" states="normal"/>
+                    <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="名称,如XX群..."/>
+                        </h1>
+                        <h3>
+                            <field name="company_id" placeholder="公司"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="chat_id" invisible="1"/>
+                            <field name="employee_id"/>
+                            <field name="show_history_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="searchable" widget="radio" options="{'horizontal': true}"/>
+                            <field name="validation_type" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="mention_all_authority" widget="radio" options="{'horizontal': true}"/>
+                            <field name="chat_banned_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="management_ype" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="成员信息">
+                            <group>
+                                <field name="useridlist" widget="many2many_tags"  attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group>
+                            <field name="create_uid" string="创建人" readonly='1'/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="创建时间" readonly='1'/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_chat_action" model="ir.actions.act_window">
+        <field name="name">群会话</field>
+        <field name="res_model">dingding.chat</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="群会话"
+              id="dingding_chat_menu"
+              parent="ali_dindin.message_menu"
+              sequence="3"
+              action="dindin_message.dingding_chat_action"
+    />
+
+
+    <record id="get_dingding_chat_list_form_view" model="ir.ui.view">
+        <field name="name">get.dingding.chat.list.form</field>
+        <field name="model">get.dingding.chat.list</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <p>系统将从钉钉中拉取已存在的群会话信息</p>
+                </group>
+                <footer>
+                    <button string="确认获取" name="get_chat_list" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="get_dingding_chat_list_action" model="ir.actions.act_window">
+        <field name="name">获取群已存在的会话</field>
+        <field name="res_model">get.dingding.chat.list</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

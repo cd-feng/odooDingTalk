@@ -69,10 +69,10 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="dindin_message_template_menu"
-              name="消息模板"
-              parent="ali_dindin.message_menu"
-              sequence="2"
-              action="dingding_message_template_action"/>
+<!--    <menuitem id="dindin_message_template_menu"-->
+<!--              name="消息模板"-->
+<!--              parent="ali_dindin.message_menu"-->
+<!--              sequence="2"-->
+<!--              action="dingding_message_template_action"/>-->
 
 </odoo>

@@ -16,8 +16,13 @@
         'data/system_conf.xml',
         'data/config.xml',
         'views/config.xml',
+        'views/assets.xml',
         'views/work_message.xml',
         'views/message_template.xml',
+        'views/dingding_chat.xml',
+    ],
+    'qweb': [
+        'static/xml/*.xml',
     ],
     'images':  ['static/description/msg4.png', 'static/description/msg3.png', 'static/description/msg2.png']
 }
