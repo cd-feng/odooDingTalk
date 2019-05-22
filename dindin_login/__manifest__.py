@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "钉钉办公-扫码登录",
-    'summary': """钉钉办公-扫码登录""",
-    'description': """ 钉钉办公-扫码登录 """,
+    'name': "钉钉办公-扫码/免密登录模块",
+    'summary': """钉钉办公-扫码/免密登录模块""",
+    'description': """ 钉钉办公-扫码/免密登录模块 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
@@ -12,12 +12,8 @@
     'application': False,
     'auto_install': True,
     'data': [
-        # 'security/ir.model.access.csv',
         'data/system_conf.xml',
         'views/login_templates.xml',
+        'views/auto_templates.xml',
     ],
-    # 'qweb': [
-    #     'static/xml/*.xml'
-    # ]
-
 }
