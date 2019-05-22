@@ -9,11 +9,16 @@
             <form>
                 <p>请选择要添加的用户,单次最大添加40人！</p>
                 <group>
-                    <field name="user_ids" widget="many2many_tags"/>
+                    <group>
+                        <field name="on_user_ids" widget="many2many_tags" string="已有成员" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="user_ids" widget="many2many_tags"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="确认添加" name="add_chat_users" type="object" class="oe_highlight"/>
-                    <button string="取消" class="btn btn-default" special="cancel"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>
         </field>
@@ -36,11 +41,16 @@
             <form>
                 <p>请选择要删除的用户，单次最大为40人</p>
                 <group>
-                    <field name="user_ids" widget="many2many_tags"/>
+                    <group>
+                        <field name="old_user_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="user_ids" widget="many2many_tags"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="确认删除" name="del_chat_users" type="object" class="oe_highlight"/>
-                    <button string="取消" class="btn btn-default" special="cancel"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>
         </field>
@@ -159,11 +169,14 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <p>系统将从钉钉中拉取已存在的群会话信息</p>
+                    <h4>根据钉钉API规定,获取群会话需要管理员有群会话Id, 若没有Id,那本功能就不适合!</h4>
+                </group>
+                <group>
+                    <field name="chat_id" placeholder="请输入群会话Id"/>
                 </group>
                 <footer>
-                    <button string="确认获取" name="get_chat_list" type="object" class="oe_highlight"/>
-                    <button string="取消" class="btn btn-default" special="cancel"/>
+                    <button string="任性获取" name="get_chat_info" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>
         </field>
