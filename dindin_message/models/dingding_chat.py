@@ -39,7 +39,7 @@ class DingDingChat(models.Model):
         :return:
         """
         for res in self:
-            self.check_employee_din_id(res)
+            user_list = self.check_employee_din_id(res)
             logging.info(">>>开始钉钉创建群会话")
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'chat_create')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
@@ -110,14 +110,41 @@ class DingDingChat(models.Model):
             if not emp.din_id:
                 raise UserError("员工{}:在钉钉中不存在，请选择其他人员!".format(emp.name))
             user_list.append(emp.din_id)
+        return user_list
 
 
-class DingDingChatUserModel(models.TransientModel):
-    _name = 'dingding.chat.user.model'
-    _description = "群会话用户模型"
+class DingDingChatUserModelAdd(models.TransientModel):
+    _name = 'dingding.chat.user.model.add'
+    _description = "群会话添加成员"
 
-    user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_model_and_hr_employee_rel',
+    user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_add_and_hr_employee_rel',
                                 column1='model_id', column2='emp_id', string=u'群成员', required=True)
+
+    @api.multi
+    def add_chat_users(self):
+        """
+        添加群成员
+        :return:
+        """
+        chat_id = self.env.context.get('active_id', False)
+        ding_chat = self.env['dingding.chat'].browse(chat_id)
+        print(ding_chat.name)
+
+
+class DingDingChatUserModelDel(models.TransientModel):
+    _name = 'dingding.chat.user.model.del'
+    _description = "群会话删除成员"
+
+    user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_del_and_hr_employee_rel',
+                                column1='model_id', column2='emp_id', string=u'群成员', required=True)
+
+    @api.multi
+    def del_chat_users(self):
+        """
+        删除群成员
+        :return:
+        """
+
 
 
 class DingDingChatList(models.TransientModel):
