@@ -273,6 +273,44 @@ class DingDingChatUserModelDel(models.TransientModel):
                 raise UserError("网络连接超时！")
 
 
+class DingDingSendChatMessage(models.TransientModel):
+    _name = 'dingding.send.chat.message'
+    _description = "发送群消息"
+
+    message = fields.Text(string=u'消息内容', required=True)
+
+    @api.multi
+    def send_dingding_message(self):
+        """
+        发送群会话消息
+        :return:
+        """
+        chat_id = self.env.context.get('active_id', False)
+        ding_chat = self.env['dingding.chat'].browse(chat_id)
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'chat_send')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'chatid': ding_chat.chat_id,
+            'msg': {
+                "msgtype": "text",
+                "text": {
+                    "content": self.message
+                }
+            },
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=5)
+            result = json.loads(result.text)
+            logging.info(">>>返回结果{}".format(result))
+            if result.get('errcode') == 0:
+                ding_chat.message_post(body=u"消息已成功发送!".format(self.message), message_type='notification')
+            else:
+                raise UserError('操作失败，详情为:{}'.format(result.get('errmsg')))
+        except ReadTimeout:
+            raise UserError("网络连接超时！")
+
+
 class DingDingChatList(models.TransientModel):
     _name = 'get.dingding.chat.list'
     _description = "获取群已存在的会话"
