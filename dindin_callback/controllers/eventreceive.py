@@ -29,11 +29,8 @@ class CallBack(Home, http.Controller):
         logging.info(">>>解密消息结果:{}".format(msg))
         msg = json.loads(msg)
         event_type = msg.get('EventType')
-        # -------------------
         # --------通讯录------
-        # -------------------
         if event_type == 'user_add_org' or event_type == 'user_modify_org' or event_type == 'user_leave_org':
-            logging.info(">>>钉钉回调-用户增加、更改、离职")
             if event_type == 'user_leave_org':
                 UserId = msg.get('UserId')
                 for user_id in UserId:
@@ -43,7 +40,6 @@ class CallBack(Home, http.Controller):
             else:
                 request.env['hr.employee'].sudo().synchronous_dingding_employee()
         elif event_type == 'org_dept_create' or event_type == 'org_dept_modify' or event_type == 'org_dept_remove':
-            logging.info(">>>钉钉回调-通讯录企业部门创建/修改/删除")
             DeptId = msg.get('DeptId')
             if event_type == 'org_dept_remove':
                 for dept in DeptId:
@@ -52,26 +48,22 @@ class CallBack(Home, http.Controller):
                         hr_depat.sudo().unlink()
             else:
                 request.env['hr.department'].sudo().synchronous_dingding_department()
-        # -------------------
         # -----员工角色-------
-        # -------------------
         elif event_type == 'label_user_change' or event_type == 'label_conf_add' or event_type == 'label_conf_del' \
                 or event_type == 'label_conf_modify':
             logging.info(">>>钉钉回调-员工角色信息发生变更/增加/删除/修改")
-        # -------------------
         # -----审批-----------
-        # -------------------
         elif event_type == 'bpms_task_change':
-            logging.info(">>>钉钉回调-审批任务开始/结束/转交")
             self.bpms_task_change(msg)
         elif event_type == 'bpms_instance_change':
-            logging.info(">>>钉钉回调-审批实例开始/结束")
             self.bpms_instance_change(msg)
-        # -----------------------
         # -----用户签到-----------
-        # -----------------------
         elif event_type == 'check_in':
             request.env['dindin.signs.list'].sudo().get_signs_by_user(msg.get('StaffId'), msg.get('TimeStamp'))
+        # -------群会话事件----------
+        elif event_type == 'chat_add_member' or event_type == 'chat_remove_member' or event_type == 'chat_quit' or \
+                event_type == 'chat_update_owner' or event_type == 'chat_update_title' or event_type == 'chat_disband':
+            request.env['dingding.chat'].sudo().process_dingding_chat_onchange(msg)
         # 返回加密结果
         return self.result_success(call_back.aes_key, call_back.token, din_corpId)
 
