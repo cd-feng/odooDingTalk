@@ -6,3 +6,4 @@ from . import ali_dindin_util
 from . import department
 from . import employee
 from . import partner
+from . import feedback
