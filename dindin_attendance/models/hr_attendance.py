@@ -73,6 +73,8 @@ class HrAttendanceTransient(models.TransientModel):
     def onchange_all_emp(self):
         if self.is_all_emp:
             emps = self.env['hr.employee'].search([('din_id', '!=', '')])
+            if len(emps) <= 0:
+                raise UserError("员工钉钉Id不存在！也许是你的员工未同步导致的！")
             self.emp_ids = [(6, 0, emps.ids)]
 
     @api.multi
