@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="dindin_message.dingding_message_template_sale_order" model="dingding.message.template">
+            <field name="name">销售订单消息模型</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">销售订单：${object.name}</field>
+            <field name="body">
+                销售订单: ${object.name}
+                需要你进行处理!
+            </field>
+            <field name="email">True</field>
+            <field name="comment">True</field>
+            <field name="notification">True</field>
+        </record>
+
+        <record id="dindin_message.dingding_message_template_purchase_order" model="dingding.message.template">
+            <field name="name">采购订单消息模型</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">采购订单：${object.name}</field>
+            <field name="body">
+                订单号: ${object.name}
+                供应商: ${object.partner_id.name}
+                订单日期: ${object.date_order}
+                总计金额: ${object.amount_total}
+            </field>
+            <field name="email">True</field>
+            <field name="comment">True</field>
+            <field name="notification">True</field>
+        </record>
+
+
+    </data>
+</odoo>

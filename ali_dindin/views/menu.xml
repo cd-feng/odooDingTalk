@@ -17,5 +17,9 @@
                   parent="ali_dindin.main_menu" sequence="100"
         />
 
+        <menuitem name="关于" id="ali_dindin.about_menu"
+                  parent="ali_dindin.main_menu" sequence="101"
+        />
+
     </data>
 </odoo>

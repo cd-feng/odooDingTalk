@@ -33,15 +33,22 @@
                             <field name="manager_list" widget="many2many_tags"/>
                             <field name="dept_name_list" widget="many2many_tags"/>
                         </group>
-                        <field name="emp_ids">
-                            <tree editable="top" create="false" edit="false">
-                                <field name="name"/>
-                                <field name="department_id"/>
-                                <field name="mobile_phone"/>
-                                <field name="job_title"/>
-                            </tree>
-                        </field>
                     </group>
+                    <notebook>
+                        <page string="考勤成员">
+                            <field name="emp_ids">
+                                <tree editable="top" create="false" edit="false">
+                                    <field name="name"/>
+                                    <field name="department_id"/>
+                                    <field name="mobile_phone"/>
+                                    <field name="job_title"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="考勤班次">
+
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -69,8 +76,13 @@
         </field>
     </record>
 
+    <menuitem id="dingding_attendance_menu" name="钉钉出勤"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="10"
+    />
+
     <menuitem id="dindin_simple_groups_menu" name="考勤组"
-              parent="hr_attendance.menu_hr_attendance_manage_attendances"
+              parent="dingding_attendance_menu"
               sequence="1"
               action="dindin_simple_groups_action"
     />

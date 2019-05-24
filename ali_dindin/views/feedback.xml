@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingding_user_feedback_tree_view" model="ir.ui.view">
+        <field name="name">问题反馈</field>
+        <field name="model">dingding.user.feedback</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="partner"/>
+                <field name="contact_information"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingding_user_feedback_form_view" model="ir.ui.view">
+        <field name="name">问题反馈</field>
+        <field name="model">dingding.user.feedback</field>
+        <field name="arch" type="xml">
+            <form string="问题反馈">
+                <header>
+                    <button name="commit_feedback" type="object" string="提交" class="oe_highlight" states="00"/>
+                    <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" required="1" placeholder="简要描述问题..." attrs="{'readonly': [('state', '!=', '00')]}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner" placeholder="联系人..." attrs="{'readonly': [('state', '!=', '00')]}"/>
+                        </group>
+                        <group>
+                            <field name="contact_information" placeholder="联系方式，通常为手机号..." attrs="{'readonly': [('state', '!=', '00')]}"/>
+                        </group>
+                        <field name="remarks" placeholder="备注信息..." attrs="{'readonly': [('state', '!=', '00')]}"/>
+                    </group>
+                    <notebook>
+                        <page string="反馈内容">
+                            <field name="body" widget="html" options="{'style-inline': true}" />
+                        </page>
+                        <page string="问题回复">
+                            <field name="response" widget="html" options="{'style-inline': true}" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_user_feedback_action" model="ir.actions.act_window">
+        <field name="name">问题反馈</field>
+        <field name="res_model">dingding.user.feedback</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="问题反馈"
+              id="dingding_user_feedback_menu"
+              parent="ali_dindin.about_menu"
+              sequence="1"
+              action="dingding_user_feedback_action"
+    />
+
+</odoo>

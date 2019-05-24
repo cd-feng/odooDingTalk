@@ -8,7 +8,7 @@
 
     <template id="dindin_dashboard_template" name="Dindin Dashboard Template" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/dindin_dashboard/static/src/css/dashboard.css"/>
+            <link rel="stylesheet" type="text/scss" href="/dindin_dashboard/static/src/scss/dashboard.scss"/>
             <script type="text/javascript" src="/dindin_dashboard/static/src/js/dashboard.js"></script>
         </xpath>
     </template>

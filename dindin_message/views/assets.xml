@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingding_message_template" name="DingDing Message Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dindin_message/static/src/js/dingding_chat.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

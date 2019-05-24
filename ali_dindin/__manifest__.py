@@ -22,6 +22,7 @@
         'views/department.xml',
         'views/employee.xml',
         'views/partner.xml',
+        'views/feedback.xml',
     ],
     'qweb': [
         'static/xml/*.xml',

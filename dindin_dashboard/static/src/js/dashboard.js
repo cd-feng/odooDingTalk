@@ -7,9 +7,8 @@ odoo.define('dindin.blackboard.info', function (require) {
     let rpc = require('web.rpc');
     let AbstractAction = require('web.AbstractAction');
 
-
     let DinDinDashboard = AbstractAction.extend({
-        template: 'DindinDashboardInfo',
+        template: 'DingDingDashboardMain',
         setBlackboardData: function (data) {
             let self = this;
             self.$el.find('#blackboard_list').html(QWeb.render("DindinDashboardInfoLine", {
@@ -60,8 +59,8 @@ odoo.define('dindin.blackboard.info', function (require) {
             }).then(function (result) {
                 self.getUserApprovalNumber(result);
             });
-
-            let def = rpc.query({
+            // 获取公告
+            rpc.query({
                 model: 'dindin.blackboard',
                 method: 'get_blackboard_by_user',
                 args: [],
