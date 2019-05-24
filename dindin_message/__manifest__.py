@@ -7,7 +7,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '1.0',
-    'depends': ['base', 'ali_dindin', 'mail'],
+    'depends': ['base', 'ali_dindin', 'mail', 'purchase', 'sale'],
     'installable': True,
     'application': False,
     'auto_install': True,
