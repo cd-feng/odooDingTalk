@@ -160,6 +160,19 @@
                                        attrs="{'readonly': [('state', '!=', 'new')]}"/>
                             </group>
                         </page>
+                        <page string="频道及模型">
+                            <group string="产生的消息可推送到的频道">
+                                <field name="channel_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="哪些模型单据产生的消息可推送到本群会话">
+                                <field name="model_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="其他">
+                            <group>
+                                <field name="chat_id" readonly="1"/>
+                            </group>
+                        </page>
                     </notebook>
                     <group>
                         <group>
@@ -172,6 +185,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
