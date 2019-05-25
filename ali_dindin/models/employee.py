@@ -4,10 +4,13 @@ import logging
 import time
 import requests
 from requests import ReadTimeout
-
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
+try:
+    import base64
+except ImportError:
+    _logger.debug('Cannot `import base64`.')
 _logger = logging.getLogger(__name__)
 
 """ 钉钉部门功能模块 """
@@ -179,6 +182,7 @@ class HrEmployee(models.Model):
                     'work_email': user.get('email'),  # email
                     'din_jobnumber': user.get('jobnumber'),  # 工号
                     'department_id': department[0].id,  # 部门
+                    'image': tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content)) #头像
                 }
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
