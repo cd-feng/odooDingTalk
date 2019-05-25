@@ -182,13 +182,15 @@ class HrEmployee(models.Model):
                     'work_email': user.get('email'),  # email
                     'din_jobnumber': user.get('jobnumber'),  # 工号
                     'department_id': department[0].id,  # 部门
-                    'image': tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content)) #头像
                 }
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
                     data.update({
                         'din_hiredDate': time_stamp,  # 入职时间
                     })
+                if user.get('avatar'):
+                    binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content))
+                    data.update({'image': binary_data})
                 employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
                 if employee:
                     employee.sudo().write(data)
