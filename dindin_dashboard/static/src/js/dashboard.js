@@ -7,8 +7,14 @@ odoo.define('dindin.blackboard.info', function (require) {
     let rpc = require('web.rpc');
     let AbstractAction = require('web.AbstractAction');
 
+
+
     let DinDinDashboard = AbstractAction.extend({
         template: 'DingDingDashboardMain',
+        events: {
+            'click .my_feedback_bug': '_onFeedback_clicked',
+        },
+
         setBlackboardData: function (data) {
             let self = this;
             self.$el.find('#blackboard_list').html(QWeb.render("DindinDashboardInfoLine", {
@@ -77,6 +83,12 @@ odoo.define('dindin.blackboard.info', function (require) {
                 }
             });
         },
+
+        _onFeedback_clicked: function (ev) {
+            var self = this;
+            alert("dsadasdasdas");
+        },
+
     });
 
     core.action_registry.add('dindin_dashboard', DinDinDashboard);

@@ -18,7 +18,6 @@ class DinDinBlackboard(models.TransientModel):
         根据当前用户获取公告信息
         :return:
         """
-        logging.info(">>>开始获取用户{}的公告信息...".format(self.env.user.name))
         uid = self.env.user.id
         emp = self.env['hr.employee'].sudo().search([('user_id', '=', uid)])
         if emp:
@@ -41,6 +40,7 @@ class DinDinBlackboard(models.TransientModel):
                     return {'state': False, 'msg': '获取公告失败,详情为:{}'.format(result.get('errmsg'))}
             except ReadTimeout:
                 return {'state': False, 'msg': '获取公告网络连接超时'}
-            except Exception:
+            except Exception as e:
                 return {'state': False, 'msg': "获取用户'{}'的公告失败".format(self.env.user.name)}
-        logging.info(">>>获取用户公告信息结束...")
+        else:
+            return {'state': False, 'msg': '当前登录用户不存在关联员工!'}
