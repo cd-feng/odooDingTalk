@@ -142,11 +142,10 @@
                         <div class="mt16">
                             <a href="https://github.com/suxuefeng20/odooDingDing" role="button" class="btn btn-primary btn-block o_load_translations"><strong>获取新版本</strong></a>
                         </div>
-
-                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">
-                            <a href="#" target="_blank" class="flex-grow-1 w-25 my_feedback_bug"><i class="fa fa-bug fa-rocket text-muted"/>
-                                Bug反馈</a>
-                        </div>
+<!--                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">-->
+<!--                            <a href="" class="flex-grow-1 w-25 my_feedback_bug"><i class="fa fa-bug fa-rocket text-muted"/>-->
+<!--                                Bug反馈</a>-->
+<!--                        </div>-->
                         <div class="clearfix"/>
                     </div>
                 </div>

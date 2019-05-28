@@ -11,9 +11,9 @@ odoo.define('dindin.blackboard.info', function (require) {
 
     let DinDinDashboard = AbstractAction.extend({
         template: 'DingDingDashboardMain',
-        events: {
-            'click .my_feedback_bug': '_onFeedback_clicked',
-        },
+        // events: {
+        //     'click .my_feedback_bug': '_onFeedback_clicked',
+        // },
 
         setBlackboardData: function (data) {
             let self = this;
@@ -84,10 +84,16 @@ odoo.define('dindin.blackboard.info', function (require) {
             });
         },
 
-        _onFeedback_clicked: function (ev) {
-            var self = this;
-            alert("dsadasdasdas");
-        },
+        // _onFeedback_clicked: function (ev) {
+        //     let self = this;
+        //     self.do_action({
+        //         type: 'ir.actions.act_window',
+        //         res_model: 'dingding.user.feedback',
+        //         // target: 'new',
+        //         views: [[false, 'list']],
+        //         // context: [],
+        //     });
+        // },
 
     });
 
