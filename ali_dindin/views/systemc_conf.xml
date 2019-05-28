@@ -36,7 +36,7 @@
               parent="ali_dindin.configure_menu"
               sequence="2"
               action="ali_dindin_system_conf_action"
-              groups="ali_dindin.group_ali_dindin_manager"
+              groups="ali_dindin.dd_setting_group"
     />
 
 </odoo>

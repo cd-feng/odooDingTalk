@@ -10,15 +10,17 @@
                 <field name="din_jobnumber"/>
                 <field name="din_hiredDate"/>
                 <field name="work_status"/>
+                <field name="dingding_type" invisible="1"/>
             </xpath>
-            <xpath expr="//sheet" position="before">
-                <header>
-                    <button name="create_ding_employee" type="object" string="上传至钉钉" class="oe_highlight"
-                                confirm="确认要将此员工上传至钉钉吗？若不是新创建的员工则无法上传!"/>
-                    <button name="update_ding_employee" type="object" string="更新至钉钉" class="oe_highlight"
-                                confirm="系统将新的信息上传至钉钉,确认?"/>
-                </header>
-            </xpath>
+            <button name="toggle_active" position="before">
+                <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
+                        icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
+                        groups="ali_dindin.dd_top_group">
+                </button>
+                <button name="update_ding_employee" string="更新至钉钉" type="object" class="oe_stat_button"
+                        icon="fa-hand-peace-o" groups="ali_dindin.dd_update_group">
+                </button>
+            </button>
         </field>
     </record>
 

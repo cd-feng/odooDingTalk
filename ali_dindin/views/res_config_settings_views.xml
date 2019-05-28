@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block dindin_settings_block" string="钉钉" data-string="钉钉" data-key="ali_dindin"
-                     groups="ali_dindin.group_ali_dindin_manager">
+                     groups="ali_dindin.dd_setting_group">
                     <h2>钉钉API应用信息</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
@@ -142,7 +142,7 @@
         </field>
     </record>
 
-    <record id="union_pay_config_settings_configuration_action" model="ir.actions.act_window">
+    <record id="dingding_settings_configuration_action" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
@@ -151,11 +151,11 @@
         <field name="context">{'module' : 'ali_dindin'}</field>
     </record>
 
-    <menuitem id="union_pay_config_settings_settings" name="基础设置"
+    <menuitem id="dingding_settings_menu" name="基础设置"
               parent="ali_dindin.configure_menu"
               sequence="1"
-              action="union_pay_config_settings_configuration_action"
-              groups="base.group_system"
+              action="dingding_settings_configuration_action"
+              groups="ali_dindin.dd_setting_group"
     />
 
 </odoo>

@@ -17,6 +17,8 @@ class HrDepartment(models.Model):
 
     din_id = fields.Char(string='钉钉Id')
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
+    dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')],
+                                     compute="_compute_dingding_type")
 
     @api.multi
     def create_ding_department(self):
@@ -35,7 +37,8 @@ class HrDepartment(models.Model):
                 raise UserError("请选择上级部门!")
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=10)
                 result = json.loads(result.text)
                 logging.info(">>>新增部门返回结果:{}".format(result))
                 if result.get('errcode') == 0:
@@ -61,7 +64,8 @@ class HrDepartment(models.Model):
             }
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=10)
                 result = json.loads(result.text)
                 logging.info(">>>修改部门时钉钉返回结果:{}".format(result))
                 if result.get('errcode') == 0:
@@ -99,39 +103,12 @@ class HrDepartment(models.Model):
         except ReadTimeout:
             raise UserError("同步至钉钉超时！")
 
-    # 同步钉钉部门数据
-    @api.model
-    def synchronous_dingding_department(self):
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'department_list')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        data = {'id': 1}
-        result = requests.get(url="{}{}".format(url, token), params=data, timeout=15)
-        logging.info(">>>获取钉钉部门结果:{}".format(result.text))
-        result = json.loads(result.text)
-        if result.get('errcode') == 0:
-            for res in result.get('department'):
-                data = {
-                    'name': res.get('name'),
-                    'din_id': res.get('id'),
-                }
-                if res.get('parentid') != 1:
-                    partner_department = self.env['hr.department'].search([('din_id', '=', res.get('parentid'))])
-                    if partner_department:
-                        data.update({'parent_id': partner_department[0].id})
-                h_department = self.env['hr.department'].search(['|', ('din_id', '=', res.get('id')), ('name', '=', res.get('name'))])
-                if h_department:
-                    h_department.sudo().write(data)
-                else:
-                    self.env['hr.department'].create(data)
-            return {'state': True}
-        else:
-            logging.info(">>>获取部门失败，原因为:{}".format(result.get('errmsg')))
-            return {'state': False, 'msg': "获取部门失败，原因为:{}".format(result.get('errmsg'))}
+    def _compute_dingding_type(self):
+        for res in self:
+            res.dingding_type = 'yes' if res.din_id else 'no'
 
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousDepartment(models.TransientModel):
     _name = 'dindin.synchronous.department'
     _description = "同步钉钉部门功能模型"
-
-

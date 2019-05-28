@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import time
 import json
 import logging
 import requests
-import hashlib
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -22,11 +19,11 @@ class GetAliDinDinToken(models.TransientModel):
         din_appkey = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_appkey')
         din_appsecret = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_appsecret')
         if not din_appkey and not din_appsecret:
-            logging.info("钉钉设置项中的AppKey和AppSecret不能为空！")
+            logging.info(">>>钉钉设置项中的AppKey和AppSecret不能为空！")
             return False
         token_url = self.env['ali.dindin.system.conf'].search([('key', '=', 'token_url')]).value
         if not token_url:
-            logging.info('获取钉钉Token值URL记录不存在')
+            logging.info('>>>获取钉钉Token值URL记录不存在')
             return False
         data = {'appkey': din_appkey, 'appsecret': din_appsecret}
         # 发送数据

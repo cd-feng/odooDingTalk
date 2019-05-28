@@ -3,7 +3,11 @@
     <data>
         <menuitem name="钉钉"
                   id="ali_dindin.main_menu"
-                  web_icon="ali_dindin,static/description/icon.png"/>
+                  web_icon="ali_dindin,static/description/icon.png" groups="ali_dindin.dd_user_group"/>
+
+        <menuitem name="基础数据" id="bash_menu"
+                  parent="ali_dindin.main_menu" sequence="5"
+        />
 
         <menuitem name="消息" id="ali_dindin.message_menu"
                   parent="ali_dindin.main_menu" sequence="10"
