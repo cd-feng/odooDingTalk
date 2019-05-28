@@ -4,10 +4,13 @@ import logging
 import time
 import requests
 from requests import ReadTimeout
-
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
+try:
+    import base64
+except ImportError:
+    _logger.debug('Cannot `import base64`.')
 _logger = logging.getLogger(__name__)
 
 """ 钉钉部门功能模块 """
@@ -185,6 +188,9 @@ class HrEmployee(models.Model):
                     data.update({
                         'din_hiredDate': time_stamp,  # 入职时间
                     })
+                if user.get('avatar'):
+                    binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content))
+                    data.update({'image': binary_data})
                 employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
                 if employee:
                     employee.sudo().write(data)
