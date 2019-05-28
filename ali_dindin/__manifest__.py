@@ -18,14 +18,11 @@
         'views/menu.xml',
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
-        'views/asset.xml',
         'views/department.xml',
         'views/employee.xml',
         'views/partner.xml',
+        'views/synchronous.xml',
         'views/feedback.xml',
-    ],
-    'qweb': [
-        'static/xml/*.xml',
     ],
     'images': ['static/description/index2.png','static/description/index1.png']
 }

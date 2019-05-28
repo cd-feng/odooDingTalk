@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-import time
 import requests
 from requests import ReadTimeout
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
 try:
     import base64
 except ImportError:
     _logger.debug('Cannot `import base64`.')
-_logger = logging.getLogger(__name__)
-
-""" 钉钉部门功能模块 """
 
 
 # 拓展部门员工
@@ -26,6 +23,7 @@ class HrEmployee(models.Model):
     din_hiredDate = fields.Date(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
     work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
+    dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
 
     # 上传员工到钉钉
     @api.multi
@@ -52,7 +50,8 @@ class HrEmployee(models.Model):
             }
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=10)
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
@@ -88,7 +87,8 @@ class HrEmployee(models.Model):
             }
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=30)
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
@@ -134,88 +134,12 @@ class HrEmployee(models.Model):
         except ReadTimeout:
             raise UserError("上传员工至钉钉超时！")
 
-    # 员工列表和看板上同步员工数据按钮执行的方法，若使用回调同样使用本方法进行同步
-    @api.model
-    def synchronous_dingding_employee(self):
-        """同步钉钉部门员工列表"""
-        logging.info("同步钉钉部门员工列表")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取所有部门
-        departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments:
-            emp_offset = 0
-            emp_size = 100
-            result_state = dict()
-            while True:
-                logging.info(">>>开始获取{}部门的员工".format(department.name))
-                data = {
-                    'access_token': token,
-                    'department_id': department[0].din_id,
-                    'offset': emp_offset,
-                    'size': emp_size,
-                }
-                result_state = self.get_dingding_employees(department, url, data)
-                if result_state.get('has_more'):
-                    emp_offset = emp_offset + 1
-                else:
-                    break
-            if not result_state.get('state'):
-                return result_state
-        return {'state': True}
-
-    @api.model
-    def get_dingding_employees(self, department, url, data):
-        result = requests.get(url=url, params=data, timeout=15)
-        result = json.loads(result.text)
-        if result.get('errcode') == 0:
-            for user in result.get('userlist'):
-                data = {
-                    'name': user.get('name'),  # 员工名称
-                    'din_id': user.get('userid'),  # 钉钉用户Id
-                    'din_unionid': user.get('unionid'),  # 钉钉唯一标识
-                    'mobile_phone': user.get('mobile'),  # 手机号
-                    'work_phone': user.get('tel'),  # 分机号
-                    'work_location': user.get('workPlace'),  # 办公地址
-                    'notes': user.get('remark'),  # 备注
-                    'job_title': user.get('position'),  # 职位
-                    'work_email': user.get('email'),  # email
-                    'din_jobnumber': user.get('jobnumber'),  # 工号
-                    'department_id': department[0].id,  # 部门
-                }
-                if user.get('hiredDate'):
-                    time_stamp = self.get_time_stamp(user.get('hiredDate'))
-                    data.update({
-                        'din_hiredDate': time_stamp,  # 入职时间
-                    })
-                if user.get('avatar'):
-                    binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content))
-                    data.update({'image': binary_data})
-                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
-                if employee:
-                    employee.sudo().write(data)
-                else:
-                    self.env['hr.employee'].sudo().create(data)
-            return {'state': True, 'has_more': result.get('hasMore')}
-        else:
-            logging.info(">>>获取部门员工失败，原因为:{}".format(result.get('errmsg')))
-            return {'state': False, 'msg': "获取部门员工失败，原因为:{}".format(result.get('errmsg'))}
-
-    @api.model
-    def get_time_stamp(self, timeNum):
-        """
-        将13位时间戳转换为时间
-        :param timeNum:
-        :return:
-        """
-        timeStamp = float(timeNum / 1000)
-        timeArray = time.localtime(timeStamp)
-        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-        return otherStyleTime
+    def _compute_dingding_type(self):
+        for res in self:
+            res.dingding_type = 'yes' if res.din_id else 'no'
 
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):
     _name = 'dindin.synchronous.employee'
     _description = "同步钉钉部门员工功能模型"
-

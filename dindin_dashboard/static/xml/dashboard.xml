@@ -6,7 +6,7 @@
             <div class="form-row">
                <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_apps">
-                        <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights"
+                        <i class="fa fa-user fa-4x text-muted o_web_settings_dashboard_access_rights"
                            style="cursor: pointer;" role="img" aria-label="Access rights" title="Access rights"></i>
                         <div class="o_web_settings_dashboard_header">
                             用户信息
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_share">
-                        <i class="fa fa-share-alt fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
+                        <i class="fa fa-bullhorn fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
                         <div class="o_web_settings_dashboard_header">钉钉用户公告</div>
                         <div>
                             <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
@@ -142,6 +142,11 @@
                         <div class="mt16">
                             <a href="https://github.com/suxuefeng20/odooDingDing" role="button" class="btn btn-primary btn-block o_load_translations"><strong>获取新版本</strong></a>
                         </div>
+<!--                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">-->
+<!--                            <a href="" class="flex-grow-1 w-25 my_feedback_bug"><i class="fa fa-bug fa-rocket text-muted"/>-->
+<!--                                Bug反馈</a>-->
+<!--                        </div>-->
+                        <div class="clearfix"/>
                     </div>
                 </div>
             </div>
