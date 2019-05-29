@@ -64,11 +64,11 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="问题反馈"
-              id="dingding_user_feedback_menu"
-              parent="ali_dindin.about_menu"
-              sequence="1"
-              action="dingding_user_feedback_action"
-    />
+<!--    <menuitem name="问题反馈"-->
+<!--              id="dingding_user_feedback_menu"-->
+<!--              parent="ali_dindin.about_menu"-->
+<!--              sequence="1"-->
+<!--              action="dingding_user_feedback_action"-->
+<!--    />-->
 
 </odoo>

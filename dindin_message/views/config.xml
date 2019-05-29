@@ -34,7 +34,6 @@
               parent="ali_dindin.configure_menu"
               sequence="3"
               action="dindin_message_type_action"
-              groups="ali_dindin.group_ali_dindin_manager"
     />
 
 
