@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingding_report_template_template" name="DingDing report Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dindin_report/static/src/js/report_template.js"></script>
+        </xpath>
+    </template>
+
+    <record id="dingding_report_template_tree_view" model="ir.ui.view">
+        <field name="name">日志模板</field>
+        <field name="model">dingding.report.template</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url"/>
+                <field name="report_code"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingding_report_template_action">
+        <field name="name">日志模板</field>
+        <field name="res_model">dingding.report.template</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_report_template_search">
+        <field name="model">dingding.report.template</field>
+        <field name="arch" type="xml">
+            <search string="日志模板">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="report_code"/>
+                <field name="url"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="日志" id="dingding_report_main_menu" parent="ali_dindin.main_menu" sequence="60"/>
+
+    <menuitem id="dingding_report_template_menu" name="日志模板" parent="dingding_report_main_menu" sequence="1" action="dingding_report_template_action"/>
+
+
+</odoo>
