@@ -18,7 +18,5 @@
         'views/users_sign.xml',
         'views/sign_list.xml',
     ],
-    'price': '50',
-    'currency': 'EUR',
     'images':  ['static/description/app1.png']
 }

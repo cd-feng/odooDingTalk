@@ -17,8 +17,4 @@
         'data/record_crom.xml',
         'views/work_record.xml',
     ],
-    # 'qweb': [
-    #     'static/xml/*.xml'
-    # ]
-
 }

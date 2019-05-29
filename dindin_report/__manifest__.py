@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "钉钉办公-回调管理",
-    'summary': """钉钉办公-回调管理""",
-    'description': """ 钉钉办公-回调管理 """,
+    'name': "钉钉办公-日志",
+    'summary': """钉钉办公-日志""",
+    'description': """ 钉钉办公-日志 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
@@ -13,13 +13,12 @@
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
+        'security/dindin_security.xml',
         'data/system_conf.xml',
-        'data/call_back.xml',
-        'views/call_back_list.xml',
-        'views/call_back.xml',
+        'views/report_template.xml',
+        'views/report.xml',
     ],
     'qweb': [
-        'static/xml/*.xml'
+        'static/xml/*.xml',
     ],
-    'images':  ['static/description/app1.png', 'static/description/app2.png']
 }
