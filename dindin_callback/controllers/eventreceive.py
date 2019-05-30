@@ -35,10 +35,9 @@ class CallBack(Home, http.Controller):
                 UserId = msg.get('UserId')
                 for user_id in UserId:
                     emp = request.env['hr.employee'].sudo().search([('din_id', '=', user_id)])
-                    if emp:
-                        emp.sudo().unlink()
+                    emp.sudo().write({'active': False})
             else:
-                request.env['hr.employee'].sudo().synchronous_dingding_employee()
+                request.env['dingding.bash.data.synchronous'].sudo().synchronous_dingding_employee()
         elif event_type == 'org_dept_create' or event_type == 'org_dept_modify' or event_type == 'org_dept_remove':
             DeptId = msg.get('DeptId')
             if event_type == 'org_dept_remove':
@@ -47,7 +46,7 @@ class CallBack(Home, http.Controller):
                     if hr_depat:
                         hr_depat.sudo().unlink()
             else:
-                request.env['hr.department'].sudo().synchronous_dingding_department()
+                request.env['dingding.bash.data.synchronous'].sudo().synchronous_dingding_department()
         # -----员工角色-------
         elif event_type == 'label_user_change' or event_type == 'label_conf_add' or event_type == 'label_conf_del' \
                 or event_type == 'label_conf_modify':

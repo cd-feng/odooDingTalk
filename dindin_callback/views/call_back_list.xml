@@ -5,7 +5,7 @@
         <field name="name">回调类型列表</field>
         <field name="model">dindin.users.callback.list</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" editable="top" create="true">
+            <tree default_order="id desc" editable="top" create="false">
                 <field name="name"/>
                 <field name="value"/>
                 <field name="call_back_url"/>
