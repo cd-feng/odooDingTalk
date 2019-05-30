@@ -53,7 +53,8 @@
                     <notebook>
                         <page string="消息内容">
                             <group>
-                                <field name="chat_id" placeholder="接受消息的钉钉群会话" options="{'no_create': True}"/>
+<!--                                <field name="chat_id" placeholder="接受消息的钉钉群会话" options="{'no_create': True}"/>-->
+                                <field name="chat_ids" placeholder="接受消息的钉钉群会话" options="{'no_create': True}" widget="many2many_tags"/>
                                 <field name="subject" placeholder="请输入一个主题吧...支持Mako语法"/>
                             </group>
                             <group>

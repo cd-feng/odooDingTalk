@@ -11,17 +11,17 @@ class MailMessage(models.Model):
     @api.model
     def create(self, values):
         message = super(MailMessage, self).create(values)
-        # print(values)
         template = self.env['dingding.message.template'].sudo()
         model = self.env['ir.model'].sudo().search([('model', '=', values.get('model'))])
-        result = template.get_template_by_model_and_type(model, values.get('message_type'))
-        if result and result.chat_id:
-            if values.get('message_type') == 'comment':
-                base_url = "{}/dingding/auto/login/in".format(self.env["ir.config_parameter"].get_param("web.base.url"))
-                partner = self.env['res.partner'].sudo().search([('id', '=', values.get('author_id'))])
-                msg = "*{}*在**{}**备注: \n  - **单据**:{} \n - **内容**:{}  \n  \n [登录ERP]({})".format(
-                    partner.name, model.name, values.get('record_name'), values.get('body'), base_url)
-                self.env['dingding.send.chat.message'].sudo().send_message(result.chat_id, msg)
+        results = template.get_template_by_model_and_type(model, values.get('message_type'))
+        for result in results:
+            for chat in result.chat_ids:
+                if values.get('message_type') == 'comment':
+                    base_url = "{}/dingding/auto/login/in".format(self.env["ir.config_parameter"].get_param("web.base.url"))
+                    partner = self.env['res.partner'].sudo().search([('id', '=', values.get('author_id'))])
+                    msg = "*{}*在**{}**备注: \n  - **单据**:{} \n - **内容**:{}  \n  \n [登录ERP]({})".format(
+                        partner.name, model.name, values.get('record_name'), values.get('body'), base_url)
+                    self.env['dingding.send.chat.message'].sudo().send_message(chat, msg)
         return message
 
 
@@ -39,6 +39,8 @@ class DingDingMessageTemplate(models.Model):
     comment = fields.Boolean(string=u'备注消息时触发')
     notification = fields.Boolean(string=u'讨论消息时触发')
     chat_id = fields.Many2one(comodel_name='dingding.chat', string=u'To群会话')
+    chat_ids = fields.Many2many(comodel_name='dingding.chat', relation='message_template_and_dingding_chat_rel',
+                                column1='template_id', column2='chat_id', string=u'To群会话')
 
     @api.model
     def generate_message_text(self, model_name, body_html, res_id):
@@ -57,4 +59,4 @@ class DingDingMessageTemplate(models.Model):
         if model:
             template = self.env['dingding.message.template'].sudo().search(
                 [('model_id', '=', model.id), (msh_type, '=', True), ('active', '=', True)])
-            return template[0] if template else False
+            return template if template else False
