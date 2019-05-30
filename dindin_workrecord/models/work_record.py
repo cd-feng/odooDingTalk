@@ -184,3 +184,87 @@ class DinDinWorkRecordList(models.Model):
     title = fields.Char(string='标题', required=True)
     content = fields.Char(string='内容', required=True)
     record_id = fields.Many2one(comodel_name='dindin.work.record', string=u'待办', ondelete='cascade')
+
+
+class GetUserDingDingWorkRecord(models.TransientModel):
+    _name = 'get.user.dingding.work.record'
+    _description = "获取用户待办"
+
+    @api.multi
+    def get_user_work_record(self):
+        """
+        获取当前用户的待办信息
+        :return:
+        """
+        self.ensure_one()
+        din_id = self.env['hr.employee'].search_read([('user_id', '=', self.env.user.id)], fields=['din_id'])
+        if len(din_id) > 1:
+            raise UserError("当前用户关联了多个员工，请纠正！")
+        offset = 0  # 分页游标
+        limit = 50  # 分页大小
+        for emp in din_id:
+            while True:
+                result = self.get_workrecord_url(emp.get('din_id'), offset, limit)
+                try:
+                    if 'list' in result:
+                        for d_res in result.get('list'):
+                            record = self.env['dindin.work.record'].search(
+                                [('record_id', '=', d_res.get('record_id')), ('record_type', '!=', 'out')])
+                            rec_line = list()
+                            for res_line in d_res.get('forms'):
+                                rec_line.append(
+                                    (0, 0, {'title': res_line.get('title'), 'content': res_line.get('content')}))
+                            data = {
+                                'name': d_res.get('title'),
+                                'emp_id': emp.get('id'),
+                                'record_url': d_res.get('url'),
+                                'record_time': self.get_time_stamp(d_res.get('create_time')),
+                                'record_type': 'put',
+                                'record_id': d_res.get('record_id'),
+                                'line_ids': rec_line,
+                            }
+                            if not record:
+                                self.env['dindin.work.record'].create(data)
+                    if not result.get('has_more'):
+                        break
+                    else:
+                        offset = offset + limit
+                except TypeError:
+                    logging.info(">>>TypeError: argument of type 'NoneType' is not iterable")
+                    break
+                except ValueError:
+                    logging.info(">>>ValueError：NoneType' is not iterable")
+                    break
+        return True
+
+    @api.model
+    def get_workrecord_url(self, user_id, offset, limit):
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'workrecord_getbyuserid')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'userid': user_id,
+            'offset': offset,
+            'limit': limit,
+            'status': 0,
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+            result = json.loads(result.text)
+            logging.info(">>>{}".format(result))
+            if result.get('errcode') == 0:
+                return result.get('records')
+        except ReadTimeout:
+            logging.info("获取所有用户的待办事项网络连接超时")
+
+    @api.model
+    def get_time_stamp(self, timeNum):
+        """
+        将10位时间戳转换为时间
+        :param timeNum:
+        :return:
+        """
+        timeStamp = float(timeNum)
+        timeArray = time.localtime(timeStamp)
+        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+        return otherStyleTime

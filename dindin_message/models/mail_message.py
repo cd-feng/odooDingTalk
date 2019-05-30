@@ -14,14 +14,15 @@ class MailMessage(models.Model):
         template = self.env['dingding.message.template'].sudo()
         model = self.env['ir.model'].sudo().search([('model', '=', values.get('model'))])
         results = template.get_template_by_model_and_type(model, values.get('message_type'))
-        for result in results:
-            for chat in result.chat_ids:
-                if values.get('message_type') == 'comment':
-                    base_url = "{}/dingding/auto/login/in".format(self.env["ir.config_parameter"].get_param("web.base.url"))
-                    partner = self.env['res.partner'].sudo().search([('id', '=', values.get('author_id'))])
-                    msg = "*{}*在**{}**备注: \n  - **单据**:{} \n - **内容**:{}  \n  \n [登录ERP]({})".format(
-                        partner.name, model.name, values.get('record_name'), values.get('body'), base_url)
-                    self.env['dingding.send.chat.message'].sudo().send_message(chat, msg)
+        if results:
+            for result in results:
+                for chat in result.chat_ids:
+                    if values.get('message_type') == 'comment':
+                        base_url = "{}/dingding/auto/login/in".format(self.env["ir.config_parameter"].get_param("web.base.url"))
+                        partner = self.env['res.partner'].sudo().search([('id', '=', values.get('author_id'))])
+                        msg = "*{}*在**{}**备注: \n  - **单据**:{} \n - **内容**:{}  \n  \n [登录ERP]({})".format(
+                            partner.name, model.name, values.get('record_name'), values.get('body'), base_url)
+                        self.env['dingding.send.chat.message'].sudo().send_message(chat, msg)
         return message
 
 
