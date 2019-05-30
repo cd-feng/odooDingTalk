@@ -15,9 +15,10 @@ class DingDingSynchronous(models.TransientModel):
     _description = "基础数据同步"
     _rec_name = 'employee'
 
-    department = fields.Boolean(string=u'钉钉部门同步', default=True)
-    employee = fields.Boolean(string=u'钉钉员工同步', default=True)
-    partner = fields.Boolean(string=u'钉钉联系人同步', default=True)
+    department = fields.Boolean(string=u'同步钉钉部门', default=True)
+    employee = fields.Boolean(string=u'同步钉钉员工', default=True)
+    employee_avatar = fields.Boolean(string=u'是否替换为钉钉员工头像', default=False)
+    partner = fields.Boolean(string=u'同步钉钉联系人', default=True)
 
     @api.multi
     def start_synchronous_data(self):
@@ -29,7 +30,7 @@ class DingDingSynchronous(models.TransientModel):
             if res.department:
                 self.synchronous_dingding_department()
             if res.employee:
-                self.synchronous_dingding_employee()
+                self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
             if res.partner:
                 self.synchronous_dingding_category()
                 self.synchronous_dingding_partner()
@@ -67,7 +68,7 @@ class DingDingSynchronous(models.TransientModel):
             raise UserError("同步部门时发生意外，原因为:{}".format(result.get('errmsg')))
 
     @api.model
-    def synchronous_dingding_employee(self):
+    def synchronous_dingding_employee(self, s_avatar=None):
         """
         同步钉钉部门员工列表
         :return:
@@ -87,7 +88,7 @@ class DingDingSynchronous(models.TransientModel):
                     'offset': emp_offset,
                     'size': emp_size,
                 }
-                result_state = self.get_dingding_employees(department, url, data)
+                result_state = self.get_dingding_employees(department, url, data, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
@@ -95,7 +96,7 @@ class DingDingSynchronous(models.TransientModel):
         return True
 
     @api.model
-    def get_dingding_employees(self, department, url, data):
+    def get_dingding_employees(self, department, url, data, s_avatar=None):
         result = requests.get(url=url, params=data, timeout=5)
         result = json.loads(result.text)
         if result.get('errcode') == 0:
@@ -118,7 +119,7 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({
                         'din_hiredDate': time_stamp,
                     })
-                if user.get('avatar'):
+                if s_avatar and user.get('avatar'):
                     try:
                         binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content))
                         data.update({'image': binary_data})

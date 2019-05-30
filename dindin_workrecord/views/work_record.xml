@@ -91,9 +91,9 @@
     />
 
 
-    <!--获取待办-->
+    <!--待办列表-->
     <record id="dindin_work_get_record_tree_view" model="ir.ui.view">
-        <field name="name">获取待办</field>
+        <field name="name">待办列表</field>
         <field name="model">dindin.work.record</field>
         <field name="arch" type="xml">
             <tree default_order="id desc" create="false" edit="false">
@@ -107,10 +107,10 @@
     </record>
 
     <record id="dindin_work_get_record_form_view" model="ir.ui.view">
-        <field name="name">获取待办</field>
+        <field name="name">待办列表</field>
         <field name="model">dindin.work.record</field>
         <field name="arch" type="xml">
-            <form string="获取待办">
+            <form string="待办列表">
                 <header>
                     <button name="record_update" type="object" string="待办更新" class="oe_highlight"
                             attrs="{'invisible': [('record_state', '!=', '00')]}"/>
@@ -160,12 +160,53 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="dindin_work_get_record_kanban">
+        <field name="name">待办列表看板</field>
+        <field name="model">dindin.work.record</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+                <field name="name"/>
+                <field name="emp_id"/>
+                <field name="state"/>
+                <field name="record_time"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb8">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <span>
+                                            <field name="name"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                                <strong>
+                                    <field name="record_state" widget="label_selection"
+                                           options="{'classes': {'00': 'warning', '01': 'success', '02': 'default'}}"/>
+                                </strong>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="emp_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="record_time"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="dindin_work_get_record_action" model="ir.actions.act_window">
-        <field name="name">获取待办</field>
+        <field name="name">待办列表</field>
         <field name="res_model">dindin.work.record</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('record_type', '=', 'put'), ('record_state', '=', '00')]</field>
         <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('dindin_workrecord.dindin_work_get_record_kanban')}),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('dindin_workrecord.dindin_work_get_record_tree_view')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('dindin_workrecord.dindin_work_get_record_form_view')})]"/>
     </record>

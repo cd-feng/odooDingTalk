@@ -7,6 +7,7 @@ import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,10 @@ class DinDinCallback(models.Model):
     def _get_default_token(self):
         return ''.join(random.sample(string.ascii_letters + string.digits, 10))
 
+    @api.model
+    def _get_default_localhost(self):
+        return "{}callback/eventreceive".format(request.httprequest.host_url)
+
     ValueType = [
         ('all', '所有事件'),
         ('00', '通讯录事件'),
@@ -39,7 +44,7 @@ class DinDinCallback(models.Model):
     value_type = fields.Selection(string=u'注册事件类型', selection=ValueType, default='all', copy=False)
     token = fields.Char(string='Token', default=_get_default_token, size=50)
     aes_key = fields.Char(string='数据加密密钥', default=_get_default_aes_key, size=50)
-    url = fields.Char(string='回调URL', size=200, default='http://ip:port/callback/eventreceive')
+    url = fields.Char(string='回调URL', size=200, default=_get_default_localhost)
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00', copy=False)
     call_ids = fields.Many2many(comodel_name='dindin.users.callback.list', relation='dindin_users_callback_and_list_ref',
                                 column1='call_id', column2='list_id', string=u'回调类型', copy=False)
