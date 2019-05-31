@@ -20,9 +20,6 @@
                 <button name="update_ding_employee" string="更新至钉钉" type="object" class="oe_stat_button"
                         icon="fa-hand-peace-o" groups="ali_dindin.dd_update_group">
                 </button>
-                <button name="using_dingding_avatar" string="使用钉钉头像" type="object" class="oe_stat_button"
-                        icon="fa-telegram" groups="ali_dindin.dd_update_group">
-                </button>
             </button>
         </field>
     </record>
