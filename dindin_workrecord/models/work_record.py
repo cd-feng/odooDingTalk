@@ -28,11 +28,31 @@ class DinDinWorkRecord(models.Model):
     record_id = fields.Char(string='待办任务ID', help="用于发送到钉钉后接受返回的id，通过id可以修改待办")
     record_type = fields.Selection(string=u'待办类型', selection=[('out', '发起'), ('put', '接收'), ], default='out')
     record_state = fields.Selection(string=u'待办状态', selection=[('00', '已通知'), ('01', '已更新'), ], default='00')
+    attachment_number = fields.Integer(compute='_compute_attachment_number', string='附件上传功能')
+    active = fields.Boolean(default=True)
+
+    @api.multi
+    def _compute_attachment_number(self):
+        """附件上传"""
+        attachment_data = self.env['ir.attachment'].read_group(
+            [('res_model', '=', 'dindin.work.record'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
+        attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
+        for expense in self:
+            expense.attachment_number = attachment.get(expense.id, 0)
+
+    @api.multi
+    def action_get_attachment_view(self):
+        """附件上传动作视图"""
+        self.ensure_one()
+        res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        res['domain'] = [('res_model', '=', 'dindin.work.record'), ('res_id', 'in', self.ids)]
+        res['context'] = {'default_res_model': 'dindin.work.record', 'default_res_id': self.id}
+        return res
 
     @api.multi
     def send_record(self):
         """发送待办事项函数"""
-        logging.info(">>>开始钉钉发送工作消息")
+        self.ensure_one()
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'workrecord_add')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         formItemList = list()
@@ -57,10 +77,50 @@ class DinDinWorkRecord(models.Model):
             if result.get('errcode') == 0:
                 self.write({'state': '01', 'record_id': result.get('record_id')})
             else:
-                raise UserError('发送消息失败，详情为:{}'.format(result.get('errmsg')))
+                raise UserError('发送待办事项失败，详情为:{}'.format(result.get('errmsg')))
         except ReadTimeout:
             raise UserError("网络连接超时！")
+        self.send_message_to_emp()
         self.message_post(body=u"待办事项已推送到钉钉!", message_type='notification')
+
+    @api.multi
+    def send_message_to_emp(self):
+        self.ensure_one()
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'send_work_message')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        msg_list = list()
+        for line in self.line_ids:
+            msg_list.append({'key': "{}: ".format(line.title), 'value': line.content})
+        data = {
+            'agent_id': self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_agentid'),
+            'userid_list': self.emp_id.din_id,
+            'msg': {
+                "msgtype": "oa",
+                "oa": {
+                    "message_url": self.record_url,
+                    "head": {
+                        "text": self.name
+                    },
+                    "body": {
+                        "title": self.name,
+                        "form": msg_list,
+                        "file_count": self.attachment_number,
+                        "author": self.env.user.name
+                    }
+                }
+            }
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=2)
+            result = json.loads(result.text)
+            logging.info(">>>发送待办消息结果：{}".format(result))
+            if result.get('errcode') == 0:
+                return result.get('task_id')
+            else:
+                logging.info('发送消息失败，详情为:{}'.format(result.get('errmsg')))
+        except ReadTimeout:
+            return False
 
     @api.model
     def get_workrecord(self):
