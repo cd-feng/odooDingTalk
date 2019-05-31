@@ -81,11 +81,7 @@
               sequence="10"
     />
 
-    <menuitem id="dindin_simple_groups_menu" name="考勤组"
-              parent="dingding_attendance_menu"
-              sequence="1"
-              action="dindin_simple_groups_action"
-    />
+    <menuitem id="dindin_simple_groups_menu" name="考勤组" parent="dingding_attendance_menu" sequence="1" action="dindin_simple_groups_action" groups="dindin_attendance.dd_attendance_groups_group"/>
 
     <record id="dindin_attendance.hr_employee_form_inherit" model="ir.ui.view">
         <field name="name">hr.employee.form</field>
