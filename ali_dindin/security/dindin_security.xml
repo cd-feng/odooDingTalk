@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="dingding_main_groups" model="ir.module.category">
-        <field name="name">钉钉权限管理</field>
+        <field name="name">钉钉额外权限管理</field>
         <field name="description">False</field>
         <field name="sequence">0</field>
     </record>
@@ -11,7 +11,8 @@
         <field name="name">用户</field>
         <field name="category_id" ref="dingding_main_groups"/>
         <field name="users" eval="[
-            (4, ref('base.user_admin'))
+            (4, ref('base.user_admin')),
+            (4, ref('base.group_user')),
 		]"/>
     </record>
 

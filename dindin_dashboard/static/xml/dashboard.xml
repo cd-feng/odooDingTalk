@@ -118,25 +118,21 @@
                 <!--版本更新公告-->
                 <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_translations mt8">
-                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations"
-                           title="Translations"></i>
+                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations"></i>
                         <div class="o_web_settings_dashboard_header">
                             更新公告
                         </div>
                         <hr/>
                         <div>
                             <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle">
-                                <h3>20190524</h3>
+                                <h3>20190531</h3>
                                 <ul>
-                                    <li>重新定义仪表盘样式</li>
-                                    <li>加入单据备注消息功能，可通过配置消息模板来控制单据在产生备注消息时发送到钉钉群会话中</li>
-                                    <li>修复拉取已有群会话时，群主信息不正确的问题</li>
-                                    <li>加入主模块的问题反馈模型，用于后期可以直接通过该功能提交钉钉模块的问题</li>
+                                    <li>修复部分模块的bug问题</li>
+                                    <li>增加很多单据的看板展示方式</li>
                                     <li>重新定义了消息模板，方便其他消息功能的拓展</li>
-                                    <li>支持备注消息中免登到ERP，前提是已配置好免登</li>
+                                    <li>增加发起待办时发送消息到待办人的功能</li>
                                 </ul>
                                 <p>更新方式： 拉取最新代码，直接更新主模块`ali_dindin`即可</p>
-                                <p>当前版本的更新日志为手动添加，后续会设置为自动获取!!</p>
                             </small>
                         </div>
                         <div class="mt16">

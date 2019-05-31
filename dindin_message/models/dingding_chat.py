@@ -5,7 +5,9 @@ import requests
 from requests import ReadTimeout
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-
+from odoo.modules import get_module_resource
+from odoo import tools
+import base64
 _logger = logging.getLogger(__name__)
 
 
@@ -14,6 +16,11 @@ class DingDingChat(models.Model):
     _description = "钉钉群会话"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
+
+    @api.model
+    def _default_image(self):
+        image_path = get_module_resource('dindin_message', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     chat_id = fields.Char(string='群会话Id')
     name = fields.Char(string='群名称', required=True)
@@ -26,15 +33,29 @@ class DingDingChat(models.Model):
     validation_type = fields.Selection(string=u'入群验证', selection=[(0, '否'), (1, '是'), ], default=0)
     mention_all_authority = fields.Selection(string=u'@all 权限', selection=[(0, '所有人'), (1, '仅群主'), ], default=0)
     chat_banned_type = fields.Selection(string=u'群禁言', selection=[(0, '不禁言'), (1, '全员禁言'), ], default=0)
-    management_ype = fields.Selection(string=u'管理类型', selection=[(0, '所有人可管理'), (1, '仅群主可管理'), ], default=1)
+    management_ype = fields.Selection(string=u'管理类型', selection=[(0, '所有人可管理'), (1, '仅群主可管理')], default=1)
     useridlist = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_and_hr_employee_rel',
                                   column1='chat_id', column2='emp_id', string=u'群成员', required=True)
-    state = fields.Selection(string=u'状态', selection=[('new', '新建'), ('normal', '已建立'), ('close', '解散'), ],
+    state = fields.Selection(string=u'状态', selection=[('new', '新建'), ('normal', '已建立'), ('close', '解散')],
                              default='new', track_visibility='onchange')
     channel_ids = fields.Many2many(comodel_name='mail.channel', relation='dingding_chat_and_mail_channel_rel',
                                    column1='chat_id', column2='mail_id', string=u'关注频道')
     model_ids = fields.Many2many(comodel_name='ir.model', relation='dingding_chat_and_ir_model_rel',
                                  column1='chat_id', column2='model_id', string=u'关联模型')
+    image = fields.Binary("照片", default=_default_image, attachment=True)
+    image_medium = fields.Binary("Medium-sized photo", attachment=True)
+    image_small = fields.Binary("Small-sized photo", attachment=True)
+    active = fields.Boolean(default=True)
+
+    @api.model
+    def create(self, values):
+        tools.image_resize_images(values)
+        return super(DingDingChat, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        tools.image_resize_images(values)
+        return super(DingDingChat, self).write(values)
 
     @api.multi
     def create_dingding_chat(self):
