@@ -20,8 +20,33 @@
                 <button name="update_ding_employee" string="更新至钉钉" type="object" class="oe_stat_button"
                         icon="fa-hand-peace-o" groups="ali_dindin.dd_update_group">
                 </button>
+                <button name="using_dingding_avatar" string="使用钉钉头像" type="object" class="oe_stat_button"
+                        icon="fa-telegram" groups="ali_dindin.dd_update_group">
+                </button>
             </button>
         </field>
     </record>
 
+    <record id="view_employee_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="din_avatar" widget="image_url" class="oe_image_small" width="25px" height="25px"/>
+                <field name="mobile_phone"/>
+            </field>
+        </field>
+    </record>
+
+    <record id='using_dingding_avatar_action' model='ir.actions.server'>
+        <field name='name'>Using avatar</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.using_dingding_avatar()
+        </field>     
+    </record>
 </odoo>
