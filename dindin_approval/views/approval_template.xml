@@ -8,7 +8,7 @@
             <tree default_order="id desc" editable="top" create="true">
                 <field name="company_id"/>
                 <field name="name"/>
-                <field name="icon_url"/>
+                <field name="icon_url" widget="image_url" class="oe_image_small" width="50px" height="50px"/>
                 <field name="process_code"/>
                 <field name="url"/>
             </tree>
