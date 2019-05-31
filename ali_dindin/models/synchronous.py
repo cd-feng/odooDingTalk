@@ -113,6 +113,7 @@ class DingDingSynchronous(models.TransientModel):
                     'work_email': user.get('email'),  # email
                     'din_jobnumber': user.get('jobnumber'),  # 工号
                     'department_id': department[0].id,  # 部门
+                    'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
                 }
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
