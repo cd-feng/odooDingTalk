@@ -15,6 +15,7 @@
         'security/ir.model.access.csv',
         'security/dindin_security.xml',
         'data/system_conf.xml',
+        'views/web_widget_image_url.xml',
         'views/menu.xml',
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
@@ -23,6 +24,9 @@
         'views/partner.xml',
         'views/synchronous.xml',
         'views/feedback.xml',
+    ],
+    "qweb": [
+        "static/xml/*.xml"
     ],
     'images': ['static/description/index2.png','static/description/index1.png']
 }
