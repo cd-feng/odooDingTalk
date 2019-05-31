@@ -97,8 +97,8 @@
     <record model="ir.actions.act_window" id="dingding_attendance_action">
         <field name="name">考勤列表</field>
         <field name="res_model">dingding.attendance</field>
-        <field name="view_mode">kanban,tree,calendar,pivot,graph,activity</field>
-        <field name="context">{'search_default_groupby_emp_id': True, 'search_default_groupby_checkType': True}</field>
+        <field name="view_mode">tree,kanban,calendar,pivot,graph,activity</field>
+        <field name="context">{'search_default_myattendances': True, 'search_default_groupby_checkType': True}</field>
     </record>
 
     <record model="ir.ui.view" id="dingding_attendance_search">
@@ -118,14 +118,19 @@
                 <filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>
                 <filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>
                 <filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/>
+                <separator/>
                 <filter name="groupby_emp_id" string="员工" context="{'group_by': 'emp_id'}"/>
                 <filter name="groupby_checkType" string="考勤类型" context="{'group_by': 'checkType'}"/>
+                <filter string="我的考勤" name="myattendances" domain="[('emp_id.user_id.id', '=', uid)]" />
+                <separator/>
+                <filter name="check_in_filter" string="签到日期" date="check_in"/>
+                <separator/>
             </search>
         </field>
     </record>
 
     <menuitem id="dingding_attendance_list_menu" name="钉钉出勤" parent="dingding_attendance_menu" sequence="2"
-              action="dingding_attendance_action"/>
+              action="dingding_attendance_action" groups="dindin_attendance.dd_attendance_user_group"/>
 
     <record id="dindin_attendance.view_employee_form_inherit_hr_attendance" model="ir.ui.view">
         <field name="name">hr.employee</field>
