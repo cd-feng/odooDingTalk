@@ -100,6 +100,7 @@
         <field name="arch" type="xml">
             <tree default_order="id desc" js_class="dingding_chat_list_tree">
                 <field name="name"/>
+                <field name="chat_icon"/>
                 <field name="employee_id"/>
                 <field name="show_history_type"/>
                 <field name="searchable"/>
