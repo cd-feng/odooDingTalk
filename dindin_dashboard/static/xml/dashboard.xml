@@ -77,6 +77,10 @@
                                 钉钉管理后台</a>
                             <a href="https://open-dev.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-picture-o text-muted"/>
                                 钉钉开发者后台</a>
+                            <a href="https://wsdebug.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-bug text-muted"/>
+                                钉钉JSAPI控制台</a>
+                            <a href="https://open-doc.dingtalk.com/microapp/serverapi2" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-book text-muted"/>
+                                钉钉开发文档</a>
                         </div>
                         <div class="clearfix"/>
                     </div>

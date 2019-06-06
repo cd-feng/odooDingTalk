@@ -23,6 +23,7 @@ class DingDingChat(models.Model):
         return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     chat_id = fields.Char(string='群会话Id')
+    chat_icon = fields.Char(string='群头像mediaId')
     name = fields.Char(string='群名称', required=True)
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
@@ -397,6 +398,7 @@ class DingDingChatList(models.TransientModel):
                             user_list.append(user[0].id)
                     data = {
                         'chat_id': chat_info.get('chatid'),
+                        'chat_icon': chat_info.get('icon'),
                         'name': chat_info.get('name'),
                         'employee_id': employee[0].id,
                         'show_history_type': chat_info.get('showHistoryType'),

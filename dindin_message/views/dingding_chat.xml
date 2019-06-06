@@ -100,6 +100,7 @@
         <field name="arch" type="xml">
             <tree default_order="id desc" js_class="dingding_chat_list_tree">
                 <field name="name"/>
+                <field name="chat_icon"/>
                 <field name="employee_id"/>
                 <field name="show_history_type"/>
                 <field name="searchable"/>
@@ -263,7 +264,8 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <h4>根据钉钉API规定,获取群会话需要管理员有群会话Id, 若没有Id,那本功能就不适合!</h4>
+                    <h4>根据钉钉API规定,获取群会话需要管理员有群会话Id, 如您是钉钉管理员,请进入<a href="https://wsdebug.dingtalk.com/" target="_blank">
+                                钉钉JSAPI控制台</a>获取群会话Id.</h4>
                 </group>
                 <group>
                     <field name="chat_id" placeholder="请输入群会话Id"/>
