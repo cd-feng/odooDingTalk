@@ -2,60 +2,13 @@
 #----------------------------------------------------------
 # OpenERP HTTP layer
 #----------------------------------------------------------
-import ast
-import collections
-import contextlib
-import datetime
-import functools
-import hashlib
-import hmac
-import inspect
+
 import logging
-import mimetypes
-import os
-import pprint
-import random
-import re
-import sys
-import threading
-import time
-import traceback
-import warnings
-from os.path import join as opj
-from zlib import adler32
-
-import babel.core
-from datetime import datetime, date
-import passlib.utils
-import psycopg2
 import json
-import werkzeug.contrib.sessions
-import werkzeug.datastructures
-import werkzeug.exceptions
-import werkzeug.local
-import werkzeug.routing
-import werkzeug.wrappers
-import werkzeug.wsgi
-from werkzeug import urls
-from werkzeug.wsgi import wrap_file
-
-try:
-    import psutil
-except ImportError:
-    psutil = None
-
 import odoo
-from odoo import fields
-from odoo.service.server import memory_info
-from odoo.service import security, model as service_model
-from odoo.tools.func import lazy_property
-from odoo.tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from odoo.tools import date_utils
+from odoo.http import WebRequest, Response
 
-# from .modules.module import module_manifest
-
-_logger = logging.getLogger(__name__)
-rpc_request = logging.getLogger(__name__ + '.rpc.request')
-rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
 class JsonRequest(WebRequest):
 
@@ -65,6 +18,7 @@ class JsonRequest(WebRequest):
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
             }
+        #修复钉钉注册回调事件时报错？
         if isinstance(result, dict) and result is not None and result.get('json'):
             mime = 'application/json'
             body = json.dumps(result.get('data'))
