@@ -4,6 +4,7 @@ import logging
 import time
 import requests
 from requests import ReadTimeout
+from datetime import datetime, timedelta
 from odoo.exceptions import UserError
 from odoo import models, fields, api
 
@@ -63,8 +64,8 @@ class HrAttendanceTransient(models.TransientModel):
     _name = 'hr.attendance.tran'
     _description = '获取钉钉考勤信息'
 
-    start_date = fields.Date(string=u'开始日期', required=True)
-    stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
+    start_date = fields.Datetime(string=u'开始时间', required=True)
+    stop_date = fields.Datetime(string=u'结束时间', required=True, default=str(fields.datetime.now()))
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_dingding_attendance_and_hr_employee_rel',
                                column1='attendance_id', column2='emp_id', string=u'员工', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
@@ -114,31 +115,52 @@ class HrAttendanceTransient(models.TransientModel):
                     offset = 0
                     limit = 50
                     while True:
-                        data = {
-                            'workDateFrom': "{} 00:00:00".format(res.start_date),  # 开始日期
-                            'workDateTo': "{} 00:00:00".format(res.stop_date),  # 结束日期
-                            'userIdList': user_list,  # 员工列表
-                            'offset': offset,  # 开始日期
-                            'limit': limit,  # 开始日期
-                        }
-                        has_more = self.send_post_dindin(data)
+                        work_data_from = datetime.strptime(str(res.start_date), "%Y-%m-%d %H:%M:%S")
+                        work_data_to = datetime.strptime(str(res.stop_date), "%Y-%m-%d %H:%M:%S")
+                        delta = timedelta(days=7)
+                        if work_data_to < work_data_from  + delta:
+                            work_data_to_mid = work_data_to
+                        else:
+                            work_data_to_mid = work_data_from + delta
+                        while (work_data_from < work_data_to):
+                            data = {
+                                'workDateFrom': str(work_data_from),  
+                                'workDateTo': str(work_data_to_mid),  
+                                'userIdList': user_list,  
+                                'offset': offset,
+                                'limit': limit,
+                            }
+                            has_more = self.send_post_dindin(data)
+                            work_data_from = work_data_to_mid + timedelta(days=1)
+                            work_data_to_mid += delta
+
                         if not has_more:
                             break
                         else:
                             offset = offset + limit
-                    break
+                        break
                 elif isinstance(u, list):
                     offset = 0
                     limit = 50
                     while True:
-                        data = {
-                            'workDateFrom': "{} 00:00:00".format(res.start_date),  # 开始日期
-                            'workDateTo': "{} 00:00:00".format(res.stop_date),  # 结束日期
-                            'userIdList': u,  # 员工列表
-                            'offset': offset,  # 开始日期
-                            'limit': limit,  # 开始日期
-                        }
-                        has_more = self.send_post_dindin(data)
+                        work_data_from = datetime.strptime(str(res.start_date), "%Y-%m-%d %H:%M:%S")
+                        work_data_to = datetime.strptime(str(res.stop_date), "%Y-%m-%d %H:%M:%S")
+                        delta = timedelta(days=7)
+                        if work_data_to < work_data_from  + delta:
+                            work_data_to_mid = work_data_to
+                        else:
+                            work_data_to_mid = work_data_from + delta
+                        while (work_data_from < work_data_to):
+                            data = {
+                                'workDateFrom': str(work_data_from),  
+                                'workDateTo': str(work_data_to_mid),  
+                                'userIdList': u,  
+                                'offset': offset,
+                                'limit': limit,
+                            }
+                            has_more = self.send_post_dindin(data)
+                            work_data_from = work_data_to_mid + timedelta(days=1)
+                            work_data_to_mid += delta
                         if not has_more:
                             break
                         else:
