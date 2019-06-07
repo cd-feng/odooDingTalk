@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="alert alert-info">
-                注意:开始和结束日期不能大于7天!!!
+                注意:开始和结束日期跨度不再限于7天内!!!
             </div>
         </div>
 	</t>
