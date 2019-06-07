@@ -12,6 +12,19 @@
                 <field name="work_status"/>
                 <field name="dingding_type" invisible="1"/>
             </xpath>
+            <xpath expr="//field[@name='mobile_phone']" position="replace">
+                <label for="mobile_phone"/>
+                    <div class="o_row">
+                        <field name="mobile_phone" widget="phone"/>
+                        <button
+                            type="action"
+                            string="换手机号" 
+                            icon="fa-arrow-right" 
+                            name="%(change_mobile_action)d"
+                            attrs="{'invisible':[('mobile_phone', '=', False)]}"
+                        />
+                    </div>
+            </xpath>
             <button name="toggle_active" position="before">
                 <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
                         icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}"

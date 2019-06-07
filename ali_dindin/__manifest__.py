@@ -20,6 +20,7 @@
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
         'views/department.xml',
+        'wizard/change_mobile.xml',
         'views/employee.xml',
         'views/partner.xml',
         'views/synchronous.xml',
