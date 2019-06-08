@@ -50,11 +50,18 @@
                             </div>
                         </div>
                     </div>
+                    <group>
+                        <field name="send_to" widget="radio" options="{'horizontal': true}"/>
+                        <field name="chat_ids" placeholder="将消息发送到钉钉群" options="{'no_create': True}" widget="many2many_tags"
+                               attrs="{'invisible': [('send_to', '!=', 'chat')], 'required': [('send_to', '=', 'chat')]}"/>
+                        <field name="user_ids" placeholder="将消息发送到工作群中的员工" options="{'no_create': True}" widget="many2many_tags"
+                               attrs="{'invisible': [('send_to', '!=', 'user')], 'required': [('send_to', '=', 'user')]}"/>
+                        <field name="field_ids" placeholder="给单据上指定的员工发送消息到工作群" options="{'no_create': True}" widget="many2many_tags"
+                               attrs="{'invisible': [('send_to', '!=', 'form')], 'required': [('send_to', '=', 'form')]}"/>
+                    </group>
                     <notebook>
-                        <page string="消息内容">
+                        <page string="消息配置">
                             <group>
-<!--                                <field name="chat_id" placeholder="接受消息的钉钉群会话" options="{'no_create': True}"/>-->
-                                <field name="chat_ids" placeholder="接受消息的钉钉群会话" options="{'no_create': True}" widget="many2many_tags"/>
                                 <field name="subject" placeholder="请输入一个主题吧...支持Mako语法"/>
                             </group>
                             <group>
