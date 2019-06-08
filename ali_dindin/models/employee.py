@@ -97,7 +97,7 @@ class HrEmployee(models.Model):
                 'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
             }
             if res.din_hiredDate:
-                hiredDate = self.time_to_timestamp(res.din_hiredDate)
+                hiredDate = self.date_to_stamp(res.din_hiredDate)
                 data.update({'hiredDate': hiredDate})
 
             headers = {'Content-Type': 'application/json'}
@@ -150,9 +150,9 @@ class HrEmployee(models.Model):
                         'din_avatar': result.get('avatar') if result.get('avatar') else '',  # 钉钉头像url
                     }
                     if result.get('hiredDate'):
-                        time_stamp = self.get_time_stamp(result.get('hiredDate'))
+                        date_str = self.get_time_stamp(result.get('hiredDate'))
                         data.update({
-                            'din_hiredDate': time_stamp,
+                            'din_hiredDate': date_str,
                         })
                     if result.get('department'):
                         dep_din_ids = result.get('department')
@@ -213,19 +213,22 @@ class HrEmployee(models.Model):
         """
         time_stamp = float(time_num / 1000)
         time_array = time.localtime(time_stamp)
-        return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
+        return time.strftime("%Y-%m-%d", time_array)
+
+
 
     # 把时间转成时间戳形式
     @api.model
-    def time_to_timestamp(self, time_str):
+    def date_to_stamp(self, date):
         """
         将时间转成13位时间戳
         :param time_num:
         :return:
         """
-        time_stamp = time.mktime(time_str.timetuple())
-        time_stamp = time_stamp * 1000
-        return time_stamp
+        date_str = fields.Date.to_string(date)
+        date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d"))
+        date_stamp = date_stamp * 1000
+        return date_stamp
 
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
