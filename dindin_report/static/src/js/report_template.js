@@ -6,6 +6,9 @@ odoo.define('dingding_report.report.template.button', function (require) {
     let core = require('web.core');
     let QWeb = core.qweb;
     let rpc = require('web.rpc');
+    let viewRegistry = require('web.view_registry');
+    let KanbanController = require('web.KanbanController');
+    let KanbanView = require('web.KanbanView');
 
     let save_data = function () {
         rpc.query({
@@ -49,4 +52,45 @@ odoo.define('dingding_report.report.template.button', function (require) {
         },
 
     });
+
+
+    let DingDingReportTemplateKanbanController = KanbanController.extend({
+        renderButtons: function ($node) {
+            let $buttons = this._super.apply(this, arguments);
+            let tree_model = this.modelName;
+            if (tree_model == 'dingding.report.template') {
+                let but = "<button type=\"button\" class=\"btn btn-secondary\">获取日志模板</button>";
+                let button2 = $(but).click(this.proxy('getDingDingReportTemplateKanbanButton'));
+                this.$buttons.append(button2);
+            }
+            return $buttons;
+        },
+        getDingDingReportTemplateKanbanButton: function () {
+            new Dialog(this, {
+                title: "获取日志模板",
+                size: 'medium',
+                buttons: [
+                    {
+                        text: "获取",
+                        classes: 'btn-primary',
+                        close: true,
+                        click: save_data
+                    }, {
+                        text: "告辞",
+                        close: true
+                    }
+                ],
+                $content: $(QWeb.render('PullDingDingReportTemplate', {widget: this, data: []}))
+            }).open();
+        },
+    });
+
+    let GetDingDingReportTemplateKanbanView = KanbanView.extend({
+        config: _.extend({}, KanbanView.prototype.config, {
+            Controller: DingDingReportTemplateKanbanController,
+        }),
+    });
+
+    viewRegistry.add('dingding_report_template_kanban', GetDingDingReportTemplateKanbanView);
+
 });

@@ -23,6 +23,7 @@ class DingDingChat(models.Model):
         return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     chat_id = fields.Char(string='群会话Id')
+    chat_icon = fields.Char(string='群头像mediaId')
     name = fields.Char(string='群名称', required=True)
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
@@ -305,9 +306,9 @@ class DingDingSendChatMessage(models.TransientModel):
     message = fields.Text(string=u'消息内容', required=True)
 
     @api.multi
-    def send_dingding_message(self):
+    def send_dingding_test_message(self):
         """
-        发送群会话消息
+        点击群会话发送群消息按钮
         :return:
         """
         chat_id = self.env.context.get('active_id', False)
@@ -360,6 +361,37 @@ class DingDingSendChatMessage(models.TransientModel):
             logging.info(">>>返回结果{}".format(result))
         except ReadTimeout:
             logging.info("发送群会话:'{}'时，网络连接超时！".format(ding_chat.name))
+        return True
+
+    @api.model
+    def send_work_message(self, userstr, message):
+        """
+        发送工作消息到指定员工列表
+        :param userstr 员工列表  string
+        :param message 消息内容
+        :return:
+        """
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'send_work_message')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'agent_id': self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_agentid'),  # 应用id
+            'userid_list': userstr,
+            'msg': {
+                "msgtype": "markdown",
+                "markdown": {
+                    "title": "来自ERP的消息",
+                    "text": message
+                }
+            },
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=1)
+            result = json.loads(result.text)
+            logging.info(">>>返回结果{}".format(result))
+        except ReadTimeout:
+            logging.info("网络连接超时！")
+        return True
 
 
 class DingDingChatList(models.TransientModel):
@@ -397,6 +429,7 @@ class DingDingChatList(models.TransientModel):
                             user_list.append(user[0].id)
                     data = {
                         'chat_id': chat_info.get('chatid'),
+                        'chat_icon': chat_info.get('icon'),
                         'name': chat_info.get('name'),
                         'employee_id': employee[0].id,
                         'show_history_type': chat_info.get('showHistoryType'),

@@ -20,10 +20,12 @@ class HrEmployee(models.Model):
     din_id = fields.Char(string='钉钉用户Id')
     din_unionid = fields.Char(string='钉钉唯一标识')
     din_jobnumber = fields.Char(string='钉钉员工工号')
+    din_avatar = fields.Char(string='钉钉头像url')
     din_hiredDate = fields.Date(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
     work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
+
 
     # 上传员工到钉钉
     @api.multi
@@ -138,6 +140,13 @@ class HrEmployee(models.Model):
         for res in self:
             res.dingding_type = 'yes' if res.din_id else 'no'
 
+    # 单独获取钉钉头像设为员工头像
+    @api.multi
+    def using_dingding_avatar(self):
+        for emp in self:
+            if emp.din_avatar:
+                binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
+                emp.sudo().write({'image': binary_data})
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):

@@ -12,6 +12,19 @@
                 <field name="work_status"/>
                 <field name="dingding_type" invisible="1"/>
             </xpath>
+            <xpath expr="//field[@name='mobile_phone']" position="replace">
+                <label for="mobile_phone"/>
+                    <div class="o_row">
+                        <field name="mobile_phone" widget="phone"/>
+                        <button
+                            type="action"
+                            string="换手机号" 
+                            icon="fa-arrow-right" 
+                            name="%(change_mobile_action)d"
+                            attrs="{'invisible':[('mobile_phone', '=', False)]}"
+                        />
+                    </div>
+            </xpath>
             <button name="toggle_active" position="before">
                 <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
                         icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
@@ -24,4 +37,26 @@
         </field>
     </record>
 
+    <record id="view_employee_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="din_avatar" widget="image_url" class="oe_image_small" width="25px" height="25px"/>
+                <field name="mobile_phone"/>
+            </field>
+        </field>
+    </record>
+
+    <record id='using_dingding_avatar_action' model='ir.actions.server'>
+        <field name='name'>Using avatar</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.using_dingding_avatar()
+        </field>     
+    </record>
 </odoo>
