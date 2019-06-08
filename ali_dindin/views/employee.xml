@@ -60,7 +60,7 @@
     </record>
 
     <record id='using_dingding_avatar_action' model='ir.actions.server'>
-        <field name='name'>Using avatar</field>
+        <field name='name'>使用钉钉头像</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="binding_model_id" ref="model_hr_employee"/>
         <field name="state">code</field>
