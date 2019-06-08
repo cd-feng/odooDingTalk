@@ -6,12 +6,22 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='work_phone']" position="after">
-                <field name="din_jobnumber"/>
-                <field name="din_hiredDate"/>
-                <field name="work_status"/>
-                <field name="dingding_type" invisible="1"/>
+            <xpath expr="//page[@name='public']" position='after'>
+                <page string="钉钉信息">
+                    <group>
+                        <group>
+                            <field name="din_jobnumber"/>
+                            <field name="din_hiredDate"/>
+                        </group>
+                        <group>
+                            <field name="work_status"/>
+                            <field name="office_status" attrs="{'invisible': [('work_status', '!=', 2)]}"/>
+                            <field name="dingding_type" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
+
             <xpath expr="//field[@name='mobile_phone']" position="replace">
                 <label for="mobile_phone"/>
                     <div class="o_row">

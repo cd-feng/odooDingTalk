@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_dingding_report_tree_view" model="ir.ui.view">
+            <field name="name">员工入职状态</field>
+            <field name="model">hr_employee_dingding_report</field>
+            <field name="arch" type="xml">
+                <tree js_class="get_dingding_emp_work_type">
+                    <field name="company_id"/>
+                    <field name="employee_id"/>
+                    <field name="work_status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_employee_dingding_report_pivot" model="ir.ui.view">
+            <field name="name">hr_employee_dingding_report_pivot</field>
+            <field name="model">hr_employee_dingding_report</field>
+            <field name="arch" type="xml">
+                <pivot string="员工入职状态" disable_linking="True">
+                    <field name="company_id" type="row"/>
+                    <field name="work_status" type="row"/>
+                    <field name="employee_id" type="row"/>
+                    <field name="department_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_employee_dingding_report_graph" model="ir.ui.view">
+            <field name="name">hr_employee_dingding_report.graph</field>
+            <field name="model">hr_employee_dingding_report</field>
+            <field name="arch" type="xml">
+                <graph string="员工入职状态" stacked="True">
+                    <field name="company_id" type="col"/>
+                    <field name="work_status" type="col"/>
+                    <field name="employee_id" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_employee_dingding_report_action" model="ir.actions.act_window">
+            <field name="name">员工入职状态</field>
+            <field name="res_model">hr_employee_dingding_report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,tree,graph</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem name="员工入职状态"
+                  id="hr_employee_dingding_report_menu"
+                  parent="zhineng_hrm_menu"
+                  sequence="4"
+                  action="hr_employee_dingding_report_action"/>
+
+        <record id="get_hrm_employee_state_form_view" model="ir.ui.view">
+            <field name="name">get_hrm_employee_state.form</field>
+            <field name="model">get.hrm.employee.state</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="alert alert-info">
+                        <p>即将同步最新的员工入职状态信息(待入职、在职、离职)！</p>
+                    </div>
+                    <footer>
+                        <button string="更新" name="get_hrm_employee_state" type="object" class="oe_highlight"/>
+                        <button string="取消" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="get_hrm_employee_state_action" model="ir.actions.act_window">
+            <field name="name">get_hrm_employee_state</field>
+            <field name="res_model">get.hrm.employee.state</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
