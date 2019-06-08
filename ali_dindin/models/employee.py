@@ -13,7 +13,6 @@ except ImportError:
     _logger.debug('Cannot `import base64`.')
 
 
-# 拓展部门员工
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
@@ -23,9 +22,9 @@ class HrEmployee(models.Model):
     din_avatar = fields.Char(string='钉钉头像url')
     din_hiredDate = fields.Date(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
-    work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
+    work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')], default=2)
+    office_status = fields.Selection(string=u'在职子状态', selection=[(2, '试用期'), (3, '正式'), (5, '待离职'), (-1, '无状态')], default='-1')
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
-
 
     # 上传员工到钉钉
     @api.multi
@@ -147,6 +146,7 @@ class HrEmployee(models.Model):
             if emp.din_avatar:
                 binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
                 emp.sudo().write({'image': binary_data})
+
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):
