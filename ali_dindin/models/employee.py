@@ -140,7 +140,7 @@ class HrEmployee(models.Model):
         for res in self:
             res.dingding_type = 'yes' if res.din_id else 'no'
 
-    #单独获取钉钉头像设为员工头像
+    # 单独获取钉钉头像设为员工头像
     @api.multi
     def using_dingding_avatar(self):
         for emp in self:

@@ -30,7 +30,7 @@ class InheritResUsers(models.Model):
         if employee:
             # 账号生成改为格式：姓名全拼+手机号末四位@企业邮箱域名
             email_name1 = pypinyin.slug(employee.name, separator='')  # 全拼
-            # email_name1 = pypinyin.slug(employee.name, style=Style.FIRST_LETTER, separator='') #首字母
+            # email_name1 = pypinyin.slug(employee.name, style=Style.FIRST_LETTER, separator='') # 首字母
             email_name2 = employee.mobile_phone[7:]  # 取手机号末四位
             email_name = email_name1 + email_name2
             # 这里后续可以加个开关，让管理员自己决定使用其他域名或企业邮箱域名
@@ -61,7 +61,6 @@ class InheritResUsers(models.Model):
                     "name": name,
                     'email': employee.work_email,
                     'groups_id': self.env.ref('base.group_user')
-
                 }
                 user = self.sudo().create(values)
                 # 注册成功后，自动关联员工与用户
