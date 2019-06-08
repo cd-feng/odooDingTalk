@@ -96,6 +96,10 @@ class HrEmployee(models.Model):
                 'email': res.work_email if res.work_email else '',  # 邮箱
                 'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
             }
+            if res.din_hiredDate:
+                hiredDate = self.time_to_timestamp(res.din_hiredDate)
+                data.update({'hiredDate': hiredDate})
+
             headers = {'Content-Type': 'application/json'}
             try:
                 result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
@@ -210,6 +214,19 @@ class HrEmployee(models.Model):
         time_stamp = float(time_num / 1000)
         time_array = time.localtime(time_stamp)
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
+
+    # 把时间转成时间戳形式
+    @api.model
+    def time_to_timestamp(self, time_str):
+        """
+        将时间转成13位时间戳
+        :param time_num:
+        :return:
+        """
+        time_stamp = time.mktime(time_str.timetuple())
+        time_stamp = time_stamp * 1000
+        return time_stamp
+
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):
