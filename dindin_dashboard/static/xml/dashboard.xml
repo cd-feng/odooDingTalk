@@ -129,12 +129,12 @@
                         <hr/>
                         <div>
                             <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle">
-                                <h3>20190531</h3>
+                                <h3>20190608</h3>
                                 <ul>
-                                    <li>修复部分模块的bug问题</li>
-                                    <li>增加很多单据的看板展示方式</li>
-                                    <li>重新定义了消息模板，方便其他消息功能的拓展</li>
-                                    <li>增加发起待办时发送消息到待办人的功能</li>
+                                    <li>重构智能人事模块，增加查询待入职、在职、离职功能和添加待入职人员</li>
+                                    <li>对消息模板增加了发送消息到指定人的功能</li>
+                                    <li>调整了部分界面的展示效果，部分模型默认展示为看版模式</li>
+                                    <li>测试并整合**niulinlnc** 提交的实用功能（修改手机号、考勤不限于7天等）</li>
                                 </ul>
                                 <p>更新方式： 拉取最新代码，直接更新主模块`ali_dindin`即可</p>
                             </small>
@@ -142,10 +142,6 @@
                         <div class="mt16">
                             <a href="https://github.com/suxuefeng20/odooDingDing" role="button" class="btn btn-primary btn-block o_load_translations"><strong>获取新版本</strong></a>
                         </div>
-<!--                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">-->
-<!--                            <a href="" class="flex-grow-1 w-25 my_feedback_bug"><i class="fa fa-bug fa-rocket text-muted"/>-->
-<!--                                Bug反馈</a>-->
-<!--                        </div>-->
                         <div class="clearfix"/>
                     </div>
                 </div>
