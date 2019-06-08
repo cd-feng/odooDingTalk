@@ -22,7 +22,7 @@ class HrEmployee(models.Model):
     din_unionid = fields.Char(string='钉钉唯一标识')
     din_jobnumber = fields.Char(string='钉钉员工工号')
     din_avatar = fields.Char(string='钉钉头像url')
-    din_hiredDate = fields.Date(string='入职时间')
+    din_hiredDate = fields.Datetime(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
     work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
@@ -211,11 +211,9 @@ class HrEmployee(models.Model):
         :param time_num:
         :return:
         """
-        time_stamp = float(time_num / 1000 + 28800) # 从钉钉时间戳转成odoo日期，差一天，暂时这样解决
+        time_stamp = float(time_num / 1000) 
         time_array = time.localtime(time_stamp)
-        return time.strftime("%Y-%m-%d", time_array)
-
-
+        return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     # 把时间转成时间戳形式
     @api.model
@@ -225,11 +223,10 @@ class HrEmployee(models.Model):
         :param time_num:
         :return:
         """
-        date_str = fields.Date.to_string(date)
-        date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d"))
+        date_str = fields.Datetime.to_string(date)
+        date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
         date_stamp = date_stamp * 1000
         return date_stamp
-
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):
