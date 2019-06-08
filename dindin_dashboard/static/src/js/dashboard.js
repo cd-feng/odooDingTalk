@@ -8,8 +8,13 @@ odoo.define('dindin.blackboard.info', function (require) {
     let AbstractAction = require('web.AbstractAction');
 
 
+
     let DinDinDashboard = AbstractAction.extend({
-        template: 'DindinDashboardInfo',
+        template: 'DingDingDashboardMain',
+        // events: {
+        //     'click .my_feedback_bug': '_onFeedback_clicked',
+        // },
+
         setBlackboardData: function (data) {
             let self = this;
             self.$el.find('#blackboard_list').html(QWeb.render("DindinDashboardInfoLine", {
@@ -60,8 +65,8 @@ odoo.define('dindin.blackboard.info', function (require) {
             }).then(function (result) {
                 self.getUserApprovalNumber(result);
             });
-
-            let def = rpc.query({
+            // 获取公告
+            rpc.query({
                 model: 'dindin.blackboard',
                 method: 'get_blackboard_by_user',
                 args: [],
@@ -78,6 +83,18 @@ odoo.define('dindin.blackboard.info', function (require) {
                 }
             });
         },
+
+        // _onFeedback_clicked: function (ev) {
+        //     let self = this;
+        //     self.do_action({
+        //         type: 'ir.actions.act_window',
+        //         res_model: 'dingding.user.feedback',
+        //         // target: 'new',
+        //         views: [[false, 'list']],
+        //         // context: [],
+        //     });
+        // },
+
     });
 
     core.action_registry.add('dindin_dashboard', DinDinDashboard);

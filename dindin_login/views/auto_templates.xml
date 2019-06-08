@@ -1,0 +1,53 @@
+<odoo>
+    <template id="dindin_login.dingding_auto_login">
+        <style>
+            #loading{
+            margin: 100px auto 0 auto;
+            width: 300px;
+            font-size: 28px;
+            text-align: center;
+            }
+        </style>
+        <div id="loading">登陆中，请稍后...</div>
+        <div id="corp-id" style="display:none;">
+            <t t-esc="corp_id"/>
+        </div>
+        <script src="//g.alicdn.com/dingding/dingtalk-jsapi/2.0.57/dingtalk.open.js"></script>
+        <script>
+            window.onload = function() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            // 检测UA
+            if(ua.match(/DingTalk/i) == "dingtalk"){
+                // 获取CorpId
+                var corpId = document.querySelector("#corp-id").innerHTML.trim();
+                // 调用钉钉JSAPI
+                dd.runtime.permission.requestAuthCode({
+                    corpId,
+                    onSuccess: function(result) {
+                    window.location.replace("/dingding/auto/login?authCode=" + result.code);
+                },
+                onFail: function(err) {
+                    alert("系统错误，请使用账号密码登陆。");
+                    window.location.replace("/web/login");
+                }
+                })
+            } else {
+                    window.location.replace("/web/login");
+                }
+            }
+        </script>
+    </template>
+
+    <template id="dindin_login.dingding_auto_login_message">
+        <style>
+            #loading{
+            margin: 100px auto 0 auto;
+            width: 300px;
+            font-size: 40px;
+            text-align: center;
+            color: red;
+            }
+        </style>
+        <div id="loading">提示：<t t-esc="message"/></div>
+    </template>
+</odoo>

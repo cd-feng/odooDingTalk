@@ -1,28 +1,40 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-import time
 import requests
+import time
 from requests import ReadTimeout
-
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+try:
+    import base64
+except ImportError:
+    _logger.debug('Cannot `import base64`.')
 
-""" 钉钉部门功能模块 """
 
-
-# 拓展部门员工
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     din_id = fields.Char(string='钉钉用户Id')
     din_unionid = fields.Char(string='钉钉唯一标识')
     din_jobnumber = fields.Char(string='钉钉员工工号')
-    din_hiredDate = fields.Date(string='入职时间')
+    din_avatar = fields.Char(string='钉钉头像url')
+    din_hiredDate = fields.Datetime(string='入职时间')
+    din_admin = fields.Boolean("是管理员", default=False)
+    din_isboss = fields.Boolean("是老板", default=False)
+    din_hide = fields.Boolean("隐藏手机号", default=False)
+    din_leader = fields.Boolean("部门主管", default=False)
+    din_isSenior = fields.Boolean("高管模式", default=False)
+    din_active = fields.Boolean("是否激活", readonly=True)
+    din_orderindepts = fields.Char("所在部门序位")
+    din_isLeaderInDepts = fields.Char("是否为部门主管")
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
-    work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
+    work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')], default=2)
+    office_status = fields.Selection(string=u'在职子状态', selection=[(2, '试用期'), (3, '正式'), (5, '待离职'), (-1, '无状态')], default='-1')
+    dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
+    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='钉钉部门')
 
     # 上传员工到钉钉
     @api.multi
@@ -32,10 +44,13 @@ class HrEmployee(models.Model):
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
             # 获取部门din_id
             department_list = list()
-            if res.department_id:
+            if not res.department_id:
+                raise UserError("请选择员工部门!")
+            elif res.department_ids:
+                department_list = res.department_ids.mapped('din_id')
                 department_list.append(res.department_id.din_id)
             else:
-                raise UserError("请选择员工部门!")
+                department_list.append(res.department_id.din_id)
             data = {
                 'name': res.name,  # 名称
                 'department': department_list,  # 部门
@@ -49,7 +64,8 @@ class HrEmployee(models.Model):
             }
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=10)
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
@@ -71,10 +87,15 @@ class HrEmployee(models.Model):
             department_list = list()
             if not res.department_id:
                 raise UserError("请选择员工部门!")
+            elif res.department_ids:
+                department_list = res.department_ids.mapped('din_id')
+                department_list.append(res.department_id.din_id)
+            else:
+                department_list.append(res.department_id.din_id)
             data = {
                 'userid': res.din_id,  # userid
                 'name': res.name,  # 名称
-                'department': department_list.append(res.department_id.din_id),  # 部门
+                'department': department_list,  # 部门
                 'position': res.job_title if res.job_title else '',  # 职位
                 'mobile': res.mobile_phone if res.mobile_phone else '',  # 手机
                 'tel': res.work_phone if res.work_phone else '',  # 手机
@@ -83,9 +104,14 @@ class HrEmployee(models.Model):
                 'email': res.work_email if res.work_email else '',  # 邮箱
                 'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
             }
+            if res.din_hiredDate:
+                hiredDate = self.date_to_stamp(res.din_hiredDate)
+                data.update({'hiredDate': hiredDate})
+
             headers = {'Content-Type': 'application/json'}
             try:
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),
+                                       timeout=30)
                 result = json.loads(result.text)
                 logging.info(result)
                 if result.get('errcode') == 0:
@@ -95,15 +121,74 @@ class HrEmployee(models.Model):
             except ReadTimeout:
                 raise UserError("上传员工至钉钉超时！")
 
+    @api.constrains('user_id')
+    def constrains_dingding_user_id(self):
+        """当选择了相关用户时，需要检查系统用户是否只对应一个员工"""
+        if self.user_id:
+            emps = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)])
+            if len(emps) > 1:
+                raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
+
+    # 从钉钉手动获取用户详情
+    @api.multi
+    def update_employee_from_dingding(self):
+        """
+        从钉钉获取用户详情
+        :return:
+        """
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_get')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        for employee in self:
+            data = {'userid': employee.din_id}
+            try:
+                result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
+                result = json.loads(result.text)
+                if result.get('errcode') == 0:
+                    data = {
+                        'name': result.get('name'),  # 员工名称
+                        'din_id': result.get('userid'),  # 钉钉用户Id
+                        'din_unionid': result.get('unionid'),  # 钉钉唯一标识
+                        'mobile_phone': result.get('mobile'),  # 手机号
+                        'work_phone': result.get('tel'),  # 分机号
+                        'work_location': result.get('workPlace'),  # 办公地址
+                        'notes': result.get('remark'),  # 备注
+                        'job_title': result.get('position'),  # 职位
+                        'work_email': result.get('email'),  # email
+                        'din_jobnumber': result.get('jobnumber'),  # 工号
+                        'din_avatar': result.get('avatar') if result.get('avatar') else '',  # 钉钉头像url
+                        'din_isSenior': result.get('isSenior'),  # 高管模式
+                        'din_isAdmin': result.get('isAdmin'),  # 是管理员
+                        'din_isBoss': result.get('isBoss'),  # 是老板
+                        'din_hide': result.get('isHide'),  # 隐藏手机号
+                        'din_active': result.get('active'),  # 是否激活
+                        'din_isLeaderInDepts': result.get('isLeaderInDepts'),  # 是否为部门主管
+                        'din_orderInDepts': result.get('orderInDepts'),  # 所在部门序位
+                    }
+                    if result.get('hiredDate'):
+                        date_str = self.get_time_stamp(result.get('hiredDate'))
+                        data.update({
+                            'din_hiredDate': date_str,
+                        })
+                    if result.get('department'):
+                        dep_din_ids = result.get('department')
+                        dep_list = self.env['hr.department'].sudo().search([('din_id', 'in', dep_din_ids)])
+                        data.update({'department_ids': [(6, 0, dep_list.ids)]})
+                    employee.sudo().write(data)
+                else:
+                    raise UserError("从钉钉同步员工时发生意外，原因为:{}".format(result.get('errmsg')))
+            except ReadTimeout:
+                raise UserError("从钉钉同步员工详情超时！")
+
     # 重写删除方法
     @api.multi
     def unlink(self):
-        userid = self.din_id
-        super(HrEmployee, self).unlink()
-        din_delete_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee')
-        if din_delete_employee:
-            self.delete_din_employee(userid)
-        return True
+        for res in self:
+            userid = res.din_id
+            super(HrEmployee, self).unlink()
+            din_delete_employee = self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_delete_employee')
+            if din_delete_employee:
+                self.delete_din_employee(userid)
+            return True
 
     @api.model
     def delete_din_employee(self, userid):
@@ -122,85 +207,43 @@ class HrEmployee(models.Model):
         except ReadTimeout:
             raise UserError("上传员工至钉钉超时！")
 
-    # 员工列表和看板上同步员工数据按钮执行的方法，若使用回调同样使用本方法进行同步
-    @api.model
-    def synchronous_dingding_employee(self):
-        """同步钉钉部门员工列表"""
-        logging.info("同步钉钉部门员工列表")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取所有部门
-        departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments:
-            emp_offset = 0
-            emp_size = 100
-            result_state = dict()
-            while True:
-                logging.info(">>>开始获取{}部门的员工".format(department.name))
-                data = {
-                    'access_token': token,
-                    'department_id': department[0].din_id,
-                    'offset': emp_offset,
-                    'size': emp_size,
-                }
-                result_state = self.get_dingding_employees(department, url, data)
-                if result_state.get('has_more'):
-                    emp_offset = emp_offset + 1
-                else:
-                    break
-            if not result_state.get('state'):
-                return result_state
-        return {'state': True}
+    def _compute_dingding_type(self):
+        for res in self:
+            res.dingding_type = 'yes' if res.din_id else 'no'
+
+    # 单独获取钉钉头像设为员工头像
+    @api.multi
+    def using_dingding_avatar(self):
+        for emp in self:
+            if emp.din_avatar:
+                binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
+                emp.sudo().write({'image': binary_data})
 
     @api.model
-    def get_dingding_employees(self, department, url, data):
-        result = requests.get(url=url, params=data, timeout=15)
-        result = json.loads(result.text)
-        if result.get('errcode') == 0:
-            for user in result.get('userlist'):
-                data = {
-                    'name': user.get('name'),  # 员工名称
-                    'din_id': user.get('userid'),  # 钉钉用户Id
-                    'din_unionid': user.get('unionid'),  # 钉钉唯一标识
-                    'mobile_phone': user.get('mobile'),  # 手机号
-                    'work_phone': user.get('tel'),  # 分机号
-                    'work_location': user.get('workPlace'),  # 办公地址
-                    'notes': user.get('remark'),  # 备注
-                    'job_title': user.get('position'),  # 职位
-                    'work_email': user.get('email'),  # email
-                    'din_jobnumber': user.get('jobnumber'),  # 工号
-                    'department_id': department[0].id,  # 部门
-                }
-                if user.get('hiredDate'):
-                    time_stamp = self.get_time_stamp(user.get('hiredDate'))
-                    data.update({
-                        'din_hiredDate': time_stamp,  # 入职时间
-                    })
-                employee = self.env['hr.employee'].search([('din_id', '=', user.get('userid'))])
-                if employee:
-                    employee.sudo().write(data)
-                else:
-                    self.env['hr.employee'].sudo().create(data)
-            return {'state': True, 'has_more': result.get('hasMore')}
-        else:
-            logging.info(">>>获取部门员工失败，原因为:{}".format(result.get('errmsg')))
-            return {'state': False, 'msg': "获取部门员工失败，原因为:{}".format(result.get('errmsg'))}
-
-    @api.model
-    def get_time_stamp(self, timeNum):
+    def get_time_stamp(self, time_num):
         """
         将13位时间戳转换为时间
-        :param timeNum:
+        :param time_num:
         :return:
         """
-        timeStamp = float(timeNum / 1000)
-        timeArray = time.localtime(timeStamp)
-        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-        return otherStyleTime
+        time_stamp = float(time_num / 1000) 
+        time_array = time.localtime(time_stamp)
+        return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
+    # 把时间转成时间戳形式
+    @api.model
+    def date_to_stamp(self, date):
+        """
+        将时间转成13位时间戳
+        :param time_num:
+        :return:
+        """
+        date_str = fields.Datetime.to_string(date)
+        date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
+        date_stamp = date_stamp * 1000
+        return date_stamp
 
 # 未使用，但是不能删除，因为第一个版本创建的视图还存在
 class DinDinSynchronousEmployee(models.TransientModel):
     _name = 'dindin.synchronous.employee'
     _description = "同步钉钉部门员工功能模型"
-

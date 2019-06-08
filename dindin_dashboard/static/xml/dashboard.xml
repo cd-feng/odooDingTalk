@@ -1,99 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="DindinDashboardInfo">
-        <div>
-            <div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-6 da-div1">
-                            <div class="card widget-flat da-div1-1">
-                                <div class="card-body p-0">
-                                    <div class="p-3 pb-0">
-                                        <div class="float-right">
-                                            <i class="mdi mdi-cart text-primary widget-icon"></i>
+    <t t-name="DingDingDashboardMain">
+        <div class="container-fluid py-2 o_web_settings_dashboard">
+            <div class="form-row">
+               <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_apps">
+                        <i class="fa fa-user fa-4x text-muted o_web_settings_dashboard_access_rights"
+                           style="cursor: pointer;" role="img" aria-label="Access rights" title="Access rights"></i>
+                        <div class="o_web_settings_dashboard_header">
+                            用户信息
+                        </div>
+                        <hr/>
+                        <div>
+                            <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                                这里是展示当前用户的一些信息
+                            </small>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-6 da-div1">
+                                <div class="card widget-flat da-div1-1">
+                                    <div class="card-body p-0">
+                                        <div class="p-3 pb-0">
+                                            <div class="float-right">
+                                                <i class="mdi mdi-cart text-primary widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted font-weight-normal mt-0">我的待办</h5>
+                                            <h3 class="mt-2 my-val1">0</h3>
                                         </div>
-                                        <h5 class="text-muted font-weight-normal mt-0">我的待办</h5>
-                                        <h3 class="mt-2 my-val1">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 da-div2">
+                                <div class="card widget-flat da-div2-1">
+                                    <div class="card-body p-0">
+                                        <div class="p-3 pb-0">
+                                            <div class="float-right">
+                                                <i class="mdi mdi-currency-usd text-danger widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted font-weight-normal mt-0">公告数</h5>
+                                            <h3 class="mt-2 my-val2">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 da-div3">
+                                <div class="card widget-flat da-div3-1">
+                                    <div class="card-body p-0">
+                                        <div class="p-3 pb-0">
+                                            <div class="float-right">
+                                                <i class="mdi mdi-account-multiple text-primary widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted font-weight-normal mt-0">待审批数</h5>
+                                            <h3 class="mt-2 my-val3">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 da-div4">
+                                <div class="card widget-flat da-div4-1">
+                                    <div class="card-body p-0">
+                                        <div class="p-3 pb-0">
+                                            <div class="float-right">
+                                                <i class="mdi mdi-eye-outline text-danger widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted font-weight-normal da-div4-4">消息</h5>
+                                            <h3 class="mt-2 my-val4">0</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-xl-3 col-lg-6 da-div2">
-                            <div class="card widget-flat da-div2-1">
-                                <div class="card-body p-0">
-                                    <div class="p-3 pb-0">
-                                        <div class="float-right">
-                                            <i class="mdi mdi-currency-usd text-danger widget-icon"></i>
-                                        </div>
-                                        <h5 class="text-muted font-weight-normal mt-0">公告数</h5>
-                                        <h3 class="mt-2 my-val2">0</h3>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">
+                            <a href="https://oa.dingtalk.com/index.htm" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-rocket text-muted"/>
+                                钉钉管理后台</a>
+                            <a href="https://open-dev.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-picture-o text-muted"/>
+                                钉钉开发者后台</a>
+                            <a href="https://wsdebug.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-bug text-muted"/>
+                                钉钉JSAPI控制台</a>
+                            <a href="https://open-doc.dingtalk.com/microapp/serverapi2" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-book text-muted"/>
+                                钉钉开发文档</a>
                         </div>
-
-                        <div class="col-xl-3 col-lg-6 da-div3">
-                            <div class="card widget-flat da-div3-1">
-                                <div class="card-body p-0">
-                                    <div class="p-3 pb-0">
-                                        <div class="float-right">
-                                            <i class="mdi mdi-account-multiple text-primary widget-icon"></i>
-                                        </div>
-                                        <h5 class="text-muted font-weight-normal mt-0">待审批数</h5>
-                                        <h3 class="mt-2 my-val3">0</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-lg-6 da-div4">
-                            <div class="card widget-flat da-div4-1">
-                                <div class="card-body p-0">
-                                    <div class="p-3 pb-0">
-                                        <div class="float-right">
-                                            <i class="mdi mdi-eye-outline text-danger widget-icon"></i>
-                                        </div>
-                                        <h5 class="text-muted font-weight-normal da-div4-4">消息</h5>
-                                        <h3 class="mt-2 my-val4">0</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="clearfix"/>
                     </div>
+                </div>
+                <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_share">
+                        <i class="fa fa-bullhorn fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
+                        <div class="o_web_settings_dashboard_header">钉钉用户公告</div>
+                        <div>
+                            <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                                这里将展示钉钉的公告消息
+                            </small>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-12 row01">
+                                <div class="card row02">
+                                    <div class="card-body row03">
+                                        <div class="table-responsive mt-3 row04">
+                                            <table class="table table-hover table-centered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>日期</th>
+                                                        <th>标题</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="blackboard_list" id="blackboard_list">
 
-                    <div class="row">
-                        <div class="col-12 row01">
-                            <div class="card row02">
-                                <div class="card-body row03">
-                                    <h4 class="header-title">公告列表</h4>
-                                    <div class="table-responsive mt-3 row04">
-                                        <table class="table table-hover table-centered mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>公告日期</th>
-                                                    <th>标题</th>
-                                                    <th>发布人</th>
-                                                    <th>操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="blackboard_list" id="blackboard_list">
-
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="container-fluid div-foot">
-                    <h5 class="text-muted font-weight-normal">待规划区</h5>
+                <!--版本更新公告-->
+                <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_translations mt8">
+                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations"></i>
+                        <div class="o_web_settings_dashboard_header">
+                            更新公告
+                        </div>
+                        <hr/>
+                        <div>
+                            <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle">
+                                <h3>20190608</h3>
+                                <ul>
+                                    <li>重构智能人事模块，增加查询待入职、在职、离职功能和添加待入职人员</li>
+                                    <li>对消息模板增加了发送消息到指定人的功能</li>
+                                    <li>调整了部分界面的展示效果，部分模型默认展示为看版模式</li>
+                                    <li>测试并整合**niulinlnc** 提交的实用功能（修改手机号、考勤不限于7天等）</li>
+                                </ul>
+                                <p>更新方式： 拉取最新代码，直接更新主模块`ali_dindin`即可</p>
+                            </small>
+                        </div>
+                        <div class="mt16">
+                            <a href="https://github.com/suxuefeng20/odooDingDing" role="button" class="btn btn-primary btn-block o_load_translations"><strong>获取新版本</strong></a>
+                        </div>
+                        <div class="clearfix"/>
+                    </div>
                 </div>
             </div>
         </div>
     </t>
+
+    <t t-name="DindinDashboardInfo"></t>
 
     <t t-name="DindinDashboardInfoLine">
         <t t-foreach="data" t-as="line">
@@ -101,9 +157,6 @@
                 <td><b><t t-esc="line.gmt_create"/></b></td>
                 <td>
                     <p class="mb-0 font-weight-bold"><t t-esc="line.title"/></p>
-                </td>
-                <td>
-                    <p class="mb-0 font-weight-bold">暂无信息</p>
                 </td>
                 <td>
                     <div class="btn-group dropdown">

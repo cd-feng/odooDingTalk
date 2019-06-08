@@ -20,11 +20,10 @@
         'views/hrm_list.xml',
         'views/hrm_dimission_list.xml',
         'views/add_employee.xml',
+        'wizard/hr_employee_report.xml',
     ],
     'qweb': [
          'static/xml/*.xml',
     ],
-    'price': '50',
-    'currency': 'EUR',
     'images':  ['static/description/app1.png']
 }

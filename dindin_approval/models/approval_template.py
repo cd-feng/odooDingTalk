@@ -63,8 +63,9 @@ class DinDinApprovalTemplate(models.Model):
         根据当前用户获取该用户的待审批数量
         :return:
         """
-        user = self.env['res.users'].sudo().search([('id', '=', self.env.user.id)])
-        emp = self.env['hr.employee'].sudo().search([('user_id', '=', user.id)])
+        emp = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.user.id)])
+        if len(emp) > 1:
+            return {'state': False, 'number': 0, 'msg': '登录用户关联了多个员工'}
         if emp and emp.din_id:
             url = self.env['ali.dindin.system.conf'].search([('key', '=', 'process_gettodonum')]).value
             token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value

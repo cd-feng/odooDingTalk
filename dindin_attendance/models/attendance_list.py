@@ -8,6 +8,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+# 已弃用，已经钉钉考勤整合至odoo考勤
 
 
 class DinDinAttendanceList(models.Model):

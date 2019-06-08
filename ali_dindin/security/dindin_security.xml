@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.module.category" id="ali_dindin.main_group">
-        <field name="name">钉钉管理</field>
-        <field name="visible" eval="0"/>
+    <record id="dingding_main_groups" model="ir.module.category">
+        <field name="name">钉钉额外权限管理</field>
+        <field name="description">False</field>
+        <field name="sequence">0</field>
     </record>
 
-    <record id="group_ali_dindin_user" model="res.groups">
+    <record id="dd_user_group" model="res.groups">
         <field name="name">用户</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="category_id" ref="ali_dindin.main_group"/>
+        <field name="category_id" ref="dingding_main_groups"/>
+        <field name="users" eval="[
+            (4, ref('base.user_admin')),
+            (4, ref('base.group_user')),
+		]"/>
     </record>
 
-    <record id="group_ali_dindin_manager" model="res.groups">
-        <field name="name">管理员</field>
-        <field name="category_id" ref="ali_dindin.main_group"/>
-        <field name="implied_ids" eval="[(4, ref('ali_dindin.group_ali_dindin_user'))]"/>
+    <record id="dd_setting_group" model="res.groups">
+        <field name="name">允许钉钉相关API配置</field>
+        <field name="category_id" ref="dingding_main_groups"/>
+        <field name="users" eval="[
+            (4, ref('base.user_admin'))
+		]"/>
     </record>
 
-    <!-- 默认用户权限 -->
-    <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4, ref('group_ali_dindin_user'))]"/>
+    <record id="dd_synchronous_group" model="res.groups">
+        <field name="name">允许数据同步</field>
+        <field name="category_id" ref="dingding_main_groups"/>
+        <field name="users" eval="[
+            (4, ref('base.user_admin'))
+		]"/>
+    </record>
+
+    <record id="dd_top_group" model="res.groups">
+        <field name="name">允许上传数据(员工、部门、联系人)</field>
+        <field name="category_id" ref="dingding_main_groups"/>
+        <field name="users" eval="[
+            (4, ref('base.user_admin'))
+		]"/>
+    </record>
+
+    <record id="dd_update_group" model="res.groups">
+        <field name="name">允许更新数据(员工、部门、联系人)</field>
+        <field name="category_id" ref="dingding_main_groups"/>
+        <field name="users" eval="[
+            (4, ref('base.user_admin'))
+		]"/>
     </record>
 
 </odoo>

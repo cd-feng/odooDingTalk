@@ -4,7 +4,7 @@
 
         <!--扫码登录-->
         <record id="ali_dindin_system_conf_sns_authorize" model="ali.dindin.system.conf">
-            <field name="name">扫码登录页面url</field>
+            <field name="name">钉钉登录页面url</field>
             <field name="key">sns_authorize</field>
             <field name="value">https://oapi.dingtalk.com/connect/oauth2/sns_authorize?</field>
         </record>

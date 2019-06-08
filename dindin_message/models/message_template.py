@@ -28,7 +28,7 @@ class DinDinMessageTemplateLine(models.Model):
         return {
             'domain': {
                 'field_id': [('model_id', '=', model_id),
-                             ('ttype', 'in', ['char', 'date', 'float', 'integer', 'text', 'html'])]
+                             ('ttype', 'in', ['char', 'date', 'float', 'integer', 'text', 'html', 'many2one'])]
             }
         }
 
@@ -42,8 +42,8 @@ class DinDinMessageTemplate(models.Model):
     model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', required=True)
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
-    create_send = fields.Boolean(string=u'创建时发送消息')
-    delete_send = fields.Boolean(string=u'删除时发送消息')
+    create_send = fields.Boolean(string=u'创建时自动发送消息')
+    delete_send = fields.Boolean(string=u'删除时自动发送消息')
     line_ids = fields.One2many(comodel_name='dindin.message.template.line', inverse_name='template_id', string=u'消息字段')
     msg_type = fields.Selection(string=u'接受者', selection=[('00', '员工'), ('01', '部门'), ('03', '所有人')],
                                 required=True, default='00')
@@ -120,7 +120,19 @@ class DinDinMessageTemplate(models.Model):
             msg_text = "{}删除了'{}',内容:\n".format(self.env.user.name, template.model_id.name)
         for tem_line in template.line_ids:
             # 拼接消息字段
-            msg_text = msg_text + "{}: {}\n".format(tem_line.field_name, res_dict.get(tem_line.field_id.name))
+            if tem_line.field_id.ttype == 'many2one':
+                doc_model = self.env[tem_line.field_id.relation].sudo().search(
+                    [('id', '=', res_dict.get(tem_line.field_id.name))])
+                if doc_model:
+                    try:
+                        msg_text = msg_text + "{}: {}\n".format(tem_line.field_name, doc_model[0].name)
+                    except Exception as e:
+                        msg_text = msg_text + "{}: {}\n".format(tem_line.field_name, "字段值获取失败!")
+            else:
+                if res_dict.get(tem_line.field_id.name):
+                    msg_text = msg_text + "{}: {}\n".format(tem_line.field_name, res_dict.get(tem_line.field_id.name))
+                else:
+                    msg_text = msg_text + "{}: {}\n".format(tem_line.field_name, "字段值获取失败!")
         return {
             'msgtype': 'text',
             "text": {

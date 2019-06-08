@@ -20,8 +20,8 @@ class ResConfigSettings(models.TransientModel):
     din_create_department = fields.Boolean(string=u'添加部门')
     din_update_department = fields.Boolean(string=u'修改部门')
     din_delete_department = fields.Boolean(string=u'删除部门')
-    din_login_appid = fields.Char(string=u'扫码登录appId')
-    din_login_appsecret = fields.Char(string=u'扫码登录appSecret')
+    din_login_appid = fields.Char(string=u'钉钉登录appId')
+    din_login_appsecret = fields.Char(string=u'钉钉登录appSecret')
     auto_calendar_event = fields.Boolean(string=u'自动上传日程')
     
     def get_values(self):
@@ -82,5 +82,6 @@ class ResConfigSettings(models.TransientModel):
         else:
             cron = self.env['ir.cron'].sudo().search(
                 [('code', '=', "env['ali.dindin.get.token'].get_token()")])
-            cron.sudo().unlink()
+            if len(cron) >= 1:
+                cron.sudo().unlink()
 

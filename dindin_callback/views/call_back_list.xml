@@ -5,7 +5,7 @@
         <field name="name">回调类型列表</field>
         <field name="model">dindin.users.callback.list</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" editable="top" create="true">
+            <tree default_order="id desc" editable="top" create="false">
                 <field name="name"/>
                 <field name="value"/>
                 <field name="call_back_url"/>
@@ -39,7 +39,7 @@
               id="dindin_callbacke_main_menu"
               parent="ali_dindin.main_menu"
               sequence="50"
-              groups="ali_dindin.group_ali_dindin_manager"
+              groups="ali_dindin.dd_setting_group"
     />
 
     <menuitem id="dindin_users_callback_listmenu" name="回调类型列表"
