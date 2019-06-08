@@ -35,6 +35,9 @@
                         />
                     </div>
             </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="department_ids" widget="many2many_tags"/>
+            </xpath>
             <button name="toggle_active" position="before">
                 <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
                         icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
@@ -69,4 +72,16 @@ if records:
     action = records.using_dingding_avatar()
         </field>     
     </record>
+
+    <record id='update_employee_from_dingding_action' model='ir.actions.server'>
+        <field name='name'>从钉钉更新</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.update_employee_from_dingding()
+        </field>
+    </record>
+
 </odoo>
