@@ -14,7 +14,6 @@ except ImportError:
     _logger.debug('Cannot `import base64`.')
 
 
-# 拓展部门员工
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
@@ -24,7 +23,8 @@ class HrEmployee(models.Model):
     din_avatar = fields.Char(string='钉钉头像url')
     din_hiredDate = fields.Datetime(string='入职时间')
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
-    work_status = fields.Selection(string=u'工作状态', selection=[(1, '待入职'), (2, '试用期'), (3, '正式员工'), (4, '离职')])
+    work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')], default=2)
+    office_status = fields.Selection(string=u'在职子状态', selection=[(2, '试用期'), (3, '正式'), (5, '待离职'), (-1, '无状态')], default='-1')
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
     department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='Other departments')
 
