@@ -76,7 +76,7 @@
                     <field name="message" placeholder="你想要发送的消息内容...默认的消息格式为文本格式!"/>
                 </group>
                 <footer>
-                    <button string="写好了,发送" name="send_dingding_message" type="object" class="oe_highlight"/>
+                    <button string="写好了,发送" name="send_dingding_test_message" type="object" class="oe_highlight"/>
                     <button string="算了,不发送" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>
