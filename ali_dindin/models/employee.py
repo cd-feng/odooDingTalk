@@ -211,7 +211,7 @@ class HrEmployee(models.Model):
         :param time_num:
         :return:
         """
-        time_stamp = float(time_num / 1000)
+        time_stamp = float(time_num / 1000 + 28800) # 从钉钉时间戳转成odoo日期，差一天，暂时这样解决
         time_array = time.localtime(time_stamp)
         return time.strftime("%Y-%m-%d", time_array)
 
