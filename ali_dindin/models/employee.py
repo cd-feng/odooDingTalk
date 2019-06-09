@@ -22,11 +22,19 @@ class HrEmployee(models.Model):
     din_jobnumber = fields.Char(string='钉钉员工工号')
     din_avatar = fields.Char(string='钉钉头像url')
     din_hiredDate = fields.Datetime(string='入职时间')
+    din_admin = fields.Boolean("是管理员", default=False)
+    din_isboss = fields.Boolean("是老板", default=False)
+    din_hide = fields.Boolean("隐藏手机号", default=False)
+    din_leader = fields.Boolean("部门主管", default=False)
+    din_isSenior = fields.Boolean("高管模式", default=False)
+    din_active = fields.Boolean("是否激活", readonly=True)
+    din_orderindepts = fields.Char("所在部门序位")
+    din_isLeaderInDepts = fields.Char("是否为部门主管")
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
     work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')], default=2)
     office_status = fields.Selection(string=u'在职子状态', selection=[(2, '试用期'), (3, '正式'), (5, '待离职'), (-1, '无状态')], default='-1')
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
-    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='Other departments')
+    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='钉钉部门')
 
     # 上传员工到钉钉
     @api.multi
@@ -148,6 +156,13 @@ class HrEmployee(models.Model):
                         'work_email': result.get('email'),  # email
                         'din_jobnumber': result.get('jobnumber'),  # 工号
                         'din_avatar': result.get('avatar') if result.get('avatar') else '',  # 钉钉头像url
+                        'din_isSenior': result.get('isSenior'),  # 高管模式
+                        'din_isAdmin': result.get('isAdmin'),  # 是管理员
+                        'din_isBoss': result.get('isBoss'),  # 是老板
+                        'din_hide': result.get('isHide'),  # 隐藏手机号
+                        'din_active': result.get('active'),  # 是否激活
+                        'din_isLeaderInDepts': result.get('isLeaderInDepts'),  # 是否为部门主管
+                        'din_orderInDepts': result.get('orderInDepts'),  # 所在部门序位
                     }
                     if result.get('hiredDate'):
                         date_str = self.get_time_stamp(result.get('hiredDate'))
