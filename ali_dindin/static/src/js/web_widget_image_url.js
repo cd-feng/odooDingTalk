@@ -1,7 +1,7 @@
 // Copyright 2017 - 2018 Modoolar <info@modoolar.com>
 // License LGPLv3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.en.html).
 
-odoo.define('web_widget_image_url.FieldImageURL', function (require) {
+odoo.define('ali_dindin.FieldImageURL', function (require) {
     "use strict";
 
     var AbstractField = require('web.AbstractField');

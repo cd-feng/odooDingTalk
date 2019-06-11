@@ -133,7 +133,7 @@ class DingDingSynchronous(models.TransientModel):
                         dep_din_ids = user.get('department')
                         dep_list = self.env['hr.department'].sudo().search([('din_id', 'in', dep_din_ids)])
                         data.update({'department_ids': [(6, 0, dep_list.ids)]})
-                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
+                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('mobile_phone', '=', user.get('mobile'))])
                 if employee:
                     employee.sudo().write(data)
                 else:
