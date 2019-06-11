@@ -2,16 +2,10 @@
 <odoo>
 
     <template id="dingding" name="OAuth dingding">
-
         <div class="justify-content-between mt-2 d-flex small">
             <a t-attf-href="/web/dindin_login?{{ keep_query() }}">钉钉扫码登录</a>
-            <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
-            <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
-        </div>
-        <div class="justify-content-between mt-2 d-flex small">
             <a t-attf-href="/web/dingding/account_login?{{ keep_query() }}">钉钉账号登录</a>
         </div>
-
     </template>
 
     <template id="login" inherit_id="web.login" name="Sign up - Reset Password">
