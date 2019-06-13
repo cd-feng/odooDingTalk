@@ -20,6 +20,7 @@
         'views/hrm_list.xml',
         'views/hrm_dimission_list.xml',
         'views/add_employee.xml',
+        'wizard/hr_employee_report.xml',
     ],
     'qweb': [
          'static/xml/*.xml',

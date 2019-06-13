@@ -4,6 +4,7 @@ import json
 import logging
 import time
 import requests
+from requests import ReadTimeout
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -128,7 +129,11 @@ class DingDingSynchronous(models.TransientModel):
                         logging.info(">>>--------------------------------")
                         logging.info(">>>SSL异常:{}".format(e))
                         logging.info(">>>--------------------------------")
-                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
+                if user.get('department'):
+                        dep_din_ids = user.get('department')
+                        dep_list = self.env['hr.department'].sudo().search([('din_id', 'in', dep_din_ids)])
+                        data.update({'department_ids': [(6, 0, dep_list.ids)]})
+                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('mobile_phone', '=', user.get('mobile'))])
                 if employee:
                     employee.sudo().write(data)
                 else:

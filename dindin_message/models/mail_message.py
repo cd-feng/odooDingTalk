@@ -96,10 +96,11 @@ class DingDingMessageTemplate(models.Model):
 
     @api.model
     def get_template_by_model_and_type(self, model, msh_type):
-        if model:
+        if model and msh_type:
             template = self.env['dingding.message.template'].sudo().search(
                 [('model_id', '=', model.id), (msh_type, '=', True), ('active', '=', True)])
             return template if template else False
+        return False
 
     @api.onchange('model_id', 'send_to')
     def _change_model_id(self):

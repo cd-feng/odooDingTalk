@@ -5,7 +5,7 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_list.js"></script>
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_dimission_list.js"></script>
-            <script type="text/javascript" src="/dingding_hrm/static/src/js/add_employee.js"></script>
+            <script type="text/javascript" src="/dingding_hrm/static/src/js/get_emp_work_type.js"></script>
         </xpath>
     </template>
 

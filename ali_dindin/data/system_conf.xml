@@ -118,8 +118,11 @@
 			<field name="key">user_delete</field>
 			<field name="value">https://oapi.dingtalk.com/user/delete?access_token=</field>
 		</record>
-
-
+    <record id="ali_dindin_system_conf_user_get" model="ali.dindin.system.conf">
+			<field name="name">获取用户详情</field>
+			<field name="key">user_get</field>
+			<field name="value">https://oapi.dingtalk.com/user/get?access_token=</field>
+		</record>
 
 
     </data>

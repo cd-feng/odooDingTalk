@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<data>
+		<record model="ir.module.category" id="dingding_health.main">
+			<field name="name">阿里钉钉-运动</field>
+			<field name="visible" eval="0" />
+		</record>
+
+		<record id="dingding_health.personnel" model="res.groups">
+			<field name="name">用户</field>
+			<field name="category_id" ref="dingding_health.main"/>
+		</record>
+
+		<record id="dingding_health.manager" model="res.groups">
+			<field name="name">管理员</field>
+			<field name="category_id" ref="dingding_health.main"/>
+			<field name="implied_ids" eval="[(4, ref('dingding_health.personnel'))]"/>
+		</record>
+
+		<!-- 默认用户权限 -->
+		<record id="base.default_user" model="res.users">
+			<field name="groups_id" eval="[(4, ref('dingding_health.personnel'))]" />
+		</record>
+
+	</data>
+</odoo>
