@@ -116,6 +116,11 @@ class DingDingSynchronous(models.TransientModel):
                     'department_id': department[0].id,  # 部门
                     'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
                 }
+                # 支持显示国际手机号
+                if user.get('stateCode') != '86':
+                    data.update({
+                        'mobile_phone':'+{}-{}'.format(user.get('stateCode'),user.get('mobile')),
+                    })
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
                     data.update({
