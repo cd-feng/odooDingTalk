@@ -164,6 +164,11 @@ class HrEmployee(models.Model):
                         'din_isLeaderInDepts': result.get('isLeaderInDepts'),  # 是否为部门主管
                         'din_orderInDepts': result.get('orderInDepts'),  # 所在部门序位
                     }
+                    # 支持显示国际手机号
+                    if result.get('stateCode') != '86':
+                        data.update({
+                            'mobile_phone':'+{}-{}'.format(user.get('stateCode'),user.get('mobile')),
+                        })
                     if result.get('hiredDate'):
                         date_str = self.get_time_stamp(result.get('hiredDate'))
                         data.update({
