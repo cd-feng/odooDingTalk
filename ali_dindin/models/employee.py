@@ -167,7 +167,7 @@ class HrEmployee(models.Model):
                     # 支持显示国际手机号
                     if result.get('stateCode') != '86':
                         data.update({
-                            'mobile_phone':'+{}-{}'.format(user.get('stateCode'),user.get('mobile')),
+                            'mobile_phone':'+{}-{}'.format(result.get('stateCode'), result.get('mobile')),
                         })
                     if result.get('hiredDate'):
                         date_str = self.get_time_stamp(result.get('hiredDate'))
