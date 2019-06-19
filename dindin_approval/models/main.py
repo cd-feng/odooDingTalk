@@ -151,8 +151,8 @@ class DinDinApproversUsers(models.Model):
     _description = u"审批人列表"
     _rec_name = 'emp_id'
 
-    number = fields.Integer(string=u'序号')
-    sequence = fields.Integer(string=u'序号')
+    number = fields.Integer(string='序号')
+    sequence = fields.Integer(string='序列')
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'审批人', required=True)
     mobile_phone = fields.Char(string='电话')
     job_title = fields.Char(string='职位')
@@ -175,8 +175,8 @@ class DinDinApproversCc(models.Model):
     _description = u"抄送人列表"
     _rec_name = 'emp_id'
 
-    number = fields.Integer(string=u'序号')
-    sequence = fields.Integer(string=u'序号')
+    number = fields.Integer(string='序号')
+    sequence = fields.Integer(string='序列')
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'抄送人', required=True)
     mobile_phone = fields.Char(string='电话')
     job_title = fields.Char(string='职位')

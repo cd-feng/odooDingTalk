@@ -47,7 +47,7 @@ class DinDinCallback(models.Model):
     url = fields.Char(string='回调URL', size=200, default=_get_default_localhost)
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00', copy=False)
     call_ids = fields.Many2many(comodel_name='dindin.users.callback.list', relation='dindin_users_callback_and_list_ref',
-                                column1='call_id', column2='list_id', string=u'回调类型', copy=False)
+                                column1='call_id', column2='list_id', string=u'回调类型列表', copy=False)
     
     _sql_constraints = [
         ('value_type_uniq', 'unique(value_type)', u'事件类型重复!'),
