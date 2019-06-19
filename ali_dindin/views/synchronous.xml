@@ -6,7 +6,7 @@
         <field name="model">dingding.bash.data.synchronous</field>
         <field name="arch" type="xml">
             <form>
-                <div class="alert alert-info">
+                <div class="alert alert-info" role="alert">
                     <p>选择需要同步的钉钉数据，同步数据量较大的话，等待时间可能会很久额~~</p>
                 </div>
                 <div class="oe_title">
