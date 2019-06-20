@@ -46,6 +46,7 @@ class DingDingChat(models.Model):
     image = fields.Binary("照片", default=_default_image, attachment=True)
     image_medium = fields.Binary("Medium-sized photo", attachment=True)
     image_small = fields.Binary("Small-sized photo", attachment=True)
+    robot_count = fields.Integer(string=u'群机器人数', compute='get_robot_count')
     active = fields.Boolean(default=True)
 
     @api.model
@@ -57,6 +58,26 @@ class DingDingChat(models.Model):
     def write(self, values):
         tools.image_resize_images(values)
         return super(DingDingChat, self).write(values)
+
+    @api.multi
+    def get_robot_count(self):
+        """
+        获取当前群的群机器人数量
+        :return:
+        """
+        for res in self:
+            res.robot_count = self.env['dingding.robot'].search_count([('chat_id', '=', res.id)])
+
+    @api.multi
+    def action_view_robot(self):
+        """
+        跳转到群机器人列表
+        :return:
+        """
+        self.ensure_one()
+        action = self.env.ref('dindin_message.dingding_robot_action').read()[0]
+        action['domain'] = [('chat_id', '=', self.id)]
+        return action
 
     @api.multi
     def create_dingding_chat(self):
