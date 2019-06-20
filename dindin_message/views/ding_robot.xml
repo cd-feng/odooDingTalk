@@ -1,57 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <record id="dingding_robot_send_message_form_view" model="ir.ui.view">
+        <field name="name">群机器人发送消息</field>
+        <field name="model">dingding.robot.send.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="robot_id" placeholder="选择群机器人"/>
+                        <field name="chat_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="message" placeholder="你想要发送的消息内容...默认的消息格式为文本格式!"/>
+                        <field name="at_mobiles"/>
+                        <field name="isAtAll"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="发送" name="dingding_robot_send_message" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
-        <record id="dingding_robot_tree_view" model="ir.ui.view">
-            <field name="name">群机器人</field>
-            <field name="model">dingding.robot</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="webhook"/>
-                    <field name="chat_id"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
+    <record id="dingding_robot_send_message_action" model="ir.actions.act_window">
+        <field name="name">发送群消息</field>
+        <field name="res_model">dingding.robot.send.message</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="dingding_robot_send_message_form_view"/>
+        <field name="target">new</field>
+    </record>
 
-        <record id="dingding_robot_form_view" model="ir.ui.view">
-            <field name="name">群机器人</field>
-            <field name="model">dingding.robot</field>
-            <field name="arch" type="xml">
-                <form string="群机器人">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="test_robot_connection" type="object" string="测试连接" icon="fa-television"/>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+    <record id="dingding_robot_tree_view" model="ir.ui.view">
+        <field name="name">群机器人</field>
+        <field name="model">dingding.robot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="webhook"/>
+                <field name="chat_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingding_robot_form_view" model="ir.ui.view">
+        <field name="name">群机器人</field>
+        <field name="model">dingding.robot</field>
+        <field name="arch" type="xml">
+            <form string="群机器人">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(dingding_robot_send_message_action)d" 
+                                type="action" 
+                                string="发送消息" 
+                                context="{'search_default_robot_id': [active_id], 'default_robot_id': active_id}"
+                                class="oe_stat_button" icon="fa-group">
+                        </button>
+                        <button name="test_robot_connection" type="object" string="测试连接" icon="fa-television"/>
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="webhook"/>
+                    </group>
+                    <group>
                         <group>
-                            <field name="name"/>
-                            <field name="webhook"/>
+                            <field name="chat_id"/>
                         </group>
                         <group>
-                            <group>
-                                <field name="chat_id"/>
-                            </group>
-                            <group>
-                                <field name="remarks" placeholder="描述说明"/>
-                            </group>
+                            <field name="remarks" placeholder="描述说明"/>
                         </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record id="dingding_robot_action" model="ir.actions.act_window">
-            <field name="name">群机器人</field>
-            <field name="res_model">dingding.robot</field>
-            <field name="view_mode">tree,form</field>
-        </record>
+    <record id="dingding_robot_action" model="ir.actions.act_window">
+        <field name="name">群机器人</field>
+        <field name="res_model">dingding.robot</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
-        <menuitem id="dingding_robot_menu" name="群机器人" parent="ali_dindin.message_menu" sequence="4"
-                  action="dingding_robot_action"/>
-
-    </data>
+    <menuitem id="dingding_robot_menu" name="群机器人" parent="ali_dindin.message_menu" sequence="4"
+                action="dingding_robot_action"/>
 </odoo>
