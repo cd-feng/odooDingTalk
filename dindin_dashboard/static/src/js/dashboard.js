@@ -36,16 +36,6 @@ odoo.define('dindin.blackboard.info', function (require) {
                 data: [],
             }));
         },
-        setWorkRecordNumber: function (result) {
-            this.$('.my-val1').html(result);
-        },
-        getUserApprovalNumber: function (result) {
-            if (result.state) {
-                this.$('.my-val3').html(result.number);
-            } else {
-                this.$('.my-val3').html(result.msg);
-            }
-        },
 
         start: function () {
             let self = this;
@@ -55,7 +45,7 @@ odoo.define('dindin.blackboard.info', function (require) {
                 method: 'get_record_number',
                 args: [],
             }).then(function (result) {
-                self.setWorkRecordNumber(result);
+                self.$('.my-val1').html(result);
             });
             //获取待审批数
             rpc.query({
@@ -63,7 +53,7 @@ odoo.define('dindin.blackboard.info', function (require) {
                 method: 'get_get_template_number_by_user',
                 args: [],
             }).then(function (result) {
-                self.getUserApprovalNumber(result);
+                self.$('.my-val3').html(result.number);
             });
             // 获取公告
             rpc.query({

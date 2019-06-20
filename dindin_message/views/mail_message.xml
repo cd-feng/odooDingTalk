@@ -58,6 +58,8 @@
                                attrs="{'invisible': [('send_to', '!=', 'user')], 'required': [('send_to', '=', 'user')]}"/>
                         <field name="field_ids" placeholder="给单据上指定的员工发送消息到工作群" options="{'no_create': True}" widget="many2many_tags"
                                attrs="{'invisible': [('send_to', '!=', 'form')], 'required': [('send_to', '=', 'form')]}"/>
+                        <field name="rotbot_ids" placeholder="发送消息到指定的群机器人" options="{'no_create': True}" widget="many2many_tags"
+                               attrs="{'invisible': [('send_to', '!=', 'robot')], 'required': [('send_to', '=', 'robot')]}"/>
                     </group>
                     <notebook>
                         <page string="消息配置">

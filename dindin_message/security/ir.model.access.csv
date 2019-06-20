@@ -7,6 +7,6 @@ access_dindin_work_card_message_list,dindin.work.card.message.list,model_dindin_
 access_dindin_work_oa_message_list,dindin.work.oa.message.list,model_dindin_work_oa_message_list,base.group_user,1,1,1,1
 access_dindin_message_template,dindin.message.template,model_dindin_message_template,base.group_user,1,1,1,1
 access_dindin_message_template_line,dindin.message.template.line,model_dindin_message_template_line,base.group_user,1,1,1,1
-
 access_dingding_chat,dingding.chat,model_dingding_chat,base.group_user,1,1,1,1
 access_dingding_message_template,dingding_message_template,model_dingding_message_template,base.group_user,1,1,1,1
+access_dingding_robot,dingding.robot,model_dingding_robot,base.group_user,1,1,1,1

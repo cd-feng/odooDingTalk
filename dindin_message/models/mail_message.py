@@ -53,6 +53,9 @@ class MailMessage(models.Model):
                                     else:
                                         user_str = user_str + ",{}".format(emp.din_id)
                         self.env['dingding.send.chat.message'].sudo().send_work_message(user_str, msg)
+                    # 指定群机器人
+                    elif result.send_to == 'robot':
+                        self.env['dingding.robot'].sudo().send_robot_message(result.rotbot_ids, msg)
         return message
 
 
@@ -65,6 +68,7 @@ class DingDingMessageTemplate(models.Model):
         ('chat', '钉钉群'),
         ('user', '指定人'),
         ('form', '单据人员'),
+        ('robot', '群机器人'),
     ]
 
     name = fields.Char(string='消息名称', required=True)
@@ -81,6 +85,7 @@ class DingDingMessageTemplate(models.Model):
                                 column1='template_id', column2='chat_id', string=u'群会话')
     user_ids = fields.Many2many('hr.employee', string='接受人')
     field_ids = fields.Many2many('ir.model.fields', string=u'单据字段')
+    rotbot_ids = fields.Many2many('dingding.robot', string=u'群机器人')
 
     @api.model
     def generate_message_text(self, model_name, body_html, res_id):
