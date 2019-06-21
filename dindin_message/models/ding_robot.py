@@ -229,21 +229,3 @@ class CardMessageList(models.TransientModel):
     actionURL = fields.Char(string='标题链接地址', required=True)
     pic_url = fields.Char(string='图片链接地址')
     message_id = fields.Many2one(comodel_name='dingding.robot.send.message', string=u'消息', ondelete='cascade')
-
-class DinDinWorkMessageUserList(models.TransientModel):
-    _name = 'dingding.robot.send.user.list'
-    _rec_name = 'emp_id'
-    _description = "@提醒人列表"
-
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
-    mobile_phone = fields.Char(string='电话')
-    job_title = fields.Char(string='职位')
-    department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', ondelete='cascade')
-    message_id = fields.Many2one(comodel_name='dingding.robot.send.message', string=u'消息', ondelete='cascade')
-
-    @api.onchange('emp_id')
-    def onchange_emp(self):
-        if self.emp_id:
-            self.mobile_phone = self.emp_id.mobile_phone
-            self.job_title = self.emp_id.job_title
-            self.department_id = self.emp_id.department_id.id
