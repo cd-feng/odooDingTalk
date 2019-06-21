@@ -12,7 +12,6 @@
                     </group>
                     <group>
                         <field name="msg_type"/>
-                        <field name="at_mobiles"/>
                         <field name="isAtAll"/>
                     </group>
                 </group>
@@ -40,6 +39,16 @@
                                    attrs="{'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
                             <field name="link_image_url" placeholder="请输入消息图片url地址..."
                                    attrs="{'invisible': [('msg_type', 'not in', ['link','image'])], 'required': [('msg_type', 'in', ['link','image'])]}"/>
+                        </page>
+                        <page string="@提醒人列表">
+                            <field name="at_mobiles">
+                                <tree editable="top">
+                                    <field name="emp_id"/>
+                                    <field name="department_id"/>
+                                    <field name="mobile_phone"/>
+                                    <field name="job_title"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 <footer>
