@@ -218,6 +218,16 @@ class DingDingChatUserModelAdd(models.TransientModel):
     user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_add_and_hr_employee_rel',
                                 column1='model_id', column2='emp_id', string=u'新群成员', required=True)
 
+    @api.onchange('on_user_ids')
+    def _onchange_on_user_ids(self):
+        """待添加人员下拉列表不显示当前群内成员
+        """
+        if self.on_user_ids:
+            domain = [('id','not in', self.on_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
+
     @api.model
     def default_get(self, fields):
         res = super(DingDingChatUserModelAdd, self).default_get(fields)
@@ -275,6 +285,16 @@ class DingDingChatUserModelDel(models.TransientModel):
     old_user_ids = fields.Many2many(comodel_name='hr.employee',
                                     relation='dingding_chat_old_user_del_and_hr_employee_rel',
                                     column1='model_id', column2='emp_id', string=u'群成员', required=True)
+
+    @api.onchange('old_user_ids')
+    def _onchange_old_user_ids(self):
+        """待删除人员下拉列表只显示当前群内成员
+        """
+        if self.old_user_ids:
+            domain = [('id','in', self.old_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
 
     @api.model
     def default_get(self, fields):
