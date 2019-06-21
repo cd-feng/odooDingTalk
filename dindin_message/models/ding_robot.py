@@ -182,6 +182,8 @@ class DingDingRobotSendMessage(models.TransientModel):
         # 获取提醒人手机号列表
         if self.at_user_ids:
             at_mobiles = self.at_user_ids.mapped('mobile_phone')
+        else:
+            at_mobiles = None
         if self.msg_type == 'action_card':
             """卡片类型"""
             if len(self.btns) == 1:
