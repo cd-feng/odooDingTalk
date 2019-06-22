@@ -22,6 +22,7 @@
         # 'views/message_template.xml',
         'views/dingding_chat.xml',
         'views/mail_message.xml',
+        'views/ding_robot.xml',
     ],
     'qweb': [
         'static/xml/*.xml',

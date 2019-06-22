@@ -34,7 +34,7 @@ class HrEmployee(models.Model):
     work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')], default=2)
     office_status = fields.Selection(string=u'在职子状态', selection=[(2, '试用期'), (3, '正式'), (5, '待离职'), (-1, '无状态')], default='-1')
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
-    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='钉钉部门')
+    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='所属部门')
 
     # 上传员工到钉钉
     @api.multi
@@ -164,6 +164,11 @@ class HrEmployee(models.Model):
                         'din_isLeaderInDepts': result.get('isLeaderInDepts'),  # 是否为部门主管
                         'din_orderInDepts': result.get('orderInDepts'),  # 所在部门序位
                     }
+                    # 支持显示国际手机号
+                    if result.get('stateCode') != '86':
+                        data.update({
+                            'mobile_phone':'+{}-{}'.format(result.get('stateCode'), result.get('mobile')),
+                        })
                     if result.get('hiredDate'):
                         date_str = self.get_time_stamp(result.get('hiredDate'))
                         data.update({
@@ -214,7 +219,7 @@ class HrEmployee(models.Model):
     # 单独获取钉钉头像设为员工头像
     @api.multi
     def using_dingding_avatar(self):
-        for emp in self:
+        for emp in self.with_progress(msg="正在设置员工头像"):
             if emp.din_avatar:
                 binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
                 emp.sudo().write({'image': binary_data})

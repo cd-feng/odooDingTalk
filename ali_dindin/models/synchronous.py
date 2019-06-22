@@ -78,7 +78,7 @@ class DingDingSynchronous(models.TransientModel):
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments:
+        for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
             emp_offset = 0
             emp_size = 100
             while True:
@@ -116,6 +116,11 @@ class DingDingSynchronous(models.TransientModel):
                     'department_id': department[0].id,  # 部门
                     'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
                 }
+                # 支持显示国际手机号
+                if user.get('stateCode') != '86':
+                    data.update({
+                        'mobile_phone':'+{}-{}'.format(user.get('stateCode'),user.get('mobile')),
+                    })
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
                     data.update({
@@ -133,7 +138,7 @@ class DingDingSynchronous(models.TransientModel):
                         dep_din_ids = user.get('department')
                         dep_list = self.env['hr.department'].sudo().search([('din_id', 'in', dep_din_ids)])
                         data.update({'department_ids': [(6, 0, dep_list.ids)]})
-                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
+                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('mobile_phone', '=', user.get('mobile'))])
                 if employee:
                     employee.sudo().write(data)
                 else:

@@ -46,6 +46,7 @@ class DingDingChat(models.Model):
     image = fields.Binary("照片", default=_default_image, attachment=True)
     image_medium = fields.Binary("Medium-sized photo", attachment=True)
     image_small = fields.Binary("Small-sized photo", attachment=True)
+    robot_count = fields.Integer(string=u'群机器人数', compute='get_robot_count')
     active = fields.Boolean(default=True)
 
     @api.model
@@ -57,6 +58,26 @@ class DingDingChat(models.Model):
     def write(self, values):
         tools.image_resize_images(values)
         return super(DingDingChat, self).write(values)
+
+    @api.multi
+    def get_robot_count(self):
+        """
+        获取当前群的群机器人数量
+        :return:
+        """
+        for res in self:
+            res.robot_count = self.env['dingding.robot'].search_count([('chat_id', '=', res.id)])
+
+    @api.multi
+    def action_view_robot(self):
+        """
+        跳转到群机器人列表
+        :return:
+        """
+        self.ensure_one()
+        action = self.env.ref('dindin_message.dingding_robot_action').read()[0]
+        action['domain'] = [('chat_id', '=', self.id)]
+        return action
 
     @api.multi
     def create_dingding_chat(self):
@@ -197,6 +218,16 @@ class DingDingChatUserModelAdd(models.TransientModel):
     user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_add_and_hr_employee_rel',
                                 column1='model_id', column2='emp_id', string=u'新群成员', required=True)
 
+    @api.onchange('on_user_ids')
+    def _onchange_on_user_ids(self):
+        """待添加人员下拉列表不显示当前群内成员
+        """
+        if self.on_user_ids:
+            domain = [('id','not in', self.on_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
+
     @api.model
     def default_get(self, fields):
         res = super(DingDingChatUserModelAdd, self).default_get(fields)
@@ -254,6 +285,16 @@ class DingDingChatUserModelDel(models.TransientModel):
     old_user_ids = fields.Many2many(comodel_name='hr.employee',
                                     relation='dingding_chat_old_user_del_and_hr_employee_rel',
                                     column1='model_id', column2='emp_id', string=u'群成员', required=True)
+
+    @api.onchange('old_user_ids')
+    def _onchange_old_user_ids(self):
+        """待删除人员下拉列表只显示当前群内成员
+        """
+        if self.old_user_ids:
+            domain = [('id','in', self.old_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
 
     @api.model
     def default_get(self, fields):

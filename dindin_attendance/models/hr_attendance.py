@@ -87,6 +87,7 @@ class HrAttendanceTransient(models.TransientModel):
         :param user:
         :return:
         """
+        global has_more
         logging.info(">>>开始获取员工打卡信息...")
         for res in self:
             user_list = list()
