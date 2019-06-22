@@ -44,3 +44,18 @@ class DinDinBlackboard(models.TransientModel):
                 return {'state': False, 'msg': "获取用户'{}'的公告失败".format(self.env.user.name)}
         else:
             return {'state': False, 'msg': '当前登录用户不存在关联员工!'}
+
+    @api.model
+    def get_update_information(self):
+        """
+        获取更新公告信息
+        :return:
+        """
+        try:
+            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_manage_version_info')]).value
+            result = requests.get(url=url, timeout=2)
+            return result.text
+        except ReadTimeout:
+            return {"本地网络链接超时!"}
+        except Exception as e:
+            return {"获取更新公告信息失败!"}
