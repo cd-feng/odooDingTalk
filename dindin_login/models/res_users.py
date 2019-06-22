@@ -63,6 +63,14 @@ class InheritResUsers(models.Model):
                     'groups_id': self.env.ref('base.group_user')
                 }
                 user = self.sudo().create(values)
+                # 首次自动创建odoo用户后发送钉钉工作通知给该员工
+                msg = {
+                    'msgtype': 'text',  
+                    'text': {
+                        "content": "尊敬的{},欢迎加入odoo,您的登陆名为{}，初始登陆密码为{}，请登陆后及时修改密码！".format(name, email, password), 
+                    }
+                }
+                self.env['dindin.work.message'].sudo().send_work_message(userstr=employee.din_id, msg=msg)
                 # 注册成功后，自动关联员工与用户
                 values = {
                     'user_id': user.id

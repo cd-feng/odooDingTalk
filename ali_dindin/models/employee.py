@@ -180,7 +180,9 @@ class HrEmployee(models.Model):
                         data.update({'department_ids': [(6, 0, dep_list.ids)]})
                     employee.sudo().write(data)
                 else:
-                    raise UserError("从钉钉同步员工时发生意外，原因为:{}".format(result.get('errmsg')))
+                    _logger.info("从钉钉同步员工时发生意外，原因为:{}".format(result.get('errmsg')))
+                    employee.message_post(body="从钉钉同步员工失败:{}".format(result.get('errmsg')), message_type='notification')
+
             except ReadTimeout:
                 raise UserError("从钉钉同步员工详情超时！")
 
