@@ -219,7 +219,7 @@ class HrEmployee(models.Model):
     # 单独获取钉钉头像设为员工头像
     @api.multi
     def using_dingding_avatar(self):
-        for emp in self:
+        for emp in self.with_progress(msg="正在设置员工头像"):
             if emp.din_avatar:
                 binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
                 emp.sudo().write({'image': binary_data})
