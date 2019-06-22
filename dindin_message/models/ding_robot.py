@@ -147,8 +147,8 @@ class DingDingRobotSendMessage(models.TransientModel):
     msg_type = fields.Selection(string=u'消息类型', selection=MESSAGETYPE, default='text', required=True)
     robot_id = fields.Many2one('dingding.robot', required=True, string='群机器人')
     chat_id = fields.Many2one('dingding.chat', related='robot_id.chat_id', string='关联群组')
-    at_mobiles = fields.One2many(comodel_name='dingding.robot.send.user.list', inverse_name='message_id',
-                               string='@提醒人列表')
+    at_user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_robot_and_hr_employee_rel',
+                                  column1='message_id', column2='emp_id', string=u'提醒人员')                  
     isAtAll = fields.Boolean(string='@所有人时', default=False)
     text_message = fields.Text(string='文本消息内容')
     msg_title = fields.Char(string='消息标题', help="文本格式")
@@ -160,6 +160,17 @@ class DingDingRobotSendMessage(models.TransientModel):
     link_image_url = fields.Char(string='链接图片URL', help="链接图片URL")
     link_message = fields.Text(string='消息描述', help="支持markdown语法")
 
+
+    @api.onchange('chat_id')
+    def _onchange_chat_id(self):
+        """提醒人员下拉列表只显示群内成员
+        """
+        if self.chat_id:
+            domain = [('id','in', self.chat_id.useridlist.ids)]
+            return {
+            'domain': {'at_user_ids': domain}
+            }
+
     @api.multi
     def dingding_robot_send_message(self):
         """
@@ -168,6 +179,11 @@ class DingDingRobotSendMessage(models.TransientModel):
         """
         webhook = self.robot_id.webhook
         xiaoding = DingtalkChatbot(webhook)
+        # 获取提醒人手机号列表
+        if self.at_user_ids:
+            at_mobiles = self.at_user_ids.mapped('mobile_phone')
+        else:
+            at_mobiles = None
         if self.msg_type == 'action_card':
             """卡片类型"""
             if len(self.btns) == 1:
@@ -186,10 +202,10 @@ class DingDingRobotSendMessage(models.TransientModel):
             xiaoding.send_action_card(actioncard) 
         elif self.msg_type == 'text':
             """文本类型消息"""
-            xiaoding.send_text(msg=self.text_message, at_mobiles=self.at_mobiles, at_dingtalk_ids=None)
+            xiaoding.send_text(msg=self.text_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=None)
         elif self.msg_type == 'markdown':
             """markdown类型的消息"""
-            xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message, is_at_all=False, at_mobiles=[], at_dingtalk_ids=[])
+            xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=[])
         elif self.msg_type == 'link':
             """链接消息"""
             xiaoding.send_link(title=self.msg_title, text=self.link_message, message_url=self.link_url, pic_url=self.link_image_url)
@@ -213,21 +229,3 @@ class CardMessageList(models.TransientModel):
     actionURL = fields.Char(string='标题链接地址', required=True)
     pic_url = fields.Char(string='图片链接地址')
     message_id = fields.Many2one(comodel_name='dingding.robot.send.message', string=u'消息', ondelete='cascade')
-
-class DinDinWorkMessageUserList(models.TransientModel):
-    _name = 'dingding.robot.send.user.list'
-    _rec_name = 'emp_id'
-    _description = "@提醒人列表"
-
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
-    mobile_phone = fields.Char(string='电话')
-    job_title = fields.Char(string='职位')
-    department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', ondelete='cascade')
-    message_id = fields.Many2one(comodel_name='dingding.robot.send.message', string=u'消息', ondelete='cascade')
-
-    @api.onchange('emp_id')
-    def onchange_emp(self):
-        if self.emp_id:
-            self.mobile_phone = self.emp_id.mobile_phone
-            self.job_title = self.emp_id.job_title
-            self.department_id = self.emp_id.department_id.id
