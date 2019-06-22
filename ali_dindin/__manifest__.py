@@ -15,7 +15,7 @@
         'security/ir.model.access.csv',
         'security/dindin_security.xml',
         'data/system_conf.xml',
-        'views/web_widget_image_url.xml',
+        'views/web_widget.xml',
         'views/menu.xml',
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
