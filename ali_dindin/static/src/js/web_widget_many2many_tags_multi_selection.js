@@ -1,4 +1,4 @@
-odoo.define('web_widget_many2many_tags_multi_selection.multiple_tags', function (require) {
+odoo.define('ali_dindin.multiple_tags', function (require) {
     "use strict";
 
     var rel_fields = require('web.relational_fields');
