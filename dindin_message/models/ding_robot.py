@@ -46,70 +46,6 @@ class DingDingRobot(models.Model):
             requests.post(url=res.webhook, headers=headers, data=json.dumps(data), timeout=1)
             logging.info(">>>机器人测试连接End")
 
-            webhook = res.webhook
-            # 用户手机号列表
-            at_mobiles = ['*************************这里填写需要提醒的用户的手机号码，字符串或数字都可以****************************']
-            # 初始化机器人小丁
-            xiaoding = DingtalkChatbot(webhook)
-            # text
-            xiaoding.send_text(msg='我就是小丁，小丁就是我！', is_at_all=True)
-            xiaoding.send_text(msg='我就是小丁，小丁就是我！', at_mobiles='')
-
-            # image表情
-            xiaoding.send_image(pic_url='http://uc-test-manage-00.umlife.net/jenkins/pic/flake8.png')
-
-            # link
-            xiaoding.send_link(title='万万没想到，某小璐竟然...', text='故事是这样子的...', message_url='http://www.kwongwah.com.my/?p=454748", pic_url="https://pbs.twimg.com/media/CEwj7EDWgAE5eIF.jpg')
-
-            # markdown
-            # 1、提醒所有人
-            xiaoding.send_markdown(title='氧气文字', text='#### 广州天气\n'
-                                '> 9度，西北风1级，空气良89，相对温度73%\n\n'
-                                '> ![美景](http://www.sinaimg.cn/dy/slidenews/5_img/2013_28/453_28488_469248.jpg)\n'
-                                '> ###### 10点20分发布 [天气](http://www.thinkpage.cn/) \n',
-                                is_at_all=True)
-            # 2、提醒指定手机用户，需要在text参数中@用户
-            xiaoding.send_markdown(title='氧气文字', text='#### 广州天气\n'
-                                '> 9度，西北风1级，空气良89，相对温度73%\n\n'
-                                '> ![美景](http://www.sinaimg.cn/dy/slidenews/5_img/2013_28/453_28488_469248.jpg)\n'
-                                '> ###### 10点20分发布 [天气](http://www.thinkpage.cn/) \n',
-                                at_mobiles='')
-
-            # 整体跳转ActionCard
-            btns1 = [CardItem(title="查看详情", url="https://www.dingtalk.com/")]
-            actioncard1 = ActionCard(title='万万没想到，竟然...',
-                                    text='![markdown](http://www.songshan.es/wp-content/uploads/2016/01/Yin-Yang.png) \n### 故事是这样子的...',
-                                    btns=btns1,
-                                    btn_orientation=1,
-                                    hide_avatar=1)
-            xiaoding.send_action_card(actioncard1)
-
-            # 单独跳转ActionCard
-            # 1、两个按钮选择
-            btns2 = [CardItem(title="支持", url="https://www.dingtalk.com/"), CardItem(title="反对", url="https://www.dingtalk.com/")]
-            actioncard2 = ActionCard(title='万万没想到，竟然...',
-                                    text='![markdown](http://www.songshan.es/wp-content/uploads/2016/01/Yin-Yang.png) \n### 故事是这样子的...',
-                                    btns=btns2,
-                                    btn_orientation=1,
-                                    hide_avatar=1)
-            xiaoding.send_action_card(actioncard2)
-            # 2、三个按钮选择
-            btns3 = [CardItem(title="支持", url="https://www.dingtalk.com/"), CardItem(title="中立", url="https://www.dingtalk.com/"), CardItem(title="反对", url="https://www.dingtalk.com/")]
-            actioncard3 = ActionCard(title='万万没想到，竟然...',
-                                    text='![markdown](http://www.songshan.es/wp-content/uploads/2016/01/Yin-Yang.png) \n### 故事是这样子的...',
-                                    btns=btns3,
-                                    btn_orientation=1,
-                                    hide_avatar=1)
-            xiaoding.send_action_card(actioncard3)
-
-            # FeedCard类型
-            card1 = CardItem(title="氧气美女", url="https://www.dingtalk.com/", pic_url="https://unzippedtv.com/wp-content/uploads/sites/28/2016/02/asian.jpg")
-            card2 = CardItem(title="氧眼美女", url="https://www.dingtalk.com/", pic_url="https://unzippedtv.com/wp-content/uploads/sites/28/2016/02/asian.jpg")
-            card3 = CardItem(title="氧神美女", url="https://www.dingtalk.com/", pic_url="https://unzippedtv.com/wp-content/uploads/sites/28/2016/02/asian.jpg")
-            cards = [card1, card2, card3]
-            xiaoding.send_feed_card(cards)
-
-
     @api.model
     def send_robot_message(self, robots, msg):
         """
@@ -178,47 +114,49 @@ class DingDingRobotSendMessage(models.TransientModel):
         :return:
         """
         webhook = self.robot_id.webhook
-        xiaoding = DingtalkChatbot(webhook)
-        # 获取提醒人手机号列表
-        if self.at_user_ids:
-            at_mobiles = self.at_user_ids.mapped('mobile_phone')
-        else:
-            at_mobiles = None
-        if self.msg_type == 'action_card':
-            """卡片类型"""
-            if len(self.btns) == 1:
-                btns= self.btns
+        try:
+            xiaoding = DingtalkChatbot(webhook)
+               # 获取提醒人手机号列表
+            if self.at_user_ids:
+                at_mobiles = self.at_user_ids.mapped('mobile_phone')
             else:
-                btn_json_list = list()
+                at_mobiles = None
+            if self.msg_type == 'action_card':
+                """卡片类型"""
+                if len(self.btns) == 1:
+                    btns= self.btns
+                else:
+                    btn_json_list = list()
+                    for val in self.btns:
+                        btn_json_list.append({'title': val.title, 'url': val.actionURL})
+                    btns= btn_json_list
+                btn_orientation = "1" if len(self.btns) == 2 else "0"
+                actioncard = ActionCard(title=self.msg_title,
+                                        text=self.card_message,
+                                        btns=btns,
+                                        btn_orientation=btn_orientation,
+                                        hide_avatar=1)
+                xiaoding.send_action_card(actioncard) 
+            elif self.msg_type == 'text':
+                """文本类型消息"""
+                xiaoding.send_text(msg=self.text_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=None)
+            elif self.msg_type == 'markdown':
+                """markdown类型的消息"""
+                xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=[])
+            elif self.msg_type == 'link':
+                """链接消息"""
+                xiaoding.send_link(title=self.msg_title, text=self.link_message, message_url=self.link_url, pic_url=self.link_image_url)
+            elif self.msg_type == 'image':
+                """image消息"""
+                xiaoding.send_image(pic_url=self.link_image_url)
+            elif self.msg_type == 'feed_card':
+                """feed_card消息"""
+                link_list = list()
                 for val in self.btns:
-                    btn_json_list.append({'title': val.title, 'url': val.actionURL})
-                btns= btn_json_list
-            btn_orientation = "1" if len(self.btns) == 2 else "0"
-            actioncard = ActionCard(title=self.msg_title,
-                                    text=self.card_message,
-                                    btns=btns,
-                                    btn_orientation=btn_orientation,
-                                    hide_avatar=1)
-            xiaoding.send_action_card(actioncard) 
-        elif self.msg_type == 'text':
-            """文本类型消息"""
-            xiaoding.send_text(msg=self.text_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=None)
-        elif self.msg_type == 'markdown':
-            """markdown类型的消息"""
-            xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=[])
-        elif self.msg_type == 'link':
-            """链接消息"""
-            xiaoding.send_link(title=self.msg_title, text=self.link_message, message_url=self.link_url, pic_url=self.link_image_url)
-        elif self.msg_type == 'image':
-            """image消息"""
-            xiaoding.send_image(pic_url=self.link_image_url)
-        elif self.msg_type == 'feed_card':
-            """feed_card消息"""
-
-            link_list = list()
-            for val in self.btns:
-                link_list.append({'title': val.title, 'url': val.actionURL, 'pic_url': val.pic_url})
-            xiaoding.send_feed_card(link_list)
+                    link_list.append({'title': val.title, 'url': val.actionURL, 'pic_url': val.pic_url})
+                xiaoding.send_feed_card(link_list)
+        except Exception:
+            raise UserError('Webhook地址有误！')
 
 class CardMessageList(models.TransientModel):
     _name = 'dingding.robot.send.card.message.list'

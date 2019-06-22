@@ -93,10 +93,10 @@ class DinDinLogin(Home, http.Controller):
         password = password.decode(encoding='utf-8', errors='strict')
         if password == '' or not password:
             return self._do_err_redirect("用户:'{}'无法进行登录,请修改该用户登录密码并关联员工!".format(user.login))
-        if password == '123456':
-            user.sudo().password = '123'
-            user.sudo()._set_password()
-            return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login))
+        # if password == '123456':
+        #     user.sudo().password = '123'
+        #     user.sudo()._set_password()
+        #     return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login)) 
         uid = request.session.authenticate(request.session.db, user.login, password)
         logging.info(u'>>>:获取的用户uid: {}'.format(uid))
         if uid is not False:
