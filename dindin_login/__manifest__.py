@@ -10,7 +10,7 @@
     'depends': ['base', 'mail', 'ali_dindin', 'dindin_message'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'data/system_conf.xml',
         'views/login_templates.xml',

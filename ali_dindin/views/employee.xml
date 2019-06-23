@@ -29,14 +29,13 @@
                             <field name="work_status"/>
                             <field name="office_status" attrs="{'invisible': [('work_status', '!=', 2)]}"/>
                             <field name="dingding_type" invisible="1"/>
-                            <field name="din_admin"/>
-                            <field name="din_isboss"/>
-                            <field name="din_hide"/>
-                            <field name="din_leader"/>
+                            <field name="din_isAdmin"/>
+                            <field name="din_isBoss"/>
+                            <field name="din_isLeader"/>
                             <field name="din_isSenior"/>
+                            <field name="din_isHide"/>
                             <field name="din_active"/>
-                            <field name="din_orderindepts"/>
-                            <!-- <field name="din_isLeaderInDepts"/> -->
+                            <!-- <field name="din_orderInDepts"/> -->
                         </group>
                     </group>
                 </page>
