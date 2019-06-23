@@ -89,9 +89,11 @@ class HrEmployee(models.Model):
                 raise UserError("请选择员工部门!")
             elif res.department_ids:
                 department_list = res.department_ids.mapped('din_id')
-                department_list.append(res.department_id.din_id)
+                if not res.department_id.din_id in res.department_ids.mapped('din_id'):
+                    department_list.append(res.department_id.din_id)
             else:
                 department_list.append(res.department_id.din_id)
+            _logger.info(department_list)
             data = {
                 'userid': res.din_id,  # userid
                 'name': res.name,  # 名称
@@ -103,6 +105,8 @@ class HrEmployee(models.Model):
                 'remark': res.notes if res.notes else '',  # 备注
                 'email': res.work_email if res.work_email else '',  # 邮箱
                 'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
+                'isSenior': res.din_isSenior,  # 高管模式
+                'isHide': res.din_isHide,  # 隐藏手机号
             }
             if res.din_hiredDate:
                 hiredDate = self.date_to_stamp(res.din_hiredDate)
@@ -159,7 +163,7 @@ class HrEmployee(models.Model):
                         'din_isSenior': result.get('isSenior'),  # 高管模式
                         'din_isAdmin': result.get('isAdmin'),  # 是管理员
                         'din_isBoss': result.get('isBoss'),  # 是老板
-                        'din_hide': result.get('isHide'),  # 隐藏手机号
+                        'din_isHide': result.get('isHide'),  # 隐藏手机号
                         'din_active': result.get('active'),  # 是否激活
                         'din_isLeaderInDepts': result.get('isLeaderInDepts'),  # 是否为部门主管
                         'din_orderInDepts': result.get('orderInDepts'),  # 所在部门序位

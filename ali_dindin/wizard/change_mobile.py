@@ -15,9 +15,6 @@ class ChangeMobile(models.TransientModel):
 
     name = fields.Char('员工姓名', required=True, readonly= True)
     din_id = fields.Char('钉钉ID', required=True, readonly= True)
-    din_jobnumber = fields.Char(string='工号', readonly= True)
-    din_position = fields.Char(string='职务', readonly= True)
-    din_hiredDate = fields.Date(string='入职时间', readonly= True)
     dep_din_id = fields.Char('所属部门ID列表', required=True, readonly= True)
     old_mobile = fields.Char('原手机号', readonly= True)
     new_mobile = fields.Char('新手机号', required= True)
@@ -47,9 +44,6 @@ class ChangeMobile(models.TransientModel):
             result = {
                 'name': self._sanitization(record,'name'),
                 'din_id': self._sanitization(record,'din_id'),
-                'din_jobnumber': self._sanitization(record,'din_jobnumber'),
-                'din_position': self._sanitization(record,'job_title'),
-                'din_hiredDate': self._sanitization(record,'din_hiredDate'),
                 'dep_din_id': self._sanitization(record,'department_id').din_id,
                 'old_mobile': self._sanitization(record,'mobile_phone'),
                 'din_active': self._sanitization(record,'din_active')
@@ -115,8 +109,6 @@ class ChangeMobile(models.TransientModel):
                     'name': self.name,  # 姓名
                     'department': [self.dep_din_id],
                     'mobile': self.new_mobile,  # 手机
-                    'position': self.din_position if self.din_position else '',  # 职位
-                    'jobnumber': self.din_jobnumber if self.din_jobnumber else '',  # 工号
                 }
                 try:
                     result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=10)
@@ -126,7 +118,8 @@ class ChangeMobile(models.TransientModel):
                         employee = self.env['hr.employee'].search([('din_id', '=', self.din_id)])
                         if employee:
                             employee.sudo().write({'mobile_phone': self.new_mobile})
-                            employee.update_employee_from_dingding() # 换号码后刷新手机状态
+                            employee.update_ding_employee() # 换号码后把员工其他信息同步到钉钉
+                            employee.update_employee_from_dingding() # 换号码后从钉钉获取新手机的激活状态
                             employee.message_post(body="通过删除后重建更换手机号为:{}".format(self.new_mobile), message_type='notification')
                     else:
                         raise UserError('上传钉钉系统时发生错误，详情为:{}'.format(result.get('errmsg')))
