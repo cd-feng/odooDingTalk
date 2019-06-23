@@ -19,6 +19,7 @@
                             <field name="din_position"/>
                             <field name="din_hiredDate"/>
                             <field name="dep_din_id"/>
+                            <field name="din_active"/>
                         </group>
                     </group>
                 </sheet>
