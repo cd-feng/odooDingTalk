@@ -78,7 +78,7 @@ class DingDingSynchronous(models.TransientModel):
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
+        for department in departments:
             emp_offset = 0
             emp_size = 100
             while True:
