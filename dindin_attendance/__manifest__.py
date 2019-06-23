@@ -10,7 +10,7 @@
     'depends': ['base', 'ali_dindin', 'mail', 'hr_attendance'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
         'security/dingding_security.xml',
