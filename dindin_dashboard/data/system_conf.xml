@@ -9,6 +9,13 @@
             <field name="value">https://oapi.dingtalk.com/topapi/blackboard/listtopten?access_token=</field>
         </record>
 
+        <!--获取模块更新公告-->
+        <record id="get_dingding_version_info" model="ali.dindin.system.conf">
+            <field name="name">获取模块更新公告</field>
+            <field name="key">get_manage_version_info</field>
+            <field name="value">http://odoo.cdooc.cn:8085/dingding/manage/get/update_information</field>
+        </record>
+
 
     </data>
 </odoo>

@@ -78,7 +78,7 @@ class DingDingSynchronous(models.TransientModel):
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
+        for department in departments:
             emp_offset = 0
             emp_size = 100
             while True:
@@ -115,6 +115,14 @@ class DingDingSynchronous(models.TransientModel):
                     'din_jobnumber': user.get('jobnumber'),  # 工号
                     'department_id': department[0].id,  # 部门
                     'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
+                    'din_isSenior': user.get('isSenior'),  # 高管模式
+                    'din_isAdmin': user.get('isAdmin'),  # 是管理员
+                    'din_isBoss': user.get('isBoss'),  # 是老板
+                    'din_isLeader': user.get('isLeader'),  # 是部门主管
+                    'din_isHide': user.get('isHide'),  # 隐藏手机号
+                    'din_active': user.get('active'),  # 是否激活
+                    'din_isLeaderInDepts': user.get('isLeaderInDepts'),  # 是否为部门主管
+                    'din_orderInDepts': user.get('orderInDepts'),  # 所在部门序位
                 }
                 # 支持显示国际手机号
                 if user.get('stateCode') != '86':

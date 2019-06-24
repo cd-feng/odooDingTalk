@@ -72,6 +72,14 @@ odoo.define('dindin.blackboard.info', function (require) {
                     self.setBlackboardFalseData(result);
                 }
             });
+            // 获取更新公告
+            rpc.query({
+                model: 'dindin.blackboard',
+                method: 'get_update_information',
+                args: [],
+            }).then(function (msg) {
+                self.$('.dingding_update_information').html(msg);
+            });
         },
 
         // _onFeedback_clicked: function (ev) {

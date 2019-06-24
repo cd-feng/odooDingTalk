@@ -10,5 +10,3 @@ access_dindin_message_template_line,dindin.message.template.line,model_dindin_me
 access_dingding_chat,dingding.chat,model_dingding_chat,base.group_user,1,1,1,1
 access_dingding_message_template,dingding_message_template,model_dingding_message_template,base.group_user,1,1,1,1
 access_dingding_robot,dingding.robot,model_dingding_robot,base.group_user,1,1,1,1
-access_dingding_robot_send_message,dingding.robot.send.message,model_dingding_robot_send_message,base.group_user,1,1,1,1
-access_dingding_robot_send_card_message_list,dingding.robot.send.card.message.list,model_dingding_robot_send_card_message_list,base.group_user,1,1,1,1

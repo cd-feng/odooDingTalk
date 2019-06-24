@@ -7,7 +7,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '1.1',
-    'depends': ['base', 'hr', 'contacts', 'web_progress'],
+    'depends': ['base', 'hr', 'contacts'],
     'installable': True,
     'application': True,
     'auto_install': False,
