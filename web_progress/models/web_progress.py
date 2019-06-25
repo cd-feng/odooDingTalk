@@ -9,16 +9,16 @@ _logger = logging.getLogger(__name__)
 lock = RLock()
 # track time between progress reports
 last_report_time = {}
+# store recursion depth for every operation
+recur_depths = {}
+# progress reports data
+progress_data = {}
 
 
 class WebProgress(models.TransientModel):
     _name = 'web.progress'
     _description = "Operation Progress"
     _transient_max_hours = 0.5
-    # store recursion depth for every operation
-    _recur_depths = {}
-    # progress reports data
-    _progress_data = {}
     # time between progress reports (in seconds)
     _progress_period_secs = 5
 
@@ -146,6 +146,7 @@ class WebProgress(models.TransientModel):
         :param log_level: log level to use when logging progress
         :return: yields every element of iteration
         """
+        global recur_depths
         # web progress_code typically comes from web client in call context
         code = self.env.context.get('progress_code')
         if total is None:
@@ -158,9 +159,9 @@ class WebProgress(models.TransientModel):
         with lock:
             recur_depth = self._get_recur_depth(code)
             if recur_depth:
-                self._recur_depths[code] += 1
+                recur_depths[code] += 1
             else:
-                self._recur_depths[code] = 1
+                recur_depths[code] = 1
         params = dict(code=code, total=total, msg=msg, recur_depth=recur_depth,
                       cancellable=cancellable, log_level=log_level)
         try:
@@ -174,9 +175,9 @@ class WebProgress(models.TransientModel):
             # finally record progress as finished
             self._report_progress_done(params)
             with lock:
-                self._recur_depths[code] -= 1
-                if not self._recur_depths[code]:
-                    del self._recur_depths[code]
+                recur_depths[code] -= 1
+                if not recur_depths[code]:
+                    del recur_depths[code]
 
     @api.model
     def _get_recur_depth(self, code):
@@ -185,8 +186,9 @@ class WebProgress(models.TransientModel):
         :param code: web progress code
         :return: current recursion depth
         """
+        global recur_depths
         with lock:
-            recur_depth = self._recur_depths.get(code, 0)
+            recur_depth = recur_depths.get(code, 0)
         return recur_depth
 
     @api.model
@@ -263,7 +265,7 @@ class WebProgress(models.TransientModel):
         :return: None
         """
         # check the time from last progress report
-        global last_report_time
+        global last_report_time, progress_data
         code = params.get('code')
         precise_code = self._get_precise_code(params)
         time_now = datetime.now()
@@ -271,7 +273,7 @@ class WebProgress(models.TransientModel):
             last_ts = last_report_time.get(code)
             if not last_ts:
                 last_ts = (time_now - timedelta(seconds=self._progress_period_secs + 1))
-            self._progress_data[precise_code] = dict(params)
+            progress_data[precise_code] = dict(params)
         period_sec = (time_now - last_ts).total_seconds()
         # report progress every time period
         if period_sec >= self._progress_period_secs:
@@ -293,6 +295,7 @@ class WebProgress(models.TransientModel):
         :param cancellable: indicates whether the operation is cancellable
         :return:
         """
+        global progress_data
         precise_code = self._get_precise_code(params)
         params['progress'] = 100
         params['done'] = params['total']
@@ -303,7 +306,7 @@ class WebProgress(models.TransientModel):
             ret = self._report_progress_do_percent(params)
         else:
             # done main-level progress, report immediatelly
-            self._progress_data[precise_code] = dict(params)
+            progress_data[precise_code] = dict(params)
             ret = self._report_progress_store(params)
             with lock:
                 # remove last report time for this code
@@ -311,11 +314,14 @@ class WebProgress(models.TransientModel):
                     del last_report_time[code]
         # remove data for this precise code code
         with lock:
-            if precise_code in self._progress_data:
-                del self._progress_data[precise_code]
+            if precise_code in progress_data:
+                del progress_data[precise_code]
         return ret
 
     def _report_progress_prepare_vals(self, params):
+        """
+        Filter out all params that are not web.progress fields
+        """
         vals = {k:v for k,v in params.items() if k in self._fields}
         return vals
 
@@ -331,21 +337,22 @@ class WebProgress(models.TransientModel):
         :param cancellable: indicates whether the operation is cancellable
         :param state: state of progress: ongoing or done
         """
+        global progress_data
         codes = self._get_parent_codes(params)
         codes.append(self._get_precise_code(params))
         vals_list = []
         for precise_code in codes:
             with lock:
-                progress_data = self._progress_data.get(precise_code)
+                my_progress_data = progress_data.get(precise_code)
             log_message = "Progress {code} {level} {progress}% ({done}/{total}) {msg}".format(
-                level=(">" * (progress_data.get('recur_depth') + 1)),
-                **progress_data)
-            log_level = progress_data.get('log_level')
+                level=(">" * (my_progress_data.get('recur_depth') + 1)),
+                **my_progress_data)
+            log_level = my_progress_data.get('log_level')
             if hasattr(_logger, log_level):
                 logger_cmd = getattr(_logger, log_level)
             else:
                 logger_cmd = _logger.info
             logger_cmd(log_message)
-            vals_list.append(self._report_progress_prepare_vals(progress_data))
+            vals_list.append(self._report_progress_prepare_vals(my_progress_data))
         self._create_progress(vals_list)
 

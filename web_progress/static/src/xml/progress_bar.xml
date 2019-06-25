@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProgressBarCancelConfirm">
+    <t t-name="WebProgressBarCancelConfirm">
         <div id="cancel_message"  class="o_progress_message">Cancel ongoing operation?</div>
         <button class="btn btn-sm" id="progress_cancel_yes">Yes</button>
         <button class="btn btn-sm" id="progress_cancel_no">No</button>
     </t>
 
-    <t t-name="ProgressBarCancel">
+    <t t-name="WebProgressBarCancel">
         <button class="btn btn-sm" id="progress_cancel_confirm">Cancel</button>
     </t>
 
-    <t t-name="ProgressBar">
+    <t t-name="WebProgressBar">
         <div>
             <div id="progress_user" class="o_progress_user" style="visibility:hidden"/>
             <div id="progress_frame" style="visibility:hidden">

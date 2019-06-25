@@ -21,15 +21,15 @@ var framework_unblockUI = framework.unblockUI;
 
 
 var ProgressBar = Widget.extend({
-    template: "ProgressBar",
+    template: "WebProgressBar",
     progress_timer: false,
     init: function(parent, code, $spin_container) {
         this._super(parent);
         this.progress_code = code;
         this.$spin_container = $spin_container;
         this.systray = !$spin_container;
-        this.cancel_html = QWeb.render('ProgressBarCancel', {});
-        this.cancel_confirm_html = QWeb.render('ProgressBarCancelConfirm', {});
+        this.cancel_html = QWeb.render('WebProgressBarCancel', {});
+        this.cancel_confirm_html = QWeb.render('WebProgressBarCancelConfirm', {});
     },
     start: function() {
         this.$progress_frame = this.$("#progress_frame");

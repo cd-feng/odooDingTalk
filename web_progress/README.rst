@@ -75,8 +75,13 @@ Progress tracking may be added to sub-operations as well:
             for line in lines.with_progress("Sub-operation")
                 line.do_something()
 
-Relese Notes
-------------
+Release Notes
+-------------
+
+1.2 - 2019-06-24 - fixes:
+
+- refactor global progress data
+- change progress template name to avoid clash with progressbar widget
 
 1.1 - 2019-06-23 - fixes:
 
