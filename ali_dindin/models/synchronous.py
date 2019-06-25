@@ -69,46 +69,18 @@ class DingDingSynchronous(models.TransientModel):
         else:
             raise UserError("同步部门时发生意外，原因为:{}".format(result.get('errmsg')))
 
-    # @api.model
-    # def synchronous_dingding_employee(self, s_avatar=None):
-    #     """
-    #     同步钉钉部门员工列表
-    #     :return:
-    #     """
-    #     url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
-    #     token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-    #     # 获取所有部门
-    #     departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-    #     for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
-    #         emp_offset = 0
-    #         emp_size = 100
-    #         while True:
-    #             logging.info(">>>开始获取{}部门的员工".format(department.name))
-    #             data = {
-    #                 'access_token': token,
-    #                 'department_id': department[0].din_id,
-    #                 'offset': emp_offset,
-    #                 'size': emp_size,
-    #             }
-    #             result_state = self.get_dingding_employees(department, url, data, s_avatar=s_avatar)
-    #             if result_state:
-    #                 emp_offset = emp_offset + 1
-    #             else:
-    #                 break
-    #     return True
-
-
     @api.model
     def synchronous_dingding_employee(self, s_avatar=None):
         """
+        同步钉钉部门员工列表
         synchronous dingding employee
         :return:
         """
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # Get the department list
+        # 获取所有部门Get the department list
         departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments.with_progress(msg="Synchronizing employee list"):
+        for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
             emp_count = self.get_department_employees_count(department)
             emp_size = 100
             for page in self.web_progress_iter(range(math.ceil(emp_count/emp_size)), msg="batch of 100"):
