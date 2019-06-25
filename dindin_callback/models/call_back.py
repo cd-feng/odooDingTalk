@@ -156,7 +156,8 @@ class DinDinCallback(models.Model):
             if result.get('errcode') == 0:
                 logging.info("已删除token为{}的回调事件".format(call_token))
             else:
-                raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
+                pass
+                # raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
         except ReadTimeout:
             raise UserError("网络连接超时")
         logging.info(">>>删除事件End...")
