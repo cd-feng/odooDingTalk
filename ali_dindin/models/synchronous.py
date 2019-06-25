@@ -4,6 +4,7 @@ import json
 import logging
 import time
 import requests
+import math
 from requests import ReadTimeout
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
@@ -68,21 +69,51 @@ class DingDingSynchronous(models.TransientModel):
         else:
             raise UserError("同步部门时发生意外，原因为:{}".format(result.get('errmsg')))
 
+    # @api.model
+    # def synchronous_dingding_employee(self, s_avatar=None):
+    #     """
+    #     同步钉钉部门员工列表
+    #     :return:
+    #     """
+    #     url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
+    #     token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+    #     # 获取所有部门
+    #     departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
+    #     for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
+    #         emp_offset = 0
+    #         emp_size = 100
+    #         while True:
+    #             logging.info(">>>开始获取{}部门的员工".format(department.name))
+    #             data = {
+    #                 'access_token': token,
+    #                 'department_id': department[0].din_id,
+    #                 'offset': emp_offset,
+    #                 'size': emp_size,
+    #             }
+    #             result_state = self.get_dingding_employees(department, url, data, s_avatar=s_avatar)
+    #             if result_state:
+    #                 emp_offset = emp_offset + 1
+    #             else:
+    #                 break
+    #     return True
+
+
     @api.model
     def synchronous_dingding_employee(self, s_avatar=None):
         """
-        同步钉钉部门员工列表
+        synchronous dingding employee
         :return:
         """
         url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_listbypage')]).value
         token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        # 获取所有部门
+        # Get the department list
         departments = self.env['hr.department'].sudo().search([('din_id', '!=', '')])
-        for department in departments.with_progress(msg="正在同步钉钉部门员工列表"):
-            emp_offset = 0
+        for department in departments.with_progress(msg="Synchronizing employee list"):
+            emp_count = self.get_department_employees_count(department)
             emp_size = 100
-            while True:
-                logging.info(">>>开始获取{}部门的员工".format(department.name))
+            for page in self.web_progress_iter(range(math.ceil(emp_count/emp_size)), msg="batch of 100"):
+                emp_offset = page*emp_size
+                logging.info(">>>Start getting employees from {} departments".format(department.name))
                 data = {
                     'access_token': token,
                     'department_id': department[0].din_id,
@@ -90,11 +121,29 @@ class DingDingSynchronous(models.TransientModel):
                     'size': emp_size,
                 }
                 result_state = self.get_dingding_employees(department, url, data, s_avatar=s_avatar)
-                if result_state:
-                    emp_offset = emp_offset + 1
-                else:
+                if not result_state:
                     break
-        return True
+        return True  
+
+    @api.model
+    def get_department_employees_count(self, department):
+        """
+        获取钉钉部门员工人数
+        :return:
+        """
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'user_getdeptmember')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        headers = {'Content-Type': 'application/json'}
+        data = {
+            'deptId': department.din_id,
+        }
+        result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=3)
+        result = json.loads(result.text)
+        if result.get('userIds'):
+            emp_count = len(result.get('userIds'))
+        else:
+            emp_count = 0
+        return emp_count
 
     @api.model
     def get_dingding_employees(self, department, url, data, s_avatar=None):

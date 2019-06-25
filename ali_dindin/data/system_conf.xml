@@ -93,6 +93,11 @@
 
 
 		<!--部门员工api-->
+		<record id="ali_dindin_system_conf_user_deptmember" model="ali.dindin.system.conf">
+			<field name="name">获取部门员工列表</field>
+			<field name="key">user_getdeptmember</field>
+			<field name="value">https://oapi.dingtalk.com/user/getDeptMember</field>
+		</record>
 		<record id="ali_dindin_system_conf_user_listbypage" model="ali.dindin.system.conf">
 			<field name="name">获取部门用户详情</field>
 			<field name="key">user_listbypage</field>
