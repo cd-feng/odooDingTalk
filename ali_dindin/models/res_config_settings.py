@@ -130,26 +130,14 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appid', self.din_login_appid)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.din_login_appsecret', self.din_login_appsecret)
         self.env['ir.config_parameter'].sudo().set_param('ali_dindin.auto_calendar_event', self.auto_calendar_event)
-        data = {
-            'name': '钉钉-定时更新token值',
-            'active': True,
-            'model_id': self.env['ir.model'].sudo().search([('model', '=', 'ali.dindin.get.token')]).id,
-            'state': 'code',
-            'user_id': self.env.user.id,
-            'numbercall': -1,
-            'interval_number': 90,
-            'interval_type': 'minutes',
-            'code': "env['ali.dindin.get.token'].get_token()",
-        }
-        if self.din_token:
-            cron = self.env['ir.cron'].sudo().search([('name', '=', "钉钉-定时更新token值")])
-            if len(cron) >= 1:
-                cron.sudo().write(data)
+        cron = self.env['ir.cron'].sudo().search(
+            [('code', '=', "env['ali.dindin.get.token'].get_token()")])
+        if len(cron) >= 1:
+            if self.din_token:
+                cron.sudo().write({'active':True})
             else:
-                self.env['ir.cron'].sudo().create(data)
-        else:
-            cron = self.env['ir.cron'].sudo().search(
-                [('code', '=', "env['ali.dindin.get.token'].get_token()")])
-            if len(cron) >= 1:
-                cron.sudo().unlink()
+                cron.sudo().write({'active':False})
+
+    def getting_token(self):
+        self.env.ref('ali_dindin.ir_cron_data_get_token').method_direct_trigger()
 
