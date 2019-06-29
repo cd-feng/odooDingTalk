@@ -11,6 +11,7 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/ir.model.access.csv',
         'security/dindin_security.xml',
