@@ -122,21 +122,14 @@
                 <!--版本更新公告-->
                 <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_translations mt8">
-                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations"></i>
+                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations">
+                        </i>
                         <div class="o_web_settings_dashboard_header">
                             更新公告
                         </div>
                         <hr/>
                         <div>
-                            <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle">
-                                <h3>20190608</h3>
-                                <ul>
-                                    <li>重构智能人事模块，增加查询待入职、在职、离职功能和添加待入职人员</li>
-                                    <li>对消息模板增加了发送消息到指定人的功能</li>
-                                    <li>调整了部分界面的展示效果，部分模型默认展示为看版模式</li>
-                                    <li>测试并整合**niulinlnc** 提交的实用功能（修改手机号、考勤不限于7天等）</li>
-                                </ul>
-                                <p>更新方式： 拉取最新代码，直接更新主模块`ali_dindin`即可</p>
+                            <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle dingding_update_information">
                             </small>
                         </div>
                         <div class="mt16">

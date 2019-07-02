@@ -10,7 +10,7 @@
     'depends': ['base', 'ali_dindin'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'security/health_group.xml',
         'security/ir.model.access.csv',

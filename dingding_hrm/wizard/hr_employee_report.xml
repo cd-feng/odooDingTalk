@@ -58,7 +58,7 @@
             <field name="model">get.hrm.employee.state</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="alert alert-info">
+                    <div class="alert alert-info" role="alert">
                         <p>即将同步最新的员工入职状态信息(待入职、在职、离职)！</p>
                     </div>
                     <footer>

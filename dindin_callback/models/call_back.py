@@ -47,7 +47,7 @@ class DinDinCallback(models.Model):
     url = fields.Char(string='回调URL', size=200, default=_get_default_localhost)
     state = fields.Selection(string=u'状态', selection=[('00', '未注册'), ('01', '已注册')], default='00', copy=False)
     call_ids = fields.Many2many(comodel_name='dindin.users.callback.list', relation='dindin_users_callback_and_list_ref',
-                                column1='call_id', column2='list_id', string=u'回调类型', copy=False)
+                                column1='call_id', column2='list_id', string=u'回调类型列表', copy=False)
     
     _sql_constraints = [
         ('value_type_uniq', 'unique(value_type)', u'事件类型重复!'),
@@ -156,7 +156,8 @@ class DinDinCallback(models.Model):
             if result.get('errcode') == 0:
                 logging.info("已删除token为{}的回调事件".format(call_token))
             else:
-                raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
+                pass
+                # raise UserError("删除事件失败！原因:{}".format(result.get('errmsg')))
         except ReadTimeout:
             raise UserError("网络连接超时")
         logging.info(">>>删除事件End...")
