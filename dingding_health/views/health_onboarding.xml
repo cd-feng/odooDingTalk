@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  引导  -->
+    <template id="dingding_health_onboarding_panel" name="dingding.health.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes" t-value="'o_onboarding_violet'" />
+            <t t-set="bg_image" t-value="'/dingding_health/static/src/img/dingding_health.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
+            <t t-set="close_model" t-value="'res.company'" />
+            <t t-call="base.onboarding_company_step" name="company_step" />
+        </t>
+    </template>
+
+
+</odoo>
