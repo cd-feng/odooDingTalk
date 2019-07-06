@@ -30,6 +30,7 @@ class DingDingSynchronous(models.TransientModel):
         for res in self:
             if res.department:
                 self.synchronous_dingding_department()
+                self.synchronous_dingding_department() # 重复的目的是先生成的子部门能关联到后生成的父部门
             if res.employee:
                 self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
             if res.partner:
