@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "钉钉办公-仪表盘",
-    'summary': """钉钉办公-仪表盘""",
-    'description': """ 钉钉办公-仪表盘 """,
+    'name': "钉钉办公-概览",
+    'summary': """钉钉办公-概览""",
+    'description': """ 钉钉办公-概览 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',

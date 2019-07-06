@@ -20,5 +20,6 @@
         'views/employee.xml',
         'views/department.xml',
         'views/dingding_health.xml',
+        'views/health_onboarding.xml',
     ],
 }

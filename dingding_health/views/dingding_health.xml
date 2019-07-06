@@ -5,7 +5,7 @@
         <field name="name">钉钉运动</field>
         <field name="model">dingding.health</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc">
+            <tree default_order="id desc" banner_route="/healths/dingding_health_onboarding_panel">
                 <field name="company_id"/>
                 <field name="department_id"/>
                 <field name="emp_id"/>
@@ -46,7 +46,7 @@
         <field name="name">钉钉运动</field>
         <field name="model">dingding.health</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" banner_route="/healths/dingding_health_onboarding_panel">
                 <field name="company_id"/>
                 <field name="department_id"/>
                 <field name="emp_id"/>
