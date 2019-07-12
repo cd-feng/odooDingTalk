@@ -18,7 +18,7 @@ class HrEmployeeReport(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司')
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
     department_id = fields.Many2one(comodel_name='hr.department', string=u'部门')
-    work_status = fields.Selection(string=u'入职状态', selection=[(1, '待入职'), (2, '在职'), (3, '离职')])
+    work_status = fields.Selection(string=u'入职状态', selection=[('1', '待入职'), ('2', '在职'), ('3', '离职')])
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_employee_dingding_report')
@@ -69,7 +69,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                 if result.get('errcode') == 0:
                     d_res = result['result']
                     for data_list in d_res['data_list']:
-                        sql = """UPDATE hr_employee SET work_status=1 WHERE din_id='{}'""".format(data_list)
+                        sql = """UPDATE hr_employee SET work_status='1' WHERE din_id='{}'""".format(data_list)
                         self._cr.execute(sql)
                     if 'next_cursor' in d_res:
                         offset = d_res['next_cursor']
@@ -107,7 +107,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                     if result.get('errcode') == 0:
                         d_res = result['result']
                         for data_list in d_res['data_list']:
-                            sql = """UPDATE hr_employee SET work_status=2,office_status={} WHERE din_id='{}'""".format(data_list, arr)
+                            sql = """UPDATE hr_employee SET work_status='2',office_status={} WHERE din_id='{}'""".format(data_list, arr)
                             self._cr.execute(sql)
                         if 'next_cursor' in d_res:
                             offset = d_res['next_cursor']
@@ -139,7 +139,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                 if result.get('errcode') == 0:
                     d_res = result['result']
                     for data_list in d_res['data_list']:
-                        sql = """UPDATE hr_employee SET work_status=3 WHERE din_id='{}'""".format(data_list)
+                        sql = """UPDATE hr_employee SET work_status='3' WHERE din_id='{}'""".format(data_list)
                         self._cr.execute(sql)
                     if 'next_cursor' in d_res:
                         offset = d_res['next_cursor']
