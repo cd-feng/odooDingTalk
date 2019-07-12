@@ -172,7 +172,7 @@ class DinDinWorkRecord(models.Model):
             'userid': user_id,
             'offset': offset,
             'limit': limit,
-            'status': 0,
+            'status': '0',
         }
         headers = {'Content-Type': 'application/json'}
         try:
@@ -305,7 +305,7 @@ class GetUserDingDingWorkRecord(models.TransientModel):
             'userid': user_id,
             'offset': offset,
             'limit': limit,
-            'status': 0,
+            'status': '0',
         }
         headers = {'Content-Type': 'application/json'}
         try:

@@ -16,20 +16,20 @@ class DingDingHrmDimissionList(models.Model):
     _rec_name = 'emp_id'
 
     REASONTYPE = [
-        (1, '家庭原因'),
-        (2, '个人原因'),
-        (3, '发展原因'),
-        (4, '合同到期不续签'),
-        (5, '协议解除'),
-        (6, '无法胜任工作'),
-        (7, '经济性裁员'),
-        (8, '严重违法违纪'),
-        (9, '其他'),
+        ('1', '家庭原因'),
+        ('2', '个人原因'),
+        ('3', '发展原因'),
+        ('4', '合同到期不续签'),
+        ('5', '协议解除'),
+        ('6', '无法胜任工作'),
+        ('7', '经济性裁员'),
+        ('8', '严重违法违纪'),
+        ('9', '其他'),
     ]
     PRESTATUS = [
-        (1, '待入职'),
-        (2, '试用期'),
-        (3, '正式'),
+        ('1', '待入职'),
+        ('2', '试用期'),
+        ('3', '正式'),
     ]
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
     last_work_day = fields.Datetime(string=u'最后工作时间')
@@ -39,7 +39,7 @@ class DingDingHrmDimissionList(models.Model):
     reason_type = fields.Selection(string=u'离职类型', selection=REASONTYPE)
     pre_status = fields.Selection(string=u'离职前工作状态', selection=PRESTATUS)
     handover_userid = fields.Many2one(comodel_name='hr.employee', string=u'离职交接人')
-    status = fields.Selection(string=u'离职状态', selection=[(1, '待离职'), (2, '已离职')])
+    status = fields.Selection(string=u'离职状态', selection=[('1', '待离职'), ('2', '已离职')])
     main_dept_name = fields.Many2one(comodel_name='hr.department', string=u'离职前主部门')
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
 

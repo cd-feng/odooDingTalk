@@ -28,13 +28,13 @@ class DingDingChat(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'群主', required=True)
-    show_history_type = fields.Selection(string=u'聊天历史消息', selection=[(0, '否'), (1, '是'), ], default=0,
+    show_history_type = fields.Selection(string=u'聊天历史消息', selection=[('0', '否'), ('1', '是'), ], default='0',
                                          help="新成员是否可查看聊天历史消息,新成员入群是否可查看最近100条聊天记录")
-    searchable = fields.Selection(string=u'群可搜索', selection=[(0, '否'), (1, '是'), ], default=0)
-    validation_type = fields.Selection(string=u'入群验证', selection=[(0, '否'), (1, '是'), ], default=0)
-    mention_all_authority = fields.Selection(string=u'@all 权限', selection=[(0, '所有人'), (1, '仅群主'), ], default=0)
-    chat_banned_type = fields.Selection(string=u'群禁言', selection=[(0, '不禁言'), (1, '全员禁言'), ], default=0)
-    management_ype = fields.Selection(string=u'管理类型', selection=[(0, '所有人可管理'), (1, '仅群主可管理')], default=1)
+    searchable = fields.Selection(string=u'群可搜索', selection=[('0', '否'), ('1', '是'), ], default='0')
+    validation_type = fields.Selection(string=u'入群验证', selection=[('0', '否'), ('1', '是'), ], default='0')
+    mention_all_authority = fields.Selection(string=u'@all 权限', selection=[('0', '所有人'), ('1', '仅群主'), ], default='0')
+    chat_banned_type = fields.Selection(string=u'群禁言', selection=[('0', '不禁言'), ('1', '全员禁言'), ], default='0')
+    management_ype = fields.Selection(string=u'管理类型', selection=[('0', '所有人可管理'), ('1', '仅群主可管理')], default='1')
     useridlist = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_and_hr_employee_rel',
                                   column1='chat_id', column2='emp_id', string=u'群成员', required=True)
     state = fields.Selection(string=u'状态', selection=[('new', '新建'), ('normal', '已建立'), ('close', '解散')],

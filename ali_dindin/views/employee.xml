@@ -27,7 +27,7 @@
                         </group>
                         <group>
                             <field name="work_status"/>
-                            <field name="office_status" attrs="{'invisible': [('work_status', '!=', 2)]}"/>
+                            <field name="office_status" attrs="{'invisible': [('work_status', '!=', '2')]}"/>
                             <field name="dingding_type" invisible="1"/>
                             <field name="din_isAdmin"/>
                             <field name="din_isBoss"/>
