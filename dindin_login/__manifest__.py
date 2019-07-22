@@ -6,14 +6,14 @@
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
-    'version': '1.0',
-    'depends': ['base', 'mail', 'ali_dindin', 'dindin_message'],
+    'version': '2.0',
+    'depends': ['base', 'mail', 'auth_oauth', 'ali_dindin', 'dindin_message'],
     'installable': True,
     'application': False,
     'auto_install': False,
     'data': [
         'data/system_conf.xml',
-        'views/login_templates.xml',
+        'data/auth_oauth_data.xml',
         'views/auto_templates.xml',
     ],
 }

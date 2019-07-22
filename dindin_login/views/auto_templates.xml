@@ -1,4 +1,9 @@
 <odoo>
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="OAuth Providers Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/dindin_login/static/src/scss/auth_oauth.scss"/>
+        </xpath>
+    </template>
     <template id="dindin_login.dingding_auto_login">
         <style>
             #loading{
@@ -24,7 +29,7 @@
                 dd.runtime.permission.requestAuthCode({
                     corpId,
                     onSuccess: function(result) {
-                    window.location.replace("/dingding/auto/login?authCode=" + result.code);
+                    window.location.replace("/dingding/auto/login?authcode=" + result.code);
                 },
                 onFail: function(err) {
                     alert("系统错误，请使用账号密码登陆。");
