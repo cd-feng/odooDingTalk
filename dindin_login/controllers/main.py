@@ -1,124 +1,171 @@
 # -*- coding: utf-8 -*-
 import base64
+import functools
 import hashlib
+import hmac
 import json
 import logging
 import time
-import requests
-from requests import ReadTimeout
-from odoo import http, _
-from odoo.addons.web.controllers.main import ensure_db, Home
-from odoo.http import request
 from urllib.parse import quote
-import hmac
-import odoo
+
+import requests
+import werkzeug.urls
+import werkzeug.utils
+from werkzeug.exceptions import BadRequest
+
+from odoo import SUPERUSER_ID, api, http
+from odoo import registry as registry_get
+from odoo.addons.auth_oauth.controllers.main import \
+    OAuthController as Controller
+from odoo.addons.auth_oauth.controllers.main import OAuthLogin as Home
+from odoo.addons.web.controllers.main import (login_and_redirect,
+                                              set_cookie_and_redirect)
+from odoo.exceptions import AccessDenied, UserError
+from odoo.http import request
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
 
-class DinDinLogin(Home, http.Controller):
+def fragment_to_query_string(func):
+    @functools.wraps(func)
+    def wrapper(self, *a, **kw):
+        kw.pop('debug', False)
+        if not kw:
+            return """<html><head><script>
+                var l = window.location;
+                var q = l.hash.substring(1);
+                var r = l.pathname + l.search;
+                if(q.length !== 0) {
+                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
+                    r = l.pathname + l.search + s + q;
+                }
+                if (r == l.pathname) {
+                    r = '/';
+                }
+                window.location = r;
+            </script></head><body></body></html>"""
+        return func(self, *a, **kw)
+    return wrapper
 
-    @http.route('/web/dindin_login', type='http', auth='public', website=True, sitemap=False)
-    def web_dindin_login(self, *args, **kw):
+
+class OAuthLogin(Home):
+    def list_providers(self):
         """
-        主页点击钉钉扫码登录route 将返回到扫码页面
-        :param args:
+        oauth2登录入口
         :param kw:
         :return:
         """
-        values = request.params.copy()
-        return request.render('dindin_login.signup', values)
+        result = super(OAuthLogin, self).list_providers()
+        for provider in result:
+            if 'dingtalk' in provider['auth_endpoint']:
+                return_url = request.httprequest.url_root + 'dingding/auto/login'
+                state = self.get_state(provider)
+                params = dict(
+                    response_type='code',
+                    appid=provider['client_id'],  # appid 是钉钉移动应用的appId
+                    redirect_uri=return_url,
+                    scope=provider['scope'],
+                    state=json.dumps(state),
+                )
+                provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
 
-    @http.route('/dindin_login/get_url', type='http', auth="none")
-    def get_url(self, **kw):
+        return result
+
+
+class OAuthController(Controller):
+    @http.route('/dingding/auto/login/in', type='http', auth='none')
+    def dingding_auto_login(self, **kw):
         """
-        拼接访问钉钉的验证用户的url
+        免登入口
         :param kw:
         :return:
         """
-        url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'sns_authorize')]).value
-        login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
-        # 获取传递过来当前的url和端口信息
-        local_url = request.params['local_url']
-        redirect_url = "{}/web/action_login".format(local_url)
-        new_url = "{}appid={}&response_type=code&scope=snsapi_login&redirect_uri={}".format(url, login_appid,
-                                                                                            redirect_url)
-        data = json.dumps({"encode_url": new_url, 'callback_url': redirect_url})
-        return data
+        logging.info(">>>用户正在使用免登...")
+        data = {'corp_id': request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_corpId')}
+        return request.render('dindin_login.dingding_auto_login', data)
 
-    @http.route('/web/action_login', type='http', auth="none")
-    def action_ding_login(self, redirect=None, **kw):
+    @http.route('/dingding/auto/login', type='http', auth='none')
+    @fragment_to_query_string
+    def auto_signin(self, **kw):
         """
-        接受到钉钉返回的数据时进入此方法
-        1. 根据返回的临时授权码获取员工的信息
-        2. 查找本地员工对应的关联系统用户。
-        3. 界面跳转
-        :param redirect:
+        通过获得的【免登授权码或者临时授权码】获取用户信息
         :param kw:
         :return:
         """
-        code = request.params['code']
-        if not code:
-            return self._do_err_redirect("错误的访问地址,请输入正确的访问地址")
-        logging.info(">>>获取的code为：{}".format(code))
-        result = self.getUserInfobyDincode(code)
-        logging.info(">>>result:{}".format(result))
-        if not result['state']:
-            logging.info(result['msg'])
-            return self._do_err_redirect(result['msg'])
-        return self._do_post_login(result['user'], redirect)
+        if kw.get('authcode'):  # 免登
+            auth_code = kw.get('authcode')
+            _logger.info("获得的auth_code: %s", auth_code)
+            userid = self.get_userid_by_auth_code(auth_code).get('userid')
+            state = dict(
+                d=request.session.db,
+                p='dingtalk',
+            )
 
-    def _do_post_login(self, user, redirect):
-        """
-        所有的验证都结束并正确后，需要界面跳转到主界面
-        :param user:  user-Object
-        :param redirect:
-        :return:
-        """
-        ensure_db()
-        request.params['login_success'] = False
-        if request.httprequest.method == 'GET' and redirect and request.session.uid:
-            return http.redirect_with_hash(redirect)
-        if not request.uid:
-            request.uid = odoo.SUPERUSER_ID
-        values = request.params.copy()
-        try:
-            values['databases'] = http.db_list()
-        except odoo.exceptions.AccessDenied:
-            values['databases'] = None
-        old_uid = request.uid
-        # 解密钉钉登录密码
-        logging.info(u'>>>:解密钉钉登录密码')
-        password = base64.b64decode(user.din_password)
-        password = password.decode(encoding='utf-8', errors='strict')
-        if password == '' or not password:
-            return self._do_err_redirect("用户:'{}'无法进行登录,请修改该用户登录密码并关联员工!".format(user.login))
-        # if password == '123456':
-        #     user.sudo().password = '123'
-        #     user.sudo()._set_password()
-        #     return self._do_err_redirect("'{}'密码已重置为123,再次扫描进行登录!".format(user.login)) 
-        uid = request.session.authenticate(request.session.db, user.login, password)
-        logging.info(u'>>>:获取的用户uid: {}'.format(uid))
-        if uid is not False:
-            request.params['login_success'] = True
-            if not redirect:
-                redirect = '/web'
-            logging.info(u'>>>:用户{}登录成功,将跳转到主界面'.format(user.login))
-            return http.redirect_with_hash(redirect)
-        request.uid = old_uid
-        return self._do_err_redirect("用户不存在或用户信息错误,无法完成登录,请联系管理员")
+        elif kw.get('code'):  # 扫码或密码登录
+            tmp_auth_code = kw.get('code', "")
+            _logger.info("获得的tmp_auth_code: %s", tmp_auth_code)
+            unionid = self.get_unionid_by_tmp_auth_code(tmp_auth_code)
+            userid = self.get_userid_by_unionid(unionid)
+            state = json.loads(kw['state'])
 
-    def getUserInfobyDincode(self, d_code):
+        mobile = self.get_user_mobile_by_userid(userid)
+        dbname = state['d']
+        if not http.db_filter([dbname]):
+            return BadRequest()
+        provider = 'dingtalk'
+        # provider = state['p']
+        context = state.get('c', {})
+        registry = registry_get(dbname)
+        with registry.cursor() as cr:
+            try:
+                env = api.Environment(cr, SUPERUSER_ID, context)
+                credentials = env['res.users'].sudo().auth_oauth_dingtalk(provider, mobile)
+                cr.commit()
+                action = state.get('a')
+                menu = state.get('m')
+                redirect = werkzeug.url_unquote_plus(state['r']) if state.get('r') else False
+                url = '/web'
+                if redirect:
+                    url = redirect
+                elif action:
+                    url = '/web#action=%s' % action
+                elif menu:
+                    url = '/web#menu_id=%s' % menu
+                resp = login_and_redirect(*credentials, redirect_url=url)
+                # Since /web is hardcoded, verify user has right to land on it
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
+                    resp.location = '/'
+                return resp
+            except AttributeError:
+                # auth_signup is not installed
+                _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
+                url = "/web/login?oauth_error=1"
+            except AccessDenied:
+                # oauth credentials not valid, user could be on a temporary session
+                _logger.info(
+                    'OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
+                url = "/web/login?oauth_error=3"
+                redirect = werkzeug.utils.redirect(url, 303)
+                redirect.autocorrect_location_header = False
+                return redirect
+            except Exception as e:
+                # signup error
+                _logger.exception("OAuth2: %s" % str(e))
+                url = "/web/login?oauth_error=2"
+
+        return set_cookie_and_redirect(url)
+
+    def get_unionid_by_tmp_auth_code(self, tmp_auth_code):
         """
         根据返回的临时授权码获取用户信息
-        :param d_code:
+        :param tmp_auth_code:用户授权的临时授权码code，只能使用一次
         :return:
         """
         url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'getuserinfo_bycode')]).value
         login_appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
         key = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appsecret')
-        current_milli_time = lambda: int(round(time.time() * 1000))
-        msg = str(current_milli_time())
+        msg = pycompat.to_text(int(time.time() * 1000))
         # ------------------------
         # 签名
         # ------------------------
@@ -126,7 +173,7 @@ class DinDinLogin(Home, http.Controller):
                              hashlib.sha256).digest()
         signature = quote(base64.b64encode(signature), 'utf-8')
         data = {
-            'tmp_auth_code': d_code
+            'tmp_auth_code': tmp_auth_code
         }
         headers = {'Content-Type': 'application/json'}
         new_url = "{}signature={}&timestamp={}&accessKey={}".format(url, signature, msg, login_appid)
@@ -136,72 +183,60 @@ class DinDinLogin(Home, http.Controller):
             logging.info(">>>钉钉登录获取用户信息返回结果{}".format(result))
             if result.get('errcode') == 0:
                 user_info = result.get('user_info')
-                # 通过unionid获取userid并得到系统的user
-                # userid = self.getUseridByUnionid(user_info.get('unionid'))
-                employee = request.env['hr.employee'].sudo().search([('din_unionid', '=', user_info.get('unionid'))])
-                if employee:
-                    if employee.user_id:
-                        return {'state': True, 'user': employee.user_id}
-                    else:
-                        return {'state': False, 'msg': "员工'{}'没有关联系统用户，请联系管理员维护!".format(employee.name)}
-                else:
-                    return {'state': False, 'msg': "钉钉员工'{}'在系统中不存在,请联系管理员维护!".format(user_info.get('nick'))}
-            else:
-                return {'state': False, 'msg': '钉钉登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
-        except ReadTimeout:
-            return {'state': False, 'msg': '网络连接超时'}
+                return user_info['unionid']
+            raise BadRequest(result)
+        except Exception as e:
+            return {'state': False, 'msg': "异常信息:{}".format(str(e))}
 
-    def getUseridByUnionid(self, unionid):
-        """根据unionid获取userid"""
+    def get_userid_by_unionid(self, unionid):
+        """
+        根据unionid获取userid
+        """
         url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'getUseridByUnionid')]).value
         token = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'token')]).value
         data = {'unionid': unionid}
-        result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
-        logging.info(">>>根据unionid获取userid获取结果:{}".format(result.text))
-        result = json.loads(result.text)
-        if result.get('errcode') == 0:
-            return result.get('userid')
-        else:
-            logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
+        try:
+            result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
+            logging.info(">>>根据unionid获取userid获取结果:{}".format(result.text))
+            result = json.loads(result.text)
+            if result.get('errcode') == 0:
+                return result.get('userid')
+            raise BadRequest(result)
+        except Exception as e:
+            return {'state': False, 'msg': "异常信息:{}".format(str(e))}
 
-    def _do_err_redirect(self, errmsg):
+    def get_userid_by_auth_code(self, auth_code):
         """
-        返回到钉钉扫码界面并返回信息errmsg
-        :param errmsg: 需要返回展示的信息
+        根据返回的免登授权码获取用户userid
+        :param auth_code:
         :return:
         """
-        err_values = request.params.copy()
-        err_values['error'] = _(errmsg)
-        http.redirect_with_hash('/web/login')
-        return request.render('dindin_login.signup', err_values)
+        url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'get_userid')]).value
+        token = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'token')]).value
+        url = "{}?access_token={}&code={}".format(url, token, auth_code)
+        try:
+            result = requests.get(url=url, timeout=5)
+            result = json.loads(result.text)
+            if result.get('errcode') == 0:
+                return result.get('userid')
+            raise BadRequest(result)
+        except Exception as e:
+            return {'state': False, 'msg': "异常信息:{}".format(str(e))}
 
-    @http.route('/web/dingding/account_login', type='http', auth='public', website=True, sitemap=False)
-    def web_dingding_account_login(self, *args, **kw):
+    def get_user_mobile_by_userid(self, userid):
         """
-        主页点击钉钉账号密码登录 重定向到钉钉登录页
-        :param args:
-        :param kw:
+        根据钉钉userid获取用户手机号
+        :param userid:
         :return:
         """
-        url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'sns_authorize')]).value
-        appid = request.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_login_appid')
-        redirect_url = '{}web/dingding/account_action_login'.format(request.httprequest.host_url)
-        new_url = '{}appid={}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri={}'.format(url, appid, redirect_url)
-        return http.redirect_with_hash(new_url)
-
-    @http.route('/web/dingding/account_action_login', type='http', auth="none")
-    def dingding_account_action_login(self, redirect=None, **kw):
-        """
-        :param redirect:
-        :param kw:
-        :return:
-        """
-        code = request.params['code']
-        if not code:
-            return self._do_err_redirect("错误的访问地址,请输入正确的访问地址")
-        logging.info(">>>获取的code为：{}".format(code))
-        result = self.getUserInfobyDincode(code)
-        logging.info(">>>result:{}".format(result))
-        if not result['state']:
-            logging.info(result['msg'])
-        return self._do_post_login(result['user'], redirect)
+        url = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'user_get')]).value
+        token = request.env['ali.dindin.system.conf'].sudo().search([('key', '=', 'token')]).value
+        data = {'userid': userid}
+        try:
+            result = requests.get(url="{}{}".format(url, token), params=data, timeout=20)
+            result = json.loads(result.text)
+            if result.get('errcode') == 0:
+                return result.get('mobile')
+            raise BadRequest(result)
+        except Exception as e:
+            return {'state': False, 'msg': "异常信息:{}".format(str(e))}

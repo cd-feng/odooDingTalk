@@ -1,25 +1,37 @@
 # -*- coding: utf-8 -*-
 import base64
 import logging
-from odoo import api, fields, models
+
 import pypinyin
+
+from odoo import api, fields, models
+from odoo.exceptions import AccessDenied
 
 _logger = logging.getLogger(__name__)
 
 
-class InheritResUsers(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     @api.model
-    def _get_defaultdin_pwd(self):
-        return base64.b64encode('123456'.encode('utf-8'))
+    def auth_oauth_dingtalk(self, provide_id, oauth_uid):
+        if provide_id == 'dingtalk':
+            user_ids = self.search([('oauth_uid', '=', oauth_uid)])
+        else:
+            user_ids = self.search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', oauth_uid)])
+        _logger.info("user: %s", user_ids)
+        if not user_ids or len(user_ids) > 1:
+            return AccessDenied
+        return (self.env.cr.dbname, user_ids[0].login, oauth_uid)
 
-    din_password = fields.Char(string='钉钉登录密码', default=_get_defaultdin_pwd, size=64)
-
-    def _set_password(self):
-        for user in self:
-            user.sudo().write({'din_password': base64.b64encode(user.password.encode('utf-8'))})
-        super(InheritResUsers, self)._set_password()
+    @api.model
+    def _check_credentials(self, password):
+        try:
+            return super(ResUsers, self)._check_credentials(password)
+        except AccessDenied:
+            res = self.sudo().search([('id', '=', self.env.uid), ('oauth_uid', '=', password)])
+            if not res:
+                raise
 
     def create_user_by_employee(self, employee_id, password, active=True):
         """
