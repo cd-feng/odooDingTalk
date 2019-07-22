@@ -96,7 +96,7 @@ class OAuthController(Controller):
         if kw.get('authcode'):  # 免登
             auth_code = kw.get('authcode')
             _logger.info("获得的auth_code: %s", auth_code)
-            userid = self.get_userid_by_auth_code(auth_code).get('userid')
+            userid = self.get_userid_by_auth_code(auth_code)
             state = dict(
                 d=request.session.db,
                 p='dingtalk',
