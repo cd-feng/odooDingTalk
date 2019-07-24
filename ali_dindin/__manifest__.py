@@ -11,18 +11,24 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/ir.model.access.csv',
         'security/dindin_security.xml',
         'data/system_conf.xml',
+        'views/web_widget.xml',
         'views/menu.xml',
         'views/systemc_conf.xml',
         'views/res_config_settings_views.xml',
         'views/department.xml',
+        'wizard/change_mobile.xml',
         'views/employee.xml',
         'views/partner.xml',
         'views/synchronous.xml',
         'views/feedback.xml',
+    ],
+    "qweb": [
+        "static/xml/*.xml"
     ],
     'images': ['static/description/index2.png','static/description/index1.png']
 }

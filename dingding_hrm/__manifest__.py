@@ -10,7 +10,7 @@
     'depends': ['base', 'ali_dindin'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'security/hrm_group.xml',
         'security/ir.model.access.csv',
@@ -20,6 +20,7 @@
         'views/hrm_list.xml',
         'views/hrm_dimission_list.xml',
         'views/add_employee.xml',
+        'wizard/hr_employee_report.xml',
     ],
     'qweb': [
          'static/xml/*.xml',

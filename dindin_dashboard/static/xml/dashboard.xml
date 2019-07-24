@@ -77,6 +77,10 @@
                                 钉钉管理后台</a>
                             <a href="https://open-dev.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-picture-o text-muted"/>
                                 钉钉开发者后台</a>
+                            <a href="https://wsdebug.dingtalk.com/" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-bug text-muted"/>
+                                钉钉JSAPI控制台</a>
+                            <a href="https://open-doc.dingtalk.com/microapp/serverapi2" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-book text-muted"/>
+                                钉钉开发文档</a>
                         </div>
                         <div class="clearfix"/>
                     </div>
@@ -118,34 +122,19 @@
                 <!--版本更新公告-->
                 <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_translations mt8">
-                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations"
-                           title="Translations"></i>
+                        <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations">
+                        </i>
                         <div class="o_web_settings_dashboard_header">
                             更新公告
                         </div>
                         <hr/>
                         <div>
-                            <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle">
-                                <h3>20190524</h3>
-                                <ul>
-                                    <li>重新定义仪表盘样式</li>
-                                    <li>加入单据备注消息功能，可通过配置消息模板来控制单据在产生备注消息时发送到钉钉群会话中</li>
-                                    <li>修复拉取已有群会话时，群主信息不正确的问题</li>
-                                    <li>加入主模块的问题反馈模型，用于后期可以直接通过该功能提交钉钉模块的问题</li>
-                                    <li>重新定义了消息模板，方便其他消息功能的拓展</li>
-                                    <li>支持备注消息中免登到ERP，前提是已配置好免登</li>
-                                </ul>
-                                <p>更新方式： 拉取最新代码，直接更新主模块`ali_dindin`即可</p>
-                                <p>当前版本的更新日志为手动添加，后续会设置为自动获取!!</p>
+                            <small class="text-muted text-left o_web_settings_dashboard_compact_subtitle dingding_update_information">
                             </small>
                         </div>
                         <div class="mt16">
                             <a href="https://github.com/suxuefeng20/odooDingDing" role="button" class="btn btn-primary btn-block o_load_translations"><strong>获取新版本</strong></a>
                         </div>
-<!--                        <div class="d-flex mt-2 o_web_settings_dashboard_pills">-->
-<!--                            <a href="" class="flex-grow-1 w-25 my_feedback_bug"><i class="fa fa-bug fa-rocket text-muted"/>-->
-<!--                                Bug反馈</a>-->
-<!--                        </div>-->
                         <div class="clearfix"/>
                     </div>
                 </div>

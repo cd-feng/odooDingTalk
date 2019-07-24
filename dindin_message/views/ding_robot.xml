@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dingding_robot_send_message_form_view" model="ir.ui.view">
+        <field name="name">群机器人发送消息</field>
+        <field name="model">dingding.robot.send.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="robot_id" placeholder="选择群机器人"/>
+                        <field name="chat_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="msg_type"/>
+                        <field name="at_user_ids" widget="many2many_tags"/>
+                        <field name="isAtAll"/>
+                    </group>
+                </group>
+                    <notebook>
+                        <page string="消息内容">
+                            <field name="msg_title" placeholder="消息标题..."
+                                   attrs="{'invisible': [('msg_type', 'in', ['text','image'])], 'required': [('msg_type', 'not in', ['text','image'])]}"/>
+                            <field name="text_message" placeholder="请输入要发送的消息内容..."
+                                   attrs="{'invisible': [('msg_type', '!=', 'text')], 'required': [('msg_type', '=', 'text')]}"/>
+                            <field name="card_message" placeholder="请输入要发送的消息内容, 支持markdown语法..."
+                                   attrs="{'invisible': [('msg_type', 'not in', ['action_card','feed_card'])], 'required': [('msg_type', 'in', ['action_card','feed_card'])]}"/>
+                            <field name="btns"
+                                   attrs="{'invisible': [('msg_type', 'not in', ['action_card','feed_card'])], 'required': [('msg_type', 'in', ['action_card','feed_card'])]}">
+                                <tree editable="top">
+                                    <field name="title"/>
+                                    <field name="actionURL"/>
+                                    <field name="pic_url"/>
+                                </tree>
+                            </field>
+                            <field name="markdown_message" placeholder="请输入要发送的消息内容, 支持markdown语法..."
+                                   attrs="{'invisible': [('msg_type', '!=', 'markdown')], 'required': [('msg_type', '=', 'markdown')]}"/>
+                            <field name="link_message" placeholder="请输入消息描述"
+                                   attrs="{'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
+                            <field name="link_url" placeholder="请输入点击消息时跳转的url地址..."
+                                   attrs="{'invisible': [('msg_type', '!=', 'link')], 'required': [('msg_type', '=', 'link')]}"/>
+                            <field name="link_image_url" placeholder="请输入消息图片url地址..."
+                                   attrs="{'invisible': [('msg_type', 'not in', ['link','image'])], 'required': [('msg_type', 'in', ['link','image'])]}"/>
+                        </page>
+                    </notebook>
+                <footer>
+                    <button string="发送" name="dingding_robot_send_message" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_robot_send_message_action" model="ir.actions.act_window">
+        <field name="name">发送群消息</field>
+        <field name="res_model">dingding.robot.send.message</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="dingding_robot_send_message_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="dingding_robot_tree_view" model="ir.ui.view">
+        <field name="name">群机器人</field>
+        <field name="model">dingding.robot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="webhook"/>
+                <field name="chat_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingding_robot_form_view" model="ir.ui.view">
+        <field name="name">群机器人</field>
+        <field name="model">dingding.robot</field>
+        <field name="arch" type="xml">
+            <form string="群机器人">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(dingding_robot_send_message_action)d" 
+                                type="action" 
+                                string="发送消息" 
+                                context="{'search_default_robot_id': [active_id], 'default_robot_id': active_id}"
+                                class="oe_stat_button" icon="fa-group">
+                        </button>
+                        <button name="test_robot_connection" type="object" string="测试连接" icon="fa-television"/>
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="webhook"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="chat_id"/>
+                        </group>
+                        <group>
+                            <field name="remarks" placeholder="描述说明"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_robot_action" model="ir.actions.act_window">
+        <field name="name">群机器人</field>
+        <field name="res_model">dingding.robot</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dingding_robot_menu" name="群机器人" parent="ali_dindin.message_menu" sequence="4"
+                action="dingding_robot_action"/>
+</odoo>

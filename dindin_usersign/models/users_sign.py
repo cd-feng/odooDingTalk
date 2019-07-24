@@ -89,7 +89,7 @@ class DinDinUsersSignLine(models.Model):
     _description = "用户签到记录列表"
     _rec_name = 'emp_id'
 
-    signs_id = fields.Many2one(comodel_name='dindin.department.signs', string=u'签到', ondelete='cascade')
+    signs_id = fields.Many2one(comodel_name='dindin.users.signs', string=u'签到', ondelete='cascade')
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
     checkin_time = fields.Datetime(string=u'签到时间')
     place = fields.Char(string='签到地址')

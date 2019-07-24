@@ -23,17 +23,18 @@ class DingDingChat(models.Model):
         return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     chat_id = fields.Char(string='群会话Id')
+    chat_icon = fields.Char(string='群头像mediaId')
     name = fields.Char(string='群名称', required=True)
     company_id = fields.Many2one(comodel_name='res.company', string=u'公司',
                                  default=lambda self: self.env.user.company_id.id)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'群主', required=True)
-    show_history_type = fields.Selection(string=u'聊天历史消息', selection=[(0, '否'), (1, '是'), ], default=0,
+    show_history_type = fields.Selection(string=u'聊天历史消息', selection=[('0', '否'), ('1', '是'), ], default='0',
                                          help="新成员是否可查看聊天历史消息,新成员入群是否可查看最近100条聊天记录")
-    searchable = fields.Selection(string=u'群可搜索', selection=[(0, '否'), (1, '是'), ], default=0)
-    validation_type = fields.Selection(string=u'入群验证', selection=[(0, '否'), (1, '是'), ], default=0)
-    mention_all_authority = fields.Selection(string=u'@all 权限', selection=[(0, '所有人'), (1, '仅群主'), ], default=0)
-    chat_banned_type = fields.Selection(string=u'群禁言', selection=[(0, '不禁言'), (1, '全员禁言'), ], default=0)
-    management_ype = fields.Selection(string=u'管理类型', selection=[(0, '所有人可管理'), (1, '仅群主可管理')], default=1)
+    searchable = fields.Selection(string=u'群可搜索', selection=[('0', '否'), ('1', '是'), ], default='0')
+    validation_type = fields.Selection(string=u'入群验证', selection=[('0', '否'), ('1', '是'), ], default='0')
+    mention_all_authority = fields.Selection(string=u'@all 权限', selection=[('0', '所有人'), ('1', '仅群主'), ], default='0')
+    chat_banned_type = fields.Selection(string=u'群禁言', selection=[('0', '不禁言'), ('1', '全员禁言'), ], default='0')
+    management_ype = fields.Selection(string=u'管理类型', selection=[('0', '所有人可管理'), ('1', '仅群主可管理')], default='1')
     useridlist = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_and_hr_employee_rel',
                                   column1='chat_id', column2='emp_id', string=u'群成员', required=True)
     state = fields.Selection(string=u'状态', selection=[('new', '新建'), ('normal', '已建立'), ('close', '解散')],
@@ -45,6 +46,7 @@ class DingDingChat(models.Model):
     image = fields.Binary("照片", default=_default_image, attachment=True)
     image_medium = fields.Binary("Medium-sized photo", attachment=True)
     image_small = fields.Binary("Small-sized photo", attachment=True)
+    robot_count = fields.Integer(string=u'群机器人数', compute='get_robot_count')
     active = fields.Boolean(default=True)
 
     @api.model
@@ -56,6 +58,26 @@ class DingDingChat(models.Model):
     def write(self, values):
         tools.image_resize_images(values)
         return super(DingDingChat, self).write(values)
+
+    @api.multi
+    def get_robot_count(self):
+        """
+        获取当前群的群机器人数量
+        :return:
+        """
+        for res in self:
+            res.robot_count = self.env['dingding.robot'].search_count([('chat_id', '=', res.id)])
+
+    @api.multi
+    def action_view_robot(self):
+        """
+        跳转到群机器人列表
+        :return:
+        """
+        self.ensure_one()
+        action = self.env.ref('dindin_message.dingding_robot_action').read()[0]
+        action['domain'] = [('chat_id', '=', self.id)]
+        return action
 
     @api.multi
     def create_dingding_chat(self):
@@ -196,6 +218,16 @@ class DingDingChatUserModelAdd(models.TransientModel):
     user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_chat_user_add_and_hr_employee_rel',
                                 column1='model_id', column2='emp_id', string=u'新群成员', required=True)
 
+    @api.onchange('on_user_ids')
+    def _onchange_on_user_ids(self):
+        """待添加人员下拉列表不显示当前群内成员
+        """
+        if self.on_user_ids:
+            domain = [('id','not in', self.on_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
+
     @api.model
     def default_get(self, fields):
         res = super(DingDingChatUserModelAdd, self).default_get(fields)
@@ -254,6 +286,16 @@ class DingDingChatUserModelDel(models.TransientModel):
                                     relation='dingding_chat_old_user_del_and_hr_employee_rel',
                                     column1='model_id', column2='emp_id', string=u'群成员', required=True)
 
+    @api.onchange('old_user_ids')
+    def _onchange_old_user_ids(self):
+        """待删除人员下拉列表只显示当前群内成员
+        """
+        if self.old_user_ids:
+            domain = [('id','in', self.old_user_ids.ids)]
+            return {
+            'domain': {'user_ids': domain}
+            }
+
     @api.model
     def default_get(self, fields):
         res = super(DingDingChatUserModelDel, self).default_get(fields)
@@ -305,9 +347,9 @@ class DingDingSendChatMessage(models.TransientModel):
     message = fields.Text(string=u'消息内容', required=True)
 
     @api.multi
-    def send_dingding_message(self):
+    def send_dingding_test_message(self):
         """
-        发送群会话消息
+        点击群会话发送群消息按钮
         :return:
         """
         chat_id = self.env.context.get('active_id', False)
@@ -360,6 +402,37 @@ class DingDingSendChatMessage(models.TransientModel):
             logging.info(">>>返回结果{}".format(result))
         except ReadTimeout:
             logging.info("发送群会话:'{}'时，网络连接超时！".format(ding_chat.name))
+        return True
+
+    @api.model
+    def send_work_message(self, userstr, message):
+        """
+        发送工作消息到指定员工列表
+        :param userstr 员工列表  string
+        :param message 消息内容
+        :return:
+        """
+        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'send_work_message')]).value
+        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        data = {
+            'agent_id': self.env['ir.config_parameter'].sudo().get_param('ali_dindin.din_agentid'),  # 应用id
+            'userid_list': userstr,
+            'msg': {
+                "msgtype": "markdown",
+                "markdown": {
+                    "title": "来自ERP的消息",
+                    "text": message
+                }
+            },
+        }
+        headers = {'Content-Type': 'application/json'}
+        try:
+            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=1)
+            result = json.loads(result.text)
+            logging.info(">>>返回结果{}".format(result))
+        except ReadTimeout:
+            logging.info("网络连接超时！")
+        return True
 
 
 class DingDingChatList(models.TransientModel):
@@ -397,6 +470,7 @@ class DingDingChatList(models.TransientModel):
                             user_list.append(user[0].id)
                     data = {
                         'chat_id': chat_info.get('chatid'),
+                        'chat_icon': chat_info.get('icon'),
                         'name': chat_info.get('name'),
                         'employee_id': employee[0].id,
                         'show_history_type': chat_info.get('showHistoryType'),

@@ -13,7 +13,7 @@
         </xpath>
     </template>
 
-    <menuitem name="仪表盘"
+    <menuitem name="概览"
               id="dindin_dashboard_menu"
               parent="ali_dindin.main_menu"
               sequence="1"

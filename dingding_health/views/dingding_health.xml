@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="dingding_health_tree_view" model="ir.ui.view">
+        <field name="name">钉钉运动</field>
+        <field name="model">dingding.health</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" banner_route="/healths/dingding_health_onboarding_panel">
+                <field name="company_id"/>
+                <field name="department_id"/>
+                <field name="emp_id"/>
+                <field name="health_date"/>
+                <field name="health_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingding_health_form_view" model="ir.ui.view">
+        <field name="name">钉钉运动</field>
+        <field name="model">dingding.health</field>
+        <field name="arch" type="xml">
+            <form string="钉钉运动">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="department_id"/>
+                            <field name="emp_id"/>
+                        </group>
+                        <group>
+                            <field name="health_date"/>
+                            <field name="health_count"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_health_kanban">
+        <field name="name">钉钉运动</field>
+        <field name="model">dingding.health</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" banner_route="/healths/dingding_health_onboarding_panel">
+                <field name="company_id"/>
+                <field name="department_id"/>
+                <field name="emp_id"/>
+                <field name="health_date"/>
+                <field name="health_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="emp_id"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <field name="department_id" options="{'color_field': 'color'}"/>
+                                <ul>
+                                    <li id="last_login"/>
+                                    <li>
+                                        <strong>
+                                            <field name="health_date"/>
+                                        </strong>
+                                        <strong>
+                                            步数:
+                                            <field name="health_count"/>
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="dingding_health_action" model="ir.actions.act_window">
+        <field name="name">钉钉运动</field>
+        <field name="res_model">dingding.health</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_health_search">
+        <field name="model">dingding.health</field>
+        <field name="arch" type="xml">
+            <search string="钉钉运动">
+                <field name="company_id"/>
+                <field name="department_id"/>
+                <field name="emp_id"/>
+                <field name="health_date"/>
+                <field name="health_count"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_emp_id" string="员工" domain="[]"
+                            context="{'group_by':'emp_id'}"/>
+                    <filter name="group_by_department_id" string="部门" domain="[]"
+                            context="{'group_by':'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="钉钉运动" id="dingding_health_menu"
+              parent="dingding_health_main_menu" sequence="1" action="dingding_health_action"/>
+
+</odoo>

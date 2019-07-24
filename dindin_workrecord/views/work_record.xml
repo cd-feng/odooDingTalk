@@ -35,6 +35,15 @@
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_attachment_view" class="oe_stat_button" icon="fa-book" type="object">
+                            <field name="attachment_number" widget="statinfo" string="附件管理"/>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="标题,如XX通知消息..."
@@ -99,7 +108,8 @@
                                 </div>
                                 <field name="emp_id" options="{'color_field': 'color'}"/>
                                 <strong class="o_kanban_record_title" options="{'color_field': 'color'}">
-                                    &amp;nbsp;-&amp;nbsp;<field name="record_time"/>
+                                    &amp;nbsp;-&amp;nbsp;
+                                    <field name="record_time"/>
                                 </strong>
                                 <ul>
                                     <li id="last_login"/>
@@ -166,6 +176,15 @@
                     <field name="record_state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_attachment_view" class="oe_stat_button" icon="fa-book" type="object">
+                            <field name="attachment_number" widget="statinfo" string="附件管理"/>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="标题,如XX通知消息..."

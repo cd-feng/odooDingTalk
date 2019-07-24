@@ -4,6 +4,7 @@ import json
 import logging
 import time
 import requests
+from requests import ReadTimeout
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -29,6 +30,7 @@ class DingDingSynchronous(models.TransientModel):
         for res in self:
             if res.department:
                 self.synchronous_dingding_department()
+                self.synchronous_dingding_department() # 重复的目的是先生成的子部门能关联到后生成的父部门
             if res.employee:
                 self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
             if res.partner:
@@ -113,7 +115,21 @@ class DingDingSynchronous(models.TransientModel):
                     'work_email': user.get('email'),  # email
                     'din_jobnumber': user.get('jobnumber'),  # 工号
                     'department_id': department[0].id,  # 部门
+                    'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
+                    'din_isSenior': user.get('isSenior'),  # 高管模式
+                    'din_isAdmin': user.get('isAdmin'),  # 是管理员
+                    'din_isBoss': user.get('isBoss'),  # 是老板
+                    'din_isLeader': user.get('isLeader'),  # 是部门主管
+                    'din_isHide': user.get('isHide'),  # 隐藏手机号
+                    'din_active': user.get('active'),  # 是否激活
+                    'din_isLeaderInDepts': user.get('isLeaderInDepts'),  # 是否为部门主管
+                    'din_orderInDepts': user.get('orderInDepts'),  # 所在部门序位
                 }
+                # 支持显示国际手机号
+                if user.get('stateCode') != '86':
+                    data.update({
+                        'mobile_phone':'+{}-{}'.format(user.get('stateCode'),user.get('mobile')),
+                    })
                 if user.get('hiredDate'):
                     time_stamp = self.get_time_stamp(user.get('hiredDate'))
                     data.update({
@@ -127,7 +143,11 @@ class DingDingSynchronous(models.TransientModel):
                         logging.info(">>>--------------------------------")
                         logging.info(">>>SSL异常:{}".format(e))
                         logging.info(">>>--------------------------------")
-                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('name', '=', user.get('name'))])
+                if user.get('department'):
+                        dep_din_ids = user.get('department')
+                        dep_list = self.env['hr.department'].sudo().search([('din_id', 'in', dep_din_ids)])
+                        data.update({'department_ids': [(6, 0, dep_list.ids)]})
+                employee = self.env['hr.employee'].search(['|', ('din_id', '=', user.get('userid')), ('mobile_phone', '=', user.get('mobile'))])
                 if employee:
                     employee.sudo().write(data)
                 else:
