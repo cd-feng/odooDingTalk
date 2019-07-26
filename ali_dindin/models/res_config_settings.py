@@ -45,11 +45,6 @@ class ResConfigSettings(models.TransientModel):
         help='钉钉办公-回调管理.\n'
         '- This installs the module dindin_callback.'
     )
-    module_dindin_dashboard = fields.Boolean(
-        '钉钉办公-仪表盘',
-        help='钉钉办公-仪表盘.\n'
-        '- This installs the module dindin_dashboard.'
-    )
     module_dindin_login = fields.Boolean(
         '钉钉办公-扫码与免登',
         help='钉钉办公-扫码与免登.\n'
