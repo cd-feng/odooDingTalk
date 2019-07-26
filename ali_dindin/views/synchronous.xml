@@ -44,18 +44,18 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="数据同步" id="dingding_bash_data_synchronous_menu" parent="ali_dindin.bash_menu" sequence="1"
+    <menuitem name="数据同步" id="dingding_bash_data_synchronous_menu" parent="ali_dindin.bash_menu" sequence="4"
               action="dingding_bash_data_synchronous_action" groups="ali_dindin.dd_synchronous_group"/>
 
-    <menuitem name="部门" id="dingding_employee_menu"  parent="ali_dindin.bash_menu" sequence="5"
+    <menuitem name="部门" id="dingding_employee_menu"  parent="ali_dindin.bash_menu" sequence="1"
           groups="hr.group_hr_user"
           action="hr.open_module_tree_department"/>
 
-    <menuitem name="员工" id="dingding_department_menu" parent="ali_dindin.bash_menu" sequence="6"
+    <menuitem name="员工" id="dingding_department_menu" parent="ali_dindin.bash_menu" sequence="2"
           groups="hr.group_hr_manager,hr.group_hr_user,base.group_user"
           action="hr.open_view_employee_list_my"/>
 
-    <menuitem name="联系人" id="dingding_partner_menu" parent="ali_dindin.bash_menu" sequence="7"
+    <menuitem name="联系人" id="dingding_partner_menu" parent="ali_dindin.bash_menu" sequence="3"
           groups="base.group_user"
           action="base.action_partner_form"/>
 
