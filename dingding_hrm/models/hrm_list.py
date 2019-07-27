@@ -46,7 +46,7 @@ class GetDingDingHrmList(models.TransientModel):
     @api.onchange('is_all_emp')
     def onchange_all_emp(self):
         if self.is_all_emp:
-            emps = self.env['hr.employee'].search([('din_id', '!=', '')])
+            emps = self.env['hr.employee'].search([('ding_id', '!=', '')])
             self.emp_ids = [(6, 0, emps.ids)]
 
     @api.multi
@@ -58,14 +58,14 @@ class GetDingDingHrmList(models.TransientModel):
         logging.info(">>>获取钉钉员工花名册start")
         if len(self.emp_ids) > 20:
             raise UserError("钉钉仅支持批量查询小于等于20个员工!")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_list')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_list')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         user_str = ''
         for user in self.emp_ids:
             if user_str == '':
-                user_str = user_str + "{}".format(user.din_id)
+                user_str = user_str + "{}".format(user.ding_id)
             else:
-                user_str = user_str + ",{}".format(user.din_id)
+                user_str = user_str + ",{}".format(user.ding_id)
         data = {'userid_list': user_str}
         try:
             headers = {'Content-Type': 'application/json'}
@@ -82,7 +82,7 @@ class GetDingDingHrmList(models.TransientModel):
                             'field_code': field_list.get('field_code'),
                             'field_name': field_list.get('field_name'),
                         }))
-                    emp = self.env['hr.employee'].search([('din_id', '=', res.get('userid'))])
+                    emp = self.env['hr.employee'].search([('ding_id', '=', res.get('userid'))])
                     if emp:
                         hrm = self.env['dingding.hrm.list'].search([('emp_id', '=', emp[0].id)])
                         if hrm:

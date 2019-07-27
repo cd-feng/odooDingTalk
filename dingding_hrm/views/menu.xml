@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem name="智能人事" id="zhineng_hrm_menu" parent="ali_dindin.main_menu" sequence="75"
+    <menuitem name="智能人事" id="zhineng_hrm_menu" parent="dingding_base.main_menu" sequence="75"
               groups="dingding_hrm.personnel"/>
 
 </odoo>

@@ -23,15 +23,15 @@ class HrEmployee(models.Model):
         :return:
         """
         if self.env['ir.config_parameter'].sudo().get_param('dingding_health.auto_user_health_info'):
-            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_health_list')]).value
-            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+            url = self.env['dingding.parameter'].search([('key', '=', 'get_health_list')]).value
+            token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
             for res in self:
-                if res.din_id:
+                if res.ding_id:
                     today = datetime.date.today()
                     formatted_today = today.strftime('%Y%m%d')
                     data = {
                         'type': 0,
-                        'object_id': res.din_id,
+                        'object_id': res.ding_id,
                         'stat_dates': formatted_today,
                     }
                     headers = {'Content-Type': 'application/json'}
@@ -56,10 +56,10 @@ class HrEmployee(models.Model):
         :return:
         """
         for res in self:
-            url = self.env['ali.dindin.system.conf'].search([('key', '=', 'get_user_health_status')]).value
-            token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-            if res.din_id:
-                data = {'userid': res.din_id}
+            url = self.env['dingding.parameter'].search([('key', '=', 'get_user_health_status')]).value
+            token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
+            if res.ding_id:
+                data = {'userid': res.ding_id}
                 headers = {'Content-Type': 'application/json'}
                 try:
                     result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data),

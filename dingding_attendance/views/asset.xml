@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingding_attendance_asset" name="Dindin Attendance Asset" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingding_attendance/static/src/js/simple_groups.js"></script>
+            <script type="text/javascript" src="/dingding_attendance/static/src/js/attendance_list.js"></script>
+            <script type="text/javascript" src="/dingding_attendance/static/src/js/dingding_plan.js"></script>
+            <script type="text/javascript" src="/dingding_attendance/static/src/js/hr_leaves_list.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

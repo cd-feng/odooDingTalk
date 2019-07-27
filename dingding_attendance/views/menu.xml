@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="考勤" id="attendance_menu" parent="dingding_base.main_menu" sequence="5"/>
+
+        <menuitem name="分割一" id="attendance_one_menu" parent="attendance_menu" sequence="1"/>
+
+        <menuitem name="分割二" id="attendance_two_menu" parent="attendance_menu" sequence="2"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--    <record id="dd_attendance_groups_group" model="res.groups">-->
+<!--        <field name="name">操作钉钉考勤组</field>-->
+<!--        <field name="category_id" ref="dingding_base.dingding_main_groups"/>-->
+<!--        <field name="users" eval="[-->
+<!--            (4, ref('base.user_admin'))-->
+<!--		]"/>-->
+<!--    </record>-->
+
+    <record model="ir.module.category" id="dd_attendance_group">
+        <field name="name">钉钉考勤</field>
+        <field name="visible" eval="0"/>
+    </record>
+
+    <record id="dd_attendance_user_group" model="res.groups">
+        <field name="name">用户:仅自己记录</field>
+        <field name="category_id" ref="dingding_attendance.dd_attendance_group"/>
+    </record>
+
+    <record id="dd_attendance_admin_group" model="res.groups">
+        <field name="name">用户:所有记录</field>
+        <field name="category_id" ref="dingding_attendance.dd_attendance_group"/>
+        <field name="implied_ids" eval="[(4, ref('dd_attendance_user_group'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
+    </record>
+
+    <record id="dd_attendance_admin_group_rule" model="ir.rule">
+        <field name="name">员工打卡结果列表:所有记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_result"/>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_admin_group'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+    <record id="dd_attendance_user_group_rule" model="ir.rule">
+        <field name="name">员工打卡结果列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_result"/>
+        <field name="domain_force">[('emp_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
+    </record>
+
+</odoo>

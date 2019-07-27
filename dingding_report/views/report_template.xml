@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingding_report_template_template" name="DingDing report Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingding_report/static/src/js/report_template.js"></script>
+        </xpath>
+    </template>
+
+    <record id="dingding_report_template_tree_view" model="ir.ui.view">
+        <field name="name">日志模板</field>
+        <field name="model">dingding.report.template</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url" widget="image_url" class="oe_image_small" width="50px" height="50px"/>
+                <field name="report_code"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_report_template_kanban">
+        <field name="name">日志模板</field>
+        <field name="model">dingding.report.template</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" js_class="dingding_report_template_kanban">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url" widget="image_url" class="oe_image_small" width="50px" height="50px"/>
+                <field name="report_code"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <div class="o_kanban_image_fill_left d-none d-md-block">
+                                <field name="icon_url" widget="image_url" width="100px" height="100px"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <field name="company_id" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingding_report_template_action">
+        <field name="name">日志模板</field>
+        <field name="res_model">dingding.report.template</field>
+        <field name="view_mode">kanban,tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_report_template_search">
+        <field name="model">dingding.report.template</field>
+        <field name="arch" type="xml">
+            <search string="日志模板">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="report_code"/>
+                <field name="url"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="日志" id="dingding_report_main_menu" parent="dingding_base.main_menu" sequence="60"/>
+
+    <menuitem id="dingding_report_template_menu" name="日志模板" parent="dingding_report_main_menu" sequence="1" action="dingding_report_template_action"/>
+
+
+</odoo>

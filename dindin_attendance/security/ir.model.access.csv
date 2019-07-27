@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dindin_simple_groups,dindin.simple.groups,model_dindin_simple_groups,base.group_user,1,0,0,1
-access_dingding_attendance,dingding.attendance,model_dingding_attendance,base.group_user,1,1,1,1
-access_dindin_attendance_list,access_dindin_attendance_list,model_dindin_attendance_list,base.group_user,1,0,0,0
-
-
