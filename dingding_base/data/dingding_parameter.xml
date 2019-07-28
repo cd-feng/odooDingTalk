@@ -155,7 +155,7 @@
 			<field name="name">钉钉-定时更新token值</field>
 			<field name="model_id" ref="model_dingding_api_tools"/>
 			<field name="type">ir.actions.server</field>
-			<field name="active">False</field>
+			<field name="active">True</field>
 			<field name="state">code</field>
 			<field name="code">env['dingding.api.tools'].get_token()</field>
 			<field name="interval_number">90</field>

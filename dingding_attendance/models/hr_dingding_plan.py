@@ -31,21 +31,33 @@ class HrDingdingPlanTran(models.TransientModel):
         :return:
         """
         self.ensure_one()
+        self.start_pull_plan_lists(str(self.work_date))
+        action = self.env.ref('dingding_attendance.hr_dingding_plan_action')
+        action_dict = action.read()[0]
+        return action_dict
+
+    @api.model
+    def start_pull_plan_lists(self, work_date):
+        """
+        拉取排班信息
+        :param work_date: string 查询的日期
+        :return:
+        """
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_listschedule')
         offset = 0
         size = 200
         while True:
-            data = {'offset': offset, 'size': size, 'workDate': str(self.work_date)}
+            data = {'offset': offset, 'size': size, 'workDate': work_date}
             result = self.env['dingding.api.tools'].send_post_request(url, token, data)
             if result.get('errcode') == 0:
                 res_result = result['result']
                 for schedules in res_result['schedules']:
                     plan_data = {
-                        'class_setting_id': schedules['class_setting_id'],
-                        'check_type': schedules['check_type'],
-                        'plan_id': schedules['plan_id'],
-                        'class_id': schedules['class_id'],
-                        'plan_check_time': schedules['plan_check_time'],
+                        'class_setting_id': schedules['class_setting_id'] if 'class_setting_id' in schedules else "",
+                        'check_type': schedules['check_type'] if 'check_type' in schedules else "",
+                        'plan_id': schedules['plan_id'] if 'plan_id' in schedules else "",
+                        'class_id': schedules['class_id'] if 'class_id' in schedules else "",
+                        'plan_check_time': schedules['plan_check_time'] if 'plan_check_time' in schedules else False,
                     }
                     simple = self.env['dingding.simple.groups'].search([('group_id', '=', schedules['group_id'])], limit=1)
                     employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)
@@ -64,6 +76,4 @@ class HrDingdingPlanTran(models.TransientModel):
                     offset += 1
             else:
                 raise UserError("获取企业考勤排班详情失败: {}".format(result['errmsg']))
-        action = self.env.ref('dingding_attendance.hr_dingding_plan_action')
-        action_dict = action.read()[0]
-        return action_dict
+        return True

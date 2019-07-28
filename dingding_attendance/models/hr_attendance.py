@@ -63,7 +63,7 @@ class HrAttendanceResult(models.Model):
 
 class HrAttendanceTransient(models.TransientModel):
     _name = 'hr.attendance.tran'
-    _description = '获取钉钉考勤信息'
+    _description = '获取钉钉考勤结果'
 
     start_date = fields.Datetime(string=u'开始时间', required=True)
     stop_date = fields.Datetime(string=u'结束时间', required=True, default=str(fields.datetime.now()))
@@ -100,28 +100,37 @@ class HrAttendanceTransient(models.TransientModel):
             logging.info(">>>开始获取{}员工段数据".format(u))
             date_list = self.day_cut(self.start_date, self.stop_date, 7)
             for d in date_list:
-                logging.info(">>>开始获取{}时间段数据".format(d))
-                offset = 0
-                limit = 50
-                while True:
-                    data = {
-                        'workDateFrom': d[0],  
-                        'workDateTo': d[1],  
-                        'userIdList': u,
-                        'offset': offset,
-                        'limit': limit,
-                    }
-                    has_more = self.send_post_dindin(data)
-                    logging.info(">>>是否还有剩余数据：{}".format(has_more))
-                    if not has_more:
-                        break
-                    else:
-                        offset = offset + limit
-                        logging.info(">>>准备获取剩余数据中的第{}至{}条".format(offset+1, offset+limit))
+                self.start_pull_attendance_list(d[0], d[1], u)
         logging.info(">>>根据日期获取员工打卡信息结束...")
         action = self.env.ref('dingding_attendance.hr_attendance_result_action')
         action_dict = action.read()[0]
         return action_dict
+
+    @api.model
+    def start_pull_attendance_list(self, from_date, to_date, user_list):
+        """
+        准备数据进行拉取考勤结果
+        :return:
+        """
+        logging.info(">>>开始获取{}-{}时间段数据".format(from_date, to_date))
+        offset = 0
+        limit = 50
+        while True:
+            data = {
+                'workDateFrom': from_date,
+                'workDateTo': to_date,
+                'userIdList': user_list,
+                'offset': offset,
+                'limit': limit,
+            }
+            has_more = self.send_post_dindin(data)
+            logging.info(">>>是否还有剩余数据：{}".format(has_more))
+            if not has_more:
+                break
+            else:
+                offset = offset + limit
+                logging.info(">>>准备获取剩余数据中的第{}至{}条".format(offset + 1, offset + limit))
+        return True
 
     @api.model
     def send_post_dindin(self, data):
