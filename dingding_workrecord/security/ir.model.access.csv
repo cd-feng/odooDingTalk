@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dindin_work_record,dindin.work.record,model_dindin_work_record,base.group_user,1,1,1,1
-access_dindin_work_record_list,dindin.work.record.list,model_dindin_work_record_list,base.group_user,1,1,1,1
-
