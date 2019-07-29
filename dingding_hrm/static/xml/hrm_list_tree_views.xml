@@ -2,8 +2,8 @@
 <templates>
 
     <t t-name="HrmListView.get_hrm_button">
-        <button type="button" class="btn btn-secondary o_button_get_dingding_hrm_list">
-            获取钉钉员工花名册
+        <button type="button" class="btn btn-secondary o_button_get_dingding_employee_roster_list">
+            获取员工花名册
         </button>
     </t>
 

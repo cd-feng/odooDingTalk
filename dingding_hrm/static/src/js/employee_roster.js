@@ -1,4 +1,4 @@
-odoo.define('dingding.hrm.list.tree', function (require) {
+odoo.define('dingding.employee.roster.tree.button', function (require) {
     "use strict";
 
     let core = require('web.core');
@@ -7,13 +7,13 @@ odoo.define('dingding.hrm.list.tree', function (require) {
     let viewRegistry = require('web.view_registry');
     let qweb = core.qweb;
 
-    let DingDingHrmListController = ListController.extend({
+    let DingDingEmployeeRosterController = ListController.extend({
         buttons_template: 'HrmListView.hrm_buttons',
         renderButtons: function () {
             this._super.apply(this, arguments);
             if (this.$buttons) {
                 var self = this;
-                this.$buttons.on('click', '.o_button_get_dingding_hrm_list', function () {
+                this.$buttons.on('click', '.o_button_get_dingding_employee_roster_list', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: 'dingding.get.hrm.list',
@@ -26,11 +26,11 @@ odoo.define('dingding.hrm.list.tree', function (require) {
         }
     });
 
-    let GetDingDingHrmListView = ListView.extend({
+    let GetDingDingEmployeeRosterView = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
-            Controller: DingDingHrmListController,
+            Controller: DingDingEmployeeRosterController,
         }),
     });
 
-    viewRegistry.add('dingding_hrm_list_tree', GetDingDingHrmListView);
+    viewRegistry.add('dingding_employee_roster_tree', GetDingDingEmployeeRosterView);
 });

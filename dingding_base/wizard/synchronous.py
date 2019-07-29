@@ -47,7 +47,7 @@ class DingDingSynchronous(models.TransientModel):
         for res in self:
             if res.department:
                 self.synchronous_dingding_department()
-                self.synchronous_dingding_department() # 重复的目的是先生成的子部门能关联到后生成的父部门
+                self.synchronous_dingding_department()   # 重复的目的是先生成的子部门能关联到后生成的父部门
             if res.employee:
                 self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
             if res.partner:
@@ -60,8 +60,10 @@ class DingDingSynchronous(models.TransientModel):
         同步钉钉部门
         :return:
         """
+        logging.info(">>>---Start 同步部门-------")
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('department_list')
-        result = self.env['dingding.api.tools'].send_get_request(url, token, {'id': 1}, 5)
+        data = {'fetch_child': True, 'id': 1}
+        result = self.env['dingding.api.tools'].send_get_request(url, token, data, 3)
         if result.get('errcode') == 0:
             for res in result.get('department'):
                 data = {
@@ -69,16 +71,15 @@ class DingDingSynchronous(models.TransientModel):
                     'ding_id': res.get('id'),
                 }
                 if res.get('parentid') != 1:
-                    partner_department = self.env['hr.department'].search(
-                        [('ding_id', '=', res.get('parentid'))])
+                    partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))])
                     if partner_department:
                         data.update({'parent_id': partner_department[0].id})
-                h_department = self.env['hr.department'].search(
-                    ['|', ('ding_id', '=', res.get('id')), ('name', '=', res.get('name'))])
+                h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id'))])
                 if h_department:
                     h_department.sudo().write(data)
                 else:
                     self.env['hr.department'].create(data)
+            logging.info(">>>-----End 同步部门-------")
             return True
         else:
             raise UserError("同步部门时发生意外，原因为:{}".format(result.get('errmsg')))
@@ -121,7 +122,7 @@ class DingDingSynchronous(models.TransientModel):
         :param s_avatar:
         :return:
         """
-        result = requests.get(url=url, params=data, timeout=3)
+        result = requests.get(url=url, params=data, timeout=30)
         result = json.loads(result.text)
         logging.info(">>>钉钉Result:{}".format(result))
         if result.get('errcode') == 0:

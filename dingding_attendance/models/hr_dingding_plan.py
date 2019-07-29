@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.exceptions import UserError
 from odoo import models, fields, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class HrDingdingPlan(models.Model):
@@ -43,6 +46,7 @@ class HrDingdingPlanTran(models.TransientModel):
         :param work_date: string 查询的日期
         :return:
         """
+        logging.info(">>>------开始获取排班信息-----------")
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_listschedule')
         offset = 0
         size = 200
@@ -73,7 +77,8 @@ class HrDingdingPlanTran(models.TransientModel):
                 if not res_result['has_more']:
                     break
                 else:
-                    offset += 1
+                    offset += size
             else:
                 raise UserError("获取企业考勤排班详情失败: {}".format(result['errmsg']))
+        logging.info(">>>------结束获取排班信息-----------")
         return True

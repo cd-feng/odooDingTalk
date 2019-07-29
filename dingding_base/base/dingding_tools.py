@@ -89,8 +89,8 @@ class DingDingTools(models.TransientModel):
             logging.info(">>>钉钉Result:{}".format(result))
             return result
         except ReadTimeout:
-            logging.info(">>>钉钉Exception: 王络连接超时！")
-            raise UserWarning("钉钉Exception: 王络连接超时！")
+            logging.info(">>>钉钉Exception: 网络连接超时！")
+            raise UserWarning("钉钉Exception: 网络连接超时！")
 
     @api.model
     def get_time_stamp(self, time_num):

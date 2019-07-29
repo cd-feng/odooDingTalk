@@ -3,9 +3,9 @@
 
     <template id="dingding_hrm_template" name="DingDing Hrm Template" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_list.js"></script>
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_dimission_list.js"></script>
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_emp_work_type.js"></script>
+            <script type="text/javascript" src="/dingding_hrm/static/src/js/employee_roster.js"></script>
         </xpath>
     </template>
 

@@ -79,10 +79,12 @@ class DingDingSimpleGroups(models.Model):
                                 'absenteeism_late_minutes': setting['absenteeism_late_minutes'],
                                 'is_off_duty_free_check': setting['is_off_duty_free_check'],
                             }
-                            rest_begin_time = setting['rest_begin_time']
-                            b_data.update({'rest_begin_time': rest_begin_time['check_time']})
-                            rest_end_time = setting['rest_end_time']
-                            b_data.update({'rest_end_time': rest_end_time['check_time']})
+                            if 'rest_begin_time' in  setting:
+                                rest_begin_time = setting['rest_begin_time']
+                                b_data.update({'rest_begin_time': rest_begin_time['check_time']})
+                            if 'rest_end_time' in setting:
+                                rest_end_time = setting['rest_end_time']
+                                b_data.update({'rest_end_time': rest_end_time['check_time']})
                             # 打卡时间段
                             time_list = list()
                             for sections in selected['sections']:

@@ -1,8 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dingding_hrm_list,dingding.hrm.list,model_dingding_hrm_list,dingding_hrm.personnel,1,1,1,1
 access_dingding_hrm_dimission_list,dingding.hrm.dimission.list,model_dingding_hrm_dimission_list,dingding_hrm.personnel,1,1,1,1
-access_dingding_hrm_list_line,dingding.hrm.list.line,model_dingding_hrm_list_line,dingding_hrm.personnel,1,1,1,1
 access_dingding_add_employee,dingding.add.employee,model_dingding_add_employee,dingding_hrm.personnel,1,1,1,1
 access_hr_employee_dingding_report,hr_employee_dingding_report,model_hr_employee_dingding_report,dingding_hrm.personnel,1,1,1,1
+
+access_dingding_employee_roster,dingding.employee.roster,model_dingding_employee_roster,dingding_hrm.personnel,1,1,1,1
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import hrm_list
+from . import employee_roster
 from . import hrm_dimission_list
 from . import add_employee
