@@ -56,5 +56,13 @@ class DingdingAttendanceIrCron(models.TransientModel):
                 self.env['hr.attendance.tran'].sudo().start_pull_attendance_list(from_date, to_date, user_list)
         except Exception as e:
             logging.info(">>>拉取考勤结果数据失败,原因:{}".format(str(e)))
+        # 自动同步考勤详情
+        try:
+            from_date = "{} 00:00:00".format(str(yesterday))
+            to_date = "{} 00:00:00".format(str(today))
+            for user_list in user_cut_list:
+                self.env['hr.attendance.record.tran'].sudo().start_pull_attendance_list(from_date, to_date, user_list)
+        except Exception as e:
+            logging.info(">>>拉取考勤详情数据失败,原因:{}".format(str(e)))
         logging.info(">>>---------------END Dingding Attendance Cron--------------")
 
