@@ -25,7 +25,7 @@ odoo.define('ding.hr.leaves.list.button', function (require) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
             if (tree_model == 'hr.leaves.list') {
-                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.leaves.list'\" class=\"btn btn-primary\">查询请假状态</button>";
+                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.leaves.list'\" class=\"btn btn-primary\" groups=\"dingding_base.manage_groups\">查询请假状态</button>";
                 let button2 = $(but).click(this.proxy('open_hr_leaves_list_tran_action'));
                 this.$buttons.append(button2);
             }

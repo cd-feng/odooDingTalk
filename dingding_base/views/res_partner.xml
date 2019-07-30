@@ -52,9 +52,9 @@
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="create_ding_partner" type="object" string="上传钉钉联系人" class="oe_highlight"
-                            confirm="确认要将此联系人上传至钉钉吗？若不是新创建的联系人则无法上传!" groups="dingding_base.user_groups"/>
+                            confirm="确认要将此联系人上传至钉钉吗？若不是新创建的联系人则无法上传!" groups="dingding_base.manage_groups"/>
                     <button name="update_ding_partner" type="object" string="修改钉钉联系人" class="oe_highlight"
-                            confirm="系统将新的信息上传至钉钉,确认?" groups="dingding_base.user_groups"/>
+                            confirm="系统将新的信息上传至钉钉,确认?" groups="dingding_base.manage_groups"/>
                 </header>
             </xpath>
         </field>

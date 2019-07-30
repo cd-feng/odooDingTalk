@@ -106,7 +106,7 @@
     </record>
 
     <menuitem id="dingding_simple_groups_menu" name="考勤组" parent="dingding_attendance.attendance_one_menu" sequence="1"
-              action="dingding_simple_groups_action"/>
+              action="dingding_simple_groups_action" groups="dingding_base.manage_groups"/>
 
     <record id="hr_employee_form_inherit" model="ir.ui.view">
         <field name="name">hr.employee.form</field>

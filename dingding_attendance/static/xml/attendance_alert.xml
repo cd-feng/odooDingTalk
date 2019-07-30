@@ -27,7 +27,7 @@
 	</t>
 
     <t t-name="AttendanceListView.get_user_attendance">
-        <button type="button" class="btn btn-secondary dingding_user_attendance_record_tree">
+        <button type="button" class="btn btn-secondary dingding_user_attendance_record_tree" groups="dingding_base.manage_groups">
             获取打卡详情
         </button>
     </t>

@@ -56,10 +56,10 @@
             <button name="toggle_active" position="before">
                 <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
                         icon="fa-upload" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
-                        groups="dingding_base.user_groups">
+                        groups="dingding_base.manage_groups">
                 </button>
                 <button name="update_ding_employee" string="更新至钉钉" type="object" class="oe_stat_button"
-                        icon="fa-cloud-upload" groups="dingding_base.user_groups">
+                        icon="fa-cloud-upload" groups="dingding_base.manage_groups">
                 </button>
             </button>
         </field>

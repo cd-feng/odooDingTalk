@@ -34,6 +34,14 @@
         <field name="groups_id" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
     </record>
 
+    <!-- 考勤结果过滤规则 -->
+   <record id="dd_attendance_user_group_rule" model="ir.rule">
+        <field name="name">员工打卡结果列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_result"/>
+        <field name="domain_force">[('emp_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
+    </record>
+
     <record id="dd_attendance_admin_group_rule" model="ir.rule">
         <field name="name">员工打卡结果列表:所有记录规则</field>
         <field name="model_id" ref="model_hr_attendance_result"/>
@@ -41,11 +49,65 @@
         <field name="domain_force">[]</field>
     </record>
 
-    <record id="dd_attendance_user_group_rule" model="ir.rule">
-        <field name="name">员工打卡结果列表:仅自己记录规则</field>
-        <field name="model_id" ref="model_hr_attendance_result"/>
-        <field name="domain_force">[('emp_id.user_id', 'in', [user.id])]</field>
+<!--  考勤组过滤规则  -->
+<!--     <record id="dd_simple_groups_users_rule" model="ir.rule">-->
+<!--        <field name="name">考勤组用户:仅自己记录规则</field>-->
+<!--        <field name="model_id" ref="model_dingding_simple_groups"/>-->
+<!--        <field name="domain_force">[(user.id, 'in', manager_list)]</field>-->
+<!--        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>-->
+<!--    </record>-->
+
+<!--    <record id="dd_simple_groups_admin_rule" model="ir.rule">-->
+<!--        <field name="name">考勤组用户:所有记录规则</field>-->
+<!--        <field name="model_id" ref="model_dingding_simple_groups"/>-->
+<!--        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_admin_group'))]"/>-->
+<!--        <field name="domain_force">[]</field>-->
+<!--    </record>-->
+
+    <!--  排班列表过滤规则  -->
+     <record id="dd_hr_dingding_plan_rule" model="ir.rule">
+        <field name="name">考勤排班列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_dingding_plan"/>
+        <field name="domain_force">['|', ('user_id.user_id', 'in', [user.id]),('user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
     </record>
+
+    <record id="dd_simple_groups_admin_rule" model="ir.rule">
+        <field name="name">考勤排班列表:所有记录规则</field>
+        <field name="model_id" ref="model_hr_dingding_plan"/>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_admin_group'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+    <!--  请假列表过滤规则  -->
+     <record id="dd_hr_leaves_list_user_rule" model="ir.rule">
+        <field name="name">考勤请假列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_leaves_list"/>
+        <field name="domain_force">['|', ('user_id.user_id', 'in', [user.id]),('user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
+    </record>
+
+    <record id="dd_hr_leaves_list_admin_rule" model="ir.rule">
+        <field name="name">考勤请假列表:所有记录规则</field>
+        <field name="model_id" ref="model_hr_leaves_list"/>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_admin_group'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+        <!--  员工打卡详情过滤规则  -->
+     <record id="dd_hr_attendance_record_user_rule" model="ir.rule">
+        <field name="name">员工打卡详情:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_record"/>
+        <field name="domain_force">['|', ('userId.user_id', 'in', [user.id]),('userId', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_user_group'))]"/>
+    </record>
+
+    <record id="dd_hr_attendance_record_admin_rule" model="ir.rule">
+        <field name="name">员工打卡详情:所有记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_record"/>
+        <field name="groups" eval="[(4, ref('dingding_attendance.dd_attendance_admin_group'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
 
 </odoo>

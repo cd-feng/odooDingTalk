@@ -62,10 +62,10 @@ odoo.define('dingding.simple.groups.button', function (require) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
             if (tree_model == 'dingding.simple.groups') {
-                let but = "<button type=\"button\" t-if=\"widget.modelName == 'dingding.simple.groups'\" class=\"btn btn-primary o_pull_dingding.simple.groups\">拉取考勤组</button>";
+                let but = "<button type=\"button\" t-if=\"widget.modelName == 'dingding.simple.groups'\" class=\"btn btn-primary o_pull_dingding.simple.groups\" groups=\"dingding_base.manage_groups\">拉取考勤组</button>";
                 let button2 = $(but).click(this.proxy('open_simple_action'));
                 this.$buttons.append(button2);
-                let but3 = "<button type=\"button\" t-if=\"widget.modelName == 'dingding.simple.groups'\" class=\"btn btn-secondary\">获取考勤组成员</button>";
+                let but3 = "<button type=\"button\" t-if=\"widget.modelName == 'dingding.simple.groups'\" class=\"btn btn-secondary\" groups=\"dingding_base.manage_groups\">获取考勤组成员</button>";
                 let button3 = $(but3).click(this.proxy('get_simple_emps_action'));
                 this.$buttons.append(button3);
             }
