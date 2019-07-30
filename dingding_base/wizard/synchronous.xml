@@ -64,11 +64,11 @@
           groups="hr.group_hr_user"
           action="hr.open_module_tree_department"/>
 
-    <menuitem name="员工" id="dingding_department_menu" parent="dingding_base.bash_menu" sequence="2"
+    <menuitem name="员工" id="dingding_department_menu" parent="dingding_base.bash_menu" sequence="3"
           groups="hr.group_hr_manager,hr.group_hr_user,base.group_user"
           action="hr.open_view_employee_list_my"/>
 
-    <menuitem name="联系人" id="dingding_partner_menu" parent="dingding_base.bash_menu" sequence="3"
+    <menuitem name="联系人" id="dingding_partner_menu" parent="dingding_base.bash_menu" sequence="4"
           groups="base.group_user"
           action="base.action_partner_form"/>
 
