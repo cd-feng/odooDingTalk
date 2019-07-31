@@ -29,10 +29,13 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = ['res.users']
 
+    ding_user_phone = fields.Char(string='钉钉用户手机')
+    ding_user_id = fields.Char(string='钉钉用户ID')
+
     @api.model
     def auth_oauth_dingtalk(self, provide_id, oauth_uid):
         if provide_id == 'dingtalk':
-            user = self.sudo().search([('oauth_uid', '=', oauth_uid)])
+            user = self.sudo().search([('ding_user_id', '=', oauth_uid)])
         else:
             user = self.search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', oauth_uid)])
         _logger.info("user: %s", user)

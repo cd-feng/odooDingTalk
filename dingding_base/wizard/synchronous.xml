@@ -57,7 +57,7 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="数据同步" id="dingding_bash_data_synchronous_menu" parent="dingding_base.bash_menu" sequence="4"
+    <menuitem name="数据同步" id="dingding_bash_data_synchronous_menu" parent="dingding_base.bash_menu" sequence="5"
               action="dingding_bash_data_synchronous_action" groups="dingding_base.manage_groups"/>
 
     <menuitem name="部门" id="dingding_employee_menu"  parent="dingding_base.bash_menu" sequence="1"

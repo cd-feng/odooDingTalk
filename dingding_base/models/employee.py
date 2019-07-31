@@ -153,7 +153,7 @@ class HrEmployee(models.Model):
                 raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
             # 把员工的钉钉id和手机号写入到系统用户oauth
             if self.ding_id and self.mobile_phone:
-                self._cr.execute("""UPDATE res_users SET oauth_uid='{}',oauth_access_token='{}' WHERE id={}""".format(self.ding_id, self.mobile_phone, self.user_id.id))
+                self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(self.ding_id, self.mobile_phone, self.user_id.id))
 
     # 从钉钉手动获取用户详情
     @api.multi

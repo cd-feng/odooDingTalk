@@ -36,6 +36,7 @@
         'data/dingding_parameter.xml',
         'data/auth_oauth_data.xml',
         'views/menu.xml',
+        'views/res_users_views.xml',
         'wizard/synchronous.xml',
         'wizard/change_mobile.xml',
         'views/web_widget.xml',
