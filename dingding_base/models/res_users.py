@@ -48,7 +48,7 @@ class ResUsers(models.Model):
         try:
             return super(ResUsers, self)._check_credentials(password)
         except AccessDenied:
-            res = self.sudo().search([('id', '=', self.env.uid), ('oauth_uid', '=', password)])
+            res = self.sudo().search([('id', '=', self.env.uid), ('ding_user_id', '=', password)])
             if not res:
                 raise
 
