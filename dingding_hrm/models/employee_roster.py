@@ -41,7 +41,8 @@ class EmployeeRoster(models.Model):
     email = fields.Char(string='邮箱')
     dept = fields.Many2one('hr.department', string=u'部门', index=True)
     mainDept = fields.Many2one('hr.department', string=u'主部门', index=True)
-    position = fields.Char(string='职位')
+    # position = fields.Char(string='职位')
+    position = fields.Many2one(comodel_name='hr.job', string=u'职位')
     mobile = fields.Char(string='手机号')
     jobNumber = fields.Char(string='工号')
     tel = fields.Char(string='分机号')
@@ -140,6 +141,14 @@ class GetDingDingHrmList(models.TransientModel):
                                 })
                             elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept' or fie['field_code'][6:] == 'deptIds':
                                 continue
+                            # 同步工作岗位
+                            elif fie['field_code'][6:] == 'position' and 'label' in fie:
+                                hr_job = self.env['hr.job'].sudo().search([('name', '=', fie['label'])])
+                                if not hr_job and fie['label']:
+                                    hr_job = self.env['hr.job'].sudo().create({'name': fie['label']})
+                                roster_data.update({
+                                    'position': hr_job.id
+                                })
                             else:
                                 roster_data.update({
                                     fie['field_code'][6:]: fie['label'] if "label" in fie else ''

@@ -229,9 +229,9 @@ class HrAttendanceResultTransient(models.TransientModel):
         :return:
         """
         length = len(mylist)
-        cut_list = [mylist[i:i+limit] for i in range(0, length, limit)]
+        cut_list = [mylist[i:i + limit] for i in range(0, length, limit)]
         return cut_list
-    
+
     @api.model
     def day_cut(self, begin_time, end_time, days):
         """
