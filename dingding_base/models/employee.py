@@ -58,6 +58,10 @@ class HrEmployee(models.Model):
     # 上传员工到钉钉
     @api.multi
     def create_ding_employee(self):
+        """
+        上传员工到钉钉
+        :return:
+        """
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'user_create')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
@@ -98,7 +102,10 @@ class HrEmployee(models.Model):
     # 修改员工同步到钉钉
     @api.multi
     def update_ding_employee(self):
-        """修改员工时同步至钉钉"""
+        """
+        修改员工时同步至钉钉
+        :return:
+        """
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'user_update')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
@@ -146,7 +153,10 @@ class HrEmployee(models.Model):
 
     @api.constrains('user_id')
     def constrains_dingding_user_id(self):
-        """当选择了相关用户时，需要检查系统用户是否只对应一个员工"""
+        """
+        当选择了相关用户时，需要检查系统用户是否只对应一个员工
+        :return:
+        """
         if self.user_id:
             emps = self.sudo().search([('user_id', '=', self.user_id.id)])
             if len(emps) > 1:
@@ -225,7 +235,11 @@ class HrEmployee(models.Model):
 
     @api.model
     def delete_din_employee(self, userid):
-        """删除钉钉用户"""
+        """
+        删除钉钉用户
+        :param userid:
+        :return:
+        """
         url = self.env['dingding.parameter'].search([('key', '=', 'user_delete')]).value
         token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         data = {
@@ -247,6 +261,10 @@ class HrEmployee(models.Model):
     # 单独获取钉钉头像设为员工头像
     @api.multi
     def using_dingding_avatar(self):
+        """
+        单独获取钉钉头像设为员工头像
+        :return:
+        """
         for emp in self:
             if emp.din_avatar:
                 binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
