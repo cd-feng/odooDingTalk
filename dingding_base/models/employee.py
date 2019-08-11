@@ -36,8 +36,8 @@ except ImportError:
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    ding_id = fields.Char(string='钉钉用户Id')
-    din_unionid = fields.Char(string='钉钉唯一标识')
+    ding_id = fields.Char(string='钉钉用户Id', index=True)
+    din_unionid = fields.Char(string='钉钉唯一标识', index=True)
     din_jobnumber = fields.Char(string='钉钉员工工号')
     din_avatar = fields.Char(string='钉钉头像url')
     din_hiredDate = fields.Datetime(string='入职时间')

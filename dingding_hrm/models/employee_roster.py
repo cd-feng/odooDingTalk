@@ -90,6 +90,17 @@ class EmployeeRoster(models.Model):
     childSex = fields.Char(string='子女性别')
     childBirthDate = fields.Char(string='子女出生日期')
 
+    @api.constrains('certNo')
+    def _constrains_employee_identification_id(self):
+        """
+        将花名册里面部分信息改写到员工信息中
+        :return:
+        """
+        for res in self:
+            res.emp_id.sudo().write({
+                'identification_id': res.certNo,
+            })
+
 
 class GetDingDingHrmList(models.TransientModel):
     _name = 'dingding.get.hrm.list'
@@ -135,10 +146,13 @@ class GetDingDingHrmList(models.TransientModel):
                         for fie in rec['field_list']:
                             # 判断部门和主部门
                             if fie['field_code'][6:] == 'deptIds':
-                                roster_data.update({
-                                    'dept': dept_data[str(fie['label'])],
-                                    'mainDept': dept_data[str(fie['label'])]
-                                })
+                                try:
+                                    roster_data.update({
+                                        'dept': dept_data[str(fie['label'])],
+                                        'mainDept': dept_data[str(fie['label'])]
+                                    })
+                                except KeyError:
+                                    raise UserError("钉钉部门已发生改变！请先同步部门数据!")
                             elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept' or fie['field_code'][6:] == 'deptIds':
                                 continue
                             # 同步工作岗位

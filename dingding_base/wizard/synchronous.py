@@ -65,7 +65,9 @@ class DingDingSynchronous(models.TransientModel):
         data = {'fetch_child': True, 'id': 1}
         result = self.env['dingding.api.tools'].send_get_request(url, token, data, 3)
         if result.get('errcode') == 0:
+            dept_ding_ids = list()
             for res in result.get('department'):
+                dept_ding_ids.append(str(res.get('id')))
                 data = {
                     'name': res.get('name'),
                     'ding_id': res.get('id'),
@@ -74,11 +76,19 @@ class DingDingSynchronous(models.TransientModel):
                     partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))])
                     if partner_department:
                         data.update({'parent_id': partner_department[0].id})
-                h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id'))])
+                h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id')), ('active', '=', True)])
                 if h_department:
-                    h_department.sudo().write(data)
+                    h_department.write(data)
                 else:
                     self.env['hr.department'].create(data)
+            # 情况：当在钉钉端删除了部门后，那么在odoo原还存在该部门，所以在同步完成后，在检查一遍，将存在的保留，不存在的部门进行归档
+            departments = self.env['hr.department'].sudo().search(['|', ('active', '=', False), ('active', '=', True)])
+            for department in departments:
+                ding_id = department.ding_id
+                if ding_id not in dept_ding_ids:
+                    department.write({'active': False})
+                else:
+                    department.write({'active': True})
             logging.info(">>>-----End 同步部门-------")
             return True
         else:
@@ -93,7 +103,7 @@ class DingDingSynchronous(models.TransientModel):
         """
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('user_listbypage')
         # 获取所有部门
-        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', '')])
+        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         for department in departments:
             emp_offset = 0
             emp_size = 100

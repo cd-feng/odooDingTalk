@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 class ResPartnerCategory(models.Model):
     _inherit = 'res.partner.category'
 
-    ding_id = fields.Char(string='钉钉标签ID')
+    ding_id = fields.Char(string='钉钉标签ID', index=True)
     din_color = fields.Char(string='钉钉标签颜色')
     din_category_type = fields.Char(string='标签分类名')
 
@@ -41,7 +41,7 @@ class ResPartnerCategory(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    din_userid = fields.Char(string='钉钉联系人ID', help="用于存储在钉钉系统中返回的联系人id")
+    din_userid = fields.Char(string='钉钉联系人ID', help="用于存储在钉钉系统中返回的联系人id", index=True)
     din_company_name = fields.Char(string='钉钉联系人公司', help="用于存储在钉钉系统中返回的联系人id")
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
     din_employee_id = fields.Many2one(comodel_name='hr.employee', string=u'负责人', ondelete='cascade')

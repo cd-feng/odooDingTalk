@@ -29,8 +29,8 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = ['res.users']
 
-    ding_user_phone = fields.Char(string='钉钉用户手机')
-    ding_user_id = fields.Char(string='钉钉用户ID')
+    ding_user_phone = fields.Char(string='钉钉用户手机', index=True)
+    ding_user_id = fields.Char(string='钉钉用户ID', index=True)
 
     @api.model
     def auth_oauth_dingtalk(self, provide_id, oauth_uid):

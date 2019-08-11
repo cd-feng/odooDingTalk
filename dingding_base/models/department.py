@@ -34,7 +34,7 @@ _logger = logging.getLogger(__name__)
 class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
-    ding_id = fields.Char(string='钉钉Id')
+    ding_id = fields.Char(string='钉钉Id', index=True)
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
     child_ids = fields.One2many(comodel_name='hr.department', inverse_name='parent_id', string=u'下级部门')
