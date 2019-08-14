@@ -35,6 +35,8 @@
         'security/dingding_security.xml',
         'data/dingding_parameter.xml',
         'data/auth_oauth_data.xml',
+        'data/dingding_callback_list.xml',
+
         'views/menu.xml',
         'views/res_users_views.xml',
         'wizard/synchronous.xml',
@@ -46,6 +48,8 @@
         'views/hr_employee.xml',
         'views/res_partner.xml',
         'views/login_templates.xml',
+        'views/dingding_callback_list.xml',
+        'views/dingding_callback_manage.xml',
     ],
     "qweb": [
         "static/xml/*.xml"

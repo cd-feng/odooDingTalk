@@ -27,6 +27,7 @@ def _json_response(self, result=None, error=None):
         response['result'] = result
     mime = 'application/json'
     body = json.dumps(response, default=date_utils.json_default)
+
     return Response(
         body, status=error and error.pop('http_status', 200) or 200,
         headers=[('Content-Type', mime), ('Content-Length', len(body))]

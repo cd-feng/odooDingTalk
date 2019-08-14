@@ -24,3 +24,5 @@ from . import department
 from . import employee
 from . import partner
 from . import res_users
+from . import dingding_callback_list
+from . import dingding_callback_manage

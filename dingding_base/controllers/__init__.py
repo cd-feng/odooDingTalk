@@ -19,3 +19,5 @@
 ###################################################################################
 
 from . import login_controller
+from . import callback_controller
+from . import crypto

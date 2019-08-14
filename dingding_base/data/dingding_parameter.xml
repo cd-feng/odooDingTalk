@@ -150,6 +150,37 @@
             <field name="value">https://oapi.dingtalk.com/sns/getuserinfo_bycode?</field>
         </record>
 
+		<!--业务事件回调接口-->
+        <record id="dingding_parameter_register_call_back" model="dingding.parameter">
+            <field name="name">注册业务事件回调接口</field>
+            <field name="key">register_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/register_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_get_call_back" model="dingding.parameter">
+            <field name="name">查询事件回调接口</field>
+            <field name="key">get_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/get_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_update_call_back" model="dingding.parameter">
+            <field name="name">更新事件回调接口</field>
+            <field name="key">update_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/update_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_delete_call_back" model="dingding.parameter">
+            <field name="name">删除事件回调接口</field>
+            <field name="key">delete_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/delete_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_get_call_back_failed_result" model="dingding.parameter">
+            <field name="name">获取回调失败的结果</field>
+            <field name="key">get_call_back_failed_result</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/get_call_back_failed_result?access_token=</field>
+        </record>
+
 		<!-- 钉钉-定时更新token值 -->
 		<record id="ir_cron_data_get_token" model="ir.cron">
 			<field name="name">钉钉-定时更新token值</field>

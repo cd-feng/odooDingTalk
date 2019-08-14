@@ -135,7 +135,7 @@ class GetDingDingHrmList(models.TransientModel):
             data = {'userid_list': user_str}
             try:
                 headers = {'Content-Type': 'application/json'}
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=3)
+                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
                 result = json.loads(result.text)
                 if result.get('errcode') == 0:
                     for rec in result['result']:
