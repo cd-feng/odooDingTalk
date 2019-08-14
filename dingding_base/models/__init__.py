@@ -26,3 +26,5 @@ from . import partner
 from . import res_users
 from . import dingding_callback_list
 from . import dingding_callback_manage
+from . import dingding_approval_template
+from . import dingding_approval_control

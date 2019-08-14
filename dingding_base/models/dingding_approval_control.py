@@ -23,24 +23,23 @@ from odoo import api, fields, models
 _logger = logging.getLogger(__name__)
 
 
-class DingDingCallbackList(models.Model):
-    _name = 'dingding.callback.list'
-    _description = "回调类型列表"
-    _rec_name = 'name'
+class DingDingApprovalControl(models.Model):
+    _name = 'dingding.approval.control'
+    _description = "审批单据关联"
+    _rec_name = 'oa_model_id'
 
-    ValueType = [
-        ('00', '通讯录事件'),
-        ('01', '群会话事件'),
-        ('02', '签到事件'),
-        ('03', '审批事件'),
-    ]
-
-    name = fields.Char(string='类型名')
-    value = fields.Char(string='类型代码')
-    call_back_url = fields.Char(string='回调地址函数')
-    value_type = fields.Selection(string=u'事件分类', selection=ValueType, default='')
+    oa_model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', required=True, index=True)
+    template_id = fields.Many2one(comodel_name='dingding.approval.template', string=u'钉钉审批模板', required=True)
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
 
     _sql_constraints = [
-        ('value_uniq', 'unique(value)', u'类型代码重复!'),
-        ('name_uniq', 'unique(name)', u'类型名重复!'),
+        ('oa_model_id_uniq', 'unique(oa_model_id)', u'已存在Odoo模型对应的审批模板!'),
     ]
+
+    @api.model
+    def get_oa_model(self):
+        oa_models = self.env['dingding.approval.control'].sudo().search([])
+        model_list = list()
+        for oa_model in oa_models:
+            model_list.append(oa_model.oa_model_id.model)
+        return model_list

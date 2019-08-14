@@ -50,6 +50,8 @@
         'views/login_templates.xml',
         'views/dingding_callback_list.xml',
         'views/dingding_callback_manage.xml',
+        'views/dingding_approval_template.xml',
+        'views/dingding_approval_control.xml',
     ],
     "qweb": [
         "static/xml/*.xml"

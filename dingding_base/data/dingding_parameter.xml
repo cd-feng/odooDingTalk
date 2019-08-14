@@ -181,6 +181,38 @@
             <field name="value">https://oapi.dingtalk.com/call_back/get_call_back_failed_result?access_token=</field>
         </record>
 
+		<!--使用钉钉官方审批流-->
+		<record id="dingding_parameter_search_processinstance_create" model="dingding.parameter">
+            <field name="name">发起审批实例</field>
+            <field name="key">processinstance_create</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/create?access_token=</field>
+        </record>
+
+		 <record id="dingding_parameter_search_processinstance_listids" model="dingding.parameter">
+            <field name="name">批量获取审批实例id</field>
+            <field name="key">processinstance_listids</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/listids?access_token=</field>
+        </record>
+
+		<record id="dingding_parameter_search_processinstance_get" model="dingding.parameter">
+            <field name="name">获取审批实例详情</field>
+            <field name="key">processinstance_get</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/get?access_token=</field>
+        </record>
+
+		<record id="dingding_parameter_search_process_gettodonum" model="dingding.parameter">
+            <field name="name">获取用户待审批数量</field>
+            <field name="key">process_gettodonum</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/process/gettodonum?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_send_process_listbyuserid" model="dingding.parameter">
+            <field name="name">获取用户可见的审批模板</field>
+            <field name="key">process_listbyuserid</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/process/listbyuserid?access_token=</field>
+        </record>
+
+
 		<!-- 钉钉-定时更新token值 -->
 		<record id="ir_cron_data_get_token" model="ir.cron">
 			<field name="name">钉钉-定时更新token值</field>
