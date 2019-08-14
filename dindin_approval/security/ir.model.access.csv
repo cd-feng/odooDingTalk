@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dindin_approval_template,dindin.approval.template,model_dindin_approval_template,base.group_user,1,1,1,1
-access_dindin_approval_control,dindin.approval.control,model_dindin_approval_control,base.group_user,1,1,1,1
-access_dindin_approval_main,dindin.approval.main,model_dindin_approval_main,base.group_user,1,1,1,1
-access_dindin_approval_users,dindin.approval.users,model_dindin_approval_users,base.group_user,1,1,1,1
-access_dindin_approval_cc,dindin.approval.cc,model_dindin_approval_cc,base.group_user,1,1,1,1
-
