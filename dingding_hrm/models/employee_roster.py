@@ -41,7 +41,6 @@ class EmployeeRoster(models.Model):
     email = fields.Char(string='邮箱')
     dept = fields.Many2one('hr.department', string=u'部门', index=True)
     mainDept = fields.Many2one('hr.department', string=u'主部门', index=True)
-    # position = fields.Char(string='职位')
     position = fields.Many2one(comodel_name='hr.job', string=u'职位')
     mobile = fields.Char(string='手机号')
     jobNumber = fields.Char(string='工号')
