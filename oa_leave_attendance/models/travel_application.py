@@ -45,7 +45,7 @@ class LeaveApplication(models.Model):
         new_list = list()
         for line in self.line_ids:
             fcv_list = list()
-            fcv_list.append({'name': '请假事由', 'value': line.ta_text})
+            fcv_list.append({'name': '出差事由', 'value': line.ta_text})
             fcv_list.append({'name': '交通工具', 'value': line.ta_tool})
             fcv_list.append({'name': '单程往返', 'value': line.ta_type})
             fcv_list.append({'name': '出发城市', 'value': line.departure_city})
