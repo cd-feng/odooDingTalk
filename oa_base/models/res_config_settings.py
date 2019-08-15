@@ -10,3 +10,4 @@ class ResConfigSettings(models.TransientModel):
 
     # 安装钉钉模块
     module_oa_leave_attendance = fields.Boolean('钉钉审批-出勤休假')
+    module_oa_personnel_admin = fields.Boolean('钉钉审批-行政人事')

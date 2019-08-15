@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='oauth_access_token']" position="after">
                     <field name="ding_user_phone"/>
-                    <field name="ding_user_id"/>
+                    <field name="ding_user_id" readonly="1"/>
                 </xpath>
             </field>
         </record>

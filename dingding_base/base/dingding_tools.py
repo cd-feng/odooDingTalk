@@ -23,7 +23,7 @@ import json
 import logging
 import time
 import requests
-from requests import ReadTimeout
+from requests import ReadTimeout, ConnectTimeout
 from odoo import api, models, fields
 import hmac
 from urllib.parse import quote
@@ -89,6 +89,9 @@ class DingDingTools(models.TransientModel):
             logging.info(">>>钉钉Result:{}".format(result))
             return result
         except ReadTimeout:
+            logging.info(">>>钉钉Exception: 网络连接超时！")
+            raise UserWarning("钉钉Exception: 网络连接超时！")
+        except ConnectTimeout:
             logging.info(">>>钉钉Exception: 网络连接超时！")
             raise UserWarning("钉钉Exception: 网络连接超时！")
 

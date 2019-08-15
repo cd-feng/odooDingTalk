@@ -91,7 +91,7 @@ class DingDingApprovalMain(models.Model):
             'dept_id': dept_id,             # 发起人部门id
             'form_component_values': form_values  # 表单参数
         }
-        result = self.env['dingding.api.tools'].send_post_request(url, token, data, 2)
+        result = self.env['dingding.api.tools'].send_post_request(url, token, data, 10)
         if result.get('errcode') == 0:
             return result.get('process_instance_id')
         else:
