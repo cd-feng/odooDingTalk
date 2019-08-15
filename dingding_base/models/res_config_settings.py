@@ -42,18 +42,6 @@ class ResConfigSettings(models.TransientModel):
     din_login_appid = fields.Char(string=u'钉钉登录appId')
     din_login_appsecret = fields.Char(string=u'钉钉登录appSecret')
 
-    # 安装钉钉模块
-    # module_dingding_attendance = fields.Boolean('钉钉办公-考勤')
-    # module_dingding_calendar = fields.Boolean('钉钉办公-日程')
-    # module_dingding_approval = fields.Boolean('钉钉办公-审批')
-    # module_dingding_callback = fields.Boolean('钉钉办公-回调管理')
-    # module_dingding_hrm = fields.Boolean('钉钉办公-智能人事')
-    # module_dingding_message = fields.Boolean('钉钉办公-消息管理')
-    # module_dingding_report = fields.Boolean('钉钉办公-日志')
-    # module_dingding_usersign = fields.Boolean('钉钉办公-签到')
-    # module_dingding_workrecord = fields.Boolean('钉钉办公-待办事项')
-    # module_dingding_health = fields.Boolean('钉钉办公-运动')
-
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
