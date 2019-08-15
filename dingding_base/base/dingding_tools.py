@@ -27,6 +27,7 @@ from requests import ReadTimeout, ConnectTimeout
 from odoo import api, models, fields
 import hmac
 from urllib.parse import quote
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -90,10 +91,10 @@ class DingDingTools(models.TransientModel):
             return result
         except ReadTimeout:
             logging.info(">>>钉钉Exception: 网络连接超时！")
-            raise UserWarning("钉钉Exception: 网络连接超时！")
+            raise UserError("钉钉Exception: 网络连接超时！")
         except ConnectTimeout:
             logging.info(">>>钉钉Exception: 网络连接超时！")
-            raise UserWarning("钉钉Exception: 网络连接超时！")
+            raise UserError("钉钉Exception: 网络连接超时！")
 
     @api.model
     def get_time_stamp(self, time_num):

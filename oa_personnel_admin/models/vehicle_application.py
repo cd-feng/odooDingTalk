@@ -21,6 +21,7 @@ _logger = logging.getLogger(__name__)
 
 class VehicleApplicationLine(models.Model):
     _name = 'oa.vehicle.application.line'
+    _description = "用车申请列表"
 
     oa_vehicle_id = fields.Many2one(comodel_name='oa.vehicle.application', string=u'用车申请', ondelete='cascade')
     sequence = fields.Integer(string=u'序号')

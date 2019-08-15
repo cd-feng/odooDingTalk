@@ -21,6 +21,7 @@ _logger = logging.getLogger(__name__)
 
 class ItemuseApplicationLine(models.Model):
     _name = 'oa.itemuse.application.line'
+    _description = "物品领用明细"
 
     oa_itemuse_id = fields.Many2one(comodel_name='oa.itemuse.application', string=u'物品领用', ondelete='cascade')
     sequence = fields.Integer(string=u'序号')
