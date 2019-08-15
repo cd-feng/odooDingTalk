@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+    <data noupdate="1">
+		<!--基础api-->
+		<record id="dingding_parameter_token" model="dingding.parameter">
+			<field name="name">阿里钉钉-Token值</field>
+			<field name="key">token</field>
+			<field name="value">0000</field>
+		</record>
+
+        <record id="dingding_parameter_gettoken" model="dingding.parameter">
+			<field name="name">获取Token值URL</field>
+			<field name="key">token_url</field>
+			<field name="value">https://oapi.dingtalk.com/gettoken</field>
+		</record>
+
+		<record id="dingding_parameter_get_userid" model="dingding.parameter">
+			<field name="name">获取用户userid</field>
+			<field name="key">get_userid</field>
+			<field name="value">https://oapi.dingtalk.com/user/getuserinfo</field>
+		</record>
+
+		<record id="dingding_parameter_getUseridByUnionid" model="dingding.parameter">
+			<field name="name">根据unionid获取userid</field>
+			<field name="key">getUseridByUnionid</field>
+			<field name="value">https://oapi.dingtalk.com/user/getUseridByUnionid?access_token=</field>
+		</record>
+
+		<!--联系人api-->
+		<record id="dingding_parameter_get_listlabelgroups" model="dingding.parameter">
+			<field name="name">获取外部联系人标签列表</field>
+			<field name="key">listlabelgroups</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/listlabelgroups?access_token=</field>
+		</record>
+
+		<record id="dingding_parameter_extcontact_list" model="dingding.parameter">
+			<field name="name">获取外部联系人列表</field>
+			<field name="key">extcontact_list</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/list?access_token=</field>
+		</record>
+
+		<record id="dingding_parameter_extcontact_get" model="dingding.parameter">
+			<field name="name">获取企业外部联系人详情</field>
+			<field name="key">extcontact_get</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/get?access_token=</field>
+		</record>
+
+		<record id="dingding_parameter_extcontact_create" model="dingding.parameter">
+			<field name="name">添加外部联系人</field>
+			<field name="key">extcontact_create</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/create?access_token=</field>
+		</record>
+
+
+		<record id="dingding_parameter_extcontact_update" model="dingding.parameter">
+			<field name="name">更新外部联系人</field>
+			<field name="key">extcontact_update</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/update?access_token=</field>
+		</record>
+
+		<record id="dingding_parameter_extcontact_delete" model="dingding.parameter">
+			<field name="name">删除外部联系人</field>
+			<field name="key">extcontact_delete</field>
+			<field name="value">https://oapi.dingtalk.com/topapi/extcontact/delete?access_token=</field>
+		</record>
+
+		<!--部门api-->
+		<record id="dingding_parameter_department_list" model="dingding.parameter">
+			<field name="name">获取部门列表</field>
+			<field name="key">department_list</field>
+			<field name="value">https://oapi.dingtalk.com/department/list?access_token=</field>
+		</record>
+		<record id="dingding_parameter_get_org_user_count" model="dingding.parameter">
+			<field name="name">获取企业员工人数</field>
+			<field name="key">get_user_count</field>
+			<field name="value">https://oapi.dingtalk.com/user/get_org_user_count?access_token=</field>
+		</record>
+		<record id="dingding_parameter_department_create" model="dingding.parameter">
+			<field name="name">创建部门</field>
+			<field name="key">department_create</field>
+			<field name="value">https://oapi.dingtalk.com/department/create?access_token=</field>
+		</record>
+		<record id="dingding_parameter_department_update" model="dingding.parameter">
+			<field name="name">更新部门</field>
+			<field name="key">department_update</field>
+			<field name="value">https://oapi.dingtalk.com/department/update?access_token=</field>
+		</record>
+		<record id="dingding_parameter_department_delete" model="dingding.parameter">
+			<field name="name">删除部门</field>
+			<field name="key">department_delete</field>
+			<field name="value">https://oapi.dingtalk.com/department/delete?access_token=</field>
+		</record>
+
+
+		<!--部门员工api-->
+		<record id="dingding_parameter_user_listbypage" model="dingding.parameter">
+			<field name="name">获取部门用户详情</field>
+			<field name="key">user_listbypage</field>
+			<field name="value">https://oapi.dingtalk.com/user/listbypage</field>
+		</record>
+		<record id="dingding_parameter_user_simplelist" model="dingding.parameter">
+			<field name="name">获取部门用户</field>
+			<field name="key">user_simplelist</field>
+			<field name="value">https://oapi.dingtalk.com/user/simplelist</field>
+		</record>
+		<record id="dingding_parameter_user_create" model="dingding.parameter">
+			<field name="name">创建部门用户</field>
+			<field name="key">user_create</field>
+			<field name="value">https://oapi.dingtalk.com/user/create?access_token=</field>
+		</record>
+		<record id="dingding_parameter_user_update" model="dingding.parameter">
+			<field name="name">更新部门用户</field>
+			<field name="key">user_update</field>
+			<field name="value">https://oapi.dingtalk.com/user/update?access_token=</field>
+		</record>
+		<record id="dingding_parameter_user_delete" model="dingding.parameter">
+			<field name="name">删除部门用户</field>
+			<field name="key">user_delete</field>
+			<field name="value">https://oapi.dingtalk.com/user/delete?access_token=</field>
+		</record>
+        <record id="dingding_parameter_user_get" model="dingding.parameter">
+			<field name="name">获取用户详情</field>
+			<field name="key">user_get</field>
+			<field name="value">https://oapi.dingtalk.com/user/get?access_token=</field>
+		</record>
+
+		<!--扫码登录-->
+        <record id="dingding_parameter_sns_authorize" model="dingding.parameter">
+            <field name="name">钉钉登录页面url</field>
+            <field name="key">sns_authorize</field>
+            <field name="value">https://oapi.dingtalk.com/connect/oauth2/sns_authorize?</field>
+        </record>
+
+        <record id="dingding_parameter_getuserinfo_bycode" model="dingding.parameter">
+            <field name="name">通过临时授权码获取授权用户的个人信息</field>
+            <field name="key">getuserinfo_bycode</field>
+            <field name="value">https://oapi.dingtalk.com/sns/getuserinfo_bycode?</field>
+        </record>
+
+		<!--业务事件回调接口-->
+        <record id="dingding_parameter_register_call_back" model="dingding.parameter">
+            <field name="name">注册业务事件回调接口</field>
+            <field name="key">register_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/register_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_get_call_back" model="dingding.parameter">
+            <field name="name">查询事件回调接口</field>
+            <field name="key">get_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/get_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_update_call_back" model="dingding.parameter">
+            <field name="name">更新事件回调接口</field>
+            <field name="key">update_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/update_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_delete_call_back" model="dingding.parameter">
+            <field name="name">删除事件回调接口</field>
+            <field name="key">delete_call_back</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/delete_call_back?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_get_call_back_failed_result" model="dingding.parameter">
+            <field name="name">获取回调失败的结果</field>
+            <field name="key">get_call_back_failed_result</field>
+            <field name="value">https://oapi.dingtalk.com/call_back/get_call_back_failed_result?access_token=</field>
+        </record>
+
+		<!--使用钉钉官方审批流-->
+		<record id="dingding_parameter_search_processinstance_create" model="dingding.parameter">
+            <field name="name">发起审批实例</field>
+            <field name="key">processinstance_create</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/create?access_token=</field>
+        </record>
+
+		 <record id="dingding_parameter_search_processinstance_listids" model="dingding.parameter">
+            <field name="name">批量获取审批实例id</field>
+            <field name="key">processinstance_listids</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/listids?access_token=</field>
+        </record>
+
+		<record id="dingding_parameter_search_processinstance_get" model="dingding.parameter">
+            <field name="name">获取审批实例详情</field>
+            <field name="key">processinstance_get</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/processinstance/get?access_token=</field>
+        </record>
+
+		<record id="dingding_parameter_search_process_gettodonum" model="dingding.parameter">
+            <field name="name">获取用户待审批数量</field>
+            <field name="key">process_gettodonum</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/process/gettodonum?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_send_process_listbyuserid" model="dingding.parameter">
+            <field name="name">获取用户可见的审批模板</field>
+            <field name="key">process_listbyuserid</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/process/listbyuserid?access_token=</field>
+        </record>
+
+
+		<!-- 钉钉-定时更新token值 -->
+		<record id="ir_cron_data_get_token" model="ir.cron">
+			<field name="name">钉钉-定时更新token值</field>
+			<field name="model_id" ref="model_dingding_api_tools"/>
+			<field name="type">ir.actions.server</field>
+			<field name="active">True</field>
+			<field name="state">code</field>
+			<field name="code">env['dingding.api.tools'].get_token()</field>
+			<field name="interval_number">90</field>
+			<field name="interval_type">minutes</field>
+			<field name="numbercall">-1</field>
+		</record>
+
+    </data>
+</odoo>

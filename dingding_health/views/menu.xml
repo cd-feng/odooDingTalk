@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-    <menuitem name="运动" id="dingding_health_main_menu" parent="ali_dindin.main_menu" sequence="76"/>
-
-</odoo>

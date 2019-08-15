@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <record id="dingding_bash_data_synchronous_form_view" model="ir.ui.view">
+        <field name="name">dingding.bash.data.synchronous.form</field>
+        <field name="model">dingding.bash.data.synchronous</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>选择需要同步的钉钉数据，同步数据量较大的话，等待时间可能会很久额~~</p>
+                </div>
+                <div class="oe_title">
+                    <div name="options">
+                        <div>
+                            <field name="department"/>
+                            <label for="department"/>
+                        </div>
+                        <div>
+                            <field name="employee"/>
+                            <label for="employee"/>
+                        </div>
+                        <div attrs="{'invisible': [('employee', '!=', True)]}">
+                            <field name="employee_avatar"/>
+                            <label for="employee_avatar"/>
+                        </div>
+                        <div>
+                            <field name="partner"/>
+                            <label for="partner"/>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button string="开始同步" name="start_synchronous_data" type="object" class="oe_highlight"/>
+                    <button string="不同步、告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingding_bash_data_synchronous_action" model="ir.actions.act_window">
+        <field name="name">钉钉基础数据同步</field>
+        <field name="res_model">dingding.bash.data.synchronous</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="数据同步" id="dingding_bash_data_synchronous_menu" parent="dingding_base.bash_menu" sequence="5"
+              action="dingding_bash_data_synchronous_action" groups="dingding_base.manage_groups"/>
+
+    <menuitem name="部门" id="dingding_employee_menu"  parent="dingding_base.bash_menu" sequence="1"
+          groups="hr.group_hr_user"
+          action="hr.open_module_tree_department"/>
+
+    <menuitem name="员工" id="dingding_department_menu" parent="dingding_base.bash_menu" sequence="3"
+          groups="hr.group_hr_manager,hr.group_hr_user,base.group_user"
+          action="hr.open_view_employee_list_my"/>
+
+    <menuitem name="联系人" id="dingding_partner_menu" parent="dingding_base.bash_menu" sequence="4"
+          groups="base.group_user"
+          action="base.action_partner_form"/>
+
+</odoo>

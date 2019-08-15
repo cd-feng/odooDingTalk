@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dindin_department_signs,dindin.department.signs,model_dindin_department_signs,base.group_user,1,1,1,1
-access_dindin_department_signs_line,dindin.department.signs.line,model_dindin_department_signs_line,base.group_user,1,1,1,1
-access_dindin_users_signs,dindin.users.signs,model_dindin_users_signs,base.group_user,1,1,1,1
-access_dindin_users_signs_line,dindin.users.signs.line,model_dindin_users_signs_line,base.group_user,1,1,1,1
-access_dindin_signs_list,dindin.signs.list,model_dindin_signs_list,base.group_user,1,1,1,1
-

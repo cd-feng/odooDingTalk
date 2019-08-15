@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingding_simple_groups,dingding.simple.groups,model_dingding_simple_groups,base.group_user,1,0,0,1
+access_dingding_simple_groups_list,dingding.simple.groups.list,model_dingding_simple_groups_list,base.group_user,1,1,1,1
+access_dingding_simple_groups_list_time,dingding.simple.groups.list.time,model_dingding_simple_groups_list_time,base.group_user,1,1,1,1
+access_hr_dingding_plan,hr.dingding.plan,model_hr_dingding_plan,base.group_user,1,1,1,1
+access_hr_leaves_list,hr.leaves.list,model_hr_leaves_list,base.group_user,1,1,1,1
+access_hr_attendance_result,hr.attendance.result,model_hr_attendance_result,base.group_user,1,1,1,1
+access_hr_attendance_record,hr.attendance.record,model_hr_attendance_record,base.group_user,1,1,1,1
+
+

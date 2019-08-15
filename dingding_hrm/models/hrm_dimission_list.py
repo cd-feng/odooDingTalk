@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+###################################################################################
+#
+#    Copyright (C) 2019 SuXueFeng
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
 import json
 import logging
 import time
@@ -60,14 +78,14 @@ class GetDingDingHrmDimissionList(models.TransientModel):
         logging.info(">>>获取钉钉获取离职员工信息start")
         if len(self.emp_ids) > 50:
             raise UserError("钉钉仅支持批量查询小于等于50个员工!")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_listdimission')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_listdimission')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         user_str = ''
         for user in self.emp_ids:
             if user_str == '':
-                user_str = user_str + "{}".format(user.din_id)
+                user_str = user_str + "{}".format(user.ding_id)
             else:
-                user_str = user_str + ",{}".format(user.din_id)
+                user_str = user_str + ",{}".format(user.ding_id)
         data = {'userid_list': user_str}
         try:
             headers = {'Content-Type': 'application/json'}
@@ -78,14 +96,14 @@ class GetDingDingHrmDimissionList(models.TransientModel):
                     raise UserError("选择的员工未离职!")
                 for res in result.get('result'):
                     logging.debug(res)
-                    emp = self.env['hr.employee'].search([('din_id', '=', res.get('userid'))])
+                    emp = self.env['hr.employee'].search([('ding_id', '=', res.get('userid'))])
                     if emp:
                         hrm = self.env['dingding.hrm.dimission.list'].search([('emp_id', '=', emp[0].id)])
-                        handover_userid = self.env['hr.employee'].search([('din_id', '=', res.get('handover_userid'))])
-                        main_dept = self.env['hr.department'].search([('din_id', '=', res.get('main_dept_id'))])
+                        handover_userid = self.env['hr.employee'].search([('ding_id', '=', res.get('handover_userid'))])
+                        main_dept = self.env['hr.department'].search([('ding_id', '=', res.get('main_dept_id'))])
                         dept_list = list()
                         for depti in res.get('dept_list'):
-                            hr_dept = self.env['hr.department'].search([('din_id', '=', depti.get('dept_id'))])
+                            hr_dept = self.env['hr.department'].search([('ding_id', '=', depti.get('dept_id'))])
                             if hr_dept:
                                 dept_list.append(hr_dept.id)
                         data = {

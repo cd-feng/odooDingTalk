@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+###################################################################################
+#
+#    Copyright (C) 2019 SuXueFeng
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
 import json
 import logging
 import requests
@@ -57,9 +75,9 @@ class AddDingDingEmployee(models.Model):
         """
         self.ensure_one()
         logging.info(">>>添加待入职员工start")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_addpreentry')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        if not self.dept_id.din_id:
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_addpreentry')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
+        if not self.dept_id.ding_id:
             raise UserError("所选部门在钉钉中不存在!")
         user = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
         data = {
@@ -67,8 +85,8 @@ class AddDingDingEmployee(models.Model):
                 'name': self.name,
                 'mobile': self.mobile,
                 'pre_entry_time': str(self.pre_entry_time),
-                'op_userid': user[0].din_id if user else '',
-                'extend_info': {'depts': self.dept_id.din_id}
+                'op_userid': user[0].ding_id if user else '',
+                'extend_info': {'depts': self.dept_id.ding_id}
             }
         }
         try:

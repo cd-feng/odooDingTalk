@@ -1,4 +1,22 @@
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
+###################################################################################
+#
+#    Copyright (C) 2019 SuXueFeng
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
 from odoo import fields, models, tools, api
 import json
 import logging
@@ -55,8 +73,8 @@ class GetHrEmployeeStauts(models.TransientModel):
         更新待入职员工
         :return:
         """
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_querypreentry')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_querypreentry')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         offset = 0
         size = 50
         while True:
@@ -69,7 +87,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                 if result.get('errcode') == 0:
                     d_res = result['result']
                     for data_list in d_res['data_list']:
-                        sql = """UPDATE hr_employee SET work_status='1' WHERE din_id='{}'""".format(data_list)
+                        sql = """UPDATE hr_employee SET work_status='1' WHERE ding_id='{}'""".format(data_list)
                         self._cr.execute(sql)
                     if 'next_cursor' in d_res:
                         offset = d_res['next_cursor']
@@ -87,8 +105,8 @@ class GetHrEmployeeStauts(models.TransientModel):
         更新在职员工,在职员工子状态筛选: 2，试用期；3，正式；5，待离职；-1，无状态
         :return:
         """
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_queryonjob')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_queryonjob')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         status_arr = ['2', '3', '5', '-1']
         offset = 0
         size = 20
@@ -107,7 +125,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                     if result.get('errcode') == 0:
                         d_res = result['result']
                         for data_list in d_res['data_list']:
-                            sql = """UPDATE hr_employee SET work_status='2',office_status={} WHERE din_id='{}'""".format(data_list, arr)
+                            sql = """UPDATE hr_employee SET work_status='2',office_status={} WHERE ding_id='{}'""".format(data_list, arr)
                             self._cr.execute(sql)
                         if 'next_cursor' in d_res:
                             offset = d_res['next_cursor']
@@ -125,8 +143,8 @@ class GetHrEmployeeStauts(models.TransientModel):
         更新离职员工
         :return:
         """
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_querydimission')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
+        url = self.env['dingding.parameter'].search([('key', '=', 'hrm_querydimission')]).value
+        token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
         offset = 0
         size = 50
         while True:
@@ -139,7 +157,7 @@ class GetHrEmployeeStauts(models.TransientModel):
                 if result.get('errcode') == 0:
                     d_res = result['result']
                     for data_list in d_res['data_list']:
-                        sql = """UPDATE hr_employee SET work_status='3' WHERE din_id='{}'""".format(data_list)
+                        sql = """UPDATE hr_employee SET work_status='3' WHERE ding_id='{}'""".format(data_list)
                         self._cr.execute(sql)
                     if 'next_cursor' in d_res:
                         offset = d_res['next_cursor']

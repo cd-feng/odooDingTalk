@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <template id="dingding_approval_template_assets" name="DingDing Approval Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingding_base/static/src/js/dingding_approval_template.js"></script>
+        </xpath>
+    </template>
+
+    <record id="dingding_approval_template_tree_view" model="ir.ui.view">
+        <field name="name">审批模板</field>
+        <field name="model">dingding.approval.template</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top" create="true">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url" widget="image_url" class="oe_image_small" width="50px" height="50px"/>
+                <field name="process_code"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_approval_template_kanban">
+        <field name="name">审批模板</field>
+        <field name="model">dingding.approval.template</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" js_class="dingding_approval_template_kanban">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url" widget="image_url" class="oe_image_small" width="50px" height="50px"/>
+                <field name="url"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <div class="o_kanban_image_fill_left d-none d-md-block">
+                                <field name="icon_url" widget="image_url" width="100px" height="100px"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <field name="company_id" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="dingding_approval_template_action" model="ir.actions.act_window">
+        <field name="name">审批模板</field>
+        <field name="res_model">dingding.approval.template</field>
+        <field name="view_mode">kanban,tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="dingding_approval_template_search">
+        <field name="model">dingding.approval.template</field>
+        <field name="arch" type="xml">
+            <search string="审批模板">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url"/>
+                <field name="process_code"/>
+                <field name="url"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="审批" id="approval_template_main_menu" parent="configure_menu" sequence="11"
+              groups="dingding_base.manage_groups"/>
+
+    <menuitem name="审批模板" id="dingding_approval_template_menu" parent="approval_template_main_menu" sequence="1"
+              action="dingding_approval_template_action" groups="dingding_base.manage_groups"/>
+
+</odoo>

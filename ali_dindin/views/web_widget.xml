@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <template id="assets_backend" name="web_widget_image_url assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/ali_dindin/static/src/js/web_widget_image_url.js" />
-            <script type="text/javascript" src="/ali_dindin/static/src/js/web_widget_many2many_tags_multi_selection.js"/>
-        </xpath>
-    </template>
-</odoo>

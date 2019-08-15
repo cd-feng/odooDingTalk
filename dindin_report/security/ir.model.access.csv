@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dingding_report_template,dingding.report.template,model_dingding_report_template,base.group_user,1,1,1,1
-access_dingding_report_user,dingding.report.user,model_dingding_report_user,base.group_user,1,1,1,1
-access_dingding_report_user_line,dingding.report.user.line,model_dingding_report_user_line,base.group_user,1,1,1,1
-access_dingding_report_comments_list,dingding.report.comments.list,model_dingding_report_comments_list,base.group_user,1,1,1,1
