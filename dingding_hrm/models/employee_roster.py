@@ -125,7 +125,7 @@ class GetDingDingHrmList(models.TransientModel):
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('hrm_list')
         emp_data, dept_data = self.get_employee_to_dict()
         user_list = list()
-        for emp in self.emp_ids:
+        for emp in self.emp_ids.with_progress(msg="正在钉钉员工花名册"):
             if emp.ding_id:
                 user_list.append(emp.ding_id)
         user_list = self.env['hr.attendance.tran'].sudo().list_cut(user_list, 20)
