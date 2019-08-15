@@ -104,7 +104,8 @@ class DingDingSynchronous(models.TransientModel):
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('user_listbypage')
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
-        for department in departments:
+        # for department in departments:
+        for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
@@ -134,7 +135,7 @@ class DingDingSynchronous(models.TransientModel):
         """
         result = requests.get(url=url, params=data, timeout=30)
         result = json.loads(result.text)
-        logging.info(">>>钉钉Result:{}".format(result))
+        # logging.info(">>>钉钉Result:{}".format(result))
         if result.get('errcode') == 0:
             for user in result.get('userlist'):
                 data = {
