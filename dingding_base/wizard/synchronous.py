@@ -239,7 +239,6 @@ class DingDingSynchronous(models.TransientModel):
                 # 根据userid查询联系人是否存在
                 partner = self.env['res.partner'].sudo().search(
                     ['|', ('din_userid', '=', res.get('userId')), ('name', '=', res.get('name'))])
-                print(data)
                 if partner:
                     partner.sudo().write(data)
                 else:
