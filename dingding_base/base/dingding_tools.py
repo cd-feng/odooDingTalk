@@ -28,6 +28,7 @@ from odoo import api, models, fields
 import hmac
 from urllib.parse import quote
 from odoo.exceptions import UserError
+from dingtalk.client import AppKeyClient
 
 _logger = logging.getLogger(__name__)
 
@@ -35,6 +36,13 @@ _logger = logging.getLogger(__name__)
 class DingDingTools(models.TransientModel):
     _description = '获取钉钉token值'
     _name = 'dingding.api.tools'
+
+    @api.model
+    def get_client(self):
+        corp_id = self.env['ir.config_parameter'].sudo().get_param('dingding_base.corp_id')
+        app_key, app_secret = self._get_key_and_secrect()
+        client = AppKeyClient(corp_id, app_key, app_secret)
+        return client
 
     @api.model
     def _get_key_and_secrect(self):
@@ -70,7 +78,6 @@ class DingDingTools(models.TransientModel):
         try:
             result = requests.get(url="{}{}".format(url, token), params=data, timeout=timeout)
             result = json.loads(result.text)
-            logging.info(">>>钉钉Result:{}".format(result))
             return result
         except Exception as e:
             logging.info(">>>钉钉Exception:{}".format(str(e)))
@@ -87,7 +94,6 @@ class DingDingTools(models.TransientModel):
         try:
             result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=timeout)
             result = json.loads(result.text)
-            logging.info(">>>钉钉Result:{}".format(result))
             return result
         except ReadTimeout:
             logging.info(">>>钉钉Exception: 网络连接超时！")

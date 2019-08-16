@@ -43,6 +43,10 @@ class GetProcessInstance(models.TransientModel):
         :return:
         """
         self.ensure_one()
+        # 检查选择的审批模型是否已关联odoo单据
+        dac = self.env['dingding.approval.control'].search([('template_id', '=', self.oa_madel.id)], limit=1)
+        if not dac:
+            raise UserError("该审批模型没有关联Odoo单据，请先进行关联后再来操作！")
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('processinstance_listids')
         size = 20
         cursor = 0
@@ -64,4 +68,110 @@ class GetProcessInstance(models.TransientModel):
             if 'next_cursor' not in r_result:
                 break
             cursor = r_result.get('next_cursor')
-        print(process_list)
+        # 批量获取实例详情
+        self._get_process_info(process_list, dac.oa_model_id)
+
+    @api.model
+    def _get_process_info(self, process_list, odoo_model):
+        """
+        获取实例详情并写入到相应的表单
+        :param process_list:  审批实例ids  数组
+        :param odoo_model:  odoo模型
+        :return:
+        """
+        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('processinstance_get')
+        for process_id in process_list:
+            data = {'process_instance_id': process_id}
+            result = self.env['dingding.api.tools'].send_post_request(url, token, data, 20)
+            print(result)
+        print(odoo_model.name)
+        print(odoo_model._name)
+        print(odoo_model.model)
+        return True
+
+{
+    'process_instance': {
+        'originator_userid': '2660205649-53768585',  # 发起人
+        'originator_dept_name': '实施部',             # 发起部门
+        'originator_dept_id': '106321170',           # 发起部门
+        'status': 'COMPLETED',  # 审批状态，分为NEW（新创建）RUNNING（运行中）TERMINATED（被终止）COMPLETED（完成）
+        'tasks': [   # 已审批任务列表，可以通过此列表获取已审批人
+            {
+                'url': 'aflow.dingtalk.com?procInsId=62da3b8f-114e-4606-96b3-c96bb2349361&taskId=61958382690&businessId=201908142306000412195',
+                'create_time': '2019-08-14 23:06:42',
+                'userid': '021038163631880229',  # 任务处理人
+                'finish_time': '2019-08-14 23:07:16',
+                'task_status': 'COMPLETED',  # 任务状态，分为NEW（未启动），RUNNING（处理中），CANCELED（取消），COMPLETED（完成）
+                'taskid': '61958382690',
+                'task_result': 'AGREE'  # 结果，分为NONE（无），AGREE（同意），REFUSE（拒绝），REDIRECTED（转交
+            }, {
+                'url': 'aflow.dingtalk.com?procInsId=62da3b8f-114e-4606-96b3-c96bb2349361&taskId=61958382691&businessId=201908142306000412195',
+                'create_time': '2019-08-14 23:06:42',
+                'userid': 'V00_1400815737560',
+                'task_status': 'CANCELED',
+                'taskid': '61958382691',
+                'task_result': 'NONE'
+            }
+        ],
+        'result': 'agree',  # 审批结果，分为 agree 和 refuse
+        'title': 'lallaalsadasdasd提交的外出申请',
+        'create_time': '2019-08-14 23:06:42',  # 开始时间。
+        'finish_time': '2019-08-14 23:07:16',  # 结束时间
+        'business_id': '201908142306000412195',  # 审批实例业务编号
+        'operation_records': [  # 操作记录列表
+            {
+                'userid': '2660205649-53768585',
+                'operation_type': 'START_PROCESS_INSTANCE',
+                'date': '2019-08-14 23:06:41',
+                'operation_result': 'NONE'
+            }, {
+                'remark': '同意',
+                'operation_type': 'EXECUTE_TASK_NORMAL',  # 操作类型，分为EXECUTE_TASK_NORMAL（正常执行任务），EXECUTE_TASK_AGENT（代理人执行任务）
+                                                          # ，APPEND_TASK_BEFORE（前加签任务），APPEND_TASK_AFTER（后加签任务），
+                                                          # REDIRECT_TASK（转交任务），START_PROCESS_INSTANCE（发起流程实例），
+                                                          # TERMINATE_PROCESS_INSTANCE（终止(撤销)流程实例），FINISH_PROCESS_INSTANCE（结束流程实例），
+                                                          # ADD_REMARK（添加评论）
+                'date': '2019-08-14 23:07:15',
+                'userid': '021038163631880229',
+                'operation_result': 'AGREE'  # 操作结果，分为AGREE（同意），REFUSE（拒绝）
+            }, {
+                'remark': '',
+                'operation_type': 'NONE',
+                'date': '2019-08-14 23:07:16',
+                'userid': '2660205649-53768585',
+                'operation_result': 'NONE'
+            }
+        ],
+        'form_component_values': [      # 表单详情列表
+            {
+                'component_type': 'TextField',
+                'id': 'TextField-JU44NQ2D',
+                'name': '申请人',
+                'value': 'lallaalsadasdasd'
+            }, {
+                'component_type': 'TextField',
+                'id': 'TextField-JU44NQ2E',
+                'name': '开始时间',
+                'value': '2019-07-30 15:06:15'
+            }, {
+                'component_type': 'TextField',
+                'id': 'TextField-JU44NQ2F',
+                'name': '结束时间',
+                'value': '2019-08-14 15:06:15'
+            }, {
+                'component_type': 'TextareaField',
+                'id': '外出事由',
+                'name': '外出事由',
+                'value': 'asdasdasdasd'
+            }, {
+                'component_type': 'DDPhotoField',
+                'id': '图片',
+                'name': '图片',
+                'value': 'null'
+            }
+        ],
+
+    },
+    'request_id': '10ua7vjtrj3l2',
+    'errcode': 0
+}

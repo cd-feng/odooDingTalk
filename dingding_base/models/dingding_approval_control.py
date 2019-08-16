@@ -29,7 +29,7 @@ class DingDingApprovalControl(models.Model):
     _rec_name = 'oa_model_id'
 
     oa_model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', required=True, index=True)
-    template_id = fields.Many2one(comodel_name='dingding.approval.template', string=u'钉钉审批模板', required=True)
+    template_id = fields.Many2one(comodel_name='dingding.approval.template', string=u'钉钉审批模板', required=True, index=True)
     company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
 
     _sql_constraints = [

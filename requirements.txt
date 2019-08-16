@@ -1,2 +1,3 @@
 pypinyin
 pycryptodome
+dingtalk-sdk==1.3.3

@@ -60,39 +60,33 @@ class DingDingSynchronous(models.TransientModel):
         同步钉钉部门
         :return:
         """
-        logging.info(">>>---Start 同步部门-------")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('department_list')
-        data = {'fetch_child': True, 'id': 1}
-        result = self.env['dingding.api.tools'].send_get_request(url, token, data, 3)
-        if result.get('errcode') == 0:
-            dept_ding_ids = list()
-            for res in result.get('department'):
-                dept_ding_ids.append(str(res.get('id')))
-                data = {
-                    'name': res.get('name'),
-                    'ding_id': res.get('id'),
-                }
-                if res.get('parentid') != 1:
-                    partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))])
-                    if partner_department:
-                        data.update({'parent_id': partner_department[0].id})
-                h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id')), ('active', '=', True)])
-                if h_department:
-                    h_department.write(data)
-                else:
-                    self.env['hr.department'].create(data)
-            # 情况：当在钉钉端删除了部门后，那么在odoo原还存在该部门，所以在同步完成后，在检查一遍，将存在的保留，不存在的部门进行归档
-            departments = self.env['hr.department'].sudo().search(['|', ('active', '=', False), ('active', '=', True)])
-            for department in departments:
-                ding_id = department.ding_id
-                if ding_id not in dept_ding_ids:
-                    department.write({'active': False})
-                else:
-                    department.write({'active': True})
-            logging.info(">>>-----End 同步部门-------")
-            return True
-        else:
-            raise UserError("同步部门时发生意外，原因为:{}".format(result.get('errmsg')))
+        din_client = self.env['dingding.api.tools'].get_client()
+        result = din_client.department.list(fetch_child=True)
+        dept_ding_ids = list()
+        for res in result:
+            dept_ding_ids.append(str(res.get('id')))
+            data = {
+                'name': res.get('name'),
+                'ding_id': res.get('id'),
+            }
+            if res.get('parentid') != 1:
+                partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))])
+                if partner_department:
+                    data.update({'parent_id': partner_department[0].id})
+            h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id')), ('active', '=', True)])
+            if h_department:
+                h_department.write(data)
+            else:
+                self.env['hr.department'].create(data)
+        # 情况：当在钉钉端删除了部门后，那么在odoo原还存在该部门，所以在同步完成后，在检查一遍，将存在的保留，不存在的部门进行归档
+        departments = self.env['hr.department'].sudo().search(['|', ('active', '=', False), ('active', '=', True)])
+        for department in departments:
+            ding_id = department.ding_id
+            if ding_id not in dept_ding_ids:
+                department.write({'active': False})
+            else:
+                department.write({'active': True})
+        return True
 
     @api.model
     def synchronous_dingding_employee(self, s_avatar=None):
@@ -101,22 +95,15 @@ class DingDingSynchronous(models.TransientModel):
         :param s_avatar: 是否同步头像
         :return:
         """
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('user_listbypage')
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
-        # for department in departments:
+        din_client = self.env['dingding.api.tools'].get_client()
         for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
-                logging.info(">>>开始获取{}部门的员工".format(department.name))
-                data = {
-                    'access_token': token,
-                    'department_id': department.ding_id,
-                    'offset': emp_offset,
-                    'size': emp_size,
-                }
-                result_state = self.get_dingding_employees(department, url, data, s_avatar=s_avatar)
+                logging.info(">>>开始获取%s部门的员工", department.name)
+                result_state = self.get_dingding_employees(din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
@@ -124,19 +111,18 @@ class DingDingSynchronous(models.TransientModel):
         return True
 
     @api.model
-    def get_dingding_employees(self, department, url, data, s_avatar=None):
+    def get_dingding_employees(self, din_client, department, offset=0, size=100, s_avatar=None):
         """
-        创建员工
+        获取部门成员（详情）
+        :param din_client:
         :param department:
-        :param url:
-        :param data:
+        :param offset:
+        :param size:
         :param s_avatar:
         :return:
         """
-        result = requests.get(url=url, params=data, timeout=30)
-        result = json.loads(result.text)
-        # logging.info(">>>钉钉Result:{}".format(result))
-        if result.get('errcode') == 0:
+        try:
+            result = din_client.user.list(department.ding_id, offset, size, order='custom')
             for user in result.get('userlist'):
                 data = {
                     'name': user.get('name'),  # 员工名称
@@ -162,30 +148,31 @@ class DingDingSynchronous(models.TransientModel):
                 }
                 # 支持显示国际手机号
                 if user.get('stateCode') != '86':
-                    data.update({'mobile_phone': '+{}-{}'.format(user.get('stateCode'),user.get('mobile'))})
+                    data.update({'mobile_phone': '+{}-{}'.format(user.get('stateCode'), user.get('mobile'))})
                 if user.get('hiredDate'):
                     time_stamp = self.env['dingding.api.tools'].get_time_stamp(user.get('hiredDate'))
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
-                        binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(user.get('avatar')).content))
+                        binary_data = tools.image_resize_image_big(
+                            base64.b64encode(requests.get(user.get('avatar')).content))
                         data.update({'image': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")
-                        logging.info(">>>钉钉头像SSL异常:{}".format(e))
+                        logging.info(">>>SSL异常:%s", e)
                         logging.info(">>>--------------------------------")
                 if user.get('department'):
-                        dep_din_ids = user.get('department')
-                        dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids)])
-                        data.update({'department_ids': [(6, 0, dep_list.ids)]})
-                employee = self.env['hr.employee'].search(['|', ('ding_id', '=', user.get('userid')), ('mobile_phone', '=', user.get('mobile'))])
+                    dep_din_ids = user.get('department')
+                    dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids)])
+                    data.update({'department_ids': [(6, 0, dep_list.ids)]})
+                employee = self.env['hr.employee'].search([('ding_id', '=', user.get('userid'))])
                 if employee:
                     employee.sudo().write(data)
                 else:
                     self.env['hr.employee'].sudo().create(data)
             return result.get('hasMore')
-        else:
-            raise UserError("同步部门员工时发生意外，原因为:{}".format(result.get('errmsg')))
+        except Exception as e:
+            raise UserError(e)
 
     @api.model
     def synchronous_dingding_category(self):
@@ -194,12 +181,11 @@ class DingDingSynchronous(models.TransientModel):
         :return:
         """
         logging.info(">>>同步钉钉联系人标签")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('listlabelgroups')
-        data = {'size': 100, 'offset': 0}
-        result = self.env['dingding.api.tools'].send_post_request(url, token, data)
-        if result.get('errcode') == 0:
+        din_client = self.env['dingding.api.tools'].get_client()
+        try:
+            result = din_client.ext.listlabelgroups(offset=0, size=100)
             category_list = list()
-            for res in result.get('results'):
+            for res in result:
                 for labels in res.get('labels'):
                     category_list.append({
                         'name': labels.get('name'),
@@ -208,14 +194,14 @@ class DingDingSynchronous(models.TransientModel):
                         'din_category_type': res.get('name'),
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('ding_id'))])
+                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('din_id'))])
                 if res_category:
                     res_category.sudo().write(category)
                 else:
                     self.env['res.partner.category'].sudo().create(category)
             return True
-        else:
-            raise UserError("同步联系人标签时发生错误，原因为:{}".format(result.get('errmsg')))
+        except Exception as e:
+            raise UserError(e)
 
     @api.model
     def synchronous_dingding_partner(self):
@@ -224,16 +210,15 @@ class DingDingSynchronous(models.TransientModel):
         :return:
         """
         logging.info(">>>同步钉钉联系人列表start")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('extcontact_list')
-        data = {'size': 100, 'offset': 0}
-        result = self.env['dingding.api.tools'].send_post_request(url, token, data)
-        if result.get('errcode') == 0:
-            for res in result.get('results'):
+        din_client = self.env['dingding.api.tools'].get_client()
+        try:
+            result = din_client.ext.list(offset=0, size=100)
+            logging.info(result)
+            for res in result:
                 # 获取标签
                 label_list = list()
-                for label in res.get('label_ids'):
-                    category = self.env['res.partner.category'].sudo().search(
-                        [('ding_id', '=', label)])
+                for label in res.get('labelIds'):
+                    category = self.env['res.partner.category'].sudo().search([('ding_id', '=', label)])
                     if category:
                         label_list.append(category[0].id)
                 data = {
@@ -249,16 +234,15 @@ class DingDingSynchronous(models.TransientModel):
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):
-                    follower_user = self.env['hr.employee'].sudo().search(
-                        [('ding_id', '=', res.get('follower_user_id'))])
+                    follower_user = self.env['hr.employee'].sudo().search([('ding_id', '=', res.get('follower_user_id'))])
                     data.update({'din_employee_id': follower_user[0].id if follower_user else ''})
                 # 根据userid查询联系人是否存在
-                partner = self.env['res.partner'].sudo().search(['|', ('din_userid', '=', res.get('userid')), ('name', '=', res.get('name'))])
+                partner = self.env['res.partner'].sudo().search(
+                    ['|', ('din_userid', '=', res.get('userid')), ('name', '=', res.get('name'))])
                 if partner:
                     partner.sudo().write(data)
                 else:
                     self.env['res.partner'].sudo().create(data)
             return True
-        else:
-            raise UserError("同步钉钉联系人失败，原因为:{}".format(result.get('errmsg')))
-
+        except Exception as e:
+            raise UserError(e)
