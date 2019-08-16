@@ -61,16 +61,16 @@ limitations under the License.
                             <group>
                                 <field name="originator_user_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"
                                        options="{'horizontal': true, 'no_create_edit': True}" placeholder="请选择发起人"/>
-                                <field name="emp_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"
+                                <field name="emp_id" attrs="{'readonly': [('oa_state', '!=', '00')]}" required="1"
                                        options="{'horizontal': true, 'no_create_edit': True}"/>
                             </group>
                             <group>
-                                <field name="start_date" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
-                                <field name="end_date" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="start_date" attrs="{'readonly': [('oa_state', '!=', '00')]}" required="1"/>
+                                <field name="end_date" attrs="{'readonly': [('oa_state', '!=', '00')]}" required="1"/>
                             </group>
                         </group>
                         <group>
-                            <field name="reason_leave" attrs="{'readonly': [('oa_state', '!=', '00')]}"
+                            <field name="reason_leave" attrs="{'readonly': [('oa_state', '!=', '00')]}" required="1"
                                    placeholder="外出事由。。。"/>
                         </group>
                         <group>

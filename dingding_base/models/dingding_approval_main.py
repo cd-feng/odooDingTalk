@@ -34,6 +34,7 @@ class DingDingApprovalMain(models.Model):
     _name = 'dingding.approval.main'
     _inherit = ['mail.thread']
     _description = "审批表单基类"
+    _rec_name = 'title'
 
     OASTATE = [
         ('00', '草稿'),
@@ -48,8 +49,10 @@ class DingDingApprovalMain(models.Model):
     
     active = fields.Boolean(string=u'Active', default=True)
     process_code = fields.Char(string='单据编号', index=True, copy=False)
+    business_id = fields.Char(string='审批实例业务编号', index=True, copy=False)
     company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
     originator_user_id = fields.Many2one('hr.employee', string=u'发起人', required=True)
+    originator_dept_id = fields.Many2one('hr.department', string=u'发起部门')
     title = fields.Char(string='标题')
     process_instance_id = fields.Char(string='钉钉审批实例id')
     reason_leave = fields.Text(string=u'事由')
@@ -68,12 +71,12 @@ class DingDingApprovalMain(models.Model):
         """
         pass
 
-    @api.multi
-    def unlink(self):
-        for res in self:
-            if res.oa_state != '00':
-                raise UserError('非草稿单据不能删除!')
-        super(DingDingApprovalMain, self).unlink()
+    # @api.multi
+    # def unlink(self):
+    #     for res in self:
+    #         if res.oa_state != '00':
+    #             raise UserError('非草稿单据不能删除!')
+    #     super(DingDingApprovalMain, self).unlink()
 
     @api.model
     def _summit_din_approval(self, process_code, form_values):

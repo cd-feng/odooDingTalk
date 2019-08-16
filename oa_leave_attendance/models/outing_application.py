@@ -26,10 +26,10 @@ class OutingApplication(models.Model):
     _description = "外出申请"
     _rec_name = 'emp_id'
 
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'申请人', required=True)
-    start_date = fields.Datetime(string=u'开始时间', required=True)
-    end_date = fields.Datetime(string=u'结束时间', required=True)
-    reason_leave = fields.Text(string=u'外出事由', required=True)
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'申请人', index=True, copy=False)
+    start_date = fields.Datetime(string=u'开始时间')
+    end_date = fields.Datetime(string=u'结束时间')
+    reason_leave = fields.Text(string=u'外出事由')
 
     @api.multi
     def summit_approval(self):

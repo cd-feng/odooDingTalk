@@ -135,25 +135,24 @@ class DingDingSimpleGroups(models.Model):
         获取考勤组成员
         :return:
         """
-        self.get_simple_groups()  # 获取考勤组成员前先更新考勤组
         emps = self.env['hr.employee'].sudo().search([('ding_id', '!=', '')])
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('a_getusergroup')
+        din_client = self.env['dingding.api.tools'].get_client()
         for emp in emps:
-            data = {'userid': emp.ding_id}
             try:
-                result = self.env['dingding.api.tools'].send_post_request(url, token, data, 1)
-                if result.get('errcode') == 0:
+                result = din_client.attendance.getusergroup(emp.ding_id)
+                logging.info(">>>获取考勤组成员返回结果%s", result)
+                if result.get('ding_open_errcode') == 0:
                     res = result.get('result')
                     groups = self.env['dingding.simple.groups'].sudo().search([('group_id', '=', res.get('group_id'))])
                     if groups:
-                        self._cr.execute(
-                            """UPDATE hr_employee SET din_group_id = {} WHERE id = {}""".format(groups[0].id, emp.id))
+                        self._cr.execute("""UPDATE hr_employee SET din_group_id = {} WHERE id = {}""".format(groups[0].id, emp.id))
                     else:
                         pass
                 else:
+                    logging.info("请求失败")
                     return {'state': False, 'msg': '请求失败,原因为:{}'.format(result.get('errmsg'))}
-            except ReadTimeout:
-                return {'state': False, 'msg': '网络连接超时!'}
+            except Exception as e:
+                raise UserError(e)
         return {'state': True, 'msg': '执行成功!'}
 
 

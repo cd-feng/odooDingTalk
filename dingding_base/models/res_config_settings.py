@@ -41,6 +41,9 @@ class ResConfigSettings(models.TransientModel):
     din_delete_department = fields.Boolean(string=u'删除部门')
     din_login_appid = fields.Char(string=u'钉钉登录appId')
     din_login_appsecret = fields.Char(string=u'钉钉登录appSecret')
+    # 安装钉钉模块
+    module_oa_leave_attendance = fields.Boolean('钉钉审批-出勤休假')
+    module_oa_personnel_admin = fields.Boolean('钉钉审批-行政人事')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()

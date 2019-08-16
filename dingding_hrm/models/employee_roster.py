@@ -39,7 +39,7 @@ class EmployeeRoster(models.Model):
     name = fields.Char(string='姓名')
     ding_userid = fields.Char(string='钉钉用户Id', index=True)
     email = fields.Char(string='邮箱')
-    dept = fields.Many2one('hr.department', string=u'部门', index=True)
+    dept = fields.Many2many('hr.department', string=u'部门', help="适应钉钉多部门")
     mainDept = fields.Many2one('hr.department', string=u'主部门', index=True)
     position = fields.Many2one(comodel_name='hr.job', string=u'职位')
     mobile = fields.Char(string='手机号')
@@ -123,7 +123,7 @@ class GetDingDingHrmList(models.TransientModel):
         """
         logging.info(">>>获取钉钉员工花名册start")
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('hrm_list')
-        emp_data, dept_data = self.get_employee_to_dict()
+        emp_data = self.get_employee_to_dict()
         user_list = list()
         for emp in self.emp_ids:
             if emp.ding_id:
@@ -143,16 +143,19 @@ class GetDingDingHrmList(models.TransientModel):
                             'ding_userid': rec['userid']
                         }
                         for fie in rec['field_list']:
-                            # 判断部门和主部门
+                            # 获取部门（可能会多个）
                             if fie['field_code'][6:] == 'deptIds':
-                                try:
-                                    roster_data.update({
-                                        'dept': dept_data[str(fie['label'])],
-                                        'mainDept': dept_data[str(fie['label'])]
-                                    })
-                                except KeyError:
-                                    raise UserError("钉钉部门已发生改变！请先同步部门数据!")
-                            elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept' or fie['field_code'][6:] == 'deptIds':
+                                dept_ding_ids = list()
+                                for depa in fie['value'].split('|'):
+                                    dept_ding_ids.append(depa)
+                                departments = self.env['hr.department'].sudo().search([('ding_id', 'in', dept_ding_ids)])
+                                roster_data.update({'dept': [(6, 0, departments.ids)]})
+                            # 获取主部门
+                            elif fie['field_code'][6:] == 'mainDeptId':
+                                dept = self.env['hr.department'].sudo().search([('ding_id', '=', fie['value'])], limit=1)
+                                if dept:
+                                    roster_data.update({'mainDept': dept.id})
+                            elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept':
                                 continue
                             # 同步工作岗位
                             elif fie['field_code'][6:] == 'position' and 'label' in fie:
@@ -182,19 +185,13 @@ class GetDingDingHrmList(models.TransientModel):
 
     def get_employee_to_dict(self):
         """
-        将员工、部门封装为字典并返回
+        将员工封装为字典并返回
         :return:
         """
         employees = self.env['hr.employee'].sudo().search([('ding_id', '!=', '')])
-        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', '')])
         emp_data = dict()
         for emp in employees:
             emp_data.update({
                 emp.ding_id: emp.id,
             })
-        dept_data = dict()
-        for dept in departments:
-            dept_data.update({
-                dept.ding_id: dept.id,
-            })
-        return emp_data, dept_data
+        return emp_data

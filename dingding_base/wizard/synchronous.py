@@ -225,7 +225,7 @@ class DingDingSynchronous(models.TransientModel):
                     'name': res.get('name'),
                     'function': res.get('title'),
                     'category_id': [(6, 0, label_list)],  # 标签
-                    'din_userid': res.get('userid'),  # 钉钉用户id
+                    'din_userid': res.get('userId'),  # 钉钉用户id
                     'comment': res.get('remark'),  # 备注
                     'street': res.get('address'),  # 地址
                     'mobile': res.get('mobile'),  # 手机
@@ -238,7 +238,7 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({'din_employee_id': follower_user[0].id if follower_user else ''})
                 # 根据userid查询联系人是否存在
                 partner = self.env['res.partner'].sudo().search(
-                    ['|', ('din_userid', '=', res.get('userid')), ('name', '=', res.get('name'))])
+                    ['|', ('din_userid', '=', res.get('userId')), ('name', '=', res.get('name'))])
                 if partner:
                     partner.sudo().write(data)
                 else:
