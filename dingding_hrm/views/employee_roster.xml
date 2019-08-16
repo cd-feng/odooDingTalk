@@ -48,12 +48,10 @@
                     <group string="简要信息">
                         <group>
                             <field name="company_id"/>
-                            <field name="dept"/>
                             <field name="position"/>
                         </group>
                         <group>
                             <field name="jobNumber"/>
-                            <field name="dept"/>
                             <field name="mainDept"/>
                         </group>
                     </group>
@@ -63,7 +61,7 @@
                                 <group>
                                     <field name="name"/>
                                     <field name="email"/>
-                                    <field name="dept"/>
+                                    <field name="dept" widget="many2many_tags"/>
                                     <field name="mainDept"/>
                                     <field name="position"/>
                                     <field name="workPlace"/>
