@@ -26,9 +26,9 @@ class LeaveApplication(models.Model):
     _description = "出差申请"
     _rec_name = 'emp_id'
 
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'申请人', required=True)
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'申请人')
     sum_days = fields.Integer(string=u'总天数', compute='_compute_sum_days')
-    line_ids = fields.One2many(comodel_name='oa.travel.application.line', inverse_name='oa_ta_id', string=u'出差列表')
+    line_ids = fields.One2many(comodel_name='oa.travel.application.line', inverse_name='oa_ta_id', string=u'明细')
 
     @api.multi
     def summit_approval(self):
@@ -71,7 +71,7 @@ class LeaveApplication(models.Model):
         for res in self:
             t_day = 0
             for line in res.line_ids:
-                t_day += line.ta_days
+                t_day += int(line.ta_days)
             res.sum_days = t_day
 
 
@@ -88,14 +88,14 @@ class LeaveApplicationLine(models.Model):
     ]
 
     sequence = fields.Integer(string=u'序号')
-    start_date = fields.Date(string=u'开始日期', required=True)
-    end_date = fields.Date(string=u'结束日期', required=True)
-    departure_city = fields.Char(string='出发城市', required=True)
-    destination_city = fields.Char(string='目的城市', required=True)
-    ta_text = fields.Char(string=u'出差事由', required=True, help="请填写出差事由")
-    ta_tool = fields.Selection(string=u'交通工具', selection=TATOOL, default='飞机', required=True)
-    ta_type = fields.Selection(string=u'单程/往返', selection=[('单程', '单程'), ('往返', '往返'), ], default='单程')
-    ta_days = fields.Integer(string=u'天数')
+    start_date = fields.Date(string=u'开始日期')
+    end_date = fields.Date(string=u'结束日期')
+    departure_city = fields.Char(string='出发城市')
+    destination_city = fields.Char(string='目的城市')
+    ta_text = fields.Char(string=u'出差事由', help="请填写出差事由")
+    ta_tool = fields.Selection(string=u'交通工具', selection=TATOOL, default='飞机')
+    ta_type = fields.Selection(string=u'单程往返', selection=[('单程', '单程'), ('往返', '往返'), ], default='单程')
+    ta_days = fields.Char(string=u'时长（天）')
     remarks = fields.Text(string=u'备注')
     oa_ta_id = fields.Many2one(comodel_name='oa.travel.application', string=u'出差申请', ondelete='cascade')
 
@@ -104,5 +104,5 @@ class LeaveApplicationLine(models.Model):
         if self.start_date and self.end_date:
             start_date = datetime.datetime.strptime(str(self.start_date), "%Y-%m-%d")
             end_date = datetime.datetime.strptime(str(self.end_date), "%Y-%m-%d")
-            self.ta_days = (end_date - start_date).days
+            self.ta_days = str((end_date - start_date).days)
 

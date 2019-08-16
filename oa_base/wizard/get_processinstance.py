@@ -17,11 +17,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
-
-import base64
 import json
 import logging
-import requests
+
+import psycopg2
+
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -83,95 +83,116 @@ class GetProcessInstance(models.TransientModel):
         for process_id in process_list:
             data = {'process_instance_id': process_id}
             result = self.env['dingding.api.tools'].send_post_request(url, token, data, 20)
-            print(result)
-        print(odoo_model.name)
-        print(odoo_model._name)
-        print(odoo_model.model)
+            if result['errcode'] == 0:
+                process_instance = result['process_instance']
+                # get发起人和发起部门
+                emp_id, dept_id = self._get_originator_user_and_dept(process_instance['originator_userid'], process_instance['originator_dept_id'])
+                model_data = {
+                    'originator_user_id': emp_id,   # 发起人
+                    'originator_dept_id': dept_id,  # 发起部门
+                    'oa_result': process_instance['result'],  # 审批结果
+                    'title': process_instance['title'],  # 标题
+                    'create_date': process_instance['create_time'],  # 创建时间
+                    'write_date': process_instance['finish_time'] if 'finish_time' in process_instance else False,  # 修改/结束时间
+                    'business_id': process_instance['business_id'],  # 审批实例业务编号
+                    'process_instance_id': process_instance['business_id'],  # 钉钉审批实例id
+                }
+                # 审批状态
+                status = process_instance['status']
+                if status == 'NEW':
+                    model_data.update({'oa_state': '00'})
+                elif status == 'RUNNING':
+                    model_data.update({'oa_state': '01'})
+                else:
+                    model_data.update({'oa_state': '02'})
+                # 表单字段详情
+                field_dict = self._get_model_filed(odoo_model)
+                for form_value in process_instance['form_component_values']:
+                    o_field = field_dict.get(form_value['name'])  # 获取odoo字段
+                    if not o_field and form_value['component_type'] != 'DDPhotoField':
+                        raise UserError("钉钉字段名 '%s' 与系统字段名不一致，无法同步！" % form_value['name'])
+                    # 过滤明细字段和图片附件字段
+                    if form_value['component_type'] != 'TableField' and form_value['component_type'] != 'DDPhotoField':
+                        if o_field.ttype == 'many2one':    # many2one字段类型
+                            domain = [('name', '=', form_value['value'])]
+                            many_model = self.env[o_field.relation].sudo().search(domain, limit=1)  # 只支持查询name字段
+                            model_data.update({o_field.sudo().name: many_model.id if many_model else False})
+                        else:
+                            model_data.update({o_field.name: form_value['value']})
+                    elif form_value['component_type'] == 'TableField':   # 处理列表
+                        # print(form_value)
+                        # print(form_value['name'])
+                        # print(o_field)
+                        line_field_dict = self._get_model_filed(o_field.relation)
+                        values = json.loads(form_value['value'])
+                        line_list = list()
+                        for value in values:
+                            line_data = dict()
+                            for row_value in value['rowValue']:
+                                line_field = line_field_dict.get(row_value['label'])  # 获取odoo字段
+                                if not line_field:
+                                    raise UserError("表单列表明细中字段名 '%s' 与系统字段名不一致，无法同步！" % row_value['label'])
+                                if line_field.ttype == 'many2one':  # many2one字段类型
+                                    domain = [('name', '=', row_value['value'])]
+                                    many_model = self.env[line_field.relation].sudo().search(domain, limit=1)
+                                    line_data.update({line_field.sudo().name: many_model.id if many_model else False})
+                                else:
+                                    line_data.update({line_field.name: row_value['value']})
+                            line_list.append((0, 0, line_data))
+                        model_data.update({o_field.name: line_list})
+                try:
+                    model_form = self.env[odoo_model.model].sudo().create(model_data)
+                except Exception as e:
+                    logging.info(str(e))
+                    logging.info("字段值不正确导致创建失败，系统将略过...")
+                    continue
+                # 将审批记录通过消息记录到单据中
+                ORESULT = {'AGREE': '同意', 'REFUSE': '拒绝', 'NONE': '无'}
+                for records in process_instance['operation_records']:
+                    bodys = "操作记录，任务时间：'%s'" % records.get('date')
+                    emp = self.env['hr.employee'].sudo().search([('ding_id', '=', records.get('userid'))])
+                    bodys = bodys + "， 处理人：'%s'" % emp.name if emp else "无 "
+                    bodys = bodys + "，处理结果：'%s'" % ORESULT.get(records.get('operation_result'))
+                    bodys = bodys + "，消息：'%s'" % records.get('remark')
+                    model_form.sudo().message_post(body=bodys, message_type='notification')
+                # 记录已审批任务消息
+                TASKRESULT = {'NONE': '无', 'AGREE': '同意', 'REFUSE': '拒绝', 'REDIRECTED': '转交'}
+                for task in process_instance['tasks']:
+                    emp = self.env['hr.employee'].sudo().search([('ding_id', '=', task.get('userid'))])
+                    bodys = "已审批任务，时间：%s，" % task.get('create_time')
+                    bodys = bodys + "处理人：%s，" % emp.name if emp else "无"
+                    bodys = bodys + "处理结果：%s，" % TASKRESULT.get(task.get('task_result'))
+                    model_form.sudo().message_post(body=bodys, message_type='notification')
+            else:
+                raise UserError(result['errmsg'])
         return True
 
-{
-    'process_instance': {
-        'originator_userid': '2660205649-53768585',  # 发起人
-        'originator_dept_name': '实施部',             # 发起部门
-        'originator_dept_id': '106321170',           # 发起部门
-        'status': 'COMPLETED',  # 审批状态，分为NEW（新创建）RUNNING（运行中）TERMINATED（被终止）COMPLETED（完成）
-        'tasks': [   # 已审批任务列表，可以通过此列表获取已审批人
-            {
-                'url': 'aflow.dingtalk.com?procInsId=62da3b8f-114e-4606-96b3-c96bb2349361&taskId=61958382690&businessId=201908142306000412195',
-                'create_time': '2019-08-14 23:06:42',
-                'userid': '021038163631880229',  # 任务处理人
-                'finish_time': '2019-08-14 23:07:16',
-                'task_status': 'COMPLETED',  # 任务状态，分为NEW（未启动），RUNNING（处理中），CANCELED（取消），COMPLETED（完成）
-                'taskid': '61958382690',
-                'task_result': 'AGREE'  # 结果，分为NONE（无），AGREE（同意），REFUSE（拒绝），REDIRECTED（转交
-            }, {
-                'url': 'aflow.dingtalk.com?procInsId=62da3b8f-114e-4606-96b3-c96bb2349361&taskId=61958382691&businessId=201908142306000412195',
-                'create_time': '2019-08-14 23:06:42',
-                'userid': 'V00_1400815737560',
-                'task_status': 'CANCELED',
-                'taskid': '61958382691',
-                'task_result': 'NONE'
-            }
-        ],
-        'result': 'agree',  # 审批结果，分为 agree 和 refuse
-        'title': 'lallaalsadasdasd提交的外出申请',
-        'create_time': '2019-08-14 23:06:42',  # 开始时间。
-        'finish_time': '2019-08-14 23:07:16',  # 结束时间
-        'business_id': '201908142306000412195',  # 审批实例业务编号
-        'operation_records': [  # 操作记录列表
-            {
-                'userid': '2660205649-53768585',
-                'operation_type': 'START_PROCESS_INSTANCE',
-                'date': '2019-08-14 23:06:41',
-                'operation_result': 'NONE'
-            }, {
-                'remark': '同意',
-                'operation_type': 'EXECUTE_TASK_NORMAL',  # 操作类型，分为EXECUTE_TASK_NORMAL（正常执行任务），EXECUTE_TASK_AGENT（代理人执行任务）
-                                                          # ，APPEND_TASK_BEFORE（前加签任务），APPEND_TASK_AFTER（后加签任务），
-                                                          # REDIRECT_TASK（转交任务），START_PROCESS_INSTANCE（发起流程实例），
-                                                          # TERMINATE_PROCESS_INSTANCE（终止(撤销)流程实例），FINISH_PROCESS_INSTANCE（结束流程实例），
-                                                          # ADD_REMARK（添加评论）
-                'date': '2019-08-14 23:07:15',
-                'userid': '021038163631880229',
-                'operation_result': 'AGREE'  # 操作结果，分为AGREE（同意），REFUSE（拒绝）
-            }, {
-                'remark': '',
-                'operation_type': 'NONE',
-                'date': '2019-08-14 23:07:16',
-                'userid': '2660205649-53768585',
-                'operation_result': 'NONE'
-            }
-        ],
-        'form_component_values': [      # 表单详情列表
-            {
-                'component_type': 'TextField',
-                'id': 'TextField-JU44NQ2D',
-                'name': '申请人',
-                'value': 'lallaalsadasdasd'
-            }, {
-                'component_type': 'TextField',
-                'id': 'TextField-JU44NQ2E',
-                'name': '开始时间',
-                'value': '2019-07-30 15:06:15'
-            }, {
-                'component_type': 'TextField',
-                'id': 'TextField-JU44NQ2F',
-                'name': '结束时间',
-                'value': '2019-08-14 15:06:15'
-            }, {
-                'component_type': 'TextareaField',
-                'id': '外出事由',
-                'name': '外出事由',
-                'value': 'asdasdasdasd'
-            }, {
-                'component_type': 'DDPhotoField',
-                'id': '图片',
-                'name': '图片',
-                'value': 'null'
-            }
-        ],
+    @api.model
+    def _get_originator_user_and_dept(self, user_id, dept_id):
+        """
+        返回员工id和部门id
+        :param user_id:
+        :param dept_id:
+        :return:
+        """
+        emp = self.env['hr.employee'].sudo().search([('ding_id', '=', user_id)], limit=1)
+        dept = self.env['hr.department'].sudo().search([('ding_id', '=', dept_id)], limit=1)
+        if not emp:
+            raise UserError("员工不存在，请先同步员工信息！")
+        if not dept:
+            raise UserError("部门不存在，请先同步部门信息！")
+        return emp.id, dept.id
 
-    },
-    'request_id': '10ua7vjtrj3l2',
-    'errcode': 0
-}
+    @api.model
+    def _get_model_filed(self, model):
+        """
+        返回该模型的标签和字段名dict
+        :param model:
+        :return:
+        """
+        field_dict = dict()
+        if isinstance(model, str):
+            model = self.env['ir.model'].sudo().search([('model', '=', model)], limit=1)
+        for field_id in model.field_id:
+            field_dict.update({field_id.field_description: field_id})
+        return field_dict

@@ -100,3 +100,13 @@ class HrDingdingPlanTran(models.TransientModel):
                 raise UserError("获取企业考勤排班详情失败: {}".format(result['errmsg']))
         logging.info(">>>------结束获取排班信息-----------")
         return True
+        # offset = 0
+        # size = 200
+        # din_client = self.env['dingding.api.tools'].get_client()
+        # try:
+        #     result = din_client.attendance.listschedule(work_date, offset, size)
+        #     print(result)
+        # except Exception as e:
+        #     raise UserError(e)
+        # logging.info(">>>获取考勤组结束...")
+        # return True

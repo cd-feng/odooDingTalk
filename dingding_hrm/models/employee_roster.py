@@ -186,7 +186,7 @@ class GetDingDingHrmList(models.TransientModel):
         :return:
         """
         employees = self.env['hr.employee'].sudo().search([('ding_id', '!=', '')])
-        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', '')])
+        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         emp_data = dict()
         for emp in employees:
             emp_data.update({

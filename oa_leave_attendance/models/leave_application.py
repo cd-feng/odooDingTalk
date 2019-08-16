@@ -25,11 +25,11 @@ class LeaveApplication(models.Model):
     _description = "请假单"
     _rec_name = 'emp_id'
 
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'请假人', required=True)
-    leave_type = fields.Many2one(comodel_name='oa.leave.type', string=u'请假类型', required=True)
-    start_date = fields.Date(string=u'开始日期', required=True)
-    end_date = fields.Date(string=u'结束日期', required=True)
-    reason_leave = fields.Text(string=u'请假事由', required=True)
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'请假人', index=True, copy=False)
+    leave_type = fields.Many2one(comodel_name='oa.leave.type', string=u'请假类型')
+    start_date = fields.Date(string=u'开始时间')
+    end_date = fields.Date(string=u'结束时间')
+    reason_leave = fields.Text(string=u'请假事由')
 
     @api.multi
     def summit_approval(self):
