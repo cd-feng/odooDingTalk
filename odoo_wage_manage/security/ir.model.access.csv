@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wage_insured_scheme_insurance,wage.insured.scheme.insurance,model_wage_insured_scheme_insurance,base.group_user,1,1,1,1
+access_wage_insured_scheme,wage.insured.scheme,model_wage_insured_scheme,base.group_user,1,1,1,1
+access_wage_insured_scheme_line,wage.insured.scheme.line,model_wage_insured_scheme_line,base.group_user,1,1,1,1
+access_wage_insured_scheme_employee,wage.insured.scheme.employee,model_wage_insured_scheme_employee,base.group_user,1,1,1,1
+access_wage_insured_monthly_statement,wage.insured.monthly.statement,model_wage_insured_monthly_statement,base.group_user,1,1,1,1
+access_wage_insured_monthly_statement_line,wage.insured.monthly.statement.line,model_wage_insured_monthly_statement_line,base.group_user,1,1,1,1
+
+access_wage_structure,wage.structure,model_wage_structure,base.group_user,1,1,1,1
+access_wage_household_registration,wage.household.registration,model_wage_household_registration,base.group_user,1,1,1,1
+access_wage_archives_company,wage.archives.company,model_wage_archives_company,base.group_user,1,1,1,1
+access_wage_archives,wage.archives,model_wage_archives,base.group_user,1,1,1,1
+access_wage_archives_line,wage.archives.line,model_wage_archives_line,base.group_user,1,1,1,1
+access_wage_calculate_salary_rules,wage.calculate.salary.rules,model_wage_calculate_salary_rules,base.group_user,1,1,1,1
+access_wage_special_additional_deduction,wage.special.additional.deduction,model_wage_special_additional_deduction,base.group_user,1,1,1,1
+access_wage_employee_attendance_annal,wage.employee.attendance.annal,model_wage_employee_attendance_annal,base.group_user,1,1,1,1
+access_wage_employee_performance_manage,wage.employee.performance.manage,model_wage_employee_performance_manage,base.group_user,1,1,1,1
