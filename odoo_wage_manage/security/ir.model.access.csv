@@ -15,3 +15,5 @@ access_wage_calculate_salary_rules,wage.calculate.salary.rules,model_wage_calcul
 access_wage_special_additional_deduction,wage.special.additional.deduction,model_wage_special_additional_deduction,base.group_user,1,1,1,1
 access_wage_employee_attendance_annal,wage.employee.attendance.annal,model_wage_employee_attendance_annal,base.group_user,1,1,1,1
 access_wage_employee_performance_manage,wage.employee.performance.manage,model_wage_employee_performance_manage,base.group_user,1,1,1,1
+access_wage_payroll_accounting,wage_payroll_accounting,model_wage_payroll_accounting,base.group_user,1,1,1,1
+access_wage_payroll_accounting_structure,wage_payroll_accounting.structure,model_wage_payroll_accounting_structure,base.group_user,1,1,1,1
