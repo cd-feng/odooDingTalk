@@ -29,7 +29,7 @@ class HrLeavesList(models.Model):
 
     user_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
     duration_unit = fields.Selection(string=u'请假单位', selection=[('percent_day', '天'), ('percent_hour', '小时')])
-    duration_percent = fields.Integer(string=u'请假时长')
+    duration_percent = fields.Float(string=u'请假时长', digits=(10, 1))
     start_time = fields.Datetime(string=u'请假开始时间')
     end_time = fields.Datetime(string=u'请假结束时间')
     start_time_stamp = fields.Char(string='开始时间戳字符串')
@@ -55,8 +55,8 @@ class HrLeavesListTran(models.TransientModel):
         url, token = self.env['dingding.parameter'].get_parameter_value_and_token('a_getleavestatus')
         offset = 0
         size = 20
-        start_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.start_time))[:12]
-        end_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.end_time))[:12]
+        start_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.start_time))[:13]
+        end_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.end_time))[:13]
         user_list = list()
         for emp in self.user_ids:
             if emp.ding_id:
@@ -70,16 +70,17 @@ class HrLeavesListTran(models.TransientModel):
                 result = self.env['dingding.api.tools'].send_post_request(url, token, data)
                 if result.get('errcode') == 0:
                     res_result = result['result']
+                    logging.info(">>>获取考勤组成员返回结果%s", res_result)
                     for leave in res_result['leave_status']:
                         leave_data = {
                             'start_time_stamp': leave['start_time'],
                             'end_time_stamp': leave['end_time'],
                             'duration_unit': leave['duration_unit'],
-                            'duration_percent': leave['duration_percent'],
+                            'duration_percent': leave['duration_percent'] / 100,
                             'end_time': self.env['dingding.api.tools'].get_time_stamp(leave['end_time']),
                             'start_time': self.env['dingding.api.tools'].get_time_stamp(leave['start_time']),
                         }
-                        employee = self.env['hr.employee'].search([('end_time', '=', leave['userid'])], limit=1)
+                        employee = self.env['hr.employee'].search([('ding_id', '=', leave['userid'])], limit=1)
                         leave_data.update({
                             'user_id': employee.id if employee else False,
                         })
