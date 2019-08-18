@@ -45,14 +45,17 @@ class DingDingSynchronous(models.TransientModel):
         :return:
         """
         for res in self:
-            if res.department:
-                self.synchronous_dingding_department()
-                self.synchronous_dingding_department()   # 重复的目的是先生成的子部门能关联到后生成的父部门
-            if res.employee:
-                self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
-            if res.partner:
-                self.synchronous_dingding_category()
-                self.synchronous_dingding_partner()
+            try:
+                if res.department:
+                    self.synchronous_dingding_department()
+                    self.synchronous_dingding_department()   # 重复的目的是先生成的子部门能关联到后生成的父部门
+                if res.employee:
+                    self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
+                if res.partner:
+                    self.synchronous_dingding_category()
+                    self.synchronous_dingding_partner()
+            except Exception as e:
+                raise UserError(e)
 
     @api.model
     def synchronous_dingding_department(self):
@@ -194,7 +197,7 @@ class DingDingSynchronous(models.TransientModel):
                         'din_category_type': res.get('name'),
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('din_id'))])
+                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('ding_id'))])
                 if res_category:
                     res_category.sudo().write(category)
                 else:

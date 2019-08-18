@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding_approval.pull.dindin.approval.button', function (require) {
+odoo.define('dingding_base.pull.dindin.approval.button', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');

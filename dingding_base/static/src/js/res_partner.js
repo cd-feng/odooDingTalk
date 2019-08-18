@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding.res.partner.synchronous.button', function (require) {
+odoo.define('dingding_base.res.partner.synchronous.button', function (require) {
     "use strict";
 
     let KanbanController = require('web.KanbanController');

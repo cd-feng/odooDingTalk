@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding.callback.manage.button', function (require) {
+odoo.define('dingding_base.callback.manage.button', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');

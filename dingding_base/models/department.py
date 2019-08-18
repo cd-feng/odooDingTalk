@@ -46,7 +46,7 @@ class HrDepartment(models.Model):
                 raise UserError("该部门已在钉钉中存在！")
             url, token = self.env['dingding.parameter'].get_parameter_value_and_token('department_create')
             data = {'name': res.name}  # 部门名称
-            # 获取父部门din_id
+            # 获取父部门ding_id
             if res.parent_id:
                 data.update({'parentid': res.parent_id.ding_id if res.parent_id.ding_id else ''})
             else:
@@ -70,7 +70,7 @@ class HrDepartment(models.Model):
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'department_update')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
-            # 获取部门din_id
+            # 获取部门ding_id
             if not res.parent_id:
                 raise UserError("请选择上级部门!")
             data = {

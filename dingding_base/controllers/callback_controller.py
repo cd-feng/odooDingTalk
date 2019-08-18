@@ -53,7 +53,7 @@ class DingDingCallBackManage(Home, http.Controller):
             if event_type == 'user_leave_org':
                 UserId = msg.get('UserId')
                 for user_id in UserId:
-                    emp = request.env['hr.employee'].sudo().search([('din_id', '=', user_id)])
+                    emp = request.env['hr.employee'].sudo().search([('ding_id', '=', user_id)])
                     emp.sudo().write({'active': False})
             else:
                 request.env['dingding.bash.data.synchronous'].sudo().synchronous_dingding_employee()
@@ -61,7 +61,7 @@ class DingDingCallBackManage(Home, http.Controller):
         #     DeptId = msg.get('DeptId')
         #     if event_type == 'org_dept_remove':
         #         for dept in DeptId:
-        #             hr_depat = request.env['hr.department'].sudo().search([('din_id', '=', dept)])
+        #             hr_depat = request.env['hr.department'].sudo().search([('ding_id', '=', dept)])
         #             if hr_depat:
         #                 hr_depat.sudo().unlink()
         #     else:

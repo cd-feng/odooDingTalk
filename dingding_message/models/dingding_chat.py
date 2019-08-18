@@ -86,7 +86,7 @@ class DingDingChat(models.Model):
         :return:
         """
         for res in self:
-            user_list = self.check_employee_din_id(res)
+            user_list = self.check_employee_ding_id(res)
             logging.info(">>>开始钉钉创建群会话")
             url = self.env['dingding.parameter'].search([('key', '=', 'chat_create')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
@@ -121,7 +121,7 @@ class DingDingChat(models.Model):
         :return:
         """
         for res in self:
-            self.check_employee_din_id(res)
+            self.check_employee_ding_id(res)
             logging.info(">>>开始钉钉修改群会话")
             url = self.env['dingding.parameter'].search([('key', '=', 'chat_update')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
@@ -149,7 +149,7 @@ class DingDingChat(models.Model):
                 raise UserError("网络连接超时！")
 
     @api.model
-    def check_employee_din_id(self, res):
+    def check_employee_ding_id(self, res):
         if not res.employee_id.ding_id:
             raise UserError("员工（群主）在钉钉中不存在，请选择其他人员!")
         user_list = list()
