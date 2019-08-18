@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <record id="wage_insured_scheme_insurance_11" model="wage.insured.scheme.insurance">
+            <field name="name">养老</field>
+            <field name="base_number">3387</field>
+            <field name="company_number">0.16</field>
+            <field name="personal_number">0.08</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_12" model="wage.insured.scheme.insurance">
+            <field name="name">失业</field>
+            <field name="base_number">3387</field>
+            <field name="company_number">0.0082</field>
+            <field name="personal_number">0.0022</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_13" model="wage.insured.scheme.insurance">
+            <field name="name">工伤</field>
+            <field name="base_number">5080</field>
+            <field name="company_number">0.0022</field>
+            <field name="personal_number">0</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_14" model="wage.insured.scheme.insurance">
+            <field name="name">医疗</field>
+            <field name="base_number">5080</field>
+            <field name="company_number">0.1</field>
+            <field name="personal_number">0.02</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_15" model="wage.insured.scheme.insurance">
+            <field name="name">生育</field>
+            <field name="base_number">5080</field>
+            <field name="company_number">0.0082</field>
+            <field name="personal_number">8</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_16" model="wage.insured.scheme.insurance">
+            <field name="name">大病</field>
+            <field name="base_number">3282</field>
+            <field name="company_number">0.015</field>
+            <field name="personal_number">0</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_17" model="wage.insured.scheme.insurance">
+            <field name="name">残保金</field>
+            <field name="base_number">3282</field>
+            <field name="company_number">0.0150</field>
+            <field name="personal_number">0</field>
+        </record>
+        <record id="wage_insured_scheme_insurance_18" model="wage.insured.scheme.insurance">
+            <field name="name">公积金</field>
+            <field name="base_number">2200</field>
+            <field name="company_number">0.0050</field>
+            <field name="personal_number">0.0050</field>
+        </record>
+
+        <record id="wage_structure_1" model="wage.structure">
+            <field name="name">岗位补助</field>
+        </record>
+         <record id="wage_structure_2" model="wage.structure">
+            <field name="name">通讯补助</field>
+        </record>
+         <record id="wage_structure_3" model="wage.structure">
+            <field name="name">交通补助</field>
+        </record>
+         <record id="wage_structure_4" model="wage.structure">
+            <field name="name">餐补</field>
+        </record>
+         <record id="wage_structure_5" model="wage.structure">
+            <field name="name">业务提成</field>
+        </record>
+
+        <record id="wage_employee_archives_number" model="ir.sequence">
+            <field name="name">薪资档案编号规则</field>
+            <field name="code">wage.employee.archives.code</field>
+            <field name="prefix">WA%(year)s%(month)s%(day)s</field>
+            <field name="suffix"/>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="wage_household_registration_1" model="wage.household.registration">
+            <field name="name">本地城镇</field>
+        </record>
+        <record id="wage_household_registration_2" model="wage.household.registration">
+            <field name="name">本地农村</field>
+        </record>
+        <record id="wage_household_registration_3" model="wage.household.registration">
+            <field name="name">外地城镇（省内）</field>
+        </record>
+        <record id="wage_household_registration_4" model="wage.household.registration">
+            <field name="name">外地农村（省内）</field>
+        </record>
+        <record id="wage_household_registration_5" model="wage.household.registration">
+            <field name="name">外地城镇（省外）</field>
+        </record>
+        <record id="wage_household_registration_6" model="wage.household.registration">
+            <field name="name">外地农村（省外）</field>
+        </record>
+
+    </data>
+</odoo>
