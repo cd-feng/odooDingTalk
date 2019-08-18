@@ -59,14 +59,14 @@ class DingDingSimpleGroups(models.Model):
         获取考勤组
         :return:
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>获取考勤组...")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_getsimplegroups')
-        data = {'offset': 0, 'size': 10}
         try:
-            result = self.env['dingding.api.tools'].send_post_request(url, token, data)
-            if result.get('errcode') == 0:
+            result = din_client.attendance.getsimplegroups()
+            logging.info(">>>获取考勤组列表返回结果%s", result)
+            if result.get('ding_open_errcode') == 0:
                 result = result.get('result')
-                for group in result.get('groups'):
+                for group in result.get('groups').get('at_group_for_top_vo'):
                     # -----读取考勤信息
                     data = {
                         'group_id': group.get('group_id'),
@@ -85,8 +85,8 @@ class DingDingSimpleGroups(models.Model):
                     # -----读取班次
                     list_ids = list()
                     if 'selected_class' in group:
-                        for selected in group['selected_class']:
-                            setting = selected['setting']
+                        for selected in group['selected_class']['at_class_vo']:
+                            setting = selected.get('setting')
                             b_data = {
                                 'class_name': selected['class_name'],
                                 'class_id': selected['class_id'],
@@ -97,7 +97,7 @@ class DingDingSimpleGroups(models.Model):
                                 'absenteeism_late_minutes': setting['absenteeism_late_minutes'],
                                 'is_off_duty_free_check': setting['is_off_duty_free_check'],
                             }
-                            if 'rest_begin_time' in  setting:
+                            if 'rest_begin_time' in setting:
                                 rest_begin_time = setting['rest_begin_time']
                                 b_data.update({'rest_begin_time': rest_begin_time['check_time']})
                             if 'rest_end_time' in setting:
@@ -105,8 +105,8 @@ class DingDingSimpleGroups(models.Model):
                                 b_data.update({'rest_end_time': rest_end_time['check_time']})
                             # 打卡时间段
                             time_list = list()
-                            for sections in selected['sections']:
-                                for time in sections['times']:
+                            for sections in selected['sections']['at_section_vo']:
+                                for time in sections['times']['at_time_vo']:
                                     time_list.append((0, 0, {
                                         'across': time['across'],
                                         'check_time': time['check_time'],
@@ -124,8 +124,8 @@ class DingDingSimpleGroups(models.Model):
                         self.env['dingding.simple.groups'].sudo().create(data)
             else:
                 raise UserError('获取考勤组失败，详情为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("网络连接超时！")
+        except Exception as e:
+            raise UserError(e)
         logging.info(">>>获取考勤组结束...")
         return True
 
@@ -145,7 +145,8 @@ class DingDingSimpleGroups(models.Model):
                     res = result.get('result')
                     groups = self.env['dingding.simple.groups'].sudo().search([('group_id', '=', res.get('group_id'))])
                     if groups:
-                        self._cr.execute("""UPDATE hr_employee SET din_group_id = {} WHERE id = {}""".format(groups[0].id, emp.id))
+                        self._cr.execute(
+                            """UPDATE hr_employee SET din_group_id = {} WHERE id = {}""".format(groups[0].id, emp.id))
                     else:
                         pass
                 else:
@@ -176,7 +177,7 @@ class DingDingSimpleGroupsList(models.Model):
     absenteeism_late_minutes = fields.Char(string='旷工迟到分钟', help="旷工迟到时长，单位分钟")
     serious_late_minutes = fields.Char(string='严重迟到分钟', help="严重迟到时长，单位分钟")
     is_off_duty_free_check = fields.Selection(string=u'强制打卡', selection=[('Y', '下班不强制打卡'), ('N', '下班强制打卡')])
-    
+
     # sections
     time_ids = fields.One2many(comodel_name='dingding.simple.groups.list.time', inverse_name='list_id', string=u'打卡时间段')
 
@@ -190,4 +191,3 @@ class DingDingSimpleGroupsListTime(models.Model):
     across = fields.Char(string=u'打卡时间跨度')
     check_time = fields.Datetime(string=u'打卡时间')
     check_type = fields.Selection(string=u'打卡类型', selection=[('OnDuty', '上班打卡'), ('OffDuty', '下班打卡')])
-

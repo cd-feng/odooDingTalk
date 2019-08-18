@@ -64,16 +64,16 @@ class HrDingdingPlanTran(models.TransientModel):
         :param work_date: string 查询的日期
         :return:
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>------开始获取排班信息-----------")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_listschedule')
         offset = 0
         size = 200
         while True:
-            data = {'offset': offset, 'size': size, 'workDate': work_date}
-            result = self.env['dingding.api.tools'].send_post_request(url, token, data)
-            if result.get('errcode') == 0:
-                res_result = result['result']
-                for schedules in res_result['schedules']:
+            result = din_client.attendance.listschedule(work_date, offset=offset, size=size)
+            logging.info(">>>获取排班信息返回结果%s", result)
+            if result.get('ding_open_errcode') == 0:
+                res_result = result.get('result')
+                for schedules in res_result['schedules']['at_schedule_for_top_vo']:
                     plan_data = {
                         'class_setting_id': schedules['class_setting_id'] if 'class_setting_id' in schedules else "",
                         'check_type': schedules['check_type'] if 'check_type' in schedules else "",

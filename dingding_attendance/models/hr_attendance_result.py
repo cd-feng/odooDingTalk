@@ -164,11 +164,10 @@ class HrAttendanceResultTransient(models.TransientModel):
 
     @api.model
     def send_post_dindin(self, data):
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_list')
-        headers = {'Content-Type': 'application/json'}
+        din_client = self.env['dingding.api.tools'].get_client()
         try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=20)
-            result = json.loads(result.text)
+            result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
+                                                user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
             if result.get('errcode') == 0:
                 for rec in result.get('recordresult'):
                     data = {
@@ -205,8 +204,8 @@ class HrAttendanceResultTransient(models.TransientModel):
                     return False
             else:
                 raise UserError('请求失败,原因为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("网络连接超时！")
+        except Exception as e:
+            raise UserError(e)
 
     @api.model
     def get_time_stamp(self, timeNum):
@@ -256,3 +255,12 @@ class HrAttendanceResultTransient(models.TransientModel):
             cut_day.append([t1_str, t2_str])
             t1 = t2 + timedelta(seconds=1)
         return cut_day
+
+    @api.model
+    def clear_attendance(self):
+        """
+        清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）
+        """
+        self._cr.execute("""
+            delete from hr_attendance_result
+        """)

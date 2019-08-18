@@ -126,50 +126,41 @@ class HrAttendanceRecordTransient(models.TransientModel):
         """
         logging.info(">>>开始获取{}-{}时间段数据".format(from_date, to_date))
         emp_data = self.get_pull_odoo_dict()
-        data = {
-            'checkDateFrom': from_date,
-            'checkDateTo': to_date,
-            'userIds': user_list,
-        }
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('attendance_listRecord')
-        headers = {'Content-Type': 'application/json'}
+        din_client = self.env['dingding.api.tools'].get_client()
         try:
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=20)
-            result = json.loads(result.text)
-            if result.get('errcode') == 0:
-                for rec in result.get('recordresult'):
-                    data = {
-                        'userId': emp_data[rec['userId']],
-                        'record_id': rec.get('id'),
-                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
-                        'corpId': rec.get('corpId'),  # 企业ID
-                        'checkType': rec.get('checkType'),  # 考勤类型
-                        'sourceType': rec.get('sourceType'),
-                        'timeResult': rec.get('timeResult'),
-                        'locationResult': rec.get('locationResult'),
-                        'approveId': rec.get('approveId'),
-                        'procInstId': rec.get('procInstId'),
-                        'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')) if "baseCheckTime" in rec else False,
-                        'userCheckTime': self.get_time_stamp(rec.get('userCheckTime')),
-                        'userAddress': rec.get('userAddress'),
-                        'userLongitude': rec.get('userLongitude'),
-                        'userLatitude': rec.get('userLatitude'),
-                        'outsideRemark': rec.get('outsideRemark'),
-                    }
-                    # 考勤组
-                    groups = self.env['dingding.simple.groups'].sudo().search(
-                        [('group_id', '=', rec.get('groupId'))], limit=1)
-                    data.update({'groupId': groups.id if groups else False})
-                    # 班次
-                    plan = self.env['hr.dingding.plan'].sudo().search([('plan_id', '=', rec.get('planId'))], limit=1)
-                    data.update({'planId': plan[0].id if plan else False})
-                    attendance = self.env['hr.attendance.record'].sudo().search([('record_id', '=', rec.get('id'))])
-                    if not attendance:
-                        self.env['hr.attendance.record'].sudo().create(data)
-            else:
-                raise UserError('请求失败,原因为:{}'.format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("网络连接超时！")
+            result = din_client.attendance.list_record(user_list, from_date, to_date)
+            logging.info(">>>数据返回结果%s", result)
+            for rec in result:
+                data = {
+                    'userId': emp_data[rec['userId']],
+                    'record_id': rec.get('id'),
+                    'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                    'corpId': rec.get('corpId'),  # 企业ID
+                    'checkType': rec.get('checkType'),  # 考勤类型
+                    'sourceType': rec.get('sourceType'),
+                    'timeResult': rec.get('timeResult'),
+                    'locationResult': rec.get('locationResult'),
+                    'approveId': rec.get('approveId'),
+                    'procInstId': rec.get('procInstId'),
+                    'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')) if "baseCheckTime" in rec else False,
+                    'userCheckTime': self.get_time_stamp(rec.get('userCheckTime')),
+                    'userAddress': rec.get('userAddress'),
+                    'userLongitude': rec.get('userLongitude'),
+                    'userLatitude': rec.get('userLatitude'),
+                    'outsideRemark': rec.get('outsideRemark'),
+                }
+                # 考勤组
+                groups = self.env['dingding.simple.groups'].sudo().search(
+                    [('group_id', '=', rec.get('groupId'))], limit=1)
+                data.update({'groupId': groups.id if groups else False})
+                # 班次
+                plan = self.env['hr.dingding.plan'].sudo().search([('plan_id', '=', rec.get('planId'))], limit=1)
+                data.update({'planId': plan[0].id if plan else False})
+                attendance = self.env['hr.attendance.record'].sudo().search([('record_id', '=', rec.get('id'))])
+                if not attendance:
+                    self.env['hr.attendance.record'].sudo().create(data)
+        except Exception as e:
+            raise UserError(e)
         return True
 
     @api.model
@@ -195,3 +186,12 @@ class HrAttendanceRecordTransient(models.TransientModel):
         for emp in employees:
             emp_data.update({emp.ding_id: emp.id})
         return emp_data
+
+    @api.model
+    def clear_attendance(self):
+        """
+        清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）
+        """
+        self._cr.execute("""
+            delete from hr_attendance_result
+        """)
