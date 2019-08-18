@@ -28,7 +28,7 @@
                         <group>
                             <field name="name"/>
                             <field name="ding_id"/>
-                            <field name="dep_din_id"/>
+                            <field name="dep_ding_id"/>
                             <field name="din_active"/>
                         </group>
                     </group>

@@ -65,7 +65,7 @@ class HrEmployee(models.Model):
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'user_create')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
-            # 获取部门din_id
+            # 获取部门ding_id
             department_list = list()
             if not res.department_id:
                 raise UserError("请选择员工部门!")
@@ -109,7 +109,7 @@ class HrEmployee(models.Model):
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'user_update')]).value
             token = self.env['dingding.parameter'].search([('key', '=', 'token')]).value
-            # 获取部门din_id
+            # 获取部门ding_id
             department_list = list()
             if not res.department_id:
                 raise UserError("请选择员工部门!")
@@ -211,8 +211,8 @@ class HrEmployee(models.Model):
                             'din_hiredDate': date_str,
                         })
                     if result.get('department'):
-                        dep_din_ids = result.get('department')
-                        dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids)])
+                        dep_ding_ids = result.get('department')
+                        dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_ding_ids)])
                         data.update({'department_ids': [(6, 0, dep_list.ids)]})
                     employee.sudo().write(data)
                 else:

@@ -194,7 +194,7 @@ class DingDingSynchronous(models.TransientModel):
                         'din_category_type': res.get('name'),
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('din_id'))])
+                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('ding_id'))])
                 if res_category:
                     res_category.sudo().write(category)
                 else:

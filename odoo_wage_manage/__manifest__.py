@@ -22,7 +22,7 @@
     'category': 'wage',
     'version': '1.0',
     'depends': ['base', 'dingding_base', 'web_progress'],
-    'installable': False,
+    'installable': True,
     'application': False,
     'auto_install': False,
     'data': [

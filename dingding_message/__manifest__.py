@@ -8,7 +8,7 @@
     'category': 'dingding',
     'version': '2.0',
     'depends': ['base', 'dingding_base', 'mail'],
-    'installable': False,
+    'installable': True,
     'application': False,
     'auto_install': False,
     'data': [

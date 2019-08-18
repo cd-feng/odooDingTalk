@@ -195,8 +195,8 @@ class DinDinWorkMessage(models.Model):
         发送工作消息功能函数，其他模型可调用本方法传递需要接受的用户和消息，当toall参数为true时，userids用户列表和deptids部门列表可不传递。
         即 toall、userids、deptids三个参数必须传递一个。
         :param toall: boolean值，是否发送企业全部人员
-        :param userstr: string，接受用户列表，注意：需要传递员工模型中的din_id字段
-        :param deptstr: ；string，接受部门列表，需传递部门的din_id字段
+        :param userstr: string，接受用户列表，注意：需要传递员工模型中的ding_id字段
+        :param deptstr: ；string，接受部门列表，需传递部门的ding_id字段
         :param msg:   消息体，请参照钉钉提供的消息体格式
         :return task_id: 返回钉钉消息任务id。
         """
