@@ -1,4 +1,4 @@
-odoo.define('dingding.chat.list.tree', function (require) {
+odoo.define('dingding_message.chat.list.tree', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');

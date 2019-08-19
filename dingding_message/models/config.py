@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MessageType(models.Model):
-    _name = 'dindin.message.type'
+    _name = 'dingding.message.type'
     _description = "消息类型"
     _rec_name = 'name'
 
