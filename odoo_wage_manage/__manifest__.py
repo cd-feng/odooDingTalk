@@ -38,6 +38,8 @@
         'views/wage_special_additional_deduction.xml',
         'views/wage_statistics_annal.xml',
         'views/wage_payroll_accounting.xml',
+        'views/wage_employee_tax_details.xml',
+        'views/odoo_wage_payslip.xml',
 
         'wizard/wage_insured_monthly_statement.xml',
         'wizard/wage_archives.xml',
