@@ -93,7 +93,8 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="work_date"/>
+                    <field name="start_date"/>
+                    <field name="stop_date"/>
                 </group>
                 <footer>
                     <button string="开始获取" name="get_plan_lists" type="object" class="oe_highlight"/>

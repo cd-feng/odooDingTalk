@@ -119,6 +119,7 @@ class HrAttendanceResultTransient(models.TransientModel):
         :param user:
         :return:
         """
+        # self.clear_attendance() 
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
