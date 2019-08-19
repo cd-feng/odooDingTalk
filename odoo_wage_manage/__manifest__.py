@@ -23,7 +23,7 @@
     'version': '1.0',
     'depends': ['base', 'dingding_base', 'web_progress'],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
