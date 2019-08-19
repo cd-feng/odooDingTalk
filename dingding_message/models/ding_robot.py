@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
-import time
 import logging
+
 import requests
-from requests import ReadTimeout
+
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo import api, fields, models
-from .ding_robot_api import DingtalkChatbot, ActionCard, FeedLink, CardItem
+
+from .ding_robot_api import ActionCard, DingtalkChatbot
+
 _logger = logging.getLogger(__name__)
 
 MESSAGETYPE = [
@@ -18,16 +20,18 @@ MESSAGETYPE = [
     ('feed_card', 'feed_card'),
 ]
 
+
 class DingDingRobot(models.Model):
     _name = 'dingding.robot'
     _description = "群机器人"
     _rec_name = 'name'
 
-    active = fields.Boolean(string=u'active', default=True)
+    active = fields.Boolean(string='active', default=True)
     name = fields.Char(string='机器人名称', required=True, index=True)
     webhook = fields.Char(string='Hook地址', required=True)
-    remarks = fields.Text(string=u'说明备注')
-    chat_id = fields.Many2one(comodel_name='dingding.chat', string=u'关联群组', index=True)
+    remarks = fields.Text(string='说明备注')
+    chat_id = fields.Many2one(
+        comodel_name='dingding.chat', string='关联群组', index=True)
 
     @api.multi
     def test_robot_connection(self):
@@ -43,7 +47,8 @@ class DingDingRobot(models.Model):
                     "isAtAll": True
                 }
             }
-            requests.post(url=res.webhook, headers=headers, data=json.dumps(data), timeout=1)
+            requests.post(url=res.webhook, headers=headers,
+                          data=json.dumps(data), timeout=1)
             logging.info(">>>机器人测试连接End")
 
     @api.model
@@ -58,9 +63,9 @@ class DingDingRobot(models.Model):
         data = {
             "msgtype": "markdown",
             "markdown": {
-                 "title": "ERP备注消息",
-                 "text": msg,
-             },
+                "title": "ERP备注消息",
+                "text": msg,
+            },
             # "at": {
             #     "atMobiles": [
             #         "156xxxx8827",
@@ -71,40 +76,43 @@ class DingDingRobot(models.Model):
         }
         for robot in robots:
             try:
-                requests.post(url=robot.webhook, headers=headers, data=json.dumps(data), timeout=1)
+                requests.post(url=robot.webhook, headers=headers,
+                              data=json.dumps(data), timeout=1)
             except Exception:
                 logging.info(">>>发送消息到指定的群机器人失败")
         return True
+
 
 class DingDingRobotSendMessage(models.TransientModel):
     _name = 'dingding.robot.send.message'
     _description = "通过群机器人发送消息"
 
-    msg_type = fields.Selection(string=u'消息类型', selection=MESSAGETYPE, default='text', required=True)
+    msg_type = fields.Selection(
+        string='消息类型', selection=MESSAGETYPE, default='text', required=True)
     robot_id = fields.Many2one('dingding.robot', required=True, string='群机器人')
-    chat_id = fields.Many2one('dingding.chat', related='robot_id.chat_id', string='关联群组')
+    chat_id = fields.Many2one(
+        'dingding.chat', related='robot_id.chat_id', string='关联群组')
     at_user_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_robot_and_hr_employee_rel',
-                                  column1='message_id', column2='emp_id', string=u'提醒人员')                  
+                                   column1='message_id', column2='emp_id', string='提醒人员')
     isAtAll = fields.Boolean(string='@所有人时', default=False)
     text_message = fields.Text(string='文本消息内容')
     msg_title = fields.Char(string='消息标题', help="文本格式")
     card_message = fields.Text(string='卡片消息内容', help="支持markdown语法")
     btns = fields.One2many(comodel_name='dingding.robot.send.card.message.list', inverse_name='message_id',
-                                       string=u'按钮列表')
+                           string='按钮列表')
     markdown_message = fields.Text(string='Markdown消息内容', help="支持markdown语法")
     link_url = fields.Char(string='链接URL', help="点击消息时链接URL")
     link_image_url = fields.Char(string='链接图片URL', help="链接图片URL")
     link_message = fields.Text(string='消息描述', help="支持markdown语法")
-
 
     @api.onchange('chat_id')
     def _onchange_chat_id(self):
         """提醒人员下拉列表只显示群内成员
         """
         if self.chat_id:
-            domain = [('id','in', self.chat_id.useridlist.ids)]
+            domain = [('id', 'in', self.chat_id.useridlist.ids)]
             return {
-            'domain': {'at_user_ids': domain}
+                'domain': {'at_user_ids': domain}
             }
 
     @api.multi
@@ -116,7 +124,7 @@ class DingDingRobotSendMessage(models.TransientModel):
         webhook = self.robot_id.webhook
         try:
             xiaoding = DingtalkChatbot(webhook)
-               # 获取提醒人手机号列表
+            # 获取提醒人手机号列表
             if self.at_user_ids:
                 at_mobiles = self.at_user_ids.mapped('mobile_phone')
             else:
@@ -124,28 +132,32 @@ class DingDingRobotSendMessage(models.TransientModel):
             if self.msg_type == 'action_card':
                 """卡片类型"""
                 if len(self.btns) == 1:
-                    btns= self.btns
+                    btns = self.btns
                 else:
                     btn_json_list = list()
                     for val in self.btns:
-                        btn_json_list.append({'title': val.title, 'url': val.actionURL})
-                    btns= btn_json_list
+                        btn_json_list.append(
+                            {'title': val.title, 'url': val.actionURL})
+                    btns = btn_json_list
                 btn_orientation = "1" if len(self.btns) == 2 else "0"
                 actioncard = ActionCard(title=self.msg_title,
                                         text=self.card_message,
                                         btns=btns,
                                         btn_orientation=btn_orientation,
                                         hide_avatar=1)
-                xiaoding.send_action_card(actioncard) 
+                xiaoding.send_action_card(actioncard)
             elif self.msg_type == 'text':
                 """文本类型消息"""
-                xiaoding.send_text(msg=self.text_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=None)
+                xiaoding.send_text(msg=self.text_message, is_at_all=self.isAtAll,
+                                   at_mobiles=at_mobiles, at_dingtalk_ids=None)
             elif self.msg_type == 'markdown':
                 """markdown类型的消息"""
-                xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message, is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=[])
+                xiaoding.send_markdown(title=self.msg_title, text=self.markdown_message,
+                                       is_at_all=self.isAtAll, at_mobiles=at_mobiles, at_dingtalk_ids=[])
             elif self.msg_type == 'link':
                 """链接消息"""
-                xiaoding.send_link(title=self.msg_title, text=self.link_message, message_url=self.link_url, pic_url=self.link_image_url)
+                xiaoding.send_link(title=self.msg_title, text=self.link_message,
+                                   message_url=self.link_url, pic_url=self.link_image_url)
             elif self.msg_type == 'image':
                 """image消息"""
                 xiaoding.send_image(pic_url=self.link_image_url)
@@ -153,10 +165,12 @@ class DingDingRobotSendMessage(models.TransientModel):
                 """feed_card消息"""
                 link_list = list()
                 for val in self.btns:
-                    link_list.append({'title': val.title, 'url': val.actionURL, 'pic_url': val.pic_url})
+                    link_list.append(
+                        {'title': val.title, 'url': val.actionURL, 'pic_url': val.pic_url})
                 xiaoding.send_feed_card(link_list)
         except Exception:
-            raise UserError('Webhook地址有误！')
+            raise UserError(_('Webhook地址有误！'))
+
 
 class CardMessageList(models.TransientModel):
     _name = 'dingding.robot.send.card.message.list'
@@ -166,4 +180,5 @@ class CardMessageList(models.TransientModel):
     title = fields.Char(string='标题', required=True)
     actionURL = fields.Char(string='标题链接地址', required=True)
     pic_url = fields.Char(string='图片链接地址')
-    message_id = fields.Many2one(comodel_name='dingding.robot.send.message', string=u'消息', ondelete='cascade')
+    message_id = fields.Many2one(
+        comodel_name='dingding.robot.send.message', string='消息', ondelete='cascade')

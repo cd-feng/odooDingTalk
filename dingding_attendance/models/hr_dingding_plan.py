@@ -17,9 +17,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
-from odoo.exceptions import UserError
-from odoo import models, fields, api
 import logging
+from datetime import timedelta
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -43,7 +45,8 @@ class HrDingdingPlanTran(models.TransientModel):
     _name = "hr.dingding.plan.tran"
     _description = "排班列表查询"
 
-    work_date = fields.Date(string=u'排期日期')
+    start_date = fields.Date(string=u'开始日期', required=True)
+    stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
 
     @api.multi
     def get_plan_lists(self):
@@ -52,52 +55,59 @@ class HrDingdingPlanTran(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        self.start_pull_plan_lists(str(self.work_date))
+        self.start_pull_plan_lists(self.start_date, self.stop_date)
         action = self.env.ref('dingding_attendance.hr_dingding_plan_action')
         action_dict = action.read()[0]
         return action_dict
 
     @api.model
-    def start_pull_plan_lists(self, work_date):
+    def start_pull_plan_lists(self, start_date, stop_date):
         """
         拉取排班信息
-        :param work_date: string 查询的日期
+        :param start_date: string 查询的开始日期
+        :param stop_date: string 查询的结束日期
         :return:
         """
         din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>------开始获取排班信息-----------")
-        offset = 0
-        size = 200
-        while True:
-            result = din_client.attendance.listschedule(work_date, offset=offset, size=size)
-            logging.info(">>>获取排班信息返回结果%s", result)
-            if result.get('ding_open_errcode') == 0:
-                res_result = result.get('result')
-                for schedules in res_result['schedules']['at_schedule_for_top_vo']:
-                    plan_data = {
-                        'class_setting_id': schedules['class_setting_id'] if 'class_setting_id' in schedules else "",
-                        'check_type': schedules['check_type'] if 'check_type' in schedules else "",
-                        'plan_id': schedules['plan_id'] if 'plan_id' in schedules else "",
-                        'class_id': schedules['class_id'] if 'class_id' in schedules else "",
-                        'plan_check_time': schedules['plan_check_time'] if 'plan_check_time' in schedules else False,
-                    }
-                    simple = self.env['dingding.simple.groups'].search([('group_id', '=', schedules['group_id'])], limit=1)
-                    employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)
-                    plan_data.update({
-                        'group_id': simple.id if simple else False,
-                        'user_id': employee.id if employee else False,
-                    })
-                    plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
-                    if not plan:
-                        self.env['hr.dingding.plan'].create(plan_data)
+        work_date = start_date
+        while work_date <= stop_date:
+            offset = 0
+            size = 200
+            while True:
+                result = din_client.attendance.listschedule(work_date, offset=offset, size=size)
+                # logging.info(">>>获取排班信息返回结果%s", result)
+                if result.get('ding_open_errcode') == 0:
+                    res_result = result.get('result')
+                    for schedules in res_result['schedules']['at_schedule_for_top_vo']:
+                        plan_data = {
+                            'class_setting_id': schedules['class_setting_id'] if 'class_setting_id' in schedules else "",
+                            'check_type': schedules['check_type'] if 'check_type' in schedules else "",
+                            'plan_id': schedules['plan_id'] if 'plan_id' in schedules else "",
+                            'class_id': schedules['class_id'] if 'class_id' in schedules else "",
+                            'plan_check_time': schedules['plan_check_time'] if 'plan_check_time' in schedules else False,
+                        }
+                        simple = self.env['dingding.simple.groups'].search(
+                            [('group_id', '=', schedules['group_id'])], limit=1)
+                        employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)
+                        plan_data.update({
+                            'group_id': simple.id if simple else False,
+                            'user_id': employee.id if employee else False,
+                        })
+                        plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
+                        if not plan:
+                            self.env['hr.dingding.plan'].create(plan_data)
+                        else:
+                            plan.write(plan_data)
+                    if not res_result['has_more']:
+                        break
                     else:
-                        plan.write(plan_data)
-                if not res_result['has_more']:
-                    break
+                        offset += size
                 else:
-                    offset += size
-            else:
-                raise UserError("获取企业考勤排班详情失败: {}".format(result['errmsg']))
+                    raise UserError("获取企业考勤排班详情失败: {}".format(result['errmsg']))
+
+            work_date = work_date + timedelta(days=1)
+
         logging.info(">>>------结束获取排班信息-----------")
         return True
         # offset = 0

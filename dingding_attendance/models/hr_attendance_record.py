@@ -101,6 +101,7 @@ class HrAttendanceRecordTransient(models.TransientModel):
         获取用户打卡详情
         :return:
         """
+        # self.clear_attendance() 
         logging.info(">>>开始获取用户打卡详情...")
         user_list = list()
         for emp in self.emp_ids:

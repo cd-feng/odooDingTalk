@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="dindin_work_message_tree_view" model="ir.ui.view">
+    <record id="dingding_work_message_tree_view" model="ir.ui.view">
         <field name="name">工作消息</field>
-        <field name="model">dindin.work.message</field>
+        <field name="model">dingding.work.message</field>
         <field name="arch" type="xml">
             <tree default_order="id desc">
                 <field name="company_id"/>
@@ -17,9 +17,9 @@
         </field>
     </record>
 
-    <record id="dindin_work_message_form_view" model="ir.ui.view">
+    <record id="dingding_work_message_form_view" model="ir.ui.view">
         <field name="name">工作消息</field>
-        <field name="model">dindin.work.message</field>
+        <field name="model">dingding.work.message</field>
         <field name="arch" type="xml">
             <form string="工作消息">
                 <header>
@@ -139,17 +139,17 @@
         </field>
     </record>
 
-    <record id="dindin_work_message_action" model="ir.actions.act_window">
+    <record id="dingding_work_message_action" model="ir.actions.act_window">
         <field name="name">工作消息</field>
-        <field name="res_model">dindin.work.message</field>
+        <field name="res_model">dingding.work.message</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem name="工作消息"
-              id="dingding_message.dindin_work_message_menu"
+              id="dingding_message.dingding_work_message_menu"
               parent="dingding_base.message_menu"
               sequence="1"
-              action="dingding_message.dindin_work_message_action"
+              action="dingding_message.dingding_work_message_action"
     />
 
 </odoo>

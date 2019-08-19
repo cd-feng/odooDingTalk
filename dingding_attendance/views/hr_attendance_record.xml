@@ -23,6 +23,8 @@
                 <field name="groupId"/>
                 <field name="planId"/>
                 <field name="workDate"/>
+                <field name="baseCheckTime"/>
+                <field name="userCheckTime"/>
                 <field name="checkType"/>
                 <field name="sourceType"/>
                 <field name="timeResult"/>
