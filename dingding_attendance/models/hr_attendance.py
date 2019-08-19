@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import time
-import requests
-from datetime import datetime, timedelta
-from requests import ReadTimeout
+from datetime import timedelta
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo import models, fields, api
 
 
 class HrAttendance(models.Model):
@@ -132,6 +130,7 @@ class HrAttendanceTransient(models.TransientModel):
         try:
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
                                                 user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
+            logging.info(">>>获取考勤结果%s", result)
             if result.get('errcode') == 0:
                 OnDuty_list = list()
                 OffDuty_list = list()
@@ -151,7 +150,6 @@ class HrAttendanceTransient(models.TransientModel):
                              'on_timeResult': rec.get('timeResult'),
                              'on_sourceType': rec.get('sourceType')
                              })
-
                         OnDuty_list.append(data)
                     else:
                         data.update({
@@ -160,45 +158,42 @@ class HrAttendanceTransient(models.TransientModel):
                             'off_timeResult': rec.get('timeResult'),
                             'off_sourceType': rec.get('sourceType')
                         })
-
                         OffDuty_list.append(data)
-                    OnDuty_list.sort(key=lambda x: (x['employee_id'], x['on_planId']))
-                    for onduy in OnDuty_list:
-                        attendance = self.env['hr.attendance'].sudo().search(
-                            [('employee_id', '=', onduy.get('employee_id')),
-                             ('on_planId', '=', onduy.get('on_planId'))])
-                        if not attendance:
-                            self.env['hr.attendance'].sudo().create(onduy)
-                        else:
-                            attendance.sudo().write({
-                                'check_in': onduy.get('check_in'),
-                                'on_planId': onduy.get('on_planId'),
-                                'on_timeResult': onduy.get('on_timeResult'),
-                                'on_sourceType': onduy.get('on_sourceType')
-                            })
-                    OffDuty_list.sort(key=lambda x: (x['employee_id'], x['off_planId']))
+                # 上班与下班匹配后合并
+                OnDuty_list.sort(key=lambda x: (x['employee_id'], x['on_planId']))
+                OffDuty_list.sort(key=lambda x: (x['employee_id'], x['off_planId']))
+                duy = list()
+                for onduy in OnDuty_list:
                     for offduy in OffDuty_list:
-                        domain = [('employee_id', '=', offduy.get('employee_id')),
-                                  ('workDate', '=', offduy.get('workDate'))]
-                        attendance = self.env['hr.attendance'].sudo().search(domain).sorted(key=lambda r: r.on_planId)
-                        for attend in attendance:
-                            if not attend.check_out:
-                                off_check_out = datetime.strptime(offduy.get('check_out'), "%Y-%m-%d %H:%M:%S")
-                                if int(offduy.get('off_planId')) == int(attend.on_planId) + 1:
-                                    attend.sudo().write(
-                                        {'check_out': offduy.get('check_out'),
-                                         'off_planId': offduy.get('off_planId'),
-                                         'off_timeResult': offduy.get('off_timeResult'),
-                                         'off_sourceType': offduy.get('off_sourceType')
-                                         })
-                                elif off_check_out > attend.check_in:
-
-                                    attend.sudo().write({
-                                        'check_out': offduy.get('check_out'),
-                                        'off_planId': offduy.get('off_planId'),
-                                        'off_timeResult': offduy.get('off_timeResult'),
-                                        'off_sourceType': offduy.get('off_sourceType')
-                                    })
+                        if int(offduy.get('off_planId')) == int(onduy.get('on_planId')) + 1 and \
+                                offduy.get('employee_id') == onduy.get('employee_id') and \
+                                offduy.get('workDate') == onduy.get('workDate'):
+                            duy_tmp = dict(onduy, **offduy)
+                            duy.append(duy_tmp)
+                        elif int(offduy.get('off_planId')) > int(onduy.get('on_planId')) and \
+                                offduy.get('employee_id') == onduy.get('employee_id') and \
+                                offduy.get('workDate') == onduy.get('workDate'):
+                            duy_tmp = dict(onduy, **offduy)
+                            duy.append(duy_tmp)
+                # 将合并的考勤导入odoo考勤
+                for att in duy:
+                    attendance = self.env['hr.attendance'].sudo().search(
+                        [('employee_id', '=', att.get('employee_id')),
+                            ('on_planId', '=', att.get('on_planId')),
+                            ('off_planId', '=', att.get('off_planId'))])
+                    if not attendance:
+                        self.env['hr.attendance'].sudo().create(att)
+                    else:
+                        attendance.sudo().write({
+                            'check_in': att.get('check_in'),
+                            'on_planId': att.get('on_planId'),
+                            'on_timeResult': att.get('on_timeResult'),
+                            'on_sourceType': att.get('on_sourceType'),
+                            'check_out': att.get('check_out'),
+                            'off_planId': att.get('off_planId'),
+                            'off_timeResult': att.get('off_timeResult'),
+                            'off_sourceType': att.get('off_sourceType')
+                        })
                 if result.get('hasMore'):
                     return True
                 else:
