@@ -17,3 +17,6 @@ access_wage_employee_attendance_annal,wage.employee.attendance.annal,model_wage_
 access_wage_employee_performance_manage,wage.employee.performance.manage,model_wage_employee_performance_manage,base.group_user,1,1,1,1
 access_wage_payroll_accounting,wage_payroll_accounting,model_wage_payroll_accounting,base.group_user,1,1,1,1
 access_wage_payroll_accounting_structure,wage_payroll_accounting.structure,model_wage_payroll_accounting_structure,base.group_user,1,1,1,1
+access_wage_employee_tax_details,wage.employee.tax.details,model_wage_employee_tax_details,base.group_user,1,1,1,1
+access_wage_employee_tax_details_line,wage.employee.tax.details.line,model_wage_employee_tax_details_line,base.group_user,1,1,1,1
+access_odoo_wage_payslip,odoo.wage.payslip,model_odoo_wage_payslip,base.group_user,1,1,1,1

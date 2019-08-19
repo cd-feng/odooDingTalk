@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="odoo_wage_payslip_tree_view" model="ir.ui.view">
+        <field name="name">工资条</field>
+        <field name="model">odoo.wage.payslip</field>
+        <field name="arch" type="xml">
+            <tree default_order="date_code desc" create="0">
+                <field name="employee_id"/>
+                <field name="emp_number"/>
+                <field name="job_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="date_code"/>
+                <field name="personal_social_security"/>
+                <field name="personal_provident_fund"/>
+                <field name="taxable_income"/>
+                <field name="pay_wage"/>
+                <field name="real_wage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="odoo_wage_payslip_form_view" model="ir.ui.view">
+        <field name="name">工资条</field>
+        <field name="model">odoo.wage.payslip</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" confirm="确认归档本记录，你想继续吗？"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h2>
+                            <field name="name" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group string="员工信息">
+                        <group>
+                            <field name="company_id"/>
+                            <field name="department_id"/>
+                            <field name="employee_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="emp_number"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="date_code"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="明细">
+                            <group col="2">
+                                <group>
+                                    <field name="base_wage"/>
+                                    <field name="structure_wage"/>
+                                    <field name="absence_sum"/>
+                                    <field name="performance_sum"/>
+                                    <field name="overtime_sum"/>
+                                </group>
+                                <group>
+                                    <field name="attendance_sum"/>
+                                    <field name="personal_social_security"/>
+                                    <field name="personal_provident_fund"/>
+                                    <field name="taxable_income"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group clo="2">
+                        <group>
+                            <label for="pay_wage"/>
+                            <div class="o_row" name="wage">
+                                <field name="pay_wage" nolabel="1" readonly="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="real_wage"/>
+                            <div class="o_row" name="wage">
+                                <field name="real_wage" nolabel="1" readonly="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="备注">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="odoo_wage_payslip_action">
+        <field name="name">工资条</field>
+        <field name="res_model">odoo.wage.payslip</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_date_code': True}</field>
+    </record>
+
+    <record model="ir.ui.view" id="odoo_wage_payslip_search">
+        <field name="model">odoo.wage.payslip</field>
+        <field name="arch" type="xml">
+            <search string="工资条">
+                <field name="employee_id"/>
+                <field name="emp_number"/>
+                <field name="job_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="date_code"/>
+                <field name="personal_social_security"/>
+                <field name="personal_provident_fund"/>
+                <field name="taxable_income"/>
+                <field name="pay_wage"/>
+                <field name="real_wage"/>
+                <group expand="0" string="分类">
+                    <filter name="group_by_date_code" string="期间" context="{'group_by':'date_code'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="工资条" id="odoo_wage_payslip_menu" parent="odoo_wage_manage.main_menu" sequence="1" action="odoo_wage_payslip_action"/>
+
+</odoo>
