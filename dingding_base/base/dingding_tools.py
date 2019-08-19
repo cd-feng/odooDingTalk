@@ -29,20 +29,25 @@ import hmac
 from urllib.parse import quote
 from odoo.exceptions import UserError
 from dingtalk.client import AppKeyClient
+from dingtalk.storage.memorystorage import MemoryStorage
 
+mem_storage = MemoryStorage()
 _logger = logging.getLogger(__name__)
 
 
 class DingDingTools(models.TransientModel):
-    _description = '获取钉钉token值'
+    _description = '钉钉工具类'
     _name = 'dingding.api.tools'
 
     @api.model
     def get_client(self):
+        """
+        返回sdk钉钉客户端
+        :return:
+        """
         corp_id = self.env['ir.config_parameter'].sudo().get_param('dingding_base.corp_id')
         app_key, app_secret = self._get_key_and_secrect()
-        client = AppKeyClient(corp_id, app_key, app_secret)
-        return client
+        return AppKeyClient(corp_id, app_key, app_secret, storage=mem_storage)
 
     @api.model
     def _get_key_and_secrect(self):
@@ -124,7 +129,6 @@ class DingDingTools(models.TransientModel):
         date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
         date_stamp = date_stamp * 1000
         return date_stamp
-
 
     @api.model
     def get_token(self):
