@@ -37,6 +37,7 @@
         'views/wage_calculate_salary_rules.xml',
         'views/wage_special_additional_deduction.xml',
         'views/wage_statistics_annal.xml',
+        'views/wage_payroll_accounting.xml',
 
         'wizard/wage_insured_monthly_statement.xml',
         'wizard/wage_archives.xml',
