@@ -27,14 +27,9 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class DingDingApprovalMain(models.Model):
-    """
-    所有需要提交审批的单据都需要继承本模型，方便使用共有的方法函数
-    """
-    _name = 'dingding.approval.main'
-    _inherit = ['mail.thread']
-    _description = "审批表单基类"
-    _rec_name = 'title'
+class OdooDingDingBaseForm(models.Model):
+
+    _name = 'odoo.dingding.form.base'
 
     OASTATE = [
         ('00', '草稿'),
@@ -46,22 +41,17 @@ class DingDingApprovalMain(models.Model):
         ('refuse', '拒绝'),
         ('redirect', '转交'),
     ]
-    
-    active = fields.Boolean(string=u'Active', default=True)
+
     process_code = fields.Char(string='单据编号', index=True, copy=False)
     business_id = fields.Char(string='审批实例业务编号', index=True, copy=False)
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
     originator_user_id = fields.Many2one('hr.employee', string=u'发起人')
     originator_dept_id = fields.Many2one('hr.department', string=u'发起部门')
     title = fields.Char(string='标题')
     process_instance_id = fields.Char(string='钉钉审批实例id')
-    reason_leave = fields.Text(string=u'事由')
-    oa_state = fields.Selection(string=u'单据状态', selection=OASTATE, default='00')
+    oa_state = fields.Selection(string=u'审批状态', selection=OASTATE, default='00')
     oa_result = fields.Selection(string=u'审批结果', selection=OARESULT)
     oa_message = fields.Char(string='审批消息')
     oa_url = fields.Char(string='钉钉单据url')
-    approver_users = fields.Many2many('hr.employee', string=u'审批人')
-    make_copy_users = fields.Many2many('hr.employee', string=u'抄送人')
 
     @api.multi
     def summit_approval(self):
@@ -70,13 +60,6 @@ class DingDingApprovalMain(models.Model):
         :return:
         """
         pass
-
-    # @api.multi
-    # def unlink(self):
-    #     for res in self:
-    #         if res.oa_state != '00':
-    #             raise UserError('非草稿单据不能删除!')
-    #     super(DingDingApprovalMain, self).unlink()
 
     @api.model
     def _summit_din_approval(self, process_code, form_values):
@@ -91,7 +74,7 @@ class DingDingApprovalMain(models.Model):
         data = {
             'process_code': process_code,  # 审批模型编码
             'originator_user_id': user_id,  # 发起人userid
-            'dept_id': dept_id,             # 发起人部门id
+            'dept_id': dept_id,  # 发起人部门id
             'form_component_values': form_values  # 表单参数
         }
         result = self.env['dingding.api.tools'].send_post_request(url, token, data, 10)
