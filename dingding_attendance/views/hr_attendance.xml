@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_out']" position="after">
+                <field name="ding_group_id"/>
+                <!-- <field name="recordId"/> -->
+                <field name="workDate"/>
+                <field name="on_timeResult"/>
+                <field name="off_timeResult"/>
+                <field name="on_sourceType"/>
+                <field name="off_sourceType"/>
+                <field name="on_planId"/>
+                <field name="off_planId"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_form_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <group>
+                        <field name="ding_group_id"/>
+                        <!-- <field name="recordId"/> -->
+                        <field name="workDate"/>
+                    </group>
+                    <group>
+                        <field name="on_timeResult"/>
+                        <field name="off_timeResult"/>
+                        <field name="on_sourceType"/>
+                        <field name="off_sourceType"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter_inherit" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="ding_group_id"/>
+                <!-- <field name="recordId"/> -->
+                <field name="workDate"/>
+                <!-- <field name="checkType"/> -->
+                <field name="on_timeResult"/>
+                <field name="off_timeResult"/>
+                <field name="on_sourceType"/>
+                <field name="off_sourceType"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_check_out']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_check_out']" position="after">
+                <!-- <filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>
+                <filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>
+                <filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/> -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_tran_form_view" model="ir.ui.view">
+        <field name="name">hr.attendance.tran.form</field>
+        <field name="model">hr.attendance.tran.v2</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="stop_date"/>
+                    </group>
+                    <group>
+                        <field name="is_all_emp"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="emp_ids" widget="many2many_tags" placeholder="获取的员工..."/>
+                </group>
+                <footer>
+                    <button string="开始获取" name="get_attendance_list_v2" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_tran_action_v2" model="ir.actions.act_window">
+        <field name="name">hr.attendance.tran.action</field>
+        <field name="res_model">hr.attendance.tran.v2</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

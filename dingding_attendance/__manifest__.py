@@ -25,7 +25,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '2.0',
-    'depends': ['base', 'dingding_base'],
+    'depends': ['base', 'dingding_base', 'hr_attendance'],
     'installable': True,
     'application': False,
     'auto_install': True,
@@ -40,6 +40,7 @@
         'views/hr_leaves_list.xml',
         'views/hr_attendance_result.xml',
         'views/hr_attendance_record.xml',
+        'views/hr_attendance.xml',
     ],
     'qweb': [
         'static/xml/*.xml'
