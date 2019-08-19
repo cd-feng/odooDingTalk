@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "钉钉办公-消息管理",
-    'summary': """钉钉办公-消息管理""",
-    'description': """ 钉钉办公-消息管理 """,
+    'name': "钉钉集成服务-消息管理",
+    'summary': """钉钉集成服务-消息管理""",
+    'description': """ 钉钉集成服务-消息管理 """,
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '2.0',
-    'depends': ['base', 'dingding_base', 'mail'],
-    'installable': False,
+    'depends': ['base', 'dingding_base'],
+    'installable': True,
     'application': False,
-    'auto_install': False,
+    'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
         'data/system_conf.xml',
