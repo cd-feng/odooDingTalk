@@ -130,7 +130,7 @@ class HrAttendanceTransient(models.TransientModel):
         try:
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
                                                 user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
-            logging.info(">>>获取考勤结果%s", result)
+            # logging.info(">>>获取考勤结果%s", result)
             if result.get('errcode') == 0:
                 OnDuty_list = list()
                 OffDuty_list = list()
