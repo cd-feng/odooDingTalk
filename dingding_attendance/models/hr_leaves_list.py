@@ -51,12 +51,10 @@ class HrLeavesListTran(models.TransientModel):
         查询请假状态
         :return:
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         self.ensure_one()
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('a_getleavestatus')
         offset = 0
         size = 20
-        start_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.start_time))[:13]
-        end_time = str(self.env['dingding.api.tools'].datetime_to_stamp(self.end_time))[:13]
         user_list = list()
         for emp in self.user_ids:
             if emp.ding_id:
@@ -64,14 +62,12 @@ class HrLeavesListTran(models.TransientModel):
         user_list = self.env['hr.attendance.tran'].sudo().list_cut(user_list, 100)
         for u in user_list:
             user_str = ",".join(u)
-            data = {'userid_list': user_str, 'start_time': start_time, 'end_time': end_time}
             while True:
-                data.update({'offset': offset, 'size': size})
-                result = self.env['dingding.api.tools'].send_post_request(url, token, data)
-                if result.get('errcode') == 0:
-                    res_result = result['result']
-                    logging.info(">>>获取考勤组成员返回结果%s", res_result)
-                    for leave in res_result['leave_status']:
+                try:
+                    result = din_client.attendance.getleavestatus(
+                        user_str, self.start_time, self.end_time, offset=offset, size=size)
+                    # logging.info(">>>查询请假状态返回结果%s", result)
+                    for leave in result['leave_status']['leave_status_v_o']:
                         leave_data = {
                             'start_time_stamp': leave['start_time'],
                             'end_time_stamp': leave['end_time'],
@@ -84,18 +80,19 @@ class HrLeavesListTran(models.TransientModel):
                         leave_data.update({
                             'user_id': employee.id if employee else False,
                         })
-                        domain = [('start_time_stamp', '=', leave['start_time']), ('user_id', '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
+                        domain = [('start_time_stamp', '=', leave['start_time']), ('user_id',
+                                                                                   '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
                         hr_leaves = self.env['hr.leaves.list'].search(domain)
                         if not hr_leaves:
                             self.env['hr.leaves.list'].create(leave_data)
                         else:
                             hr_leaves.write(leave_data)
-                    if not res_result['has_more']:
+                    if not result['has_more']:
                         break
                     else:
                         offset += size
-                else:
-                    raise UserError("查询请假状态失败: {}".format(result['errmsg']))
+                except Exception as e:
+                    raise UserError(e)
         action = self.env.ref('dingding_attendance.hr_leaves_list_action')
         action_dict = action.read()[0]
         return action_dict
