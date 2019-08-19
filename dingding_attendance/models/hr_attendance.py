@@ -136,31 +136,6 @@ class HrAttendanceTransient(models.TransientModel):
                 OnDuty_list = list()
                 OffDuty_list = list()
                 for rec in result.get('recordresult'):
-                    # data = {
-                    #     'record_id': rec.get('id'),
-                    #     'work_date': self.get_time_stamp(rec.get('workDate')),  # 工作日
-                    #     'timeResult': rec.get('timeResult'),  # 时间结果
-                    #     'locationResult': rec.get('locationResult'),  # 考勤结果
-                    #     'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
-                    #     'sourceType': rec.get('sourceType'),  # 数据来源
-                    #     'check_type': rec.get('checkType'),
-                    #     'check_in': self.get_time_stamp(rec.get('userCheckTime')),
-                    #     'approveId': rec.get('approveId'),
-                    # }
-                    # # 考勤组
-                    # groups = self.env['dingding.simple.groups'].sudo().search(
-                    #     [('group_id', '=', rec.get('groupId'))], limit=1)
-                    # data.update({'ding_group_id': groups[0].id if groups else False})
-                    # # 员工
-                    # emp_id = self.env['hr.employee'].sudo().search([('ding_id', '=', rec.get('userId'))], limit=1)
-                    # data.update({'emp_id': emp_id[0].id if emp_id else False})
-                    # # 班次
-                    # plan = self.env['hr.dingding.plan'].sudo().search([('plan_id', '=', rec.get('planId'))], limit=1)
-                    # data.update({'plan_id': plan[0].id if plan else False})
-                    # # attendance = self.env['hr.attendance.result'].sudo().search(
-                    # #     [('emp_id', '=', emp_id[0].id),
-                    # #      ('check_in', '=', self.get_time_stamp(rec.get('userCheckTime'))),
-                    # #      ('check_type', '=', rec.get('checkType'))])
                     data = {
                         'workDate': self.get_time_stamp(rec.get('workDate'))  # 工作日
                     }
@@ -178,7 +153,6 @@ class HrAttendanceTransient(models.TransientModel):
                              })
 
                         OnDuty_list.append(data)
-
                     else:
                         data.update({
                             'check_out': self.get_time_stamp(rec.get('userCheckTime')),
@@ -188,9 +162,7 @@ class HrAttendanceTransient(models.TransientModel):
                         })
 
                         OffDuty_list.append(data)
-
                     OnDuty_list.sort(key=lambda x: (x['employee_id'], x['on_planId']))
-
                     for onduy in OnDuty_list:
                         attendance = self.env['hr.attendance'].sudo().search(
                             [('employee_id', '=', onduy.get('employee_id')),
@@ -204,9 +176,7 @@ class HrAttendanceTransient(models.TransientModel):
                                 'on_timeResult': onduy.get('on_timeResult'),
                                 'on_sourceType': onduy.get('on_sourceType')
                             })
-
                     OffDuty_list.sort(key=lambda x: (x['employee_id'], x['off_planId']))
-
                     for offduy in OffDuty_list:
                         domain = [('employee_id', '=', offduy.get('employee_id')),
                                   ('workDate', '=', offduy.get('workDate'))]
@@ -229,7 +199,6 @@ class HrAttendanceTransient(models.TransientModel):
                                         'off_timeResult': offduy.get('off_timeResult'),
                                         'off_sourceType': offduy.get('off_sourceType')
                                     })
-
                 if result.get('hasMore'):
                     return True
                 else:

@@ -35,11 +35,11 @@ class DingdingAttendanceIrCron(models.TransientModel):
         :return:
         """
         logging.info(">>>---------------Start Dingding Attendance Cron------------")
-        # 自动拉取当天的下一天的排班信息
+        # 自动拉取当天的下2天的排班信息
         today = datetime.date.today()
-        tomorrow = today + datetime.timedelta(days=1)
+        tomorrow = today + datetime.timedelta(days=2)
         try:
-            self.env['hr.dingding.plan.tran'].sudo().start_pull_plan_lists(work_date=str(tomorrow))
+            self.env['hr.dingding.plan.tran'].sudo().start_pull_plan_lists(today, tomorrow)
         except Exception as e:
             logging.info(">>>拉取排班信息失败,原因:{}".format(str(e)))
         # 自动同步上二天的考勤结果数据
