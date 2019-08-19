@@ -21,6 +21,7 @@
             <script type="text/javascript" src="/dingding_attendance/static/src/js/hr_attendance_record.js"></script>
             <script type="text/javascript" src="/dingding_attendance/static/src/js/dingding_plan.js"></script>
             <script type="text/javascript" src="/dingding_attendance/static/src/js/hr_leaves_list.js"></script>
+            <script type="text/javascript" src="/dingding_attendance/static/src/js/hr_attendance_list.js"></script>
         </xpath>
     </template>
 
