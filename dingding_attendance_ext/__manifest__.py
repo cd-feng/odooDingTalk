@@ -18,31 +18,19 @@
 #
 ###################################################################################
 {
-    'name': "钉钉集成服务-考勤",
-    'summary': """钉钉集成服务-考勤""",
-    'description': """ 钉钉集成服务-考勤 """,
+    'name': "钉钉集成服务-考勤拓展模块",
+    'summary': """钉钉集成服务-考勤拓展模块，为了不影响基于dingding——base模块的考勤功能，将所有需要依赖odoo原生的模块的功能移动至本模块，可通过设置中选择进行安装""",
+    'description': """钉钉集成服务-考勤拓展模块，为了不影响基于dingding——base模块的考勤功能，将所有需要依赖odoo原生的模块的功能移动至本模块，可通过设置中选择进行安装""",
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '2.0',
-    'depends': ['base', 'dingding_base'],
+    'depends': ['dingding_attendance', 'hr_attendance'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
-        'security/ir.model.access.csv',
-        'security/dingding_security.xml',
-        'data/dingding_parameter.xml',
         'views/asset.xml',
-        'views/menu.xml',
-        'views/simplegroups.xml',
-        'views/hr_dingding_plan.xml',
-        'views/hr_leaves_list.xml',
-        'views/hr_attendance_result.xml',
-        'views/hr_attendance_record.xml',
+        'views/hr_attendance.xml',
     ],
-    'qweb': [
-        'static/xml/*.xml'
-    ]
-
 }
