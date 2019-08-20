@@ -18,8 +18,9 @@
 #
 ###################################################################################
 import logging
+import time
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -120,7 +121,7 @@ class GetDingDingHrmDimissionList(models.TransientModel):
                 for res in result.get('emp_dimission_info_vo'):
                     if res.get('main_dept_id'):
                         main_dept = self.env['hr.department'].search(
-                            [('din_id', '=', res.get('main_dept_id'))])
+                            [('ding_id', '=', res.get('main_dept_id'))])
                     dept_list = list()
                     if res.get('dept_list'):
                         for depti in res['dept_list']['emp_dept_v_o']:
@@ -130,7 +131,7 @@ class GetDingDingHrmDimissionList(models.TransientModel):
                                 dept_list.append(hr_dept.id)
                     data = {
                         'ding_id': res.get('userid'),
-                        'last_work_day': stamp_to_time(res.get('last_work_day')),
+                        'last_work_day': self.stamp_to_time(res.get('last_work_day')),
                         'department_ids': [(6, 0, dept_list)] if dept_list else '',
                         'reason_memo': res.get('reason_memo'),
                         'reason_type': str(res.get('reason_type')) if res.get('reason_type') else '9',
@@ -156,3 +157,81 @@ class GetDingDingHrmDimissionList(models.TransientModel):
         except Exception as e:
             raise UserError(e)
         logging.info(">>>获取获取离职员工信息end")
+
+    @api.multi
+    def get_hrm_employee_state(self):
+        self.ensure_one()
+        # 更新在职员工
+        self.get_queryonjob()
+        # 更新离职员工
+        self.get_querydimission()
+
+    @api.model
+    def get_queryonjob(self):
+        """
+        更新在职员工,在职员工子状态筛选: 2，试用期；3，正式；5，待离职；-1，无状态
+        :return:
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        status_arr = ['2', '3', '5', '-1']
+        for arr in status_arr:
+            offset = 0
+            size = 20
+            while True:
+                try:
+                    result = din_client.employeerm.queryonjob(status_list=arr, offset=offset, size=size)
+                    logging.info(">>>更新在职员工子状态[%s]返回结果%s", arr, result)
+                    if result['data_list']:
+                        result_list = result['data_list']['string']
+                        for data_list in result_list:
+                            sql = """UPDATE hr_employee SET work_status='2',office_status={} WHERE ding_id='{}'""".format(
+                                arr, data_list)
+                            self._cr.execute(sql)
+                        if 'next_cursor' in result:
+                            offset = result['next_cursor']
+                        else:
+                            break
+                    else:
+                        break
+                except Exception as e:
+                    raise UserError(e)
+        return True
+
+    @api.model
+    def get_querydimission(self):
+        """
+        更新离职员工
+        :return:
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        offset = 0
+        size = 50
+        while True:
+            try:
+                result = din_client.employeerm.querydimission(offset=offset, size=size)
+                logging.info(">>>获取离职员工列表返回结果%s", result)
+                if result['data_list']:
+                    result_list = result['data_list']['string']
+                    self.dimission_list(result_list)
+                    for data_list in result_list:
+                        sql = """UPDATE hr_employee SET work_status='3' WHERE ding_id='{}'""".format(data_list)
+                        self._cr.execute(sql)
+                    if 'next_cursor' in result:
+                        offset = result['next_cursor']
+                    else:
+                        break
+                else:
+                    break
+            except Exception as e:
+                raise UserError(e)
+        return True
+
+    def stamp_to_time(self, time_num):
+        """
+        将13位时间戳转换为时间
+        :param time_num:
+        :return:
+        """
+        time_stamp = float(time_num / 1000)
+        time_array = time.localtime(time_stamp)
+        return time.strftime("%Y-%m-%d %H:%M:%S", time_array)

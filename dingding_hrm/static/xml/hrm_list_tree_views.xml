@@ -31,16 +31,20 @@
         </t>
     </t>
 
-
-    <t t-name="HrmListView.get_hrm_dimission_button">
-        <button type="button" class="btn btn-secondary o_button_get_dingding_hrm_dimission_list">
-            获取离职员工信息
+     <t t-name="HrmListView.get_hrm_emp_work_type_button">
+        <button type="button" class="btn btn-secondary o_button_get_emp_work_type_button">
+            更新离职人员
         </button>
     </t>
 
-    <t t-extend="ListView.buttons" t-name="HrmListView.hrm_dimission_buttons">
+    <t t-extend="ListView.buttons" t-name="HrmListView.get_emp_work_type_buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
-            <t t-call="HrmListView.get_hrm_dimission_button"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="HrmListView.get_hrm_emp_work_type_button"/>
         </t>
     </t>
 

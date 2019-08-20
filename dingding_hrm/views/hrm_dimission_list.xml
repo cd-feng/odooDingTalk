@@ -40,29 +40,18 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="离职员工信息"
-              id="dingding_hrm_dimission_list_menu"
-              parent="zhineng_hrm_menu"
-              sequence="2"
-              action="dingding_hrm_dimission_list_action"/>
+    <menuitem name="离职员工信息" id="dingding_hrm_dimission_list_menu" parent="zhineng_hrm_menu" sequence="2" action="dingding_hrm_dimission_list_action"/>
 
-
-    <record id="dingding_get_hrm_dimission_list_form_view" model="ir.ui.view">
-        <field name="name">dingding.get.hrm.dimission.list.form</field>
+    <record id="get_hrm_employee_state_form_view" model="ir.ui.view">
+        <field name="name">dingding.get.hrm.dimission.list</field>
         <field name="model">dingding.get.hrm.dimission.list</field>
         <field name="arch" type="xml">
             <form>
-                <group>
-                    <group>
-                        <field name="is_all_emp"/>
-                    </group>
-                </group>
-                <group>
-                    <field name="emp_ids" widget="many2many_tags" placeholder="请选择要操作的员工..."
-                           options="{'horizontal': true, 'no_create_edit': True}" domain="[('work_status', '=', '3')]"/>
-                </group>
+                <div class="alert alert-info" role="alert">
+                    <p>即将从钉钉智能人事获取历史离职员工名单，并同步最新的员工入职状态信息(在职、离职)！</p>
+                </div>
                 <footer>
-                    <button string="开始获取" name="get_hrm_dimission_list" type="object" class="oe_highlight"/>
+                    <button string="更新" name="get_hrm_employee_state" type="object" class="oe_highlight"/>
                     <button string="取消" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>

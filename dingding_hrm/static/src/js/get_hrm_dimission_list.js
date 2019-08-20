@@ -25,12 +25,12 @@ odoo.define('dingding.hrm.dimission.list.tree', function (require) {
     let qweb = core.qweb;
 
     let DingDingHrmDimissionListController = ListController.extend({
-        buttons_template: 'HrmListView.hrm_dimission_buttons',
+        buttons_template: 'HrmListView.get_emp_work_type_buttons',
         renderButtons: function () {
             this._super.apply(this, arguments);
             if (this.$buttons) {
                 var self = this;
-                this.$buttons.on('click', '.o_button_get_dingding_hrm_dimission_list', function () {
+                this.$buttons.on('click', '.o_button_get_emp_work_type_button', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: 'dingding.get.hrm.dimission.list',

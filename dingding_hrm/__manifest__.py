@@ -38,11 +38,9 @@
         'views/employee_roster.xml',
         'views/hrm_dimission_list.xml',
         'views/add_employee.xml',
-        'wizard/hr_employee_report.xml',
-
         'report/employee_roster.xml',
     ],
     'qweb': [
-         'static/xml/*.xml',
+        'static/xml/*.xml',
     ],
 }
