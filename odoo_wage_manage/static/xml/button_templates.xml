@@ -20,7 +20,6 @@ limitations under the License.
             新建月结账单
         </button>
     </t>
-
     <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_insured_monthly_statement_buttons">
         <t t-jquery="button.o_list_button_add" t-operation="replace">
             <t t-call="OdooWageManageListView.wage_insured_monthly_statement_but"/>
@@ -37,7 +36,6 @@ limitations under the License.
             批量初始化档案
         </button>
     </t>
-
     <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_archives_buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
             <t t-js="ctx">
@@ -46,6 +44,41 @@ limitations under the License.
                 };
             </t>
             <t t-call="OdooWageManageListView.wage_archives_but"/>
+        </t>
+    </t>
+
+    <t t-name="OdooWageManageListView.wage_payroll_accounting_but">
+        <button type="button" class="btn btn-primary wage_payroll_accounting_but_class">
+            薪资计算
+        </button>
+        <button type="button" class="btn btn-secondary push_down_the_pay_slip_but_class">
+            生成工资条
+        </button>
+    </t>
+    <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_payroll_accounting_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <t t-call="OdooWageManageListView.wage_payroll_accounting_but"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+        </t>
+    </t>
+
+    <t t-name="OdooWageManageListView.wage_employee_tax_details_but">
+        <button type="button" class="btn btn-primary wage_employee_tax_details_but_class">
+            初始化员工个税
+        </button>
+    </t>
+    <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_employee_tax_details_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <t t-call="OdooWageManageListView.wage_employee_tax_details_but"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
         </t>
     </t>
 

@@ -19,6 +19,8 @@ limitations under the License.
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_insured_monthly_statement.js"></script>
             <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_archives.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_payroll_accounting.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_tax_details.js"></script>
         </xpath>
     </template>
 

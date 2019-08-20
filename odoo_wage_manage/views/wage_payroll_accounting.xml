@@ -19,7 +19,7 @@ limitations under the License.
         <field name="name">薪资核算</field>
         <field name="model">wage.payroll.accounting</field>
         <field name="arch" type="xml">
-            <tree default_order="employee_id asc">
+            <tree default_order="employee_id asc" js_class="compute_wage_payroll_accounting">
                 <field name="company_id"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
@@ -36,7 +36,7 @@ limitations under the License.
         <field name="name">薪资核算</field>
         <field name="model">wage.payroll.accounting</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="0">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
