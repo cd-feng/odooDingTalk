@@ -164,32 +164,36 @@ class HrAttendanceTransient(models.TransientModel):
                 # logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
                 OffDuty_list.sort(key=lambda x: (x['employee_id'], x['check_out']))
                 # logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
-                duy_list = list()
+                duty_list = list()
                 on_planId_list = list()
-                for onduy in OnDuty_list:
-                    for offduy in OffDuty_list:
-                        datetime_check_out = datetime.strptime(offduy.get('check_out'), "%Y-%m-%d %H:%M:%S")
-                        datetime_check_in = datetime.strptime(onduy.get('check_in'), "%Y-%m-%d %H:%M:%S")
-                        if int(offduy.get('off_planId')) == int(onduy.get('on_planId')) + 1 and \
-                                offduy.get('employee_id') == onduy.get('employee_id') and \
-                                offduy.get('workDate') == onduy.get('workDate'):
-                            duy_tmp = dict(onduy, **offduy)
-                            duy_list.append(duy_tmp)
-                            on_planId_list.append(onduy.get('on_planId'))
+                for onduty in OnDuty_list:
+                    for offduty in OffDuty_list:
+                        datetime_check_out = datetime.strptime(offduty.get('check_out'), "%Y-%m-%d %H:%M:%S")
+                        datetime_check_in = datetime.strptime(onduty.get('check_in'), "%Y-%m-%d %H:%M:%S")
+                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
+                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                                offduty.get('workDate') == onduty.get('workDate'):
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
                         elif datetime_check_out > datetime_check_in and \
-                                offduy.get('employee_id') == onduy.get('employee_id') and \
-                                offduy.get('workDate') == onduy.get('workDate') and \
-                                onduy.get('on_planId') not in on_planId_list:
-                            duy_tmp = dict(onduy, **offduy)
-                            duy_list.append(duy_tmp)
-                            on_planId_list.append(onduy.get('on_planId'))
-
+                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                                offduty.get('workDate') == onduty.get('workDate') and \
+                                onduty.get('on_planId') not in on_planId_list:
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
+                # 剩余还未匹配到下班记录的考勤（如当天）
+                for onduty in OnDuty_list:
+                    if onduty.get('on_planId') not in on_planId_list:
+                        duty_list.append(onduty)
                 # 将合并的考勤导入odoo考勤
-                for att in duy_list:
+                duty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
+                logging.info(">>>获取duty_list结果%s", duty_list)
+                for att in duty_list:
                     attendance = self.env['hr.attendance'].sudo().search(
                         [('employee_id', '=', att.get('employee_id')),
-                            ('on_planId', '=', att.get('on_planId')),
-                            ('off_planId', '=', att.get('off_planId'))])
+                            ('on_planId', '=', att.get('on_planId'))])
                     if not attendance:
                         self.env['hr.attendance'].sudo().create(att)
                     else:
