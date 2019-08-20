@@ -45,6 +45,8 @@ class ResConfigSettings(models.TransientModel):
     module_oa_leave_attendance = fields.Boolean('钉钉审批-出勤休假')
     module_oa_personnel_admin = fields.Boolean('钉钉审批-行政人事')
     module_oa_odoo_form = fields.Boolean('钉钉审批-采购销售')
+    module_dingding_attendance_ext = fields.Boolean('考勤拓展模块')
+    odoo_wage_manage = fields.Boolean('薪酬管理')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
