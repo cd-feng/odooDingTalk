@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding.hrm.dimission.list.tree', function (require) {
+odoo.define('dingding_hrm.dimission.list.tree', function (require) {
     "use strict";
 
     let core = require('web.core');

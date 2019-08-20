@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding.employee.roster.tree.button', function (require) {
+odoo.define('dingding_hrm.employee.roster.tree.button', function (require) {
     "use strict";
 
     let core = require('web.core');
