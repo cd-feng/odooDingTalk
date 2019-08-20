@@ -50,6 +50,14 @@ class HrAttendance(models.Model):
         """
         return True
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        支持批量新建考勤记录
+        :return:
+        """
+        return super(HrAttendance, self).create(vals_list)
+
 
 class HrAttendanceTransient(models.TransientModel):
     _name = 'hr.attendance.tran.v2'
@@ -115,7 +123,7 @@ class HrAttendanceTransient(models.TransientModel):
                 'offset': offset,
                 'limit': limit,
             }
-            has_more = self.send_post_dindin(data)
+            has_more = self.send_post_dingding(data)
             logging.info(">>>是否还有剩余数据：{}".format(has_more))
             if not has_more:
                 break
@@ -125,7 +133,7 @@ class HrAttendanceTransient(models.TransientModel):
         return True
 
     @api.model
-    def send_post_dindin(self, data):
+    def send_post_dingding(self, data):
         din_client = self.env['dingding.api.tools'].get_client()
         try:
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
@@ -217,6 +225,83 @@ class HrAttendanceTransient(models.TransientModel):
             raise UserError(e)
 
     @api.model
+    def send_post_dingding_v2(self, data):
+        din_client = self.env['dingding.api.tools'].get_client()
+        try:
+            result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
+                                                user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
+            # logging.info(">>>获取考勤结果%s", result)
+            if result.get('errcode') == 0:
+                OnDuty_list = list()
+                OffDuty_list = list()
+                for rec in result.get('recordresult'):
+                    data = {
+                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                    }
+                    groups = self.env['dingding.simple.groups'].sudo().search(
+                        [('group_id', '=', rec.get('groupId'))], limit=1)
+                    data.update({'ding_group_id': groups[0].id if groups else False})
+                    emp_id = self.env['hr.employee'].sudo().search([('ding_id', '=', rec.get('userId'))], limit=1)
+                    data.update({'employee_id': emp_id[0].id if emp_id else False})
+                    if rec.get('checkType') == 'OnDuty':
+                        data.update(
+                            {'check_in': self.get_time_stamp(rec.get('userCheckTime')),
+                             'on_planId': rec.get('planId'),
+                             'on_timeResult': rec.get('timeResult'),
+                             'on_sourceType': rec.get('sourceType')
+                             })
+                        OnDuty_list.append(data)
+                    else:
+                        data.update({
+                            'check_out': self.get_time_stamp(rec.get('userCheckTime')),
+                            'off_planId': rec.get('planId'),
+                            'off_timeResult': rec.get('timeResult'),
+                            'off_sourceType': rec.get('sourceType')
+                        })
+                        OffDuty_list.append(data)
+                # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
+                OnDuty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
+                # logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
+                OffDuty_list.sort(key=lambda x: (x['employee_id'], x['check_out']))
+                # logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
+                duty_list = list()
+                on_planId_list = list()
+                for onduty in OnDuty_list:
+                    for offduty in OffDuty_list:
+                        datetime_check_out = datetime.strptime(offduty.get('check_out'), "%Y-%m-%d %H:%M:%S")
+                        datetime_check_in = datetime.strptime(onduty.get('check_in'), "%Y-%m-%d %H:%M:%S")
+                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
+                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                                offduty.get('workDate') == onduty.get('workDate'):
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
+                        elif datetime_check_out > datetime_check_in and \
+                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                                offduty.get('workDate') == onduty.get('workDate') and \
+                                onduty.get('on_planId') not in on_planId_list:
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
+                # 剩余还未匹配到下班记录的考勤（如当天）
+                for onduty in OnDuty_list:
+                    if onduty.get('on_planId') not in on_planId_list:
+                        duty_list.append(onduty)
+                # 将合并的考勤导入odoo考勤
+                duty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
+                logging.info(">>>获取duty_list结果%s", duty_list)
+                # 批量新建记录
+                self.env['hr.attendance'].sudo().create(duty_list)
+                if result.get('hasMore'):
+                    return True
+                else:
+                    return False
+            else:
+                raise UserError('请求失败,原因为:{}'.format(result.get('errmsg')))
+        except Exception as e:
+            raise UserError(e)
+
+    @api.model
     def get_time_stamp(self, timeNum):
         """
         将13位时间戳转换为时间
@@ -254,7 +339,7 @@ class HrAttendanceTransient(models.TransientModel):
                     'offset': offset,
                     'limit': limit,
                 }
-                has_more = self.send_post_dindin(data)
+                has_more = self.send_post_dingding(data)
 
                 if not has_more:
                     break
