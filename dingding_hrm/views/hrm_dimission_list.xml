@@ -18,16 +18,17 @@
         <field name="name">dingding.hrm.dimission.list.tree</field>
         <field name="model">dingding.hrm.dimission.list</field>
         <field name="arch" type="xml">
-            <tree string="离职员工信息" js_class="dingding_hrm_dimission_list_tree" edit="false" editable="top">
+            <tree string="离职员工信息" js_class="dingding_hrm_dimission_list_tree" edit="false">
                 <field name="company_id"/>
                 <field name="emp_id"/>
+                <field name="ding_id"/>
                 <field name="last_work_day"/>
                 <field name="main_dept_name"/>
                 <field name="reason_type"/>
                 <field name="pre_status"/>
                 <field name="handover_userid"/>
                 <field name="status"/>
-<!--                <field name="department_id"/>-->
+                <field name="department_ids"/>
                 <field name="reason_memo"/>
             </tree>
         </field>
@@ -39,8 +40,11 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-<!--    <menuitem name="离职员工信息" id="dingding_hrm_dimission_list_menu" parent="zhineng_hrm_menu" sequence="2"-->
-<!--              action="dingding_hrm_dimission_list_action"/>-->
+    <menuitem name="离职员工信息"
+              id="dingding_hrm_dimission_list_menu"
+              parent="zhineng_hrm_menu"
+              sequence="2"
+              action="dingding_hrm_dimission_list_action"/>
 
 
     <record id="dingding_get_hrm_dimission_list_form_view" model="ir.ui.view">
@@ -49,8 +53,13 @@
         <field name="arch" type="xml">
             <form>
                 <group>
+                    <group>
+                        <field name="is_all_emp"/>
+                    </group>
+                </group>
+                <group>
                     <field name="emp_ids" widget="many2many_tags" placeholder="请选择要操作的员工..."
-                           options="{'horizontal': true, 'no_create_edit': True}"/>
+                           options="{'horizontal': true, 'no_create_edit': True}" domain="[('work_status', '=', '3')]"/>
                 </group>
                 <footer>
                     <button string="开始获取" name="get_hrm_dimission_list" type="object" class="oe_highlight"/>

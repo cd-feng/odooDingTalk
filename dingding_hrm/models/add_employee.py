@@ -21,7 +21,6 @@ import base64
 import logging
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.ali_dindin.dingtalk.main import client
 from odoo.exceptions import UserError
 from odoo.modules import get_module_resource
 
@@ -84,8 +83,8 @@ class AddDingDingEmployee(models.Model):
         name = self.name
         mobile = self.mobile
         pre_entry_time = self.pre_entry_time
-        op_userid = user[0].din_id if user else ''
-        extend_info = {'depts': self.dept_id.din_id} if self.dept_id else ''
+        op_userid = user[0].ding_id if user else ''
+        extend_info = {'depts': self.dept_id.ding_id} if self.dept_id else ''
         try:
             result = din_client.employeerm.addpreentry(
                 name, mobile, pre_entry_time=pre_entry_time, op_userid=op_userid, extend_info=extend_info)
@@ -107,8 +106,9 @@ class AddDingDingEmployee(models.Model):
         :param offset: 分页起始值，默认0开始
         :param size: 分页大小，最大50
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         try:
-            result = client.employeerm.querypreentry(offset=0, size=50)
+            result = din_client.employeerm.querypreentry(offset=0, size=50)
             logging.info(">>>查询待入职员工列表返回结果%s", result)
             if result['data_list']['string']:
                 pre_entry_list = result['data_list']['string']

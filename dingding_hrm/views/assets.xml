@@ -19,6 +19,7 @@
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_hrm_dimission_list.js"></script>
             <script type="text/javascript" src="/dingding_hrm/static/src/js/get_emp_work_type.js"></script>
             <script type="text/javascript" src="/dingding_hrm/static/src/js/employee_roster.js"></script>
+            <script type="text/javascript" src="/dingding_hrm/static/src/js/get_pre_entry.js"></script>
         </xpath>
     </template>
 

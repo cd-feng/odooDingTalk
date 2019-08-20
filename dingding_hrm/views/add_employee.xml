@@ -84,7 +84,7 @@
         <field name="name">待入职员工</field>
         <field name="model">dingding.add.employee</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="true">
+            <kanban class="o_kanban_mobile" create="true" js_class="dindin_get_preentry_kanban">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="mobile"/>
@@ -135,7 +135,10 @@
         <field name="target">inline</field>
     </record>
 
-<!--    <menuitem name="待入职员工" id="dingding_add_employee_menu" parent="zhineng_hrm_menu" sequence="3"-->
-<!--              action="dingding_add_employee_action"/>-->
+    <menuitem name="待入职员工"
+              id="dingding_add_employee_menu"
+              parent="zhineng_hrm_menu"
+              sequence="3"
+              action="dingding_add_employee_action"/>
 
 </odoo>
