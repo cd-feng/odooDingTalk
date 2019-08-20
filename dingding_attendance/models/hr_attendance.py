@@ -183,7 +183,10 @@ class HrAttendanceTransient(models.TransientModel):
                             duty_tmp = dict(onduty, **offduty)
                             duty_list.append(duty_tmp)
                             on_planId_list.append(onduty.get('on_planId'))
-
+                # 剩余还未匹配到下班记录的考勤（如当天）
+                for onduty in OnDuty_list:
+                    if onduty.get('on_planId') not in on_planId_list:
+                        duty_list.append(onduty)
                 # 将合并的考勤导入odoo考勤
                 duty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
                 logging.info(">>>获取duty_list结果%s", duty_list)
