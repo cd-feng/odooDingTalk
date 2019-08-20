@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class WageEmployeeTaxDetails(models.Model):
-    _description = '员工个税明细'
+    _description = '个税明细'
     _name = 'wage.employee.tax.details'
     _rec_name = 'employee_id'
     _order = 'id'

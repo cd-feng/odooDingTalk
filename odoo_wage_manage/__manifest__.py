@@ -43,6 +43,8 @@
 
         'wizard/wage_insured_monthly_statement.xml',
         'wizard/wage_archives.xml',
+        'wizard/wage_payroll_accounting.xml',
+        'wizard/wage_employee_tax_details.xml',
 
     ],
     'qweb': [
