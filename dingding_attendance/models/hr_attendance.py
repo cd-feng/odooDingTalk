@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -136,7 +136,7 @@ class HrAttendanceTransient(models.TransientModel):
                 OffDuty_list = list()
                 for rec in result.get('recordresult'):
                     data = {
-                        'workDate': self.get_time_stamp(rec.get('workDate'))  # 工作日
+                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
                     }
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
@@ -159,24 +159,33 @@ class HrAttendanceTransient(models.TransientModel):
                             'off_sourceType': rec.get('sourceType')
                         })
                         OffDuty_list.append(data)
-                # 上班与下班匹配后合并
-                OnDuty_list.sort(key=lambda x: (x['employee_id'], x['on_planId']))
-                OffDuty_list.sort(key=lambda x: (x['employee_id'], x['off_planId']))
-                duy = list()
+                # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
+                OnDuty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
+                # logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
+                OffDuty_list.sort(key=lambda x: (x['employee_id'], x['check_out']))
+                # logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
+                duy_list = list()
+                on_planId_list = list()
                 for onduy in OnDuty_list:
                     for offduy in OffDuty_list:
+                        datetime_check_out = datetime.strptime(offduy.get('check_out'), "%Y-%m-%d %H:%M:%S")
+                        datetime_check_in = datetime.strptime(onduy.get('check_in'), "%Y-%m-%d %H:%M:%S")
                         if int(offduy.get('off_planId')) == int(onduy.get('on_planId')) + 1 and \
                                 offduy.get('employee_id') == onduy.get('employee_id') and \
                                 offduy.get('workDate') == onduy.get('workDate'):
                             duy_tmp = dict(onduy, **offduy)
-                            duy.append(duy_tmp)
-                        elif int(offduy.get('off_planId')) > int(onduy.get('on_planId')) and \
+                            duy_list.append(duy_tmp)
+                            on_planId_list.append(onduy.get('on_planId'))
+                        elif datetime_check_out > datetime_check_in and \
                                 offduy.get('employee_id') == onduy.get('employee_id') and \
-                                offduy.get('workDate') == onduy.get('workDate'):
+                                offduy.get('workDate') == onduy.get('workDate') and \
+                                onduy.get('on_planId') not in on_planId_list:
                             duy_tmp = dict(onduy, **offduy)
-                            duy.append(duy_tmp)
+                            duy_list.append(duy_tmp)
+                            on_planId_list.append(onduy.get('on_planId'))
+
                 # 将合并的考勤导入odoo考勤
-                for att in duy:
+                for att in duy_list:
                     attendance = self.env['hr.attendance'].sudo().search(
                         [('employee_id', '=', att.get('employee_id')),
                             ('on_planId', '=', att.get('on_planId')),
