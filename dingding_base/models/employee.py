@@ -99,6 +99,14 @@ class HrEmployee(models.Model):
             except ReadTimeout:
                 raise UserError("上传员工至钉钉超时！")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        支持批量新建员工记录
+        :return:
+        """
+        return super(HrEmployee, self).create(vals_list)
+
     # 修改员工同步到钉钉
     @api.multi
     def update_ding_employee(self):
