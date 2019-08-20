@@ -121,8 +121,9 @@ class GetDingDingHrmList(models.TransientModel):
         获取钉钉员工花名册
         :return:
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>获取钉钉员工花名册start")
-        url, token = self.env['dingding.parameter'].get_parameter_value_and_token('hrm_list')
+        # url, token = self.env['dingding.parameter'].get_parameter_value_and_token('hrm_list')
         emp_data = self.get_employee_to_dict()
         user_list = list()
         for emp in self.emp_ids:
@@ -130,19 +131,18 @@ class GetDingDingHrmList(models.TransientModel):
                 user_list.append(emp.ding_id)
         user_list = self.env['hr.attendance.tran'].sudo().list_cut(user_list, 20)
         for u in user_list:
-            user_str = ",".join(u)
-            data = {'userid_list': user_str}
             try:
-                headers = {'Content-Type': 'application/json'}
-                result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
-                result = json.loads(result.text)
-                if result.get('errcode') == 0:
-                    for rec in result['result']:
+                result = din_client.employeerm.list(u, field_filter_list=())
+                # headers = {'Content-Type': 'application/json'}
+                # result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
+                # result = json.loads(result.text)
+                if result.get('emp_field_info_v_o'):
+                    for rec in result.get('emp_field_info_v_o'):
                         roster_data = {
                             'emp_id': emp_data[rec['userid']] if rec['userid'] in emp_data else False,
                             'ding_userid': rec['userid']
                         }
-                        for fie in rec['field_list']:
+                        for fie in rec['field_list']['emp_field_v_o']:
                             # 获取部门（可能会多个）
                             if fie['field_code'][6:] == 'deptIds':
                                 dept_ding_ids = list()
@@ -176,8 +176,8 @@ class GetDingDingHrmList(models.TransientModel):
                             self.env['dingding.employee.roster'].sudo().create(roster_data)
                 else:
                     raise UserError("获取失败,原因:{}\r\n或许您没有开通智能人事功能，请登录钉钉安装智能人事应用!".format(result.get('errmsg')))
-            except ReadTimeout:
-                raise UserError("网络连接超时")
+            except Exception as e:
+                raise UserError(e)
         logging.info(">>>获取钉钉员工花名册end")
         action = self.env.ref('dingding_hrm.dingding_employee_roster_action')
         action_dict = action.read()[0]
