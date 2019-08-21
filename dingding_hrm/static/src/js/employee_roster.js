@@ -33,7 +33,7 @@ odoo.define('dingding_hrm.employee.roster.tree.button', function (require) {
                 this.$buttons.on('click', '.o_button_get_dingding_employee_roster_list', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
-                        res_model: 'dingding.get.hrm.list',
+                        res_model: 'dingding.employee.roster.synchronous',
                         target: 'new',
                         views: [[false, 'form']],
                         context: [],

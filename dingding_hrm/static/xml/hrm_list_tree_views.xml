@@ -31,7 +31,7 @@
         </t>
     </t>
 
-     <t t-name="HrmListView.get_hrm_emp_work_type_button">
+     <!-- <t t-name="HrmListView.get_hrm_emp_work_type_button">
         <button type="button" class="btn btn-secondary o_button_get_emp_work_type_button">
             更新离职人员
         </button>
@@ -46,6 +46,6 @@
             </t>
             <t t-call="HrmListView.get_hrm_emp_work_type_button"/>
         </t>
-    </t>
+    </t> -->
 
 </templates>

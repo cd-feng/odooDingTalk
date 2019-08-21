@@ -36,7 +36,6 @@
         'views/menu.xml',
         'views/assets.xml',
         'views/employee_roster.xml',
-        'views/hrm_dimission_list.xml',
         'views/add_employee.xml',
         'report/employee_roster.xml',
     ],

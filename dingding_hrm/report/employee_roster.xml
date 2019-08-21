@@ -27,7 +27,7 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <h3><strong>员工: </strong><span t-field="o.emp_id.name"/></h3><br/>
+                        <h3><strong>员工: </strong><span t-field="o.name"/></h3><br/>
                         <table class="table table-sm table-bordered">
                             <tr>
                                 <td><strong>姓名</strong></td>

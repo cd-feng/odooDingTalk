@@ -49,23 +49,14 @@ class DingDingHrmDimissionList(models.Model):
         ('4', '未知'),
         ('5', '未知'),
     ]
-    emp_id = fields.Many2one(comodel_name='hr.employee',
+    emp_id = fields.Many2one(comodel_name='dingding.employee.roster',
                              string='员工')
-    ding_id = fields.Char(string='钉钉id')
     last_work_day = fields.Datetime(string='最后工作时间')
-    department_ids = fields.Many2many(comodel_name='hr.department', relation='hrm_dimission_and_depatment_rel',
-                                      column1='list_id', column2='dept_id', string='部门')
     reason_memo = fields.Text(string="离职原因")
     reason_type = fields.Selection(string='离职类型', selection=REASONTYPE)
     pre_status = fields.Selection(string='离职前工作状态', selection=PRESTATUS)
     handover_userid = fields.Many2one(
         comodel_name='hr.employee', string='离职交接人')
-    status = fields.Selection(string='离职状态', selection=[
-                              ('1', '待离职'), ('2', '已离职')])
-    main_dept_name = fields.Many2one(
-        comodel_name='hr.department', string='离职前主部门')
-    company_id = fields.Many2one(
-        comodel_name='res.company', string='公司', default=lambda self: self.env.user.company_id.id)
 
 
 class GetDingDingHrmDimissionList(models.TransientModel):
