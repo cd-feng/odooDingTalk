@@ -4,7 +4,7 @@
     <t t-name="DingDingDashboardMain">
         <div class="container-fluid py-2 o_web_settings_dashboard">
             <div class="form-row">
-               <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+               <div class="col-12 col-lg-5 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_apps">
                         <i class="fa fa-user fa-4x text-muted o_web_settings_dashboard_access_rights"
                            style="cursor: pointer;" role="img" aria-label="Access rights" title="Access rights"></i>
@@ -85,7 +85,7 @@
                         <div class="clearfix"/>
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                <div class="col-12 col-lg-5 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_share">
                         <i class="fa fa-bullhorn fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
                         <div class="o_web_settings_dashboard_header">钉钉用户公告</div>
@@ -120,8 +120,8 @@
                     </div>
                 </div>
                 <!--版本更新公告-->
-                <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
-                    <div class="text-center o_web_settings_dashboard_translations mt8">
+                <div class="col-12 col-lg-2 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_translations">
                         <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations">
                         </i>
                         <div class="o_web_settings_dashboard_header">
