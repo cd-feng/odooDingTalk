@@ -32,7 +32,7 @@ class EmployeeRoster(models.Model):
     _description = "员工花名册"
     _rec_name = 'emp_id'
 
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
 
     # 钉钉提供的标准字段
@@ -106,7 +106,7 @@ class GetDingDingHrmList(models.TransientModel):
     _description = '获取钉钉员工花名册'
 
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_hrm_list_and_hr_employee_rel',
-                               column1='list_id', column2='emp_id', string=u'员工', required=True)
+                               column1='list_id', column2='emp_id', string=u'员工')
     is_all_emp = fields.Boolean(string=u'全部员工')
 
     @api.onchange('is_all_emp')
@@ -133,9 +133,6 @@ class GetDingDingHrmList(models.TransientModel):
         for u in user_list:
             try:
                 result = din_client.employeerm.list(u, field_filter_list=())
-                # headers = {'Content-Type': 'application/json'}
-                # result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=30)
-                # result = json.loads(result.text)
                 if result.get('emp_field_info_v_o'):
                     for rec in result.get('emp_field_info_v_o'):
                         roster_data = {
@@ -149,7 +146,8 @@ class GetDingDingHrmList(models.TransientModel):
                                 for depa in fie['value'].split('|'):
                                     dept_ding_ids.append(depa)
                                 departments = self.env['hr.department'].sudo().search([('ding_id', 'in', dept_ding_ids)])
-                                roster_data.update({'dept': [(6, 0, departments.ids)]})
+                                if departments:
+                                    roster_data.update({'dept': [(6, 0, departments.ids)]})
                             # 获取主部门
                             elif fie['field_code'][6:] == 'mainDeptId':
                                 dept = self.env['hr.department'].sudo().search([('ding_id', '=', fie['value'])], limit=1)
@@ -182,6 +180,76 @@ class GetDingDingHrmList(models.TransientModel):
         action = self.env.ref('dingding_hrm.dingding_employee_roster_action')
         action_dict = action.read()[0]
         return action_dict
+
+    @api.multi
+    def get_hrm_list_v2(self):
+        """
+        获取钉钉离职员工花名册
+        :return:
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        logging.info(">>>获取钉钉离职员工花名册start")
+        emp_data = self.get_employee_to_dict()
+        dimission_list = self.env['dingding.get.hrm.dimission.list'].sudo().get_dimission_list()
+        # logging.info(">>>获取的离职人员返回结果%s", dimission_list)
+        user_list = self.env['hr.attendance.tran'].sudo().list_cut(dimission_list, 20)
+        # logging.info(">>>离职人员分段返回结果%s", user_list)
+        for u in user_list:
+            try:
+                result = din_client.employeerm.list(u, field_filter_list=())
+                # logging.info(">>>获取花名册返回结果%s", result)
+                if result.get('emp_field_info_v_o'):
+                    for rec in result.get('emp_field_info_v_o'):
+                        logging.info(">>>当前离职员工%s", rec)
+                        roster_data = {
+                            'emp_id': emp_data[rec['userid']] if rec['userid'] in emp_data else False,
+                            'ding_userid': rec['userid']
+                        }
+                        for fie in rec['field_list']['emp_field_v_o']:
+                            # 获取部门（可能会多个）
+                            if fie['field_code'][6:] == 'deptIds':
+                                dept_ding_ids = list()
+                                if fie['value']:
+                                    for depa in fie['value'].split('|'):
+                                        dept_ding_ids.append(depa)
+                                departments = self.env['hr.department'].sudo().search([('ding_id', 'in', dept_ding_ids)])
+                                if departments:
+                                    roster_data.update({'dept': [(6, 0, departments.ids)]})
+                            # 获取主部门
+                            elif fie['field_code'][6:] == 'mainDeptId':
+                                if fie['value']:
+                                    dept = self.env['hr.department'].sudo().search([('ding_id', '=', fie['value'])], limit=1)
+                                    if dept:
+                                        roster_data.update({'mainDept': dept.id})
+                            elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept':
+                                continue
+                            # 同步工作岗位
+                            elif fie['field_code'][6:] == 'position' and 'label' in fie:
+                                if fie['label']:
+                                    hr_job = self.env['hr.job'].sudo().search([('name', '=', fie['label'])])
+                                    if not hr_job and fie['label']:
+                                        hr_job = self.env['hr.job'].sudo().create({'name': fie['label']})
+                                roster_data.update({
+                                    'position': hr_job.id
+                                })
+                            else:
+                                roster_data.update({
+                                    fie['field_code'][6:]: fie['label'] if "label" in fie else ''
+                                })
+                        roster = self.env['dingding.employee.roster'].sudo().search([('ding_userid', '=', rec['userid'])])
+                        if roster:
+                            roster.sudo().write(roster_data)
+                        else:
+                            self.env['dingding.employee.roster'].sudo().create(roster_data)
+                else:
+                    raise UserError("获取失败,原因:{}\r\n或许您没有开通智能人事功能，请登录钉钉安装智能人事应用!".format(result.get('errmsg')))
+            except Exception as e:
+                raise UserError(e)
+        logging.info(">>>获取钉钉员工花名册end")
+        action = self.env.ref('dingding_hrm.dingding_employee_roster_action')
+        action_dict = action.read()[0]
+        return action_dict
+
 
     def get_employee_to_dict(self):
         """

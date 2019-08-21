@@ -226,6 +226,33 @@ class GetDingDingHrmDimissionList(models.TransientModel):
                 raise UserError(e)
         return True
 
+    @api.model
+    def get_dimission_list(self):
+        """
+        获取离职员工列表
+        :return:
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        dimission_list = list()
+        offset = 0
+        size = 50
+        while True:
+            try:
+                result = din_client.employeerm.querydimission(offset=offset, size=size)
+                # logging.info(">>>获取离职员工列表返回结果%s", result)
+                if result['data_list']:
+                    result_list = result['data_list']['string']
+                    if 'next_cursor' in result:
+                        offset = result['next_cursor']
+                        dimission_list.extend(result_list)
+                    else:
+                        break
+                else:
+                    break
+            except Exception as e:
+                raise UserError(e)
+        return dimission_list
+
     def stamp_to_time(self, time_num):
         """
         将13位时间戳转换为时间
