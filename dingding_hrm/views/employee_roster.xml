@@ -144,6 +144,20 @@
         </field>
     </record>
 
+    <record id="dingding_employee_roster_search" model="ir.ui.view">
+        <field name="model">dingding.employee.roster</field>
+        <field name="arch" type="xml">
+            <search string="员工花名册">
+                <field name="name"/>
+                <field name="ding_userid"/>
+                <field name="mobile"/>
+                <field name="employeeStatus"/>
+                <separator/>
+                <filter name="groupby_mainDept" string="主部门" context="{'group_by': 'mainDept'}"/>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="dingding_employee_roster_action">
         <field name="name">员工花名册</field>
         <field name="res_model">dingding.employee.roster</field>

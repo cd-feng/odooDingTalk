@@ -144,12 +144,12 @@ class EmployeeRosterSynchronous(models.TransientModel):
         while True:
             try:
                 result = din_client.employeerm.queryonjob(status_list=status_arr, offset=offset, size=size)
-                # logging.info(">>>获取在职员工列表返回结果%s", result)
+                logging.info(">>>获取在职员工列表返回结果%s", result)
                 if result['data_list']:
                     result_list = result['data_list']['string']
+                    onjob_list.extend(result_list)
                     if 'next_cursor' in result:
                         offset = result['next_cursor']
-                        onjob_list.extend(result_list)
                     else:
                         break
                 else:
@@ -250,9 +250,9 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 # logging.info(">>>获取离职员工列表返回结果%s", result)
                 if result['data_list']:
                     result_list = result['data_list']['string']
+                    dimission_list.extend(result_list)
                     if 'next_cursor' in result:
                         offset = result['next_cursor']
-                        dimission_list.extend(result_list)
                     else:
                         break
                 else:
