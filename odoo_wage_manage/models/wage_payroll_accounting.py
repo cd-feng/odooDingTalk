@@ -47,11 +47,7 @@ class WagePayrollAccounting(models.Model):
     sick_absence = fields.Float(string=u'病假扣款', digits=(10, 2))
     absence_sum = fields.Float(string=u'缺勤扣款合计', digits=(10, 2), compute='_compute_amount_sum')
     # 绩效
-    performance_wage = fields.Float(string=u'绩效工资', digits=(10, 2))
-    work_reward = fields.Float(string=u'工作奖励', digits=(10, 2))
-    class_fee = fields.Float(string=u'课时费', digits=(10, 2))
-    performance_bonus = fields.Float(string=u'业绩提成', digits=(10, 2))
-    other_wage = fields.Float(string=u'其他', digits=(10, 2))
+    performance_ids = fields.One2many('wage.payroll.accounting.performance.line', 'accounting_id', string=u'绩效列表')
     performance_sum = fields.Float(string=u'绩效合计', digits=(10, 2), compute='_compute_amount_sum')
     # 加班
     work_overtime = fields.Float(string=u'工作日加班费', digits=(10, 2))
@@ -64,9 +60,7 @@ class WagePayrollAccounting(models.Model):
     early_attendance = fields.Float(string=u'早退扣款', digits=(10, 2))
     attendance_sum = fields.Float(string=u'打卡扣款合计', digits=(10, 2), compute='_compute_amount_sum')
     # 社保公积金
-    personal_social_security = fields.Float(string=u'个人社保', digits=(10, 2))
-    personal_provident_fund = fields.Float(string=u'个人公积金', digits=(10, 2))
-    social_security_sum = fields.Float(string=u'社保公积金合计', digits=(10, 2), compute='_compute_amount_sum')
+    statement_ids = fields.One2many('wage.payroll.accounting.monthly.statement.line', 'accounting_id', string=u'社保公积金')
     # 个税
     taxable_income = fields.Float(string=u'个税', digits=(10, 2))
     cumulative_expenditure_deduction = fields.Float(string=u'累计子女教育抵扣总额', digits=(10, 2))
@@ -127,20 +121,19 @@ class WagePayrollAccounting(models.Model):
         for res in self:
             # 缺勤扣款合计 = 事假扣款+病假扣款
             absence_sum = res.leave_absence + res.sick_absence
-            # 绩效合计 = 绩效工资+工作奖励+课时费+业绩提成+其他
-            performance_sum = res.performance_wage+res.work_reward+res.class_fee+res.performance_bonus+res.other_wage
+            # 绩效合计
+            performance_sum = 0
+            for performance in res.performance_ids:
+                performance_sum += performance.wage_amount
             # 加班费合计 = 工作日加班费+周末加班费+节假日加班费
             overtime_sum = res.work_overtime + res.weekend_overtime + res.holiday_overtime
             # 打卡扣款合计 = 迟到扣款+忘记打卡扣款+早退扣款
             attendance_sum = res.late_attendance + res.notsigned_attendance + res.early_attendance
-            # 社保公积金合计 = 个人社保+个人公积金
-            social_security_sum = res.personal_social_security + res.personal_provident_fund
             res.update({
                 'absence_sum': absence_sum,
                 'performance_sum': performance_sum,
                 'overtime_sum': overtime_sum,
                 'attendance_sum': attendance_sum,
-                'social_security_sum': social_security_sum,
             })
 
 
@@ -153,5 +146,27 @@ class WagePayrollAccountingLine(models.Model):
     structure_id = fields.Many2one(comodel_name='wage.structure', string=u'薪资项目')
     wage_amount = fields.Float(string=u'薪资金额', digits=(10, 2))
 
+
+class WagePayrollAccountingPerformanceLine(models.Model):
+    _name = 'wage.payroll.accounting.performance.line'
+    _description = "绩效统计列表"
+
+    name = fields.Char(string='说明')
+    sequence = fields.Integer(string=u'序号')
+    accounting_id = fields.Many2one(comodel_name='wage.payroll.accounting', string=u'薪资核算')
+    performance_id = fields.Many2one(comodel_name='wage.performance.list', string=u'绩效项目')
+    wage_amount = fields.Float(string=u'绩效金额')
+
+
+class WagePayrollMonthlyStatementLine(models.Model):
+    _description = '社保公积金列表'
+    _name = 'wage.payroll.accounting.monthly.statement.line'
+
+    sequence = fields.Integer(string=u'序号')
+    accounting_id = fields.Many2one(comodel_name='wage.payroll.accounting', string=u'薪资核算')
+    insurance_id = fields.Many2one(comodel_name='wage.insured.scheme.insurance', string=u'险种', required=True)
+    base_number = fields.Float(string=u'险种基数', digits=(10, 2))
+    company_pay = fields.Float(string=u'公司缴纳', digits=(10, 4))
+    pension_pay = fields.Float(string=u'个人缴纳', digits=(10, 4))
 
 

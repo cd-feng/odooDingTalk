@@ -124,5 +124,22 @@ limitations under the License.
             <field name="month_12">22</field>
         </record>
 
+        <record id="wage_performance_list_data1" model="wage.performance.list">
+            <field name="name">课时费</field>
+            <field name="code">ksf</field>
+        </record>
+        <record id="wage_performance_list_data2" model="wage.performance.list">
+            <field name="name">工资奖励</field>
+            <field name="code">gzjl</field>
+        </record>
+        <record id="wage_performance_list_data3" model="wage.performance.list">
+            <field name="name">绩效提成</field>
+            <field name="code">jxtc</field>
+        </record>
+        <record id="wage_performance_list_data4" model="wage.performance.list">
+            <field name="name">项目提成</field>
+            <field name="code">xmtc</field>
+        </record>
+
     </data>
 </odoo>

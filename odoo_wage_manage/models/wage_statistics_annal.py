@@ -97,6 +97,7 @@ class WageEmployeePerformance(models.Model):
     employee_number = fields.Char(string='员工工号')
     performance_month = fields.Date(string=u'绩效日期', required=True, index=True, default=_get_default_date)
     performance_code = fields.Char(string='绩效期间', index=True)
+    line_ids = fields.One2many('wage.employee.performance.manage.line', 'manage_id', string=u'绩效明细')
     
     performance_wage = fields.Float(string=u'绩效工资', digits=(10, 2))
     work_reward = fields.Float(string=u'工作奖励', digits=(10, 2))
@@ -124,3 +125,27 @@ class WageEmployeePerformance(models.Model):
                 res.job_id = res.employee_id.job_id.id
                 res.department_id = res.employee_id.department_id.id
                 res.employee_number = res.employee_id.din_jobnumber
+
+    @api.multi
+    def get_emp_performance_list(self):
+        performance_list = list()
+        for line in self.line_ids:
+            performance_list.append((0, 0, {
+                'performance_id': line.performance_id.id,
+                'wage_amount': line.wage_amount,
+                'name': line.name,
+            }))
+        return performance_list
+
+
+class WageEmployeePerformanceLine(models.Model):
+    _name = 'wage.employee.performance.manage.line'
+    _description = "员工绩效统计列表"
+
+    name = fields.Char(string='说明')
+    sequence = fields.Integer(string=u'序号')
+    manage_id = fields.Many2one(comodel_name='wage.employee.performance.manage', string=u'绩效统计')
+    performance_id = fields.Many2one(comodel_name='wage.performance.list', string=u'绩效项目')
+    wage_amount = fields.Float(string=u'绩效金额')
+    
+    
