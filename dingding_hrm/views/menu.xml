@@ -15,7 +15,7 @@
 <odoo>
 
     <menuitem name="智能人事" id="smart_hrm_menu" web_icon="dingding_hrm,static/description/icon.png"
-              groups="dingding_hrm.personnel"/>
+              groups="dingding_hrm.personnel" sequence="171"/>
     <menuitem name="员工管理" id="hrm_employee_manager_menu" parent="smart_hrm_menu"
               groups="dingding_hrm.personnel"/>
     <menuitem name="人事异动" id="hrm_employee_changes_menu" parent="smart_hrm_menu"
