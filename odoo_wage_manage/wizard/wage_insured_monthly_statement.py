@@ -75,7 +75,7 @@ class ComputeWageInsuredMonthlyStatement(models.TransientModel):
         return action.read()[0]
 
     @api.onchange('monthly_date')
-    def _onchagngemonthly_date(self):
+    def _onchagnge_monthly_date(self):
         """
         生成期间代码
         :return:
