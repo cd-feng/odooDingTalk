@@ -152,4 +152,68 @@ limitations under the License.
     <menuitem id="wage_household_registration_menu" name="户籍性质" parent="wage_istructure_setting_menu" sequence="3"
               action="wage_household_registration_action"/>
 
+
+    <record id="wage_attend_days_config_tree_view" model="ir.ui.view">
+        <field name="name">应出勤天数</field>
+        <field name="model">wage.attend.days.config</field>
+        <field name="arch" type="xml">
+            <tree default_order="year desc">
+                <field name="year"/>
+                <field name="month_1"/>
+                <field name="month_2"/>
+                <field name="month_3"/>
+                <field name="month_4"/>
+                <field name="month_5"/>
+                <field name="month_6"/>
+                <field name="month_7"/>
+                <field name="month_8"/>
+                <field name="month_9"/>
+                <field name="month_10"/>
+                <field name="month_11"/>
+                <field name="month_12"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_attend_days_config_form_view" model="ir.ui.view">
+        <field name="name">应出勤天数</field>
+        <field name="model">wage.attend.days.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="1">
+                    <group>
+                        <field name="year" required="1"/>
+                    </group>
+                </group>
+                <group col="2" string="每月应出勤天数">
+                    <group>
+                        <field name="month_1"/>
+                        <field name="month_2"/>
+                        <field name="month_3"/>
+                        <field name="month_4"/>
+                        <field name="month_5"/>
+                        <field name="month_6"/>
+                    </group>
+                    <group>
+                        <field name="month_7"/>
+                        <field name="month_8"/>
+                        <field name="month_9"/>
+                        <field name="month_10"/>
+                        <field name="month_11"/>
+                        <field name="month_12"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_attend_days_config_action">
+        <field name="name">应出勤天数</field>
+        <field name="res_model">wage.attend.days.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wage_attend_days_config_menu" name="应出勤天数" parent="wage_istructure_setting_menu" sequence="4"
+              action="wage_attend_days_config_action"/>
+
 </odoo>

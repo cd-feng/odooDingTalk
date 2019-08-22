@@ -59,6 +59,12 @@ class WagePayrollAccountingTransient(models.TransientModel):
         self.ensure_one()
         wage_date = str(self.wage_date)
         date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
+        # 获取应出勤天数
+        attendance_days = self.env['wage.attend.days.config'].get_month_attend_day(date_code[:4], date_code[5:7])
+        # 获取薪酬计算规则
+        rules = self.en['wage.calculate.salary.rules'].search([], limit=1)
+        if not rules:
+            raise UserError("请先配置一个薪资计算规则！")
         for emp in self.emp_ids.with_progress(msg="开始计算薪资"):
             payroll_data = {
                 'wage_date': self.wage_date,
@@ -66,7 +72,12 @@ class WagePayrollAccountingTransient(models.TransientModel):
                 'employee_id': emp.id,
                 'department_id': emp.department_id.id if emp.department_id else False,
                 'job_id': emp.job_id.id if emp.job_id else False,
+                'attendance_days': attendance_days,
             }
+            # 获取员工薪资合同
+            archives = self.env['wage.archives'].search([('employee_id', '=', emp.id)], limit=1)
+            payroll_data.update({'base_wage': archives.base_wage if archives else 0})
+
             domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
             payrolls = self.env['wage.payroll.accounting'].search(domain)
             if not payrolls:

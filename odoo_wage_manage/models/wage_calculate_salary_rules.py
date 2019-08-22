@@ -50,8 +50,8 @@ class WageCalculateSalaryRules(models.Model):
 
     sick_selection = [
         ('00', '基本工资/2/应出勤天数/8*请假小时'),
-        ('01', '基本工资/应出勤天数*请假小时*0.4'),
-        ('02', '基本工资/应出勤天数*请假小时/8*0.4'),
+        ('01', '基本工资/应出勤天数*请假小时*病假扣款比例'),
+        ('02', '基本工资/应出勤天数*请假小时/8*病假扣款比例'),
         ('03', '(按次数) 次数*每次病假扣款'),
     ]
     sick_deduction = fields.Selection(string=u'病假扣款规则', selection=sick_selection, default='00')

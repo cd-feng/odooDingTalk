@@ -5,6 +5,7 @@ access_wage_insured_scheme_line,wage.insured.scheme.line,model_wage_insured_sche
 access_wage_insured_scheme_employee,wage.insured.scheme.employee,model_wage_insured_scheme_employee,base.group_user,1,1,1,1
 access_wage_insured_monthly_statement,wage.insured.monthly.statement,model_wage_insured_monthly_statement,base.group_user,1,1,1,1
 access_wage_insured_monthly_statement_line,wage.insured.monthly.statement.line,model_wage_insured_monthly_statement_line,base.group_user,1,1,1,1
+access_wage_attend_days_config,wage.attend.days.config,model_wage_attend_days_config,base.group_user,1,1,1,1
 
 access_wage_structure,wage.structure,model_wage_structure,base.group_user,1,1,1,1
 access_wage_household_registration,wage.household.registration,model_wage_household_registration,base.group_user,1,1,1,1

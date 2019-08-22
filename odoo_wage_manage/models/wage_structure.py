@@ -69,3 +69,64 @@ class WageHouseholdRegistration(models.Model):
             if result > 1:
                 raise UserError("户籍性质名称已存在！")
 
+
+class WageAttendDaysConfig(models.Model):
+    _description = '应出勤天数'
+    _name = 'wage.attend.days.config'
+    _rec_name = 'year'
+    _order = 'year'
+
+    year = fields.Char(string='年度', help="4为年份字符，如：2019")
+    month_1 = fields.Integer(string=u'1月应出勤天数')
+    month_2 = fields.Integer(string=u'2月应出勤天数')
+    month_3 = fields.Integer(string=u'3月应出勤天数')
+    month_4 = fields.Integer(string=u'4月应出勤天数')
+    month_5 = fields.Integer(string=u'5月应出勤天数')
+    month_6 = fields.Integer(string=u'6月应出勤天数')
+    month_7 = fields.Integer(string=u'7月应出勤天数')
+    month_8 = fields.Integer(string=u'8月应出勤天数')
+    month_9 = fields.Integer(string=u'9月应出勤天数')
+    month_10 = fields.Integer(string=u'10月应出勤天数')
+    month_11 = fields.Integer(string=u'11月应出勤天数')
+    month_12 = fields.Integer(string=u'12月应出勤天数')
+
+    _sql_constraints = [('year_uniq', 'unique (year)', "年份已存在!!")]
+
+    @api.model
+    def get_month_attend_day(self, year_code, month):
+        """
+        返回该月应出勤天数
+        :param year_code:
+        :param month:
+        :return:
+        """
+        attend = self.search([('year', '=', year_code)], limit=1)
+        if not attend:
+            raise UserError("年度'%s'未配置应出勤天数！" % year_code)
+        if month == '01':
+            return attend.month_1
+        elif month == '02':
+            return attend.month_2
+        elif month == '03':
+            return attend.month_3
+        elif month == '04':
+            return attend.month_4
+        elif month == '05':
+            return attend.month_5
+        elif month == '06':
+            return attend.month_6
+        elif month == '07':
+            return attend.month_7
+        elif month == '08':
+            return attend.month_8
+        elif month == '09':
+            return attend.month_9
+        elif month == '10':
+            return attend.month_10
+        elif month == '11':
+            return attend.month_11
+        elif month == '12':
+            return attend.month_12
+        else:
+            return 0
+
