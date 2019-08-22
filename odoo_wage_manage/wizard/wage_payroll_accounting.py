@@ -57,7 +57,25 @@ class WagePayrollAccountingTransient(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        raise UserError("暂未实现!")
+        wage_date = str(self.wage_date)
+        date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
+        for emp in self.emp_ids.with_progress(msg="开始计算薪资"):
+            payroll_data = {
+                'wage_date': self.wage_date,
+                'date_code': date_code,
+                'employee_id': emp.id,
+                'department_id': emp.department_id.id if emp.department_id else False,
+                'job_id': emp.job_id.id if emp.job_id else False,
+            }
+            domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
+            payrolls = self.env['wage.payroll.accounting'].search(domain)
+            if not payrolls:
+                self.env['wage.payroll.accounting'].create(payroll_data)
+            else:
+                payrolls.write(payroll_data)
+        action = self.env.ref('odoo_wage_manage.wage_payroll_accounting_action')
+        return action.read()[0]
+
 
 
 class PayrollAccountingToPayslipTransient(models.TransientModel):
