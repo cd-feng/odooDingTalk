@@ -24,7 +24,7 @@ limitations under the License.
         </xpath>
     </template>
 
-    <menuitem name="薪酬管理" id="odoo_wage_manage.main_menu" web_icon="odoo_wage_manage,static/description/icon.png"/>
+    <menuitem name="薪酬管理" id="odoo_wage_manage.main_menu" web_icon="odoo_wage_manage,static/description/icon.png" sequence="173"/>
 
     <menuitem name="统计" id="wage_statistics_menu" parent="odoo_wage_manage.main_menu" sequence="10"/>
 
