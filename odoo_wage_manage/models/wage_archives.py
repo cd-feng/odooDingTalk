@@ -103,6 +103,17 @@ class EmployeeWageArchives(models.Model):
             res.bank_account_number = roster.bankAccountNo
             res.accountBank = roster.accountBank
 
+    @api.constrains('employee_id')
+    def _constrains_employee_info(self):
+        """
+        检查员工是否重复
+        :return:
+        """
+        for res in self:
+            emp_count = self.search_count([('employee_id', '=', res.employee_id.id)])
+            if emp_count > 1:
+                raise UserError("员工'%s'薪资合同已存在，请不要重复创建！" % res.employee_id.name)
+
 
 class EmployeeWageArchivesLine(models.Model):
     _description = '薪资结构'
