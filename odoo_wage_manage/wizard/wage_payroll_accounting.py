@@ -77,7 +77,6 @@ class WagePayrollAccountingTransient(models.TransientModel):
         return action.read()[0]
 
 
-
 class PayrollAccountingToPayslipTransient(models.TransientModel):
     _name = 'wage.payroll.accounting.to.payslip.transient'
     _description = "生成工资条"
@@ -116,4 +115,22 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        raise UserError("暂未实现!")
+        start_date = str(self.start_date)
+        date_code = "{}/{}".format(start_date[:4], start_date[5:7])
+        for emp in self.emp_ids.with_progress(msg="开始生成工资条"):
+            payroll_data = {
+                'start_date': self.start_date,
+                'end_date': self.end_date,
+                'date_code': date_code,
+                'employee_id': emp.id,
+                'department_id': emp.department_id.id if emp.department_id else False,
+                'job_id': emp.job_id.id if emp.job_id else False,
+            }
+            domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
+            payrolls = self.env['odoo.wage.payslip'].search(domain)
+            if not payrolls:
+                self.env['odoo.wage.payslip'].create(payroll_data)
+            else:
+                payrolls.write(payroll_data)
+        action = self.env.ref('odoo_wage_manage.odoo_wage_payslip_action')
+        return action.read()[0]
