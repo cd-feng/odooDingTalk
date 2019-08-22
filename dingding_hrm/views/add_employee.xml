@@ -137,8 +137,8 @@
 
     <menuitem name="待入职员工"
               id="dingding_add_employee_menu"
-              parent="zhineng_hrm_menu"
-              sequence="3"
+              parent="hrm_employee_changes_menu"
+              sequence="1"
               action="dingding_add_employee_action"/>
 
 </odoo>

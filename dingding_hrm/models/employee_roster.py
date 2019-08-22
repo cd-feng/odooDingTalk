@@ -51,6 +51,7 @@ class EmployeeRoster(models.Model):
 
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
+    active = fields.Boolean('Active', default=True, store=True, readonly=False)
 
     # 钉钉提供的标准字段
     name = fields.Char(string='姓名')
@@ -130,11 +131,35 @@ class EmployeeRosterSynchronous(models.TransientModel):
     _name = 'dingding.employee.roster.synchronous'
     _description = "智能人事花名册同步"
 
+    synchronous_onjob = fields.Boolean(string=u'同步在职花名册', default=True)
+    synchronous_dimission = fields.Boolean(string=u'同步离职花名册', default=True)
+    synchronous_dimission_info = fields.Boolean(string=u'同步离职信息', default=True)
+
+    @api.multi
+    def start_synchronous_data(self):
+        """
+        花名册同步
+        :return:
+        """
+        for res in self:
+            try:
+                if res.synchronous_onjob:
+                    self.get_onjob_list()
+                if res.synchronous_dimission:
+                    self.get_dimission_list()
+                if res.synchronous_dimission_info:
+                    self.get_dimission_info()
+            except Exception as e:
+                raise UserError(e)
+
     @api.model
     def get_onjob_userid_list(self):
         """
-        获取在职员工userid列表
-        :return:
+        智能人事查询公司在职员工userid列表
+        智能人事业务，提供企业/ISV按在职状态分页查询公司在职员工id列表
+        :param status_list: 在职员工子状态筛选。2，试用期；3，正式；5，待离职；-1，无状态
+        :param offset: 分页起始值，默认0开始
+        :param size: 分页大小，最大50
         """
         din_client = self.env['dingding.api.tools'].get_client()
         onjob_list = list()
@@ -144,7 +169,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
         while True:
             try:
                 result = din_client.employeerm.queryonjob(status_list=status_arr, offset=offset, size=size)
-                logging.info(">>>获取在职员工列表返回结果%s", result)
+                # logging.info(">>>获取在职员工列表返回结果%s", result)
                 if result['data_list']:
                     result_list = result['data_list']['string']
                     onjob_list.extend(result_list)
@@ -204,9 +229,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                 roster_data.update({
                                     'position': hr_job.id
                                 })
-                            # 同步姓名
-                            elif fie['field_code'][6:] == 'name' and 'value' in fie:
-                                roster_data.update({'name': fie['value']})
                             else:
                                 roster_data.update({
                                     fie['field_code'][6:]: fie['label'] if "label" in fie else ''
@@ -225,14 +247,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
         action = self.env.ref('dingding_hrm.dingding_employee_roster_action')
         action_dict = action.read()[0]
         return action_dict
-
-    @api.multi
-    def dimission_list_synchronous(self):
-        self.ensure_one()
-        # 获取离职花名册
-        self.get_dimission_list()
-        # 更新离职信息
-        self.get_dimission_info()
 
     @api.model
     def get_dimission_userid_list(self):
@@ -310,9 +324,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                 roster_data.update({
                                     'position': hr_job.id
                                 })
-                            # 同步姓名
-                            elif fie['field_code'][6:] == 'name' and 'value' in fie:
-                                roster_data.update({'name': fie['value']})
                             else:
                                 roster_data.update({
                                     fie['field_code'][6:]: fie['label'] if "label" in fie else ''
@@ -335,9 +346,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
     @api.model
     def get_dimission_info(self):
         """
-        批量获取员工离职信息
-        根据传入的staffId列表，批量查询员工的离职信息
-        :param userid_list: 员工id
+        获取全部员工离职信息
         """
         din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>获取钉钉离职员工信息start")

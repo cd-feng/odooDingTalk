@@ -41,6 +41,11 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -152,6 +157,14 @@
                 <field name="ding_userid"/>
                 <field name="mobile"/>
                 <field name="employeeStatus"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="在职" name="status_onjob" domain="[('employeeStatus','in',['正式','待离职','试用期'])]"/>
+                <filter string="待入职" name="status_to_be_hired" domain="[('employeeStatus','=','待入职')]"/>
+                <filter string="试用期" name="status_on_trial" domain="[('employeeStatus','=','试用期')]"/>
+                <filter string="正式" name="status_official" domain="[('employeeStatus','=','正式')]"/>
+                <separator/>
+                <filter string="待离职" name="status_will_dimission" domain="[('employeeStatus','=','待离职')]"/>
+                <filter string="已离职" name="status_dimission" domain="['|',('employeeStatus','=','离职'),('employeeStatus','=',None)]"/>
                 <separator/>
                 <filter name="groupby_mainDept" string="主部门" context="{'group_by': 'mainDept'}"/>
             </search>
@@ -164,7 +177,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="员工花名册" id="dingding_employee_roster_menu" parent="zhineng_hrm_menu" sequence="1" action="dingding_employee_roster_action"/>
+    <menuitem name="员工花名册" id="dingding_employee_roster_menu" parent="hrm_employee_manager_menu" sequence="1" action="dingding_employee_roster_action"/>
 
     <record id="dingding_get_hrm_list_form_view" model="ir.ui.view">
         <field name="name">花名册同步</field>
@@ -172,11 +185,26 @@
         <field name="arch" type="xml">
             <form>
                 <div class="alert alert-info" role="alert">
-                    <p>选择需要同步的钉钉智能人事花名册（在职或离职）~~</p>
+                    <p>选择需要同步的钉钉智能人事花名册~~</p>
+                </div>
+                <div class="oe_title">
+                    <div name="options">
+                        <div>
+                            <field name="synchronous_onjob"/>
+                            <label for="synchronous_onjob"/>
+                        </div>
+                        <div>
+                            <field name="synchronous_dimission"/>
+                            <label for="synchronous_dimission"/>
+                        </div>
+                        <div attrs="{'invisible': [('synchronous_dimission', '!=', True)]}">
+                            <field name="synchronous_dimission_info"/>
+                            <label for="synchronous_dimission_info"/>
+                        </div>
+                    </div>
                 </div>
                 <footer>
-                    <button string="获取在职花名册" name="get_onjob_list" type="object" class="oe_highlight"/>
-                    <button string="获取离职花名册" name="dimission_list_synchronous" type="object" class="oe_highlight"/>
+                    <button string="开始同步" name="start_synchronous_data" type="object" class="oe_highlight"/>
                     <button string="取消" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>
