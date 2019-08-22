@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <record id="wage_tax_information_tree_view" model="ir.ui.view">
+        <field name="name">纳税信息</field>
+        <field name="model">wage.tax.information</field>
+        <field name="arch" type="xml">
+            <tree default_order="employee_id asc">
+                <field name="employee_id"/>
+                <field name="year"/>
+                <field name="name"/>
+                <field name="certificate_type"/>
+                <field name="certificate_number"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="company_id"/>
+                <field name="spouse_situation"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_tax_information_form_view" model="ir.ui.view">
+        <field name="name">纳税信息</field>
+        <field name="model">wage.tax.information</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title" name="title">
+                        <label for="employee_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="employee_id" required="1" placeholder="请选择员工"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="纳税人信息">
+                            <field name="year"/>
+                            <field name="name"/>
+                            <field name="certificate_type"/>
+                            <field name="certificate_number"/>
+                            <field name="phone"/>
+                            <field name="addr"/>
+                            <field name="email"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group string="配偶信息">
+                            <field name="spouse_situation"/>
+                            <field name="spouse_name" attrs="{'invisible':[('spouse_situation', '!=', '00')]}"/>
+                            <field name="spouse_certificate_type"
+                                   attrs="{'invisible':[('spouse_situation', '!=', '00')]}"/>
+                            <field name="spouse_certificate_number"
+                                   attrs="{'invisible':[('spouse_situation', '!=', '00')]}"/>
+                        </group>
+                    </group>
+                    <group string="备注">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_tax_information_action">
+        <field name="name">纳税信息</field>
+        <field name="res_model">wage.tax.information</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="wage_tax_information_search">
+        <field name="model">wage.tax.information</field>
+        <field name="arch" type="xml">
+            <search string="纳税信息">
+                <field name="employee_id"/>
+                <field name="year"/>
+                <field name="name"/>
+                <field name="certificate_type"/>
+                <field name="certificate_number"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="company_id"/>
+                <field name="spouse_situation"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="wage_tax_information_menu" name="纳税信息" parent="tax_main" sequence="1"
+              action="wage_tax_information_action"/>
+
+
+    <record id="wage_tax_child_education_application_tree_view" model="ir.ui.view">
+        <field name="name">子女教育专项扣除申请</field>
+        <field name="model">wage.tax.child.education.application</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="tax_id"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_tax_child_education_application_form_view" model="ir.ui.view">
+        <field name="name">子女教育专项扣除申请</field>
+        <field name="model">wage.tax.child.education.application</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title" name="title">
+                        <label for="tax_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="tax_id" required="1" placeholder="请选择纳税人"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="子女信息">
+                            <field name="line_ids">
+                                <tree default_order="id desc">
+                                    <field name="name"/>
+                                    <field name="certificate_number"/>
+                                    <field name="birth_date"/>
+                                    <field name="country_id"/>
+                                    <field name="education_stage"/>
+                                    <field name="education_phase_start_time"/>
+                                    <field name="education_phase_end_time"/>
+                                    <field name="education_termination_time"/>
+                                    <field name="now_country_id"/>
+                                    <field name="school_name"/>
+                                    <field name="deduction_ratio"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group string="备注">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_tax_child_education_application_action">
+        <field name="name">子女教育专项扣除申请</field>
+        <field name="res_model">wage.tax.child.education.application</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!--
+   暂时不开启
+-->
+<!--    <menuitem id="wage_tax_child_education_application_menu" name="子女教育专项扣除申请" parent="tax_application" sequence="1"-->
+<!--              action="wage_tax_child_education_application_action"/>-->
+
+    <record id="wage_tax_child_education_application_line_form_view" model="ir.ui.view">
+        <field name="name">子女教育专项扣除申请列表</field>
+        <field name="model">wage.tax.child.education.application.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="certificate_number"/>
+                            <field name="birth_date"/>
+                            <field name="country_id"/>
+                            <field name="education_stage"/>
+                        </group>
+                        <group>
+                            <field name="education_phase_start_time"/>
+                            <field name="education_phase_end_time"/>
+                            <field name="education_termination_time"/>
+                            <field name="now_country_id"/>
+                            <field name="school_name"/>
+                            <field name="deduction_ratio"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>
