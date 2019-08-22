@@ -114,62 +114,31 @@ limitations under the License.
                                 </tree>
                             </field>
                         </page>
-                        <page string="绩效">
-                            <group col="2">
-                                <group>
-                                    <label for="performance_wage"/>
-                                    <div class="o_row" name="performance_wage">
-                                        <field name="performance_wage" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="work_reward"/>
-                                    <div class="o_row" name="work_reward">
-                                        <field name="work_reward" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="class_fee"/>
-                                    <div class="o_row" name="class_fee">
-                                        <field name="class_fee" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="performance_bonus"/>
-                                    <div class="o_row" name="performance_bonus">
-                                        <field name="performance_bonus" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="other_wage"/>
-                                    <div class="o_row" name="other_wage">
-                                        <field name="other_wage" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="performance_sum"/>
-                                    <div class="o_row" name="performance_sum">
-                                        <field name="performance_sum" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                </group>
-                            </group>
+                        <page string="绩效明细">
+                            <field name="performance_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="performance_id" required="1"/>
+                                    <field name="wage_amount" required="1" sum="wage_amount"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                            <label for="performance_sum"/>
+                            <div class="o_row" name="performance_sum">
+                                <field name="performance_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
                         </page>
                         <page string="社保公积金">
-                            <group string="社保公积金" col="2">
-                                <group>
-                                    <label for="personal_social_security"/>
-                                    <div class="o_row" name="personal_social_security">
-                                        <field name="personal_social_security" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="personal_provident_fund"/>
-                                    <div class="o_row" name="personal_provident_fund">
-                                        <field name="personal_provident_fund" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                    <label for="social_security_sum"/>
-                                    <div class="o_row" name="social_security_sum">
-                                        <field name="social_security_sum" nolabel="1"/>
-                                        <span>￥</span>
-                                    </div>
-                                </group>
-                            </group>
+                            <field name="statement_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="insurance_id"/>
+                                    <field name="base_number" sum="base_number"/>
+                                    <field name="company_pay" sum="company_pay"/>
+                                    <field name="pension_pay" sum="pension_pay"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="个税明细">
                             <group col="2">

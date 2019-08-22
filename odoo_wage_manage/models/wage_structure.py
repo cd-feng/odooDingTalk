@@ -130,3 +130,12 @@ class WageAttendDaysConfig(models.Model):
         else:
             return 0
 
+
+class WagePerformance(models.Model):
+    _description = '绩效项目'
+    _name = 'wage.performance.list'
+
+    name = fields.Char(string='绩效项目名称', help="绩效项目名称")
+    code = fields.Char(string='识别码')
+
+    _sql_constraints = [('year_uniq', 'unique (year)', "年份已存在!!")]

@@ -21,7 +21,6 @@ limitations under the License.
         <field name="arch" type="xml">
             <tree default_order="id">
                 <field name="name"/>
-                <field name="attendance_days"/>
                 <field name="personnel_information"/>
                 <field name="fixed_salary"/>
                 <field name="performance_bonus"/>
@@ -42,18 +41,11 @@ limitations under the License.
                         <field name="name" placeholder="规则名称" required="1"/>
                     </h1>
                 </div>
-                <group>
+                <group col="2">
                     <group>
                         <field name="personnel_information" required="1"/>
                         <field name="fixed_salary" required="1"/>
                         <field name="performance_bonus" required="1"/>
-                    </group>
-                    <group>
-                        <label for="attendance_days"/>
-                        <div class="o_row" name="wage">
-                            <field name="attendance_days" nolabel="1" required="1"/>
-                            <span>天</span>
-                        </div>
                     </group>
                 </group>
                 <group string="考勤-计算规则">
@@ -105,7 +97,7 @@ limitations under the License.
                     </group>
                     <group string="考勤-迟到计算规则">
                         <field name="late_attendance_deduction" required="1"/>
-                        <field name="late_attendance_money" attrs="{'invisible':[('holiday_deduction', '!=', '00')]}"/>
+                        <field name="late_attendance_money" attrs="{'invisible':[('late_attendance_deduction', '!=', '00')]}"/>
                     </group>
                     <group string="考勤-忘记打卡计算规则">
                         <field name="notsigned_deduction" required="1"/>

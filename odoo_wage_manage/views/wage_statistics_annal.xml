@@ -51,7 +51,7 @@ limitations under the License.
                             <field name="job_id"/>
                             <field name="employee_number"/>
                         </group>
-                         <group string="考勤期间">
+                        <group string="考勤期间">
                             <field name="attendance_month"/>
                             <field name="attend_code" readonly="1"/>
                         </group>
@@ -145,42 +145,23 @@ limitations under the License.
                             <field name="job_id"/>
                             <field name="employee_number"/>
                         </group>
-                         <group string="绩效期间">
+                        <group string="绩效期间">
                             <field name="performance_month"/>
                             <field name="performance_code" readonly="1"/>
                         </group>
                     </group>
-                    <group string="明细">
-                        <group>
-                            <label for="performance_wage"/>
-                            <div class="o_row" name="wage">
-                                <field name="performance_wage" nolabel="1"/>
-                                <span>￥</span>
-                            </div>
-                            <label for="work_reward"/>
-                            <div class="o_row" name="wage">
-                                <field name="work_reward" nolabel="1"/>
-                                <span>￥</span>
-                            </div>
-                            <label for="class_fee"/>
-                            <div class="o_row" name="wage">
-                                <field name="class_fee" nolabel="1"/>
-                                <span>￥</span>
-                            </div>
-                        </group>
-                        <group>
-                            <label for="performance_bonus"/>
-                            <div class="o_row" name="wage">
-                                <field name="performance_bonus" nolabel="1"/>
-                                <span>￥</span>
-                            </div>
-                            <label for="other_wage"/>
-                            <div class="o_row" name="wage">
-                                <field name="other_wage" nolabel="1"/>
-                                <span>￥</span>
-                            </div>
-                        </group>
-                    </group>
+                    <notebook>
+                        <page string="绩效明细">
+                            <field name="line_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="performance_id" required="1"/>
+                                    <field name="wage_amount" required="1" sum="wage_amount"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                     <group string="备注">
                         <field name="notes" nolabel="1"/>
                     </group>

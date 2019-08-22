@@ -27,7 +27,6 @@ class WageCalculateSalaryRules(models.Model):
 
     name = fields.Char(string='规则名称')
     notes = fields.Text(string=u'备注')
-    attendance_days = fields.Integer(string=u'月应出勤天数')
     PLSELECTION = [('dingding', '从钉钉花名册提取'), ('odoo', '从Odoo员工提取')]
     personnel_information = fields.Selection(string=u'人事信息', selection=PLSELECTION, default='dingding')
     FIXEDSELECTION = [
@@ -101,4 +100,132 @@ class WageCalculateSalaryRules(models.Model):
     ]
     early_deduction = fields.Selection(string=u'早退打卡规则', selection=early_selection, default='00')
     early_money = fields.Float(string=u'扣款金额', digits=(10, 2))
+
+    @api.multi
+    def compute_leave_deduction(self, base_wage, days, hours):
+        """
+        计算事假
+        :param base_wage: 基本工资
+        :param days:  出勤天数
+        :param hours: 事假缺勤小时
+        :return:
+        """
+        if self.leave_deduction == '00':
+            # ('基本工资/应出勤天数/8*请假小时'
+            return base_wage / days / 8 * hours
+        elif self.leave_deduction == '01':
+            # '基本工资/应出勤天数*请假小时'
+            return base_wage / days * hours
+        else:
+            # (按次数) 次数*每次事假扣款
+            return (hours / self.hour_leave_number) * self.leave_money
+
+    @api.multi
+    def compute_sick_absence(self, base_wage, days, hours):
+        """
+        计算病假扣款
+        :param base_wage:
+        :param days:
+        :param hours:
+        :return:
+        """
+        if self.sick_deduction == '00':
+            # 基本工资/2/应出勤天数/8*请假小时
+            return base_wage/2/days/8*hours
+        elif self.sick_deduction == '01':
+            # 基本工资/应出勤天数*请假小时*病假扣款比例
+            return base_wage / days * hours * self.sick_deduction_ratio
+        elif self.sick_deduction == '02':
+            # 基本工资/应出勤天数*请假小时/8*病假扣款比例
+            return base_wage / days * hours / 8 * self.sick_deduction_ratio
+        else:
+            # (按次数) 次数*每次病假扣款')
+            return int(hours/self.hour_sick_number) * self.sick_money
+
+    @api.multi
+    def compute_work_overtime(self, base_wage, days, hours):
+        """
+        计算工作日加班费用
+        :param base_wage:
+        :param days:
+        :param hours:
+        :return:
+        """
+        if self.work_overtime_deduction == '00':
+            # 基本工资/应出勤天数/8*加班小时*倍数
+            return base_wage/days/8*hours*self.work_overtime_multiple
+        else:
+            # 加班小时*固定金额
+            return hours * self.work_overtime_money
+
+    @api.multi
+    def compute_weekend_overtime(self, base_wage, days, hours):
+        """
+        计算周末加班费用
+        :param base_wage:
+        :param days:
+        :param hours:
+        :return:
+        """
+        if self.weekend_deduction == '00':
+            # 基本工资/应出勤天数/8*加班小时*倍数
+            return base_wage/days/8*hours*self.weekend_multiple
+        else:
+            # 加班小时*固定金额
+            return hours * self.weekend_multiple
+
+    @api.multi
+    def compute_holiday_overtime(self, base_wage, days, hours):
+        """
+        计算节假日加班费用
+        :param base_wage:
+        :param days:
+        :param hours:
+        :return:
+        """
+        if self.holiday_deduction == '00':
+            # 基本工资/应出勤天数/8*加班小时*倍数
+            return base_wage/days/8*hours*self.holiday_multiple
+        else:
+            # 加班小时*固定金额
+            return hours * self.holiday_money
+
+    @api.multi
+    def compute_late_attendance(self, attendance_num):
+        """
+        计算迟到扣款费用
+        :param attendance_num:
+        :return:
+        """
+        if self.late_attendance_deduction == '00':
+            # 迟到次数*扣款金额
+            return attendance_num * self.late_attendance_money
+        else:
+            return 0
+
+    @api.multi
+    def compute_notsigned_attendance(self, attendance_num):
+        """
+        计算忘记打卡扣款费用
+        :param attendance_num:
+        :return:
+        """
+        if self.notsigned_deduction == '00':
+            # 忘记打款次数*扣款金额
+            return attendance_num * self.notsigned_money
+        else:
+            return 0
+
+    @api.multi
+    def compute_early_attendance(self, attendance_num):
+        """
+        计算早退扣款费用
+        :param attendance_num:
+        :return:
+        """
+        if self.early_deduction == '00':
+            # 早退次数*扣款金额
+            return attendance_num * self.early_money
+        else:
+            return 0
 

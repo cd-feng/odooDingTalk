@@ -76,6 +76,22 @@ class WageInsuredMonthlyStatement(models.Model):
                 'personal_sum': personal_sum,
             })
 
+    @api.multi
+    def get_employee_monthly_statement_line(self):
+        """
+        返回员工月结明细列表
+        :return:
+        """
+        statement_line = list()
+        for line in self.line_ids:
+            statement_line.append((0, 0, {
+                'insurance_id': line.insurance_id.id,
+                'base_number': line.base_number,
+                'company_pay': line.company_pay,
+                'pension_pay': line.pension_pay,
+            }))
+        return statement_line
+
 
 class WageInsuredMonthlyStatementLine(models.Model):
     _description = '月结账单明细'
