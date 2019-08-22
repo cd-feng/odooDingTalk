@@ -15,7 +15,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('dingding.employee.roster.tree.button', function (require) {
+odoo.define('dingding_hrm.employee.roster.tree.button', function (require) {
     "use strict";
 
     let core = require('web.core');
@@ -33,7 +33,7 @@ odoo.define('dingding.employee.roster.tree.button', function (require) {
                 this.$buttons.on('click', '.o_button_get_dingding_employee_roster_list', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
-                        res_model: 'dingding.get.hrm.list',
+                        res_model: 'dingding.employee.roster.synchronous',
                         target: 'new',
                         views: [[false, 'form']],
                         context: [],

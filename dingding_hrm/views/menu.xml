@@ -14,7 +14,17 @@
 -->
 <odoo>
 
-    <menuitem name="智能人事" id="zhineng_hrm_menu" parent="dingding_base.main_menu" sequence="75"
+    <menuitem name="智能人事" id="zhineng_hrm_menu" web_icon="dingding_hrm,static/description/icon.png"
+              groups="dingding_hrm.personnel"/>
+    <menuitem name="员工管理" id="hrm_employee_manager_menu" parent="zhineng_hrm_menu"
+              groups="dingding_hrm.personnel"/>
+    <menuitem name="人事异动" id="hrm_employee_changes_menu" parent="zhineng_hrm_menu"
+              groups="dingding_hrm.personnel"/>
+    <menuitem name="假勤管理" id="hrm_employee_attendance_menu" parent="zhineng_hrm_menu"
+              groups="dingding_hrm.personnel"/>
+    <menuitem name="统计分析" id="hrm_employee_analysis_menu" parent="zhineng_hrm_menu"
+              groups="dingding_hrm.personnel"/>
+    <menuitem name="设置" id="hrm_setting_menu" parent="zhineng_hrm_menu"
               groups="dingding_hrm.personnel"/>
 
 </odoo>

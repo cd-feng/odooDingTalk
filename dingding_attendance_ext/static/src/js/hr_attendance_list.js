@@ -25,7 +25,7 @@ odoo.define('dingding_attendance.attendance.button', function (require) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
             if (tree_model == 'hr.attendance') {
-                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.attendance'\" class=\"btn btn-primary o_pull_dingtalk_simple_groups\">获取钉钉考勤信息</button>";
+                let but = "<button type=\"button\" t-if=\"widget.modelName == 'hr.attendance'\" class=\"btn btn-secondary\">获取钉钉考勤结果</button>";
                 let button2 = $(but).click(this.proxy('open_attendance_list_action_v2'));
                 this.$buttons.append(button2);
             }

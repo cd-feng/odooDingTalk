@@ -59,6 +59,10 @@ class HrAttendance(models.Model):
     off_planId = fields.Char(string=u'下班班次ID')
     on_sourceType = fields.Selection(string=u'上班数据来源', selection=SourceType)
     off_sourceType = fields.Selection(string=u'下班数据来源', selection=SourceType)
+    on_approveId = fields.Char(string='上班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
+    on_procInstId = fields.Char(string='上班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
+    off_approveId = fields.Char(string='下班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
+    off_procInstId = fields.Char(string='下班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
@@ -76,6 +80,16 @@ class HrAttendance(models.Model):
         """
         return super(HrAttendance, self).create(vals_list)
 
+    @api.depends('on_timeResult', 'off_timeResult')
+    @api.depends('on_sourceType', 'off_sourceType')
+    @api.depends('check_in', 'check_out')
+    def _compute_worked_hours(self):
+        for attendance in self:
+            if attendance.check_out and attendance.on_timeResult != 'NotSigned' and \
+                    attendance.off_timeResult != 'NotSigned':
+                delta = attendance.check_out - attendance.check_in
+                attendance.worked_hours = delta.total_seconds() / 3600.0
+
 
 class HrAttendanceTransient(models.TransientModel):
     _name = 'hr.attendance.tran.v2'
@@ -86,6 +100,8 @@ class HrAttendanceTransient(models.TransientModel):
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_dingtalk_attendance_and_hr_employee_rel',
                                column1='attendance_id', column2='emp_id', string=u'员工', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
+    is_clear_data = fields.Boolean(string='清空考勤记录')
+    is_check = fields.Boolean(string='重复记录校验')
 
     @api.onchange('is_all_emp')
     def onchange_all_emp(self):
@@ -105,7 +121,10 @@ class HrAttendanceTransient(models.TransientModel):
         :param user:
         :return:
         """
-        # self.clear_attendance()
+        # 清除已下载的所有钉钉出勤记录（仅用于测试）
+        if self.is_clear_data:
+            self.clear_attendance()
+            logging.info(">>>记录已清除...")
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
@@ -141,7 +160,10 @@ class HrAttendanceTransient(models.TransientModel):
                 'offset': offset,
                 'limit': limit,
             }
-            has_more = self.send_post_dingding(data)
+            if self.is_check:
+                has_more = self.send_post_dingding(data)
+            else:
+                has_more = self.send_post_dingding_v2(data)
             logging.info(">>>是否还有剩余数据：{}".format(has_more))
             if not has_more:
                 break
@@ -174,7 +196,9 @@ class HrAttendanceTransient(models.TransientModel):
                             {'check_in': self.get_time_stamp(rec.get('userCheckTime')),
                              'on_planId': rec.get('planId'),
                              'on_timeResult': rec.get('timeResult'),
-                             'on_sourceType': rec.get('sourceType')
+                             'on_sourceType': rec.get('sourceType'),
+                             'on_approveId': rec.get('approveId'),
+                             'on_procInstId': rec.get('procInstId')
                              })
                         OnDuty_list.append(data)
                     else:
@@ -182,7 +206,9 @@ class HrAttendanceTransient(models.TransientModel):
                             'check_out': self.get_time_stamp(rec.get('userCheckTime')),
                             'off_planId': rec.get('planId'),
                             'off_timeResult': rec.get('timeResult'),
-                            'off_sourceType': rec.get('sourceType')
+                            'off_sourceType': rec.get('sourceType'),
+                            'off_approveId': rec.get('approveId'),
+                            'off_procInstId': rec.get('procInstId')
                         })
                         OffDuty_list.append(data)
                 # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
@@ -228,10 +254,14 @@ class HrAttendanceTransient(models.TransientModel):
                             'on_planId': att.get('on_planId'),
                             'on_timeResult': att.get('on_timeResult'),
                             'on_sourceType': att.get('on_sourceType'),
+                            'on_approveId': att.get('on_approveId'),
+                            'on_procInstId': att.get('on_procInstId'),
                             'check_out': att.get('check_out'),
                             'off_planId': att.get('off_planId'),
                             'off_timeResult': att.get('off_timeResult'),
-                            'off_sourceType': att.get('off_sourceType')
+                            'off_sourceType': att.get('off_sourceType'),
+                            'off_approveId': att.get('off_approveId'),
+                            'off_procInstId': att.get('off_procInstId')
                         })
                 if result.get('hasMore'):
                     return True
@@ -364,3 +394,12 @@ class HrAttendanceTransient(models.TransientModel):
                 else:
                     offset = offset + limit
         logging.info(">>>根据日期获取员工打卡信息结束...")
+
+    @api.model
+    def clear_attendance(self):
+        """
+        清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）
+        """
+        self._cr.execute("""
+            delete from hr_attendance
+        """)
