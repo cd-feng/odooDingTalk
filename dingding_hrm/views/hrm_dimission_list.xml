@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <!--TODO <tree string="离职员工信息" js_class="dingding_hrm_dimission_list_tree" edit="false" editable="top">-->
     <record id="view_dingding_hrm_dimission_list_tree" model="ir.ui.view">
         <field name="name">dingding.hrm.dimission.list.tree</field>
         <field name="model">dingding.hrm.dimission.list</field>
         <field name="arch" type="xml">
-            <tree string="离职员工信息" js_class="dingding_hrm_dimission_list_tree" edit="false" editable="top">
+            <tree string="离职员工信息" edit="false" editable="top">
                 <field name="company_id"/>
                 <field name="emp_id"/>
                 <field name="last_work_day"/>

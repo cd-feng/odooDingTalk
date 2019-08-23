@@ -1,3 +1,4 @@
 pypinyin
 pycryptodome
 Crypto
+python-dateutil

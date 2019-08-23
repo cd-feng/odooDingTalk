@@ -32,11 +32,11 @@
         </field>
     </record>
 
-    <menuitem id="ali_dindin_system_conf_menu" name="系统参数列表"
+    <menuitem id="ali_dindin_system_conf_menu"
+              name="系统参数列表"
               parent="ali_dindin.configure_menu"
               sequence="2"
               action="ali_dindin_system_conf_action"
-              groups="ali_dindin.dd_setting_group"
-    />
+              groups="ali_dindin.dd_setting_group"/>
 
 </odoo>

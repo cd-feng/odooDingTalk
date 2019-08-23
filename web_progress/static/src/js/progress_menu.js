@@ -3,6 +3,7 @@ odoo.define('web_progress.ProgressMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
+var bus = require('bus.bus').bus;
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
@@ -17,37 +18,32 @@ var ProgressMenu = Widget.extend({
     progress_bars: [],
     init: function(parent) {
         this._super(parent);
-        this.call('bus_service', 'addChannel', this.channel);
-        this.call('bus_service', 'startPolling');
+        bus.add_channel(this.channel);
+        bus.start_polling();
     },
     start: function () {
         core.bus.on('rpc_progress_destroy', this, this._removeProgressBar);
         this.progressCounter = 0;
-        this.$progresses_preview = this.$('.o_mail_systray_dropdown_items');
+        this.$progresses_preview = this.$('.o_progress_navbar_dropdown_channels');
         if (this.getSession().uid !== 1) {
             this.$el.toggleClass('hidden', !this.progressCounter);
         }
-        this.call('bus_service', 'onNotification', this, this._onNotification);
-        this._updateProgressMenu();
+        bus.on('notification', this, function (notifications) {
+            var self = this;
+            _.each(notifications, function (notification) {
+                self._onNotification(notification);
+            });
+        });
+        this._updateProgressMenu()
         return this._super();
     },
 
     // Private
     /**
-     * Iterate bus notifications
-     * @private
-     */
-    _onNotification: function (notifications) {
-        var self = this;
-        _.each(notifications, function (notification) {
-            self._handleNotification(notification);
-        });
-    },
-    /**
      * On every bus notification schedule update of all progress and pass progress message to progress bar
      * @private
      */
-    _handleNotification: function(notification){
+    _onNotification: function(notification){
         if (this.channel && (notification[0] === this.channel)) {
             // this._setTimerProgressPreview();
             var progress = notification[1][0];
@@ -71,7 +67,7 @@ var ProgressMenu = Widget.extend({
         this.progress_bars[code] = progress_bar;
         progress_bar.appendTo(this.$progresses_preview);
         this._updateProgressMenu();
-    },
+    },    
     /**
      * Remove progress bar
      * @private
@@ -110,8 +106,8 @@ var ProgressMenu = Widget.extend({
             this.$('.fa-spinner').removeClass('fa-spin');
             this.$el.addClass('o_no_notification');
         }
-        if (!this.getSession().is_admin) {
-            this.$el.toggleClass('o_hidden', !this.progressCounter);
+        if (session_uid !== 1) {
+            this.$el.toggleClass('hidden', !this.progressCounter);
         }
     },
     /**
@@ -120,9 +116,8 @@ var ProgressMenu = Widget.extend({
      */
     _processProgressData: function(code, state, uid) {
         var session_uid = this.getSession().uid;
-        var session_is_admin = this.getSession().is_admin;
         var progress_bar = this._findProgressBar(code);
-        if (session_uid !== uid && !session_is_admin) {
+        if (session_uid !== uid && session_uid !== 1) {
             return;
         }
         if (!progress_bar && state === 'ongoing') {

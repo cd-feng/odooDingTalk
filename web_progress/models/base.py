@@ -143,11 +143,11 @@ class Base(models.AbstractModel):
             return extracted
 
     @api.multi
-    def _export_rows(self, fields, *args, _is_toplevel_call=True):
+    def _export_rows(self, fields, batch_invalidate=True):
         """
         Add progress reporting to base export (on batch-level)
         """
-        if _is_toplevel_call and 'progress_code' in self._context:
+        if batch_invalidate and 'progress_code' in self._context:
             def splittor(rs):
                 """ Splits the self recordset in batches of 1000 (to avoid
                 entire-recordset-prefetch-effects) & removes the previous batch
@@ -161,6 +161,6 @@ class Base(models.AbstractModel):
 
             ret = []
             for sub in splittor(self):
-                ret += super(Base, sub)._export_rows(fields, _is_toplevel_call=_is_toplevel_call)
+                ret += super(Base, sub)._export_rows(fields, batch_invalidate=False)
             return ret
-        return super(Base, self)._export_rows(fields, *args, _is_toplevel_call=_is_toplevel_call)
+        return super(Base, self)._export_rows(fields, batch_invalidate=batch_invalidate)

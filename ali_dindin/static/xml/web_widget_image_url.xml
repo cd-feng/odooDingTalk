@@ -11,8 +11,7 @@
                  t-att-style="(!widget.readonly ? 'border: 0' : 'border: 1')"
                  t-att-name="widget.name"
                  t-att-width="widget.attrs.img_width || widget.attrs.width"
-                 t-att-height="widget.attrs.img_height || widget.attrs.height"
-            />
+                 t-att-height="widget.attrs.img_height || widget.attrs.height"/>
         </span>
     </t>
 </template>

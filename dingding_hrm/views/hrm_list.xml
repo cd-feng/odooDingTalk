@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <!--TODO <tree string="员工花名册" js_class="dingding_hrm_list_tree"> 修改为 <tree string="员工花名册">-->
     <record id="view_dingding_hrm_list_tree" model="ir.ui.view">
         <field name="name">dingding.hrm.list.tree</field>
         <field name="model">dingding.hrm.list</field>
         <field name="arch" type="xml">
-            <tree string="员工花名册" js_class="dingding_hrm_list_tree">
+            <tree string="员工花名册">
                 <field name="company_id"/>
                 <field name="emp_id"/>
                 <field name="department_id"/>

@@ -7,8 +7,6 @@ odoo.define('dindin.blackboard.info', function (require) {
     let rpc = require('web.rpc');
     let AbstractAction = require('web.AbstractAction');
 
-
-
     let DinDinDashboard = AbstractAction.extend({
         template: 'DingDingDashboardMain',
         // events: {
@@ -37,8 +35,10 @@ odoo.define('dindin.blackboard.info', function (require) {
             }));
         },
 
-        start: function () {
+        start: function (parent, context) {
+            // this._super(parent, context);
             let self = this;
+
             //获取我的待办
             rpc.query({
                 model: 'dindin.work.record',

@@ -35,13 +35,14 @@
                         </group>
                     </group>
                     <notebook>
+                        <!--TODO 要确认此处O2M字段的job_title存不存在-->
                         <page string="考勤成员">
                             <field name="emp_ids">
                                 <tree editable="top" create="false" edit="false">
                                     <field name="name"/>
                                     <field name="department_id"/>
                                     <field name="mobile_phone"/>
-                                    <field name="job_title"/>
+                                    <!--<field name="job_title"/>-->
                                 </tree>
                             </field>
                         </page>

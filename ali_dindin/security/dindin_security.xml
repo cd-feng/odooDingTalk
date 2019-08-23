@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!--TODO 把 base.user_admin 替换为了 base.group_system-->
     <record id="dingding_main_groups" model="ir.module.category">
         <field name="name">钉钉额外权限管理</field>
         <field name="description">False</field>
@@ -10,42 +11,31 @@
     <record id="dd_user_group" model="res.groups">
         <field name="name">用户</field>
         <field name="category_id" ref="dingding_main_groups"/>
-        <field name="users" eval="[
-            (4, ref('base.user_admin')),
-            (4, ref('base.group_user')),
-		]"/>
+        <field name="users" eval="[(4, ref('base.group_system')),(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="dd_setting_group" model="res.groups">
         <field name="name">允许钉钉相关API配置</field>
         <field name="category_id" ref="dingding_main_groups"/>
-        <field name="users" eval="[
-            (4, ref('base.user_admin'))
-		]"/>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="dd_synchronous_group" model="res.groups">
         <field name="name">允许数据同步</field>
         <field name="category_id" ref="dingding_main_groups"/>
-        <field name="users" eval="[
-            (4, ref('base.user_admin'))
-		]"/>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="dd_top_group" model="res.groups">
         <field name="name">允许上传数据(员工、部门、联系人)</field>
         <field name="category_id" ref="dingding_main_groups"/>
-        <field name="users" eval="[
-            (4, ref('base.user_admin'))
-		]"/>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="dd_update_group" model="res.groups">
         <field name="name">允许更新数据(员工、部门、联系人)</field>
         <field name="category_id" ref="dingding_main_groups"/>
-        <field name="users" eval="[
-            (4, ref('base.user_admin'))
-		]"/>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
 </odoo>
