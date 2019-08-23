@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
+<!--TODO <tree default_order="id desc" banner_route="/healths/dingding_health_onboarding_panel"> -->
     <record id="dingding_health_tree_view" model="ir.ui.view">
         <field name="name">钉钉运动</field>
         <field name="model">dingding.health</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" banner_route="/healths/dingding_health_onboarding_panel">
+            <tree default_order="id desc">
                 <field name="company_id"/>
                 <field name="department_id"/>
                 <field name="emp_id"/>

@@ -93,25 +93,25 @@
         <field name="target">new</field>
     </record>
 
-
-    <record id="dingding_chat_tree_view" model="ir.ui.view">
-        <field name="name">群会话</field>
-        <field name="model">dingding.chat</field>
-        <field name="arch" type="xml">
-            <tree default_order="id desc" js_class="dingding_chat_list_tree">
-                <field name="name"/>
-                <field name="chat_icon"/>
-                <field name="employee_id"/>
-                <field name="show_history_type"/>
-                <field name="searchable"/>
-                <field name="validation_type"/>
-                <field name="mention_all_authority"/>
-                <field name="chat_banned_type"/>
-                <field name="management_ype"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
+    <!--TODO 暂时注释-->
+    <!--<record id="dingding_chat_tree_view" model="ir.ui.view">-->
+        <!--<field name="name">群会话</field>-->
+        <!--<field name="model">dingding.chat</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree default_order="id desc" js_class="dingding_chat_list_tree">-->
+                <!--<field name="name"/>-->
+                <!--<field name="chat_icon"/>-->
+                <!--<field name="employee_id"/>-->
+                <!--<field name="show_history_type"/>-->
+                <!--<field name="searchable"/>-->
+                <!--<field name="validation_type"/>-->
+                <!--<field name="mention_all_authority"/>-->
+                <!--<field name="chat_banned_type"/>-->
+                <!--<field name="management_ype"/>-->
+                <!--<field name="state"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
 
     <record id="dingding_chat_form_view" model="ir.ui.view">
         <field name="name">群会话</field>

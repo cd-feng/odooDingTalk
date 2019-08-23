@@ -32,8 +32,8 @@ var ProgressBar = Widget.extend({
         this.cancel_confirm_html = QWeb.render('WebProgressBarCancelConfirm', {});
     },
     start: function() {
-        this.$progress_frame = this.$("#progress_frame");
-        this.$progress_message = this.$("#progress_message");
+        this.$progress_frame = this.$("#progress_frame"); 
+        this.$progress_message = this.$("#progress_message"); 
         this.$progress_cancel = this.$("#progress_cancel");
         this.$progress_bar = this.$("#progress_bar");
         this.$progress_user = this.$("#progress_user");
@@ -50,8 +50,7 @@ var ProgressBar = Widget.extend({
         var top_progress = progress_list[0];
         var progress_code = top_progress.code;
         var uid = session.uid;
-        var is_admin = session.is_admin;
-        if (this.progress_code !== progress_code || !is_admin && uid !== top_progress.uid) {
+        if (this.progress_code !== progress_code || uid !== 1 && uid !== top_progress.uid) {
             return;
         }
         var progress_html = '<div class="text-left">';
@@ -91,7 +90,7 @@ var ProgressBar = Widget.extend({
             self.$progress_message.removeClass('o_progress_message');
             self.$progress_message.addClass('o_progress_message_systray');
             self.$progress_user.css("visibility", 'visible');
-            if (is_admin) {
+            if (uid === 1) {
                 self.$progress_user.html(top_progress.user);
             }
         }

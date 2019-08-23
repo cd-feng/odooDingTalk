@@ -101,33 +101,34 @@
         <field name="context">{'search_default_myattendances': True, 'search_default_groupby_checkType': True}</field>
     </record>
 
-    <record model="ir.ui.view" id="dingding_attendance_search">
-        <field name="model">dingding.attendance</field>
-        <field name="arch" type="xml">
-            <search string="考勤列表">
-                <field name="emp_id"/>
-                <field name="ding_group_id"/>
-                <field name="checkType"/>
-                <field name="check_in"/>
-                <field name="recordId"/>
-                <field name="workDate"/>
-                <field name="timeResult"/>
-                <field name="locationResult"/>
-                <field name="baseCheckTime"/>
-                <field name="sourceType"/>
-                <filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>
-                <filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>
-                <filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/>
-                <separator/>
-                <filter name="groupby_emp_id" string="员工" context="{'group_by': 'emp_id'}"/>
-                <filter name="groupby_checkType" string="考勤类型" context="{'group_by': 'checkType'}"/>
-                <filter string="我的考勤" name="myattendances" domain="[('emp_id.user_id.id', '=', uid)]" />
-                <separator/>
-                <filter name="check_in_filter" string="签到日期" date="check_in"/>
-                <separator/>
-            </search>
-        </field>
-    </record>
+    <!--TODO 查看为何是无效的视图定义-->
+    <!--<record model="ir.ui.view" id="dingding_attendance_search">-->
+        <!--<field name="model">dingding.attendance</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<search string="考勤列表">-->
+                <!--<field name="emp_id"/>-->
+                <!--<field name="ding_group_id"/>-->
+                <!--<field name="checkType"/>-->
+                <!--<field name="check_in"/>-->
+                <!--<field name="recordId"/>-->
+                <!--<field name="workDate"/>-->
+                <!--<field name="timeResult"/>-->
+                <!--<field name="locationResult"/>-->
+                <!--<field name="baseCheckTime"/>-->
+                <!--<field name="sourceType"/>-->
+                <!--<filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>-->
+                <!--<filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>-->
+                <!--<filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/>-->
+                <!--<separator/>-->
+                <!--<filter name="groupby_emp_id" string="员工" context="{'group_by': 'emp_id'}"/>-->
+                <!--<filter name="groupby_checkType" string="考勤类型" context="{'group_by': 'checkType'}"/>-->
+                <!--<filter string="我的考勤" name="myattendances" domain="[('emp_id.user_id.id', '=', uid)]" />-->
+                <!--<separator/>-->
+                <!--<filter name="check_in_filter" string="签到日期" date="check_in"/>-->
+                <!--<separator/>-->
+            <!--</search>-->
+        <!--</field>-->
+    <!--</record>-->
 
     <menuitem id="dingding_attendance_list_menu" name="钉钉出勤" parent="dingding_attendance_menu" sequence="2"
               action="dingding_attendance_action" groups="dindin_attendance.dd_attendance_user_group"/>

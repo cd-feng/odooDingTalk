@@ -5,7 +5,7 @@
         <field name="name">操作钉钉考勤组</field>
         <field name="category_id" ref="ali_dindin.dingding_main_groups"/>
         <field name="users" eval="[
-            (4, ref('base.user_admin'))
+            (4, ref('base.group_system'))
 		]"/>
     </record>
 

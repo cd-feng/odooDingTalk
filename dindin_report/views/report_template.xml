@@ -21,6 +21,7 @@
         </field>
     </record>
 
+    <!--TODO <kanban class="o_kanban_mobile" js_class="dingding_report_template_kanban">-->
     <record model="ir.ui.view" id="dingding_report_template_kanban">
         <field name="name">日志模板</field>
         <field name="model">dingding.report.template</field>
