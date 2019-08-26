@@ -71,12 +71,12 @@ class DingDingApprovalMain(models.Model):
         """
         pass
 
-    # @api.multi
-    # def unlink(self):
-    #     for res in self:
-    #         if res.oa_state != '00':
-    #             raise UserError('非草稿单据不能删除!')
-    #     super(DingDingApprovalMain, self).unlink()
+    @api.multi
+    def unlink(self):
+        for res in self:
+            if res.oa_state != '00':
+                raise UserError('非草稿单据不能删除!')
+        super(DingDingApprovalMain, self).unlink()
 
     @api.model
     def _summit_din_approval(self, process_code, form_values):
@@ -95,6 +95,7 @@ class DingDingApprovalMain(models.Model):
             'form_component_values': form_values  # 表单参数
         }
         result = self.env['dingding.api.tools'].send_post_request(url, token, data, 10)
+        logging.info(result)
         if result.get('errcode') == 0:
             return result.get('process_instance_id')
         else:

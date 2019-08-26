@@ -15,28 +15,27 @@ limitations under the License.
 -->
 <odoo>
 	<data>
-		<record model="ir.module.category" id="oa_leave_attendance.main">
-			<field name="name">钉钉审批-出勤休假</field>
+		<record model="ir.module.category" id="oa_stock.main">
+			<field name="name">钉钉审批-库存</field>
 			<field name="visible" eval="0" />
 		</record>
 
-		<record id="oa_leave_attendance.personnel" model="res.groups">
+		<record id="oa_stock.personnel" model="res.groups">
 			<field name="name">用户</field>
 			<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-			<field name="category_id" ref="oa_leave_attendance.main"/>
+			<field name="category_id" ref="oa_stock.main"/>
 		</record>
 
-		<record id="oa_leave_attendance.manager" model="res.groups">
-			<field name="name">部门领导</field>
-			<field name="category_id" ref="oa_leave_attendance.main"/>
-			<field name="implied_ids" eval="[(4, ref('oa_leave_attendance.personnel'))]"/>
+		<record id="oa_stock.manager" model="res.groups">
+			<field name="name">管理员</field>
+			<field name="category_id" ref="oa_stock.main"/>
+			<field name="implied_ids" eval="[(4, ref('oa_stock.personnel'))]"/>
 			<field name="users" eval="[(4, ref('base.user_admin'))]"/>
 		</record>
 
-		<!-- 默认用户权限 -->
 		<record id="base.default_user" model="res.users">
-			<field name="groups_id" eval="[(4, ref('oa_leave_attendance.personnel'))]" />
-		</record>
+        	<field name="groups_id" eval="[(4,ref('oa_stock.personnel'))]"/>
+    	</record>
 
 	</data>
 </odoo>

@@ -14,18 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <odoo>
-	<data>
+    <data noupdate="1">
 
-		<record model="ir.module.category" id="oa_base.main">
-			<field name="name">钉钉审批</field>
-			<field name="visible" eval="0" />
-		</record>
+        <record id="oa_stock_requisition_group_number" model="ir.sequence">
+            <field name="name">货品调拨单规则</field>
+            <field name="code">oa.stock.requisition.code</field>
+            <field name="prefix">DB%(year)s%(month)s%(day)s</field>
+            <field name="suffix"/>
+            <field name="padding">5</field>
+        </record>
 
-		<record id="oa_base_pull_process_instance" model="res.groups">
-			<field name="name">获取审批实例权限</field>
-			<field name="category_id" ref="oa_base.main"/>
-			<field name="users" eval="[(4, ref('base.user_admin'))]"/>
-		</record>
-
-	</data>
+    </data>
 </odoo>

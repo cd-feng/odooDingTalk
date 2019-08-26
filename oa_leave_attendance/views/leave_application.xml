@@ -96,7 +96,7 @@ limitations under the License.
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="出勤休假" id="oa_leave_application_main_menu" parent="oa_base.menu_oa_root" sequence="2"/>
+        <menuitem name="出勤休假" id="oa_leave_application_main_menu" parent="oa_base.menu_oa_root" sequence="2" groups="oa_leave_attendance.personnel"/>
 
         <menuitem name="请假单" id="oa_leave_application_menu" parent="oa_leave_application_main_menu"
                   sequence="1" action="oa_leave_application_action"/>
