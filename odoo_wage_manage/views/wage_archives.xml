@@ -26,6 +26,7 @@ limitations under the License.
                 <field name="department_id"/>
                 <field name="job_id"/>
                 <field name="base_wage"/>
+                <field name="trial_period_salary"/>
                 <field name="payroll_company"/>
             </tree>
         </field>
@@ -52,7 +53,7 @@ limitations under the License.
                             <field name="code" placeholder="档案编号" readonly="1"/>
                         </h1>
                     </div>
-                    <group col="1">
+                    <group col="2">
                         <group>
                             <field name="company_id" required="1"/>
                             <field name="employee_id" required="1"/>
@@ -60,16 +61,24 @@ limitations under the License.
                             <field name="department_id"/>
                             <field name="job_id"/>
                         </group>
+                        <group>
+                            <field name="employee_type"/>
+                            <field name="trial_period_start_date" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <field name="trial_period_end_date" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <label for="trial_period_salary" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <div class="o_row" name="wage" attrs="{'invisible': [('employee_type','!=', 'probation')]}">
+                                <field name="trial_period_salary" nolabel="1" required="1"/>
+                                <span>￥ / 月</span>
+                            </div>
+                            <label for="base_wage"/>
+                            <div class="o_row" name="wage">
+                                <field name="base_wage" nolabel="1" required="1"/>
+                                <span>￥ / 月</span>
+                            </div>
+                        </group>
                     </group>
                     <notebook>
                         <page string="工资信息">
-                            <group>
-                                <label for="base_wage"/>
-                                <div class="o_row" name="wage">
-                                    <field name="base_wage" nolabel="1" required="1"/>
-                                    <span>￥ / 月</span>
-                                </div>
-                            </group>
                             <field name="line_ids">
                                 <tree editable="bottom" default_order="sequence">
                                     <field name="sequence" widget="handle"/>

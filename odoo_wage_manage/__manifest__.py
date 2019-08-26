@@ -14,14 +14,14 @@
 # limitations under the License.
 ###################################################################################
 {
-    'name': "Odoo薪酬管理",
+    'name': "Odoo薪酬/工资管理",
     'summary': """员工社保、薪资计算、薪资档案，部分功能需配合钉钉模块和钉钉审批模块""",
     'description': """员工社保、薪资计算、薪资档案，部分功能需配合钉钉模块和钉钉审批模块""",
     'author': "SuXueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'wage',
     'version': '1.0',
-    'depends': ['base', 'dingding_base', 'web_progress'],
+    'depends': ['base', 'web_progress'],
     'installable': True,
     'application': False,
     'auto_install': False,

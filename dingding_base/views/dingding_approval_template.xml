@@ -85,7 +85,7 @@
         </field>
     </record>
 
-    <menuitem name="审批" id="approval_template_main_menu" parent="configure_menu" sequence="11"
+    <menuitem name="审批" id="approval_template_main_menu" parent="dingding_base.main_menu" sequence="15"
               groups="dingding_base.manage_groups"/>
 
     <menuitem name="审批模板" id="dingding_approval_template_menu" parent="approval_template_main_menu" sequence="1"
