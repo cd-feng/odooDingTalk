@@ -20,7 +20,7 @@
     'author': "SuXueFeng",
     'category': 'dingding',
     'version': '1.0',
-    'depends': ['oa_base'],
+    'depends': ['oa_base', 'fleet'],
     'installable': True,
     'auto_install': True,
     'data': [

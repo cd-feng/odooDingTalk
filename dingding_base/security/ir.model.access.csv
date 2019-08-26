@@ -4,3 +4,4 @@ access_dingding_callback_list,dingding.callback.list,model_dingding_callback_lis
 access_dingding_callback_manage,dingding.callback.manage,model_dingding_callback_manage,base.group_user,1,1,1,1
 access_dingding_approval_template,dingding.approval.template,model_dingding_approval_template,base.group_user,1,1,1,1
 access_dingding_approval_control,dingding.approval.control,model_dingding_approval_control,base.group_user,1,1,1,1
+access_dingding_approval_main,access_dingding_approval_main,model_dingding_approval_main,base.group_user,1,0,0,0
