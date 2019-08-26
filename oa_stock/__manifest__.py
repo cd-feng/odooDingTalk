@@ -27,8 +27,8 @@
     'data': [
         'data/default_num.xml',
         'data/default_data.xml',
-        'security/ir.model.access.csv',
         'groups/group.xml',
+        'security/ir.model.access.csv',
 
         'views/config.xml',
         'views/requisition.xml',
