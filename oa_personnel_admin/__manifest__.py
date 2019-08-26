@@ -19,9 +19,9 @@
     'description': """钉钉审批-行政人事""",
     'author': "SuXueFeng",
     'category': 'dingding',
-    'installable': True,
     'version': '1.0',
     'depends': ['oa_base'],
+    'installable': True,
     'auto_install': True,
     'data': [
         'groups/group.xml',

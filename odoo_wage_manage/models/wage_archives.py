@@ -26,14 +26,25 @@ class EmployeeWageArchives(models.Model):
     _rec_name = 'employee_id'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    EMPLOYEESTATUS = [
+        ('formal', '正式员工'),
+        ('leave', '离职员工'),
+        ('probation', '试用期'),
+        ('stop', '暂停'),
+    ]
+
     active = fields.Boolean('Active', default=True)
     code = fields.Char(string=u'档案编号', default='New', index=True)
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id, index=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True, track_visibility='onchange')
+    employee_type = fields.Selection(string=u'员工类型', selection=EMPLOYEESTATUS, default='formal', required=True)
     employee_code = fields.Char(string='员工工号')
     department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', index=True)
     job_id = fields.Many2one(comodel_name='hr.job', string=u'工作岗位')
-    base_wage = fields.Float(string='基本工资', track_visibility='onchange')
+    base_wage = fields.Float(string='转正基本工资', track_visibility='onchange')
+    trial_period_start_date = fields.Date(string=u'试用期开始日期')
+    trial_period_end_date = fields.Date(string=u'试用期结束日期')
+    trial_period_salary = fields.Float(string='试用期工资', track_visibility='onchange')
     payroll_company = fields.Many2one(comodel_name='wage.archives.company', string=u'发薪公司', index=True)
     household_id = fields.Many2one(comodel_name='wage.household.registration', string=u'户籍性质', index=True)
     bank_account_number = fields.Char(string='银行卡号')
@@ -127,6 +138,19 @@ class EmployeeWageArchives(models.Model):
                 'wage_amount': line.wage_amount
             }))
         return structure_list
+
+    @api.multi
+    def get_employee_salary(self):
+        """
+        返回该员工的工资，需要在本函数中判断该员工是否为试用期
+        :return:
+        """
+        if self.employee_type == 'formal':
+            return self.base_wage
+        elif self.employee_type == 'probation':
+            return self.trial_period_salary
+        else:
+            return 0
 
 
 class EmployeeWageArchivesLine(models.Model):

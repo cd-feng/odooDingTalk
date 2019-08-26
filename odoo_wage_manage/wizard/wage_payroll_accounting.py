@@ -83,7 +83,7 @@ class WagePayrollAccountingTransient(models.TransientModel):
             if archives:
                 # 读取薪资档案中员工薪资结构数据
                 structure_ids = archives.get_employee_wage_structure()
-                base_wage = archives.base_wage
+                base_wage = archives.get_employee_salary()
             # 获取绩效列表
             domain = [('employee_id', '=', emp.id), ('performance_code', '=', date_code)]
             performance = self.env['wage.employee.performance.manage'].search(domain, limit=1)
@@ -130,7 +130,7 @@ class WagePayrollAccountingTransient(models.TransientModel):
                     'notsigned_attendance': notsigned_attendance,
                     'early_attendance': early_attendance,
                 })
-
+            # 判断是否已存在该期间的员工核算信息
             domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
             payrolls = self.env['wage.payroll.accounting'].search(domain)
             if not payrolls:

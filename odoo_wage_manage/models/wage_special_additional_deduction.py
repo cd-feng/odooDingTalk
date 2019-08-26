@@ -35,7 +35,7 @@ class WageSpecialAdditionalDeduction(models.Model):
     cumulative_continuing_education_deduction = fields.Float(string=u'累计继续教育', digits=(10, 2))
     cumulative_home_loan_interest_deduction = fields.Float(string=u'累计住房贷款利息', digits=(10, 2))
     cumulative_housing_rental_expense_deduction = fields.Float(string=u'累计住房租金', digits=(10, 2))
-    total_tax_deduction = fields.Float(string=u'个税抵扣总额', digits=(10, 2))
+    total_tax_deduction = fields.Float(string=u'个税抵扣总额', digits=(10, 2), compute='_compute_total_tax_deduction')
     notes = fields.Text(string=u'备注')
 
     @api.onchange('start_date')
@@ -60,3 +60,17 @@ class WageSpecialAdditionalDeduction(models.Model):
             count_num = self.search_count([('employee_id', '=', res.employee_id.id), ('date_code', '=', res.date_code)])
             if count_num > 1:
                 raise UserError("员工{}在{}期间已存在数据，请勿重复录入!".format(res.employee_id.name, res.date_code))
+
+    def _compute_total_tax_deduction(self):
+        """
+        计算个税抵扣总额
+        :return:
+        """
+        for res in self:
+            total_tax_deduction = res.cumulative_expenditure_deduction+res.cumulative_support_for_the_elderly+\
+                                  res.cumulative_continuing_education_deduction+res.cumulative_home_loan_interest_deduction+\
+                                  res.cumulative_housing_rental_expense_deduction
+            res.update({
+                'total_tax_deduction': total_tax_deduction,
+            })
+
