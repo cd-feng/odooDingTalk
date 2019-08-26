@@ -18,7 +18,7 @@ limitations under the License.
             <field name="name">货品调拨单</field>
             <field name="model">oa.stock.requisition</field>
             <field name="arch" type="xml">
-                <tree default_order="id desc">
+                <tree default_order="id desc" decoration-success="oa_state in ('01', '02')" decoration-muted="oa_result == 'agree'" decoration-warning="oa_result in ('refuse', 'redirect')" >
                     <field name="process_code"/>
                     <field name="originator_user_id"/>
                     <field name="originator_dept_id"/>
