@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+    <data>
+
+        <record id="oa_stock_requisition_tree_view" model="ir.ui.view">
+            <field name="name">货品调拨单</field>
+            <field name="model">oa.stock.requisition</field>
+            <field name="arch" type="xml">
+                <tree default_order="id desc" decoration-success="oa_state in ('01', '02')" decoration-muted="oa_result == 'agree'" decoration-warning="oa_result in ('refuse', 'redirect')" >
+                    <field name="process_code"/>
+                    <field name="originator_user_id"/>
+                    <field name="originator_dept_id"/>
+                    <field name="partner_id"/>
+                    <field name="req_date"/>
+                    <field name="contact_id"/>
+                    <field name="contact_phone"/>
+                    <field name="shipping_address"/>
+                    <field name="oa_state"/>
+                    <field name="oa_message"/>
+                    <field name="oa_result"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="oa_stock_requisition_form_view" model="ir.ui.view">
+            <field name="name">货品调拨单</field>
+            <field name="model">oa.stock.requisition</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="summit_approval" type="object" string="提交审批" class="oe_highlight"
+                                attrs="{'invisible': [('oa_state', '!=', '00')]}"
+                                confirm="确认提交审批吗？系统将会提交至钉钉系统进行审批流程！"/>
+                        <field name="oa_state" widget="statusbar" modifiers="{'readonly': true}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <div class="oe_title" name="title">
+                            <label for="process_code" class="oe_edit_only"/>
+                            <h1>
+                                <field name="process_code" placeholder="单据编号，保存后自动生成" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="partner_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"
+                                       options="{'horizontal': true, 'no_create_edit': True}" placeholder="请选择客户"
+                                       required="1"/>
+                                <field name="req_date" attrs="{'readonly': [('oa_state', '!=', '00')]}" required="1"/>
+                                <field name="contact_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="contact_phone" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="shipping_address" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                            </group>
+                            <group>
+                                <field name="originator_user_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"
+                                       required="1"
+                                       options="{'horizontal': true, 'no_create_edit': True}"/>
+                                <field name="originator_dept_id" attrs="{'readonly': [('oa_state', '!=', '00')]}"
+                                       required="1"/>
+                                <field name="out_warehouse" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="out_location" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="ing_warehouse" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="ing_location" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="调拨明细">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="approval_number_transfers" sum="taxable_salary_this_month"/>
+                                        <field name="actual_number_transfers" sum="cumulative_tax_pay"/>
+                                        <field name="control_feedback"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group col='2'>
+                            <group>
+                                <field name="transfer_method" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="bank_channel" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                            </group>
+                            <group>
+                                <field name="delivery_method" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                                <field name="delivery_number" attrs="{'readonly': [('oa_state', '!=', '00')]}"/>
+                            </group>
+                        </group>
+                        <group string="备注">
+                            <field name="reason_leave" nolabel="1" string="备注"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="oa_stock_requisition_action">
+            <field name="name">货品调拨单</field>
+            <field name="res_model">oa.stock.requisition</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="oa_stock_requisition_search">
+            <field name="model">oa.stock.requisition</field>
+            <field name="arch" type="xml">
+                <search string="货品调拨单">
+                    <field name="process_code"/>
+                    <field name="originator_user_id"/>
+                    <field name="originator_dept_id"/>
+                    <field name="partner_id"/>
+                    <field name="req_date"/>
+                    <field name="contact_id"/>
+                    <field name="contact_phone"/>
+                    <field name="shipping_address"/>
+                    <field name="oa_state"/>
+                    <field name="oa_message"/>
+                    <field name="oa_result"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
+        <menuitem name="库存" id="oa_stock_main_menu" parent="oa_base.menu_oa_root" sequence="5"
+                  groups="oa_stock.personnel"/>
+
+        <menuitem name="货品调拨单" id="oa_stock_requisition_menu" parent="oa_stock_main_menu"
+                  sequence="1" action="oa_stock_requisition_action"/>
+
+    </data>
+</odoo>

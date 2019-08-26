@@ -104,7 +104,7 @@ limitations under the License.
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="行政人事" id="oa_administrative_personnel_main_menu" parent="oa_base.menu_oa_root" sequence="3"/>
+        <menuitem name="行政人事" id="oa_administrative_personnel_main_menu" parent="oa_base.menu_oa_root" sequence="3" groups="oa_personnel_admin.personnel"/>
 
         <menuitem name="转正申请" id="oa_transfer_application_menu" parent="oa_administrative_personnel_main_menu" sequence="1"
                   action="oa_transfer_application_action"/>

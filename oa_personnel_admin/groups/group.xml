@@ -32,6 +32,7 @@ limitations under the License.
 			<field name="name">部门领导</field>
 			<field name="category_id" ref="oa_personnel_admin.main"/>
 			<field name="implied_ids" eval="[(4, ref('oa_personnel_admin.personnel'))]"/>
+			<field name="users" eval="[(4, ref('base.user_admin'))]"/>
 		</record>
 
 		<!-- 默认用户权限 -->

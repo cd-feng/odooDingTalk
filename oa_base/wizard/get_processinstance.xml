@@ -44,6 +44,6 @@
     </record>
 
     <menuitem name="获取审批实例" id="oa_get_process_instance_menu" parent="menu_oa_root" sequence="90"
-          action="oa_get_process_instance_action"/>
+          action="oa_get_process_instance_action" groups="oa_base.oa_base_pull_process_instance"/>
 
 </odoo>
