@@ -62,7 +62,6 @@ class WagePayrollAccounting(models.Model):
     # 社保公积金
     statement_ids = fields.One2many('wage.payroll.accounting.monthly.statement.line', 'accounting_id', string=u'社保公积金')
     # 个税
-    taxable_income = fields.Float(string=u'个税', digits=(10, 2))
     cumulative_expenditure_deduction = fields.Float(string=u'累计子女教育抵扣总额', digits=(10, 2))
     cumulative_home_loan_interest_deduction = fields.Float(string=u'累计住房贷款利息抵扣总额', digits=(10, 2))
     cumulative_housing_rental_expense_deduction = fields.Float(string=u'累计住房租金抵扣总额', digits=(10, 2))

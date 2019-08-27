@@ -143,7 +143,6 @@ limitations under the License.
                         <page string="个税明细">
                             <group col="2">
                                 <group>
-                                    <field name="taxable_income"/>
                                     <field name="cumulative_expenditure_deduction"/>
                                     <field name="cumulative_home_loan_interest_deduction"/>
                                     <field name="cumulative_housing_rental_expense_deduction"/>

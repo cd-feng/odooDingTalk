@@ -129,13 +129,15 @@ class WageEmployeePerformance(models.Model):
     @api.multi
     def get_emp_performance_list(self):
         performance_list = list()
+        amount_sum = 0
         for line in self.line_ids:
             performance_list.append((0, 0, {
                 'performance_id': line.performance_id.id,
                 'wage_amount': line.wage_amount,
                 'name': line.name,
             }))
-        return performance_list
+            amount_sum += line.wage_amount
+        return performance_list, amount_sum
 
 
 class WageEmployeePerformanceLine(models.Model):
