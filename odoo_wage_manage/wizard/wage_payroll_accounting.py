@@ -309,6 +309,8 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
         if self.all_emp:
             employees = self.env['hr.employee'].search([])
             self.emp_ids = [(6, 0, employees.ids)]
+        else:
+            self.emp_ids = [(2, 0, self.emp_ids)]
 
     @api.onchange('start_date')
     def _alter_date_code(self):
@@ -339,6 +341,24 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
                 'department_id': emp.department_id.id if emp.department_id else False,
                 'job_id': emp.job_id.id if emp.job_id else False,
             }
+            # 获取薪资核算明细
+            domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
+            payroll = self.env['wage.payroll.accounting'].sudo().search(domain, limit=1)
+            if payroll:
+                payroll_data.update({
+                    'base_wage': payroll.base_wage,  # 基本工资
+                    'structure_wage': 0,  # 薪资项目
+                    'absence_sum': payroll.absence_sum,  # 缺勤扣款合计
+                    'performance_sum': payroll.performance_sum,  # 绩效合计
+                    'overtime_sum': payroll.overtime_sum,  # 加班费合计
+                    'attendance_sum': payroll.attendance_sum,  # 打卡扣款合计
+                    'this_months_tax': payroll.this_months_tax,  # 本月个税
+                    'pay_wage': payroll.pay_wage,  # 应发工资
+                    'real_wage': payroll.real_wage,  # 实发工资
+                    'statement_sum': payroll.statement_sum,  # 社保个人合计
+                    'structure_sum': payroll.structure_sum,  # 薪资项目合计
+                })
+            # 创建工资单
             domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
             payrolls = self.env['odoo.wage.payslip'].search(domain)
             if not payrolls:

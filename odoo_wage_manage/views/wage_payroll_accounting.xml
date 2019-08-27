@@ -167,6 +167,11 @@ limitations under the License.
                     </notebook>
                     <group string="合计">
                         <group col="2">
+                            <label for="structure_sum"/>
+                            <div class="o_row" name="structure_sum">
+                                <field name="structure_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
                             <label for="pay_wage"/>
                             <div class="o_row" name="pay_wage">
                                 <field name="pay_wage" nolabel="1"/>
@@ -174,6 +179,11 @@ limitations under the License.
                             </div>
                         </group>
                         <group>
+                            <label for="statement_sum"/>
+                            <div class="o_row" name="statement_sum">
+                                <field name="statement_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
                             <label for="real_wage"/>
                             <div class="o_row" name="real_wage">
                                 <field name="real_wage" nolabel="1"/>

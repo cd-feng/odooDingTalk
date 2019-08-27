@@ -42,6 +42,7 @@ class WagePayrollAccounting(models.Model):
     # 基本+缺勤
     base_wage = fields.Float(string='基本工资', track_visibility='onchange', digits=(10, 2))
     structure_ids = fields.One2many('wage.payroll.accounting.structure', 'accounting_id', string=u'薪资项目')
+    structure_sum = fields.Float(string=u'薪资项目合计', digits=(10, 2), compute='_compute_amount_sum')
     attendance_days = fields.Float(string=u'应出勤天数', digits=(10, 2))
     leave_absence = fields.Float(string=u'事假扣款', digits=(10, 2))
     sick_absence = fields.Float(string=u'病假扣款', digits=(10, 2))
@@ -61,6 +62,7 @@ class WagePayrollAccounting(models.Model):
     attendance_sum = fields.Float(string=u'打卡扣款合计', digits=(10, 2), compute='_compute_amount_sum')
     # 社保公积金
     statement_ids = fields.One2many('wage.payroll.accounting.monthly.statement.line', 'accounting_id', string=u'社保公积金')
+    statement_sum = fields.Float(string=u'社保个人合计', digits=(10, 2), compute='_compute_amount_sum')
     # 个税
     cumulative_expenditure_deduction = fields.Float(string=u'累计子女教育抵扣总额', digits=(10, 2))
     cumulative_home_loan_interest_deduction = fields.Float(string=u'累计住房贷款利息抵扣总额', digits=(10, 2))
@@ -128,11 +130,21 @@ class WagePayrollAccounting(models.Model):
             overtime_sum = res.work_overtime + res.weekend_overtime + res.holiday_overtime
             # 打卡扣款合计 = 迟到扣款+忘记打卡扣款+早退扣款
             attendance_sum = res.late_attendance + res.notsigned_attendance + res.early_attendance
+            # 薪资结构合计
+            structure_sum = 0
+            for structure in res.structure_ids:
+                structure_sum += structure.wage_amount
+            # 社保个人合计
+            statement_sum = 0
+            for statement in res.statement_ids:
+                statement_sum += statement.pension_pay
             res.update({
                 'absence_sum': absence_sum,
                 'performance_sum': performance_sum,
                 'overtime_sum': overtime_sum,
                 'attendance_sum': attendance_sum,
+                'structure_sum': structure_sum,
+                'statement_sum': statement_sum,
             })
 
 
