@@ -131,13 +131,15 @@ class EmployeeWageArchives(models.Model):
         返回该员工的薪资结构数据
         :return:
         """
+        amount_sum = 0
         structure_list = list()
         for line in self.line_ids:
             structure_list.append((0, 0, {
                 'structure_id': line.structure_id.id,
                 'wage_amount': line.wage_amount
             }))
-        return structure_list
+            amount_sum += line.wage_amount
+        return structure_list, amount_sum
 
     @api.multi
     def get_employee_salary(self):

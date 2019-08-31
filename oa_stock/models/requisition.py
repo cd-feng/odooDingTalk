@@ -38,7 +38,9 @@ class OaStockRequisition(models.Model):
     bank_channel = fields.Many2one(comodel_name='stock.bank.channel', string=u'银行渠道')
     delivery_method = fields.Many2one(comodel_name='stock.delivery.method', string=u'货运方式')
     delivery_number = fields.Char(string='货运单号')
+    create_uid = fields.Many2one(comodel_name='res.users', string=u'制单人', default=lambda self: self.env.user.id)
     line_ids = fields.One2many(comodel_name='oa.stock.requisition.line', inverse_name='requisition_id', string=u'调拨明细')
+    reason_leave = fields.Text(string=u'备注')
 
     @api.multi
     def summit_approval(self):
@@ -71,7 +73,7 @@ class OaStockRequisition(models.Model):
             fcv_line_list.append({"name": "存货名称", "value": line.product_id.name})
             fcv_line_list.append({"name": "申请调拨数量", "value": line.approval_number_transfers})
             fcv_line_list.append({"name": "实际调拨数量", "value": line.actual_number_transfers})
-            fcv_line_list.append({"name": "品控反馈", "value": line.control_feedback if self.control_feedback else ''})
+            fcv_line_list.append({"name": "品控反馈", "value": line.control_feedback if line.control_feedback else ''})
             fcv_line.append(fcv_line_list)
         fcv_list.append({'name': '调拨明细', 'value': fcv_line})
         fcv_list.append({'name': '制单人', 'value': self.env.user.name})
