@@ -343,7 +343,7 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
             }
             # 获取薪资核算明细
             domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
-            payroll = self.env['wage.payroll.accounting'].sudo().search(domain, limit=1)
+            payroll = self.env['wage.payroll.accounting'].search(domain, limit=1)
             if payroll:
                 payroll_data.update({
                     'base_wage': payroll.base_wage,  # 基本工资
@@ -362,8 +362,8 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
             domain = [('employee_id', '=', emp.id), ('date_code', '=', date_code)]
             payrolls = self.env['odoo.wage.payslip'].search(domain)
             if not payrolls:
-                self.env['odoo.wage.payslip'].create(payroll_data)
+                self.env['odoo.wage.payslip'].sudo().create(payroll_data)
             else:
-                payrolls.write(payroll_data)
+                payrolls.sudo().write(payroll_data)
         action = self.env.ref('odoo_wage_manage.odoo_wage_payslip_action')
         return action.read()[0]

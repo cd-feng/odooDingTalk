@@ -82,7 +82,7 @@ class WageArchivesTransient(models.TransientModel):
         从钉钉花名册中获取员工信息
         :return:
         """
-        roster = self.env['dingding.employee.roster'].search([('emp_id', '=', emp.id)], limit=1)
+        roster = self.env['dingding.employee.roster'].sudo().search([('emp_id', '=', emp.id)], limit=1)
         if not roster:
             return archives_data
         archives_data.update({
@@ -119,6 +119,8 @@ class WageArchivesTransient(models.TransientModel):
         if self.all_emp:
             employees = self.env['hr.employee'].search([])
             self.emp_ids = [(6, 0, employees.ids)]
+        else:
+            self.emp_ids = [(2, 0, self.emp_ids)]
 
 
 class WageArchivesTransientLine(models.TransientModel):

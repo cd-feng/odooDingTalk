@@ -18,6 +18,7 @@ limitations under the License.
 		<record model="ir.module.category" id="oa_stock.main">
 			<field name="name">钉钉审批-库存</field>
 			<field name="visible" eval="0" />
+			<field name="sequence">1</field>
 		</record>
 
 		<record id="oa_stock.personnel" model="res.groups">
