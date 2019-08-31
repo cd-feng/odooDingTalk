@@ -73,7 +73,7 @@ class DingDingWorkMessage(models.Model):
         if self.to_all_user:
             self.user_ids = False
             emps = self.env['hr.employee'].sudo().search(
-                [('din_id', '!=', '')])
+                [('ding_id', '!=', '')])
             user_list = list()
             for emp in emps:
                 user_list.append({
@@ -92,14 +92,14 @@ class DingDingWorkMessage(models.Model):
         dept_str = ''
         for user in self.user_ids:
             if user_str == '':
-                user_str = user_str + "{}".format(user.emp_id.din_id)
+                user_str = user_str + "{}".format(user.emp_id.ding_id)
             else:
-                user_str = user_str + ",{}".format(user.emp_id.din_id)
+                user_str = user_str + ",{}".format(user.emp_id.ding_id)
         for dept in self.dep_ids:
             if dept_str == '':
-                dept_str = dept_str + "{}".format(dept.dept_id.din_id)
+                dept_str = dept_str + "{}".format(dept.dept_id.ding_id)
             else:
-                dept_str = dept_str + ",{}".format(dept.dept_id.din_id)
+                dept_str = dept_str + ",{}".format(dept.dept_id.ding_id)
         msg = {}
         # 判断消息类型，很具不同的类型封装不同的消息体
         if self.msg_type == 'action_card':
@@ -202,8 +202,8 @@ class DingDingWorkMessage(models.Model):
         发送工作消息功能函数，其他模型可调用本方法传递需要接受的用户和消息，当toall参数为true时，userids用户列表和deptids部门列表可不传递。
         即 toall、userids、deptids三个参数必须传递一个。
         :param toall: boolean值，是否发送企业全部人员
-        :param userstr: string，接受用户列表，注意：需要传递员工模型中的din_id字段
-        :param deptstr: ；string，接受部门列表，需传递部门的din_id字段
+        :param userstr: string，接受用户列表，注意：需要传递员工模型中的ding_id字段
+        :param deptstr: ；string，接受部门列表，需传递部门的ding_id字段
         :param msg:   消息体，请参照钉钉提供的消息体格式
         :return task_id: 返回钉钉消息任务id。
         """
@@ -280,28 +280,28 @@ class DingDingWorkMessage(models.Model):
                 failed_user_id_list = send_result['failed_user_id_list']['string']
                 for failed in failed_user_id_list:
                     for user in self.user_ids:
-                        if user.emp_id.din_id == failed:
+                        if user.emp_id.ding_id == failed:
                             user.write({'msg_type': '00'})
             if send_result['read_user_id_list']:
                 # 已读消息的用户id
                 read_user_id_list = send_result['read_user_id_list']['string']
                 for read in read_user_id_list:
                     for user in self.user_ids:
-                        if user.emp_id.din_id == read:
+                        if user.emp_id.ding_id == read:
                             user.write({'msg_type': '02'})
             if send_result['unread_user_id_list']:
                 # 未读消息的用户id
                 unread_user_id_list = send_result['unread_user_id_list']['string']
                 for unread in unread_user_id_list:
                     for user in self.user_ids:
-                        if user.emp_id.din_id == unread:
+                        if user.emp_id.ding_id == unread:
                             user.write({'msg_type': '01'})
             if send_result['invalid_dept_id_list']:
                 # 无效的部门id
                 invalid_dept_id_list = send_result['invalid_dept_id_list']['string']
                 for invalid in invalid_dept_id_list:
                     for dept in self.dep_ids:
-                        if dept.dept_id.din_id == invalid:
+                        if dept.dept_id.ding_id == invalid:
                             dept.write({'msg_type': '00'})
             self.message_post(body=_("查询工作通知消息的发送结果成功"),
                               message_type='notification')

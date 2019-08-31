@@ -36,13 +36,13 @@ class MailMessage(models.Model):
                     elif result.send_to == 'user':
                         user_str = ''
                         for user in result.user_ids:
-                            if user.din_id:
+                            if user.ding_id:
                                 if user_str == '':
                                     user_str = user_str + \
-                                        "{}".format(user.din_id)
+                                        "{}".format(user.ding_id)
                                 else:
                                     user_str = user_str + \
-                                        ",{}".format(user.din_id)
+                                        ",{}".format(user.ding_id)
                         self.env['dingding.send.chat.message'].sudo(
                         ).send_work_message(user_str, msg)
                     # 指定单据发送人
@@ -57,13 +57,13 @@ class MailMessage(models.Model):
                             if model_result:
                                 emp = self.env['hr.employee'].sudo().search(
                                     [('user_id', '=', model_result[0])])
-                                if emp.din_id:
+                                if emp.ding_id:
                                     if user_str == '':
                                         user_str = user_str + \
-                                            "{}".format(emp.din_id)
+                                            "{}".format(emp.ding_id)
                                     else:
                                         user_str = user_str + \
-                                            ",{}".format(emp.din_id)
+                                            ",{}".format(emp.ding_id)
                         self.env['dingding.send.chat.message'].sudo(
                         ).send_work_message(user_str, msg)
                     # 指定群机器人
