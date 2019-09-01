@@ -18,8 +18,9 @@ limitations under the License.
 	<data>
 
 		<record model="ir.module.category" id="oa_personnel_admin.main">
-			<field name="name">协同办公-行政人事</field>
+			<field name="name">钉钉审批-行政人事</field>
 			<field name="visible" eval="0" />
+			<field name="sequence">1</field>
 		</record>
 
 		<record id="oa_personnel_admin.personnel" model="res.groups">

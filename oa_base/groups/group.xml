@@ -19,6 +19,7 @@ limitations under the License.
 		<record model="ir.module.category" id="oa_base.main">
 			<field name="name">钉钉审批</field>
 			<field name="visible" eval="0" />
+			<field name="sequence">1</field>
 		</record>
 
 		<record id="oa_base_pull_process_instance" model="res.groups">

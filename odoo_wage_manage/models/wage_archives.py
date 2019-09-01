@@ -85,6 +85,9 @@ class EmployeeWageArchives(models.Model):
         for res in self:
             if len(res.line_ids) < 1:
                 self.create_all_structure()
+            if res.employee_id:
+                res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
+                res.job_id = res.employee_id.job_id.id if res.employee_id.job_id else False
 
     @api.multi
     def get_info_by_dingding_hrm(self):

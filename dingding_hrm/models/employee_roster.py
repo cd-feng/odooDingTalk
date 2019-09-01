@@ -49,7 +49,7 @@ class EmployeeRoster(models.Model):
     _name = 'dingding.employee.roster'
     _description = "员工花名册"
 
-    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
     active = fields.Boolean('Active', default=True, store=True, readonly=False)
 

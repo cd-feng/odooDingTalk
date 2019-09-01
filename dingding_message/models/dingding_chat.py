@@ -103,10 +103,10 @@ class DingDingChat(models.Model):
         """
         din_client = self.env['dingding.api.tools'].get_client()
         for res in self:
-            user_list = self.check_employee_din_id(res)
+            user_list = self.check_employee_ding_id(res)
             logging.info(">>>开始钉钉创建群会话")
             name = res.name
-            owner = res.employee_id.din_id
+            owner = res.employee_id.ding_id
             show_history_type = res.show_history_type
             searchable = res.searchable
             validation_type = res.validation_type
@@ -149,12 +149,12 @@ class DingDingChat(models.Model):
         """
         din_client = self.env['dingding.api.tools'].get_client()
         for res in self:
-            self.check_employee_din_id(res)
+            self.check_employee_ding_id(res)
             logging.info(">>>开始钉钉修改群会话")
 
             chatid = res.chat_id
             name = res.name
-            owner = res.employee_id.din_id
+            owner = res.employee_id.ding_id
             show_history_type = res.show_history_type
             searchable = res.searchable
             validation_type = res.validation_type
@@ -175,14 +175,14 @@ class DingDingChat(models.Model):
                 raise UserError(e)
 
     @api.model
-    def check_employee_din_id(self, res):
-        if not res.employee_id.din_id:
+    def check_employee_ding_id(self, res):
+        if not res.employee_id.ding_id:
             raise UserError(_("员工（群主）在钉钉中不存在，请选择其他人员!"))
         user_list = list()
         for emp in res.useridlist:
-            if not emp.din_id:
+            if not emp.ding_id:
                 raise UserError(_("员工{}:在钉钉中不存在，请选择其他人员!").format(emp.name))
-            user_list.append(emp.din_id)
+            user_list.append(emp.ding_id)
         return user_list
 
     @api.model
@@ -199,7 +199,7 @@ class DingDingChat(models.Model):
         if msg.get('EventType') == 'chat_update_owner':
             if chat:
                 employee = self.env['hr.employee'].sudo().search(
-                    [('din_id', '=', msg.get('Owner'))])
+                    [('ding_id', '=', msg.get('Owner'))])
                 if employee:
                     chat.sudo().write({'employee_id': employee[0].id})
         # 群会话更换群名称
@@ -213,7 +213,7 @@ class DingDingChat(models.Model):
                 new_users.append(user.id)
             for user in msg.get('UserId'):
                 employee = self.env['hr.employee'].sudo().search(
-                    [('din_id', '=', user)])
+                    [('ding_id', '=', user)])
                 if employee:
                     new_users.append(employee[0].id)
             chat.sudo().write({'useridlist': [(6, 0, new_users)]})
@@ -221,20 +221,20 @@ class DingDingChat(models.Model):
         elif msg.get('EventType') == 'chat_remove_member':
             for user in msg.get('UserId'):
                 employee = self.env['hr.employee'].sudo().search(
-                    [('din_id', '=', user)])
+                    [('ding_id', '=', user)])
                 if employee:
                     chat.sudo().write({'useridlist': [(3, employee[0].id)]})
         # 群会话用户主动退群
         elif msg.get('EventType') == 'chat_quit':
             employee = self.env['hr.employee'].sudo().search(
-                [('din_id', '=', msg.get('Operator'))])
+                [('ding_id', '=', msg.get('Operator'))])
             if employee:
                 chat.sudo().write({'useridlist': [(3, employee[0].id)]})
         # 群会话解散群
         elif msg.get('EventType') == 'chat_disband':
             if chat:
                 emp = self.env['hr.employee'].sudo().search(
-                    [('din_id', '=', msg.get('Operator'))])
+                    [('ding_id', '=', msg.get('Operator'))])
                 chat.sudo().write({'state': 'close'})
                 if emp:
                     chat.sudo().message_post(body=_("群会话已被解散，操作人: {}!").format(
@@ -282,9 +282,9 @@ class DingDingChatUserModelAdd(models.TransientModel):
             ding_chat = self.env['dingding.chat'].browse(chat_id)
             user_list = list()
             for emp in res.user_ids:
-                if not emp.din_id:
+                if not emp.ding_id:
                     raise UserError(_("员工{}:在钉钉中不存在，请选择其他人员!").format(emp.name))
-                user_list.append(emp.din_id)
+                user_list.append(emp.ding_id)
             chatid = ding_chat.chat_id
             add_useridlist = user_list
             try:
@@ -348,9 +348,9 @@ class DingDingChatUserModelDel(models.TransientModel):
             ding_chat = self.env['dingding.chat'].browse(chat_id)
             user_list = list()
             for emp in res.user_ids:
-                if not emp.din_id:
+                if not emp.ding_id:
                     raise UserError(_("员工{}:在钉钉中不存在，请选择其他人员!").format(emp.name))
-                user_list.append(emp.din_id)
+                user_list.append(emp.ding_id)
             chatid = ding_chat.chat_id
             del_useridlist = user_list
             try:
@@ -470,13 +470,13 @@ class DingDingChatList(models.TransientModel):
                 result = din_client.chat.get(chatid)
                 logging.info(">>>获取群会话返回结果%s", result)
                 employee = self.env['hr.employee'].sudo().search(
-                    [('din_id', '=', result.get('owner'))])
+                    [('ding_id', '=', result.get('owner'))])
                 if not employee:
                     raise UserError(_("返回的群管理员在Odoo系统中不存在!"))
                 user_list = list()
                 for userlist in result.get('useridlist'):
                     user = self.env['hr.employee'].sudo().search(
-                        [('din_id', '=', userlist)])
+                        [('ding_id', '=', userlist)])
                     if user:
                         user_list.append(user[0].id)
                 data = {
