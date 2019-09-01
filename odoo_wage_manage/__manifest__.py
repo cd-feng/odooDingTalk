@@ -48,6 +48,7 @@
         'wizard/wage_archives.xml',
         'wizard/wage_payroll_accounting.xml',
         'wizard/wage_employee_tax_details.xml',
+        'wizard/wage_statistics_annal.xml',
 
     ],
     'qweb': [

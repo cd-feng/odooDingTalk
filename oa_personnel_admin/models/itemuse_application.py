@@ -63,7 +63,7 @@ class ItemuseApplication(models.Model):
             new_list.append(fcv_list)
         form_component_values.append({'name': '物品明细', 'value': new_list})
         # 发送单据信息至钉钉并接受审批实例id
-        pid = self._summit_din_approval(process_code, new_list)
+        pid = self._summit_din_approval(process_code, form_component_values)
         self.write({'oa_state': '01', 'process_instance_id': pid})
         self.message_post(body=u"已提交至钉钉，请等待审批人进行审批！", message_type='notification')
 

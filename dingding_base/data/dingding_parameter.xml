@@ -103,6 +103,11 @@
 			<field name="key">department_delete</field>
 			<field name="value">https://oapi.dingtalk.com/department/delete?access_token=</field>
 		</record>
+		<record id="dingding_parameter_department_get" model="dingding.parameter">
+			<field name="name">获取部门详情</field>
+			<field name="key">department_get</field>
+			<field name="value">https://oapi.dingtalk.com/department/get?access_token=</field>
+		</record>
 
 
 		<!--部门员工api-->
