@@ -29,6 +29,10 @@ class WageStructure(models.Model):
     active = fields.Boolean(string=u'Active', default=True)
     name = fields.Char(string='名称', required=True, index=True)
 
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "不允许名称重复!"),
+    ]
+
 
 class WageArchivesCompany(models.Model):
     _description = '发薪公司'
@@ -138,4 +142,4 @@ class WagePerformance(models.Model):
     name = fields.Char(string='绩效项目名称', help="绩效项目名称")
     code = fields.Char(string='识别码')
 
-    _sql_constraints = [('year_uniq', 'unique (year)', "年份已存在!!")]
+    _sql_constraints = [('name_uniq', 'unique (name)', "绩效项目名称已存在!")]

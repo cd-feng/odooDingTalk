@@ -19,7 +19,7 @@ limitations under the License.
         <field name="name">员工考勤统计</field>
         <field name="model">wage.employee.attendance.annal</field>
         <field name="arch" type="xml">
-            <tree default_order="employee_id desc">
+            <tree default_order="employee_id desc" js_class="wage_employee_attendance_annal_js_class">
                 <field name="company_id"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
@@ -117,7 +117,7 @@ limitations under the License.
         <field name="name">员工绩效统计</field>
         <field name="model">wage.employee.performance.manage</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc">
+            <tree default_order="id desc" js_class="wage_employee_performance_manage_js_class">
                 <field name="performance_code"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>

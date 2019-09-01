@@ -18,6 +18,7 @@ limitations under the License.
 		<record model="ir.module.category" id="oa_leave_attendance.main">
 			<field name="name">钉钉审批-出勤休假</field>
 			<field name="visible" eval="0" />
+			<field name="sequence">1</field>
 		</record>
 
 		<record id="oa_leave_attendance.personnel" model="res.groups">

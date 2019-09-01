@@ -29,7 +29,7 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = ['res.users']
 
-    ding_user_phone = fields.Char(string='登录手机号', index=True)
+    ding_user_phone = fields.Char(string='钉钉登录手机', index=True)
     ding_user_id = fields.Char(string='钉钉用户ID', index=True)
 
     @api.model

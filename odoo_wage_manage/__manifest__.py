@@ -21,12 +21,14 @@
     'website': "https://www.sxfblog.com",
     'category': 'wage',
     'version': '1.0',
-    'depends': ['base', 'web_progress'],
+    'depends': ['base', 'web_progress', 'hr', 'mail'],
     'installable': True,
     'application': False,
     'auto_install': False,
     'data': [
+        'security/res_groups.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/default_num.xml',
         'views/asset.xml',
         'views/wage_insured_scheme.xml',
@@ -46,6 +48,7 @@
         'wizard/wage_archives.xml',
         'wizard/wage_payroll_accounting.xml',
         'wizard/wage_employee_tax_details.xml',
+        'wizard/wage_statistics_annal.xml',
 
     ],
     'qweb': [

@@ -21,6 +21,8 @@ limitations under the License.
             <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_archives.js"></script>
             <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_payroll_accounting.js"></script>
             <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_tax_details.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_attendance_annal.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_performance_manage.js"></script>
         </xpath>
     </template>
 
