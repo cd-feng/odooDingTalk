@@ -54,7 +54,7 @@ class WageEmpPerformanceManage(models.TransientModel):
     @api.multi
     def compute_performance_result(self):
         """
-        立即计算考勤结果
+        从绩效计算结果
         :return:
         """
         self.ensure_one()
