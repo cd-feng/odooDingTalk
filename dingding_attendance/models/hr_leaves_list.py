@@ -66,7 +66,7 @@ class HrLeavesListTran(models.TransientModel):
                 try:
                     result = din_client.attendance.getleavestatus(
                         user_str, self.start_time, self.end_time, offset=offset, size=size)
-                    # logging.info(">>>查询请假状态返回结果%s", result)
+                    logging.info(">>>查询请假状态返回结果%s", result)
                     leave_status = result['leave_status']
                     if leave_status:
                         for leave in leave_status.get('leave_status_v_o'):
@@ -89,8 +89,8 @@ class HrLeavesListTran(models.TransientModel):
                                 self.env['hr.leaves.list'].create(leave_data)
                             else:
                                 hr_leaves.write(leave_data)
-                        if not result['has_more']:
-                            break
+                    if not result['has_more']:
+                        break
                     else:
                         offset += size
                 except Exception as e:
