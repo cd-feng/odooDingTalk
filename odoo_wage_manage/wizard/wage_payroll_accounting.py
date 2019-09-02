@@ -403,7 +403,7 @@ class SendPayrollAccountingToPayslipEmailTransient(models.TransientModel):
         date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
         payrolls = self.env['wage.payroll.accounting'].sudo().search([('date_code', '=', date_code)])
         for payroll in payrolls.with_progress(msg="开始发送Emial"):
-            logging.info("email至%s" % payroll.name)
-            template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(payroll.id, force_send=False)
-            payroll.email_state = True
-
+            if payroll.employee_id.work_email:
+                logging.info("email至%s" % payroll.name)
+                template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(payroll.id, force_send=False)
+                payroll.email_state = True
