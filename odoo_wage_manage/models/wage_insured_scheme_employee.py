@@ -35,3 +35,8 @@ class WageInsuredSchemeEmployee(models.Model):
     public_fund_start_date = fields.Date(string=u'公积金起始日期')
     notes = fields.Text(string=u'备注')
 
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        for res in self:
+            if res.employee_id:
+                res.department_id = res.employee_id.department_id.id
