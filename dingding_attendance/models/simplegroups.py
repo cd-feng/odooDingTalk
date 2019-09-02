@@ -85,35 +85,37 @@ class DingDingSimpleGroups(models.Model):
                     # -----读取班次
                     list_ids = list()
                     if 'selected_class' in group:
-                        for selected in group['selected_class']['at_class_vo']:
-                            setting = selected.get('setting')
-                            b_data = {
-                                'class_name': selected['class_name'],
-                                'class_id': selected['class_id'],
-                                'serious_late_minutes': setting['serious_late_minutes'],
-                                'class_setting_id': setting['class_setting_id'],
-                                'work_time_minutes': setting['work_time_minutes'],
-                                'permit_late_minutes': setting['permit_late_minutes'],
-                                'absenteeism_late_minutes': setting['absenteeism_late_minutes'],
-                                'is_off_duty_free_check': setting['is_off_duty_free_check'],
-                            }
-                            if 'rest_begin_time' in setting:
-                                rest_begin_time = setting['rest_begin_time']
-                                b_data.update({'rest_begin_time': rest_begin_time['check_time']})
-                            if 'rest_end_time' in setting:
-                                rest_end_time = setting['rest_end_time']
-                                b_data.update({'rest_end_time': rest_end_time['check_time']})
-                            # 打卡时间段
-                            time_list = list()
-                            for sections in selected['sections']['at_section_vo']:
-                                for time in sections['times']['at_time_vo']:
-                                    time_list.append((0, 0, {
-                                        'across': time['across'],
-                                        'check_time': time['check_time'],
-                                        'check_type': time['check_type'],
-                                    }))
-                            b_data.update({'time_ids': time_list})
-                            list_ids.append((0, 0, b_data))
+                        selected_class = group['selected_class']
+                        if 'at_class_vo' in selected_class:
+                            for selected in selected_class.get('at_class_vo'):
+                                setting = selected.get('setting')
+                                b_data = {
+                                    'class_name': selected['class_name'],
+                                    'class_id': selected['class_id'],
+                                    'serious_late_minutes': setting['serious_late_minutes'],
+                                    'class_setting_id': setting['class_setting_id'],
+                                    'work_time_minutes': setting['work_time_minutes'],
+                                    'permit_late_minutes': setting['permit_late_minutes'],
+                                    'absenteeism_late_minutes': setting['absenteeism_late_minutes'],
+                                    'is_off_duty_free_check': setting['is_off_duty_free_check'],
+                                }
+                                if 'rest_begin_time' in setting:
+                                    rest_begin_time = setting['rest_begin_time']
+                                    b_data.update({'rest_begin_time': rest_begin_time['check_time']})
+                                if 'rest_end_time' in setting:
+                                    rest_end_time = setting['rest_end_time']
+                                    b_data.update({'rest_end_time': rest_end_time['check_time']})
+                                # 打卡时间段
+                                time_list = list()
+                                for sections in selected['sections']['at_section_vo']:
+                                    for time in sections['times']['at_time_vo']:
+                                        time_list.append((0, 0, {
+                                            'across': time['across'],
+                                            'check_time': time['check_time'],
+                                            'check_type': time['check_type'],
+                                        }))
+                                b_data.update({'time_ids': time_list})
+                                list_ids.append((0, 0, b_data))
                     data.update({'list_ids': list_ids})
                     self_group = self.env['dingding.simple.groups'].search([('group_id', '=', group.get('group_id'))])
                     if self_group:

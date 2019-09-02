@@ -30,8 +30,8 @@
     'application': False,
     'auto_install': True,
     'data': [
-        'security/hrm_group.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/dingding_parameter.xml',
         'views/menu.xml',
         'views/assets.xml',

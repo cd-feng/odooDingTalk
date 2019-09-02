@@ -44,6 +44,6 @@
     </record>
 
     <menuitem name="审批单据关联" id="dingding_approval_control_menu" parent="approval_template_main_menu" sequence="2"
-              action="dingding_approval_control_action" groups="dingding_base.manage_groups"/>
+              action="dingding_approval_control_action"/>
 
 </odoo>

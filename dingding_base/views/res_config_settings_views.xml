@@ -235,6 +235,6 @@
     </record>
 
     <menuitem id="dingding_settings_menu" name="基础设置" parent="dingding_base.configure_menu"
-              sequence="1" action="dingding_settings_configuration_action" groups="dingding_base.manage_groups"/>
+              sequence="1" action="dingding_settings_configuration_action"/>
 
 </odoo>
