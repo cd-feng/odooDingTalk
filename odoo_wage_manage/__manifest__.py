@@ -30,6 +30,7 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'data/default_num.xml',
+        'data/mail_template_data.xml',
         'views/asset.xml',
         'views/wage_insured_scheme.xml',
         'views/wage_insured_scheme_employee.xml',
@@ -49,7 +50,6 @@
         'wizard/wage_payroll_accounting.xml',
         'wizard/wage_employee_tax_details.xml',
         'wizard/wage_statistics_annal.xml',
-
     ],
     'qweb': [
         'static/xml/*.xml'

@@ -253,12 +253,8 @@
         <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <menuitem name="群会话"
-              id="dingding_chat_menu"
-              parent="dingding_base.message_menu"
-              sequence="3"
-              action="dingding_message.dingding_chat_action"
-    />
+    <menuitem name="群会话" id="dingding_chat_menu" parent="dingding_base.message_menu" sequence="3"
+              action="dingding_message.dingding_chat_action"/>
 
 
     <record id="get_dingding_chat_list_form_view" model="ir.ui.view">

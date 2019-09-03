@@ -88,6 +88,10 @@ class EmployeeWageArchives(models.Model):
             if res.employee_id:
                 res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
                 res.job_id = res.employee_id.job_id.id if res.employee_id.job_id else False
+                if res.employee_id.bank_account_id:
+                    res.bank_account_number = res.employee_id.bank_account_id.acc_number
+                if res.employee_id.bank_account_id and res.employee_id.bank_account_id.bank_id:
+                    res.accountBank = res.employee_id.bank_account_id.bank_id.name
 
     @api.multi
     def get_info_by_dingding_hrm(self):

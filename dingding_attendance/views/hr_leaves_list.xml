@@ -50,7 +50,7 @@
     </record>
 
     <menuitem id="hr_leaves_list_menu" name="员工请假列表" parent="dingding_attendance.attendance_two_menu" sequence="1"
-              action="hr_leaves_list_action" groups="dingding_attendance.dd_attendance_user_group"/>
+              action="hr_leaves_list_action"/>
 
 
     <record id="hr_leaves_list_tran_form_view" model="ir.ui.view">

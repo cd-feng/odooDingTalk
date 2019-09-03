@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <!-- 通用审批单 过滤规则 -->
+   <record id="oa_general_application_user_group_rule" model="ir.rule">
+        <field name="name">通用审批单:用户记录规则</field>
+        <field name="model_id" ref="model_oa_general_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_general_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">通用审批单:主管记录规则</field>
+        <field name="model_id" ref="model_oa_general_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+     <!-- 物品领用 过滤规则 -->
+   <record id="oa_itemuse_application_user_group_rule" model="ir.rule">
+        <field name="name">物品领用:用户记录规则</field>
+        <field name="model_id" ref="model_oa_itemuse_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_itemuse_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">物品领用:主管记录规则</field>
+        <field name="model_id" ref="model_oa_itemuse_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+      <!-- 离职申请 过滤规则 -->
+   <record id="oa_resignation_application_user_group_rule" model="ir.rule">
+        <field name="name">离职申请:用户记录规则</field>
+        <field name="model_id" ref="model_oa_resignation_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_resignation_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">离职申请:主管记录规则</field>
+        <field name="model_id" ref="model_oa_resignation_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+       <!-- 用印申请 过滤规则 -->
+   <record id="oa_seal_application_user_group_rule" model="ir.rule">
+        <field name="name">用印申请:用户记录规则</field>
+        <field name="model_id" ref="model_oa_seal_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_seal_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">用印申请:主管记录规则</field>
+        <field name="model_id" ref="model_oa_seal_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+        <!-- 转正申请 过滤规则 -->
+   <record id="oa_transfer_application_user_group_rule" model="ir.rule">
+        <field name="name">转正申请:用户记录规则</field>
+        <field name="model_id" ref="model_oa_transfer_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_transfer_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">转正申请:主管记录规则</field>
+        <field name="model_id" ref="model_oa_transfer_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+         <!-- 用车申请 过滤规则 -->
+   <record id="oa_vehicle_application_user_group_rule" model="ir.rule">
+        <field name="name">用车申请:用户记录规则</field>
+        <field name="model_id" ref="model_oa_vehicle_application"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]), ('originator_user_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('oa_base.user_groups'))]"/>
+    </record>
+
+    <record id="oa_vehicle_application_supervisor_groups_rule" model="ir.rule">
+        <field name="name">用车申请:主管记录规则</field>
+        <field name="model_id" ref="model_oa_vehicle_application"/>
+        <field name="groups" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+</odoo>

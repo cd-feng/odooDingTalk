@@ -79,4 +79,32 @@ limitations under the License.
         <field name="target">new</field>
     </record>
 
+    <record id="send_wage_payroll_to_email_transient_form_view" model="ir.ui.view">
+        <field name="name">通过EMAIL发送核算明细至员工</field>
+        <field name="model">send.wage.payroll.to.email.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="wage_date" widget="date"/>
+                    </group>
+                    <group>
+                        <field name="date_code" readonly="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即发送" name="send_email_now" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="send_wage_payroll_to_email_transient_action" model="ir.actions.act_window">
+        <field name="name">通过EMAIL发送核算明细至员工</field>
+        <field name="res_model">send.wage.payroll.to.email.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
 </odoo>

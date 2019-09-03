@@ -14,7 +14,10 @@
 # limitations under the License.
 ###################################################################################
 import logging
-from odoo import api, fields, models
+
+from werkzeug.urls import url_encode
+
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +26,7 @@ _logger = logging.getLogger(__name__)
 class WagePayrollAccounting(models.Model):
     _description = '薪资核算'
     _name = 'wage.payroll.accounting'
-    _rec_name = 'employee_id'
+    _rec_name = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
@@ -80,6 +83,7 @@ class WagePayrollAccounting(models.Model):
     pay_wage = fields.Float(string=u'应发工资', digits=(10, 2))
     real_wage = fields.Float(string=u'实发工资', digits=(10, 2))
     notes = fields.Text(string=u'备注')
+    email_state = fields.Boolean(string=u'邮件状态', default=False)
 
     @api.onchange('wage_date')
     @api.constrains('wage_date')
@@ -146,6 +150,20 @@ class WagePayrollAccounting(models.Model):
                 'structure_sum': structure_sum,
                 'statement_sum': statement_sum,
             })
+
+    @api.multi
+    def action_send_employee_email(self):
+        """
+        发送email
+        :return: 
+        """
+        self.ensure_one()
+        if not self.employee_id.work_email:
+            raise UserError('员工%s未设置工作邮箱，无法发送！' % self.employee_id.name)
+        template_id = self.env.ref('odoo_wage_manage.wage_payroll_accounting_email_template', raise_if_not_found=False)
+        if template_id:
+            template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(self.id, force_send=True)
+            self.email_state = True
 
 
 class WagePayrollAccountingLine(models.Model):

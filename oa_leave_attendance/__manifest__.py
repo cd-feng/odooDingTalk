@@ -24,8 +24,8 @@
     'depends': ['oa_base'],
     'auto_install': True,
     'data': [
-        'groups/group.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/leave_type.xml',
         'data/defaulr_num.xml',
         'views/config.xml',

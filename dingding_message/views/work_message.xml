@@ -145,11 +145,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="工作消息"
-              id="dingding_message.dingding_work_message_menu"
-              parent="dingding_base.message_menu"
-              sequence="1"
-              action="dingding_message.dingding_work_message_action"
-    />
+    <menuitem name="工作消息" id="dingding_message.dingding_work_message_menu" parent="dingding_base.message_menu"
+              sequence="1" action="dingding_message.dingding_work_message_action"/>
 
 </odoo>

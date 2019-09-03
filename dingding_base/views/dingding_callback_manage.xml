@@ -76,6 +76,6 @@
     </record>
 
     <menuitem name="钉钉回调管理" id="dingding_callback_manage_menu" parent="dindin_callbacke_main_menu" sequence="2"
-              action="dingding_callback_manage_action" groups="dingding_base.manage_groups"/>
+              action="dingding_callback_manage_action"/>
 
 </odoo>

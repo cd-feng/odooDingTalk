@@ -178,7 +178,7 @@
     </record>
 
     <menuitem id="hr_attendance_result_menu" name="员工打卡结果" parent="dingding_attendance.attendance_two_menu" sequence="2"
-              action="hr_attendance_result_action" groups="dingding_attendance.dd_attendance_user_group"/>
+              action="hr_attendance_result_action"/>
 
 
     <record id="dingding_attendance.view_employee_form_inherit_hr_attendance" model="ir.ui.view">
