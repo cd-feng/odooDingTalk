@@ -106,7 +106,7 @@
     </record>
 
     <menuitem id="dingding_simple_groups_menu" name="考勤组" parent="dingding_attendance.attendance_one_menu" sequence="1"
-              action="dingding_simple_groups_action" groups="dingding_base.manage_groups"/>
+              action="dingding_simple_groups_action"/>
 
     <record id="dingding_simple_groups_list_form_view" model="ir.ui.view">
         <field name="name">班次列表</field>

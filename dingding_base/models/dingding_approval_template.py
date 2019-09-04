@@ -54,12 +54,12 @@ class DingDingApprovalTemplate(models.Model):
                     'process_code': process.get('process_code'),
                     'url': process.get('url'),
                 }
-                template = self.env['dingding.approval.template'].search(
+                template = self.env['dingding.approval.template'].sudo().search(
                     [('process_code', '=', process.get('process_code'))])
                 if template:
-                    template.write(data)
+                    template.sudo().write(data)
                 else:
-                    self.env['dingding.approval.template'].create(data)
+                    self.env['dingding.approval.template'].sudo().create(data)
         else:
             raise UserError('获取审批模板失败，详情为:{}'.format(result.get('errmsg')))
         logging.info(">>>获取审批模板结束...")

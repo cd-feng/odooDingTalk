@@ -30,7 +30,7 @@ limitations under the License.
         </record>
 
         <menuitem id="stock_transfer_method_config_menu" name="库存" parent="oa_base.menu_oa_root_config" sequence="5"
-                  groups="oa_stock.manager"/>
+                  groups="oa_base.user_groups"/>
 
         <menuitem name="调拨方式" id="stock_transfer_method_menu" parent="stock_transfer_method_config_menu"
                   sequence="1" action="stock_transfer_method_action"/>

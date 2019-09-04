@@ -46,6 +46,15 @@ odoo.define('odoo.wage.payroll.accounting.tree.button', function (require) {
                         context: [],
                     });
                 });
+                this.$buttons.on('click', '.send_wage_payroll_accounting_email_but_class', function () {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: 'send.wage.payroll.to.email.transient',
+                        target: 'new',
+                        views: [[false, 'form']],
+                        context: [],
+                    });
+                });
             }
         }
     });

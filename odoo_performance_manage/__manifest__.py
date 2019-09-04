@@ -14,25 +14,18 @@
 # limitations under the License.
 ###################################################################################
 {
-    'name': "钉钉审批-出勤休假",
-    'summary': """钉钉审批-出勤休假""",
-    'description': """钉钉审批-出勤休假""",
+    'name': "Odoo绩效管理",
+    'summary': """统一管理员工绩效""",
+    'description': """统一管理员工绩效""",
     'author': "SuXueFeng",
-    'category': 'dingding',
-    'installable': True,
+    'website': "https://www.sxfblog.com",
+    'category': 'performance',
     'version': '1.0',
-    'depends': ['oa_base'],
-    'auto_install': True,
+    'depends': ['base', 'hr', 'mail'],
+    'installable': False,
+    'application': False,
+    'auto_install': False,
     'data': [
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        'data/leave_type.xml',
-        'data/defaulr_num.xml',
-        'views/config.xml',
-        'views/leave_application.xml',
-        'views/travel_application.xml',
-        'views/outing_application.xml',
-        'views/overtime_application.xml',
-        'views/reissue_application.xml',
+
     ],
 }

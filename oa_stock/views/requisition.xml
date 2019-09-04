@@ -140,8 +140,7 @@ limitations under the License.
             </field>
         </record>
 
-        <menuitem name="库存" id="oa_stock_main_menu" parent="oa_base.menu_oa_root" sequence="5"
-                  groups="oa_stock.personnel"/>
+        <menuitem name="库存" id="oa_stock_main_menu" parent="oa_base.menu_oa_root" sequence="5"/>
 
         <menuitem name="货品调拨单" id="oa_stock_requisition_menu" parent="oa_stock_main_menu"
                   sequence="1" action="oa_stock_requisition_action"/>

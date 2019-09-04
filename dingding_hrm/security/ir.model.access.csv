@@ -1,5 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dingding_add_employee,dingding.add.employee,model_dingding_add_employee,dingding_hrm.personnel,1,1,1,1
-access_dingding_employee_roster,dingding.employee.roster,model_dingding_employee_roster,dingding_hrm.personnel,1,1,1,1
-access_dingding_employee_roster_report,dingding_employee_roster_report,model_dingding_employee_roster_report,dingding_hrm.personnel,1,1,1,1
+access_dingding_add_employee,dingding.add.employee,model_dingding_add_employee,dingding_base.manage_groups,1,1,1,1
+access_dingding_employee_roster,dingding.employee.roster,model_dingding_employee_roster,dingding_base.user_groups,1,0,0,0
+access_dingding_employee_roster_manage_groups,dingding.employee.roster.manage.groups,model_dingding_employee_roster,dingding_base.manage_groups,1,1,1,1
+access_dingding_employee_roster_report,dingding_employee_roster_report,model_dingding_employee_roster_report,dingding_base.user_groups,1,0,0,0
+access_dingding_employee_roster_report_manage_groups,dingding_employee_roster_report.manage.groups,model_dingding_employee_roster_report,dingding_base.manage_groups,1,1,1,1
 

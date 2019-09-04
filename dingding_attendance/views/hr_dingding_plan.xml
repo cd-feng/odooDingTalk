@@ -84,7 +84,7 @@
     </record>
 
     <menuitem id="hr_dingding_plan_menu" name="排班列表" parent="dingding_attendance.attendance_one_menu" sequence="2"
-              action="hr_dingding_plan_action" groups="dingding_attendance.dd_attendance_user_group"/>
+              action="hr_dingding_plan_action"/>
 
 
     <record id="hr_dingding_plan_tran_form_view" model="ir.ui.view">

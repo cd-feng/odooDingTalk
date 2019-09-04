@@ -54,6 +54,9 @@ limitations under the License.
         <button type="button" class="btn btn-secondary push_down_the_pay_slip_but_class">
             生成工资条
         </button>
+        <button type="button" class="btn btn-secondary send_wage_payroll_accounting_email_but_class">
+            通过Email发送核算明细
+        </button>
     </t>
     <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_payroll_accounting_buttons">
         <t t-jquery="button.o_list_button_add" t-operation="replace">

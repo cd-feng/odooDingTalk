@@ -48,7 +48,7 @@
     </record>
 
     <menuitem name="钉钉回调" id="dindin_callbacke_main_menu" parent="dingding_base.main_menu"
-              sequence="16"  groups="dingding_base.manage_groups"/>
+              sequence="16"/>
 
     <menuitem id="dingding_callback_listmenu" name="回调类型列表" parent="dindin_callbacke_main_menu" sequence="1"
               action="dingding_callback_list_action"/>

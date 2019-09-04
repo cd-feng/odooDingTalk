@@ -14,25 +14,18 @@
 # limitations under the License.
 ###################################################################################
 {
-    'name': "钉钉审批-出勤休假",
-    'summary': """钉钉审批-出勤休假""",
-    'description': """钉钉审批-出勤休假""",
+    'name': "Odoo外部接口api",
+    'summary': """提供外部系统访问Odoo系统时的通道，比如基础数据（系统用户、员工、部门、公司等）模块所有传递格式为json""",
+    'description': """提供外部系统访问Odoo系统时的通道，比如基础数据（系统用户、员工、部门、公司等）模块所有传递格式为json""",
     'author': "SuXueFeng",
-    'category': 'dingding',
-    'installable': True,
+    'website': "https://www.sxfblog.com",
+    'category': 'api',
     'version': '1.0',
-    'depends': ['oa_base'],
-    'auto_install': True,
+    'depends': ['base', 'hr', 'mail'],
+    'installable': False,
+    'application': False,
+    'auto_install': False,
     'data': [
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        'data/leave_type.xml',
-        'data/defaulr_num.xml',
-        'views/config.xml',
-        'views/leave_application.xml',
-        'views/travel_application.xml',
-        'views/outing_application.xml',
-        'views/overtime_application.xml',
-        'views/reissue_application.xml',
+
     ],
 }

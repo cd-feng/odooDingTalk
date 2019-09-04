@@ -37,6 +37,13 @@ limitations under the License.
         <field name="model">wage.payroll.accounting</field>
         <field name="arch" type="xml">
             <form create="0">
+                <header>
+                    <field name="email_state" invisible="1"/>
+                    <button name="action_send_employee_email" string="通过Email发送" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('email_state','=', True)]}"/>
+                    <button name="action_send_employee_email" string="重新发送邮件" type="object"
+                            attrs="{'invisible': [('email_state','=', False)]}" confirm="确认重新发送吗？"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">

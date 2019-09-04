@@ -367,3 +367,43 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
                 payrolls.sudo().write(payroll_data)
         action = self.env.ref('odoo_wage_manage.odoo_wage_payslip_action')
         return action.read()[0]
+
+
+class SendPayrollAccountingToPayslipEmailTransient(models.TransientModel):
+    _name = 'send.wage.payroll.to.email.transient'
+    _description = "通过EMAIL发送核算明细至员工"
+
+    wage_date = fields.Date(string=u'核算月份', required=True)
+    date_code = fields.Char(string='期间代码')
+    payroll_ids = fields.Many2many('wage.payroll.accounting', relation='payroll_accounting_email_wage_payroll_accounting_rel', string=u'核算明细')
+    all_payroll = fields.Boolean(string=u'所有核算明细?')
+
+    @api.onchange('wage_date')
+    def _alter_date_code(self):
+        """
+        根据日期生成期间代码
+        :return:
+        """
+        for res in self:
+            if res.wage_date:
+                wage_date = str(res.wage_date)
+                res.date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
+
+    @api.multi
+    def send_email_now(self):
+        """
+        批量发送核算明细至员工email,注意不是立即发送，通过邮件：EMail队列管理器进行发送
+        :return:
+        """
+        self.ensure_one()
+        template_id = self.env.ref('odoo_wage_manage.wage_payroll_accounting_email_template', raise_if_not_found=False)
+        if not template_id:
+            return False
+        wage_date = str(self.wage_date)
+        date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
+        payrolls = self.env['wage.payroll.accounting'].sudo().search([('date_code', '=', date_code)])
+        for payroll in payrolls.with_progress(msg="开始发送Emial"):
+            if payroll.employee_id.work_email:
+                logging.info("email至%s" % payroll.name)
+                template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(payroll.id, force_send=False)
+                payroll.email_state = True
