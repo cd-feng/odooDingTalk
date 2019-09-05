@@ -23,7 +23,7 @@
     'version': '1.0',
     'depends': ['base', 'web_progress', 'hr', 'mail'],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'data': [
         'security/res_groups.xml',
