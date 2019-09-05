@@ -58,4 +58,5 @@ class WageEmpPerformanceManage(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        raise UserError("暂未实现！！！")
+        # raise UserError("暂未实现！！！")
+        return {'type': 'ir.actions.act_window_close'}

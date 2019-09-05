@@ -35,7 +35,14 @@ odoo.define('wage.employee.performance.manage.tree.button', function (require) {
                         target: 'new',
                         views: [[false, 'form']],
                         context: [],
-                    });
+                    },{
+                        on_reverse_breadcrumb: function () {
+                            self.reload();
+                        },
+                          on_close: function () {
+                            self.reload();
+                        }
+                     });
                 });
             }
         }

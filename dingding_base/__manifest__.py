@@ -31,8 +31,8 @@
     'auto_install': False,
     'uninstall_hook': 'uninstall_hook',
     'data': [
-        'security/ir.model.access.csv',
         'security/dingding_security.xml',
+        'security/ir.model.access.csv',
         'data/dingding_parameter.xml',
         'data/auth_oauth_data.xml',
         'data/dingding_callback_list.xml',
