@@ -1,5 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
-
+access_performance_grade_manage_user_groups,performance.grade.manage.user.groups,model_performance_grade_manage,odoo_performance_manage.user_groups,1,0,0,0
+access_performance_grade_manage,performance.grade.manage,model_performance_grade_manage,odoo_performance_manage.manage_groups,1,1,1,1
+access_evaluation_groups_manage,evaluation.groups.manage,model_evaluation_groups_manage,odoo_performance_manage.manage_groups,1,1,1,1
+access_performance_dimension_manage,performance.dimension.manage,model_performance_dimension_manage,odoo_performance_manage.manage_groups,1,1,1,1
 
 

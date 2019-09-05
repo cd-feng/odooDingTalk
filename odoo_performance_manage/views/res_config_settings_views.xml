@@ -110,6 +110,7 @@
         <field name="context">{'module' : 'odoo_performance_manage'}</field>
     </record>
 
-    <menuitem id="performance_manage_settings_menu" name="基础设置" parent="configure_menu" sequence="1" action="performance_manage_action"/>
+    <menuitem id="performance_manage_settings_menu" name="基础设置" parent="configure_menu" sequence="1" action="performance_manage_action"
+              groups="odoo_performance_manage.manage_groups"/>
 
 </odoo>

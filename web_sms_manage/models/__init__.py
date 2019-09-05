@@ -17,10 +17,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
-
-from . import res_config_settings
-from . import performance_grade
-from . import dimension_manage
-
-from . import evaluation_groups
-
+from . import sms_config
+from . import res_user
+from . import sms_record

@@ -17,10 +17,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
-
-from . import res_config_settings
-from . import performance_grade
-from . import dimension_manage
-
-from . import evaluation_groups
-
+{
+    'name': "Odoo短信服务",
+    'summary': """Odoo短信服务""",
+    'description': """ Odoo短信服务 """,
+    'author': "SuXueFeng",
+    'website': "https://www.sxfblog.com",
+    'category': 'sms',
+    'version': '1.1',
+    'depends': ['base', 'hr', 'contacts', 'auth_oauth'],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+    'data': [
+        'data/auth_oauth_data.xml',
+        'security/odoo_sms.xml',
+        'security/ir.model.access.csv',
+        'views/menu.xml',
+        'views/sms_config.xml',
+        'views/sms_templates.xml',
+        'views/sms_record.xml',
+    ]
+}

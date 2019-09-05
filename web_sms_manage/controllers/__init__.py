@@ -18,9 +18,4 @@
 #
 ###################################################################################
 
-from . import res_config_settings
-from . import performance_grade
-from . import dimension_manage
-
-from . import evaluation_groups
-
+from . import sms_login

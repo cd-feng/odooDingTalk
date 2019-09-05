@@ -1,3 +1,5 @@
 pypinyin
 pycryptodome
 dingtalk-sdk
+qcloudsms_py
+aliyun-python-sdk-core
