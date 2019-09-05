@@ -22,10 +22,15 @@
     'category': 'performance',
     'version': '1.0',
     'depends': ['base', 'hr', 'mail'],
-    'installable': False,
-    'application': False,
+    'installable': True,
+    'application': True,
     'auto_install': False,
     'data': [
+        'security/res_groups.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
 
+        'views/assets.xml',
+        'views/res_config_settings_views.xml',
     ],
 }
