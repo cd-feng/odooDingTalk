@@ -58,6 +58,6 @@
         </field>
     </record>
 
-    <menuitem id="sms_verification_record_menu" name="验证码记录" parent="web_sms_manage.main_menu" sequence="10" action="sms_verification_record_action"/>
+    <menuitem id="sms_verification_record_menu" name="验证码记录" parent="web_sms_manage.main_menu" sequence="5" action="sms_verification_record_action"/>
 
 </odoo>

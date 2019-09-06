@@ -53,7 +53,7 @@ class OdooSmsController(Home, http.Controller):
             values['code_maxlength'] = services[0].code_length  # 验证码最大长度
         else:
             values['code_maxlength'] = 6  # 验证码默认最大长度
-        return request.render('odoo_sms.login_signup', values)
+        return request.render('web_sms_manage.login_signup', values)
 
     @http.route('/web/odoo/send/sms/by/phone', type='http', auth="none")
     def web_send_sms_code_by_phone(self, **kw):
@@ -63,10 +63,13 @@ class OdooSmsController(Home, http.Controller):
         :return:
         """
         user_phone = request.params['user_phone']
-        # 验证是否存在系统用户
-        users = request.env['res.users'].sudo().search([('oauth_uid', '=', user_phone)])
-        if not users:
-            return json.dumps({'state': False, 'msg': "该手机号码未绑定系统用户，请注册！"})
+        # 验证员工是否有此手机号
+        domain = ['|', ('mobile_phone', '=', user_phone), ('work_phone', '=', user_phone)]
+        employee = request.env['hr.employee'].sudo().search(domain)
+        if not employee:
+            return json.dumps({'state': False, 'msg': "该手机号未在员工中注册！"})
+        if not employee.user_id:
+            return json.dumps({'state': False, 'msg': "员工未关联系统用户，请联系管理员处理！"})
         # 判断要使用的短信平台，获取配置中已开启的短信平台服务
         services = request.env['sms.service.config'].sudo().search([('state', '=', 'open')])
         result = False
@@ -167,7 +170,9 @@ class OdooSmsController(Home, http.Controller):
         :param timeout:  超时时长
         :return:
         """
-        users = request.env['res.users'].sudo().search([('oauth_uid', '=', user_phone)])
+        domain = ['|', ('mobile_phone', '=', user_phone), ('work_phone', '=', user_phone)]
+        employee = request.env['hr.employee'].sudo().search(domain)
+        users = employee.user_id
         record = request.env['sms.verification.record'].sudo().create({
             'service_id': service.id,
             'user_id': users[0].id if users else False,
@@ -222,7 +227,6 @@ class OdooSmsController(Home, http.Controller):
                     request.params['login_success'] = True
                     return json.dumps({'state': True, 'msg': "登录成功"})
             except Exception as e:
-                # signup error
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
         return set_cookie_and_redirect(url)

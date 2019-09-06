@@ -79,6 +79,7 @@ class SmsTemplate(models.Model):
         ('login', '登录时发送验证码'),
         ('registered', '注册时发送验证码'),
         ('change_pwd', '修改密码通知模板'),
+        ('send_message', '用于Odoo通知消息'),
         ('close', '关闭'),
     ]
 

@@ -15,7 +15,7 @@
 <odoo>
     <data>
 
-        <menuitem name="短信" id="main_menu" web_icon="web_sms_manage,static/description/icon.png" sequence="178"/>
+        <menuitem name="短信" id="main_menu" web_icon="web_sms_manage,static/description/icon.png" sequence="20"/>
 
         <menuitem name="设置" id="sms_configure_menu" parent="main_menu" sequence="100"/>
 

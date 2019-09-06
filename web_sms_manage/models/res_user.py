@@ -46,22 +46,24 @@ class ResUsers(models.Model):
                     raise UserError("抱歉！{}手机号码（令牌）已被'{}'占用,请解除或更换号码!".format(res.oauth_uid, users[0].name))
 
     @api.model
-    def auth_oauth_sms(self, provide_id, oauth_uid):
+    def auth_oauth_sms(self, provide_id, user_phone):
         if provide_id == 'sms':
-            user_ids = self.search([('oauth_uid', '=', oauth_uid)])
+            domain = ['|', ('mobile_phone', '=', user_phone), ('work_phone', '=', user_phone)]
+            employee = self.env['hr.employee'].sudo().search(domain)
+            user_ids = employee.user_id
         else:
-            user_ids = self.search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', oauth_uid)])
+            user_ids = self.search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', user_phone)])
         _logger.info("user: %s", user_ids)
         if not user_ids or len(user_ids) > 1:
             raise AccessDenied()
-        return (self.env.cr.dbname, user_ids[0].login, oauth_uid)
+        return (self.env.cr.dbname, user_ids[0].login, user_phone)
 
     @api.model
     def _check_credentials(self, password):
         try:
             return super(ResUsers, self)._check_credentials(password)
         except AccessDenied:
-            res = self.sudo().search([('id', '=', self.env.uid), ('oauth_uid', '=', password)])
+            res = self.sudo().search([('id', '=', self.env.uid)])
             if not res:
                 raise
 
