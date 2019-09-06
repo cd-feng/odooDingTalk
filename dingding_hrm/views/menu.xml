@@ -14,7 +14,7 @@
 -->
 <odoo>
 
-    <menuitem name="智能人事" id="zhineng_hrm_menu" web_icon="dingding_hrm,static/description/icon.png" sequence="171"/>
+    <menuitem name="智能人事" id="zhineng_hrm_menu" web_icon="dingding_hrm,static/description/icon.png" sequence="16"/>
 
     <menuitem name="员工管理" id="hrm_employee_manager_menu" parent="zhineng_hrm_menu"/>
 

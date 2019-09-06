@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sms_service_config,sms.service.config,model_sms_service_config,web_sms_manage.manage_groups,1,1,1,1
+access_sms_service_template,sms.service.template,model_sms_service_template,web_sms_manage.manage_groups,1,1,1,1
+access_sms_verification_record,sms.verification.record,model_sms_verification_record,web_sms_manage.manage_groups,1,1,1,1
