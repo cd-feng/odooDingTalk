@@ -37,5 +37,7 @@
         'views/sms_config.xml',
         'views/sms_templates.xml',
         'views/sms_record.xml',
+
+        'wizard/send_sms_message.xml',
     ]
 }
