@@ -36,5 +36,6 @@
         'views/performance_grade.xml',
         'views/evaluation_groups.xml',
         'views/dimension_manage.xml',
+        'views/indicator_library.xml',
     ],
 }
