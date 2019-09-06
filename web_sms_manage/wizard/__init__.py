@@ -13,29 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ###################################################################################
-{
-    'name': "Odoo绩效管理",
-    'summary': """统一管理员工绩效""",
-    'description': """统一管理员工绩效""",
-    'author': "SuXueFeng",
-    'website': "https://www.sxfblog.com",
-    'category': 'performance',
-    'version': '1.0',
-    'depends': ['base', 'hr', 'mail'],
-    'installable': True,
-    'application': True,
-    'auto_install': False,
-    'data': [
-        'security/res_groups.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        'data/default_num.xml',
-
-        'views/assets.xml',
-        'views/res_config_settings_views.xml',
-        'views/performance_grade.xml',
-        'views/evaluation_groups.xml',
-        'views/dimension_manage.xml',
-        'views/indicator_library.xml',
-    ],
-}
+from . import send_sms_message

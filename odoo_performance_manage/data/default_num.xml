@@ -78,5 +78,58 @@ limitations under the License.
             <field name="dimension_weights">40</field>
         </record>
 
+        <record id="performance_indicator_library_data1" model="performance.indicator.library">
+            <field name="name">重大突破加分项（示例）</field>
+            <field name="indicator_type">bonus</field>
+            <field name="extra_standard">1、解决重大突破问题，加10分
+2、解决重大危机，加10分
+3、解决重复性出现的问题，加10分（可累计）</field>
+            <field name="extra_end">30</field>
+        </record>
+        <record id="performance_indicator_library_data0" model="performance.indicator.library">
+            <field name="name">重大失误扣分项（示例）</field>
+            <field name="indicator_type">deduction</field>
+            <field name="deduction_standard">发生重大工作失误，扣10分/次</field>
+            <field name="deduction_end">30</field>
+        </record>
+
+        <record id="performance_indicator_library_data2" model="performance.indicator.library">
+            <field name="name">客户第一（示例）</field>
+            <field name="indicator_type">behavior</field>
+            <field name="assessment_criteria">1.尊重他人，维护公司的形象； 2. 积极主动解决客户的问题；
+3. 与客户交互的过程中，即使不是自己的责任，也不推诿站在客户的立场来思考问题；
+4. 在坚持原则的基础上，最终达到客户与公司都满意并主动寻求客户的反馈；
+5. 改进态度与服务方式，具备超前服务意识。</field>
+            <field name="weights">50</field>
+        </record>
+        <record id="performance_indicator_library_data3" model="performance.indicator.library">
+            <field name="name">销售额（示例）</field>
+            <field name="indicator_type">quantitative</field>
+            <field name="indicator_unit">元</field>
+            <field name="threshold_value">10000</field>
+            <field name="target_value">100000</field>
+            <field name="challenge_value">400000</field>
+            <field name="assessment_criteria">销售额≥50万，得50分
+40万≤销售额＜50万，得40分
+30万≤销售额＜40万，得30分
+20万≤销售额＜30万，得20分
+10万≤销售额＜20万，得10分
+销售额＜10万，得0分</field>
+            <field name="weights">50</field>
+        </record>
+
+        <record id="performance_indicator_label_data1" model="performance.indicator.label">
+            <field name="name">优秀</field>
+        </record>
+        <record id="performance_indicator_label_data2" model="performance.indicator.label">
+            <field name="name">行为</field>
+        </record>
+        <record id="performance_indicator_label_data3" model="performance.indicator.label">
+            <field name="name">价值</field>
+        </record>
+        <record id="performance_indicator_label_data4" model="performance.indicator.label">
+            <field name="name">销售</field>
+        </record>
+
     </data>
 </odoo>
