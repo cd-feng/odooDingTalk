@@ -19,6 +19,27 @@ limitations under the License.
 		<record model="ir.module.category" id="oa_base.main">
 			<field name="name">钉钉审批</field>
 			<field name="visible" eval="0" />
+			<field name="sequence">1</field>
+		</record>
+
+		<record id="oa_base.user_groups" model="res.groups">
+			<field name="name">用户</field>
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+			<field name="category_id" ref="oa_base.main"/>
+			<field name="users" eval="[(4, ref('base.group_user'))]"/>
+		</record>
+
+		<record id="oa_base.supervisor_groups" model="res.groups">
+			<field name="name">主管</field>
+			<field name="category_id" ref="oa_base.main"/>
+			<field name="implied_ids" eval="[(4, ref('oa_base.user_groups'))]"/>
+		</record>
+
+		<record id="oa_base.manage_groups" model="res.groups">
+			<field name="name">管理员</field>
+			<field name="category_id" ref="oa_base.main"/>
+			<field name="implied_ids" eval="[(4, ref('oa_base.supervisor_groups'))]"/>
+			<field name="users" eval="[(4, ref('base.user_admin'))]"/>
 		</record>
 
 	</data>

@@ -12,9 +12,7 @@
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="date_code"/>
-                <field name="personal_social_security"/>
-                <field name="personal_provident_fund"/>
-                <field name="taxable_income"/>
+                <field name="this_months_tax"/>
                 <field name="pay_wage"/>
                 <field name="real_wage"/>
             </tree>
@@ -58,16 +56,15 @@
                             <group col="2">
                                 <group>
                                     <field name="base_wage"/>
-                                    <field name="structure_wage"/>
+                                    <field name="structure_sum"/>
                                     <field name="absence_sum"/>
                                     <field name="performance_sum"/>
                                     <field name="overtime_sum"/>
                                 </group>
                                 <group>
                                     <field name="attendance_sum"/>
-                                    <field name="personal_social_security"/>
-                                    <field name="personal_provident_fund"/>
-                                    <field name="taxable_income"/>
+                                    <field name="statement_sum"/>
+                                    <field name="this_months_tax"/>
                                 </group>
                             </group>
                         </page>
@@ -118,9 +115,7 @@
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="date_code"/>
-                <field name="personal_social_security"/>
-                <field name="personal_provident_fund"/>
-                <field name="taxable_income"/>
+                <field name="this_months_tax"/>
                 <field name="pay_wage"/>
                 <field name="real_wage"/>
                 <group expand="0" string="分类">

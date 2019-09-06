@@ -101,7 +101,7 @@
     </record>
 
     <menuitem id="hr_attendance_record_menu" name="员工打卡详情" parent="dingding_attendance.attendance_two_menu" sequence="3"
-              action="hr_attendance_record_action" groups="dingding_attendance.dd_attendance_user_group"/>
+              action="hr_attendance_record_action"/>
 
 
      <record id="hr_attendance_record_tran_form_view" model="ir.ui.view">

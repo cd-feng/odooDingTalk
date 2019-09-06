@@ -24,8 +24,8 @@
     'installable': True,
     'auto_install': True,
     'data': [
-        'groups/group.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/defaulr_num.xml',
         'data/default_data.xml',
 

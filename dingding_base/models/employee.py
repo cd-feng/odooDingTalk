@@ -159,7 +159,7 @@ class HrEmployee(models.Model):
             except ReadTimeout:
                 raise UserError("上传员工至钉钉超时！")
 
-    @api.constrains('user_id')
+    @api.constrains('user_id', 'mobile_phone')
     def constrains_dingding_user_id(self):
         """
         当选择了相关用户时，需要检查系统用户是否只对应一个员工
@@ -168,7 +168,7 @@ class HrEmployee(models.Model):
         if self.user_id:
             emps = self.sudo().search([('user_id', '=', self.user_id.id)])
             if len(emps) > 1:
-                raise UserError("Sorry!，关联的相关(系统)用户已关联到其他员工，若需要变更请修改原关联的相关用户！")
+                raise UserError("Sorry!，系统用户只能关联一个员工！")
             # 把员工的钉钉id和手机号写入到系统用户oauth
             if self.ding_id and self.mobile_phone:
                 self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(self.ding_id, self.mobile_phone, self.user_id.id))

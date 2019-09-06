@@ -53,10 +53,10 @@ class DingDingMessageTemplate(models.Model):
                                 required=True, default='00')
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='dingding_message_temp_and_employee_rel',
                                column1='template_id', column2='employee_id', string='员工',
-                               domain=[('din_id', '!=', '')])
+                               domain=[('ding_id', '!=', '')])
     dept_ids = fields.Many2many(comodel_name='hr.department', relation='dingding_message_temp_and_department_rel',
                                 column1='template_id', column2='department_id', string='部门',
-                                domain=[('din_id', '!=', '')])
+                                domain=[('ding_id', '!=', '')])
 
     _sql_constraints = [
         ('model_id_uniq', 'unique (model_id)', 'Odoo模型已存在消息模板,请不要重复创建!'),
@@ -100,18 +100,18 @@ class DingDingMessageTemplate(models.Model):
                 user_str = ''
                 for user in template.emp_ids:
                     if user_str == '':
-                        user_str = user_str + "{}".format(user.din_id)
+                        user_str = user_str + "{}".format(user.ding_id)
                     else:
-                        user_str = user_str + ",{}".format(user.din_id)
+                        user_str = user_str + ",{}".format(user.ding_id)
                 self.env['dingding.work.message'].sudo().send_work_message(
                     userstr=user_str, msg=message_dict)
             elif template.msg_type == '01':
                 dept_str = ''
                 for dept in template.dept_ids:
                     if dept_str == '':
-                        dept_str = dept_str + "{}".format(dept.din_id)
+                        dept_str = dept_str + "{}".format(dept.ding_id)
                     else:
-                        dept_str = dept_str + ",{}".format(dept.din_id)
+                        dept_str = dept_str + ",{}".format(dept.ding_id)
                 self.env['dingding.work.message'].sudo().send_work_message(
                     deptstr=dept_str, msg=message_dict)
         except Exception as e:

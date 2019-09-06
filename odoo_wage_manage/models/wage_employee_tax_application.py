@@ -20,19 +20,41 @@ class WageEmployeeTaxInformation(models.Model):
     ]
 
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
-    year = fields.Integer(string=u'扣除年度', required=True, index=True)
+    year = fields.Char(string=u'扣除年度', required=True, index=True)
     name = fields.Char(string='姓名', required=True, index=True)
     certificate_type = fields.Selection(string=u'证件类型', selection=CERTIFICATESTATUS, default='00')
     certificate_number = fields.Char(string='证件号码', required=True)
     phone = fields.Char(string='手机号', required=True)
     addr = fields.Char(string='联系地址')
     email = fields.Char(string='电子邮箱')
-    company_id = fields.Many2one(comodel_name='res.company', string=u'工作单位', required=True)
+    company_id = fields.Many2one(comodel_name='res.company', string=u'工作单位', required=True, default=lambda self: self.env.user.company_id.id)
     spouse_situation = fields.Selection(string=u'配偶情况', selection=[('00', '有配偶'), ('01', '无配偶')], default='01')
     spouse_name = fields.Char(string='配偶姓名')
     spouse_certificate_type = fields.Selection(string=u'配偶证件类型', selection=CERTIFICATESTATUS, default='00')
     spouse_certificate_number = fields.Char(string='配偶证件号码')
     notes = fields.Text(string=u'备注')
+
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        for res in self:
+            if res.employee_id:
+                res.name = res.employee_id.name
+                res.phone = res.employee_id.mobile_phone
+                res.email = res.employee_id.work_email
+                res.addr = res.employee_id.work_location
+                res.certificate_number = res.employee_id.identification_id
+                res.year = str(fields.datetime.now())[:4]
+
+    @api.constrains('employee_id', 'year')
+    def _constrains_employee_year(self):
+        """
+        检查重复
+        :return:
+        """
+        for res in self:
+            taxs = self.search_count([('employee_id', '=', res.employee_id.id), ('year', '=', res.year)])
+            if taxs > 1:
+                raise UserError("不允许在同一年度内创建多条员工记录！")
 
 
 class WageEmployeeTaxChildEducationApplication(models.Model):

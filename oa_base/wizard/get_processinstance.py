@@ -62,6 +62,8 @@ class GetProcessInstance(models.TransientModel):
                 'cursor': cursor,
             }
             result = self.env['dingding.api.tools'].send_post_request(url, token, data, 15)
+            if result.get('errcode') != 0:
+                raise UserError(result.get('errmsg'))
             r_result = result.get('result')
             for arr in r_result.get('list'):
                 process_list.append(arr)

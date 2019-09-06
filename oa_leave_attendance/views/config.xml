@@ -34,8 +34,7 @@ limitations under the License.
         <menuitem id="oa_attendance_leave_config_menu" name="出勤休假" parent="oa_base.menu_oa_root_config" sequence="2"/>
 
         <menuitem name="请假类型" id="oa_leave_type_menu" parent="oa_attendance_leave_config_menu"
-                  sequence="1" groups="oa_leave_attendance.manager"
-                  action="oa_leave_type_action"/>
+                  sequence="1" action="oa_leave_type_action"/>
 
     </data>
 </odoo>

@@ -29,8 +29,6 @@
         'data/base_ir_rule.xml',
         'groups/group.xml',
         'views/menu.xml',
-        # 'views/res_config_settings.xml',
-
         'wizard/get_processinstance.xml',
     ]
 }

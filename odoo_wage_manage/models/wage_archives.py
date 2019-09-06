@@ -85,6 +85,13 @@ class EmployeeWageArchives(models.Model):
         for res in self:
             if len(res.line_ids) < 1:
                 self.create_all_structure()
+            if res.employee_id:
+                res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
+                res.job_id = res.employee_id.job_id.id if res.employee_id.job_id else False
+                if res.employee_id.bank_account_id:
+                    res.bank_account_number = res.employee_id.bank_account_id.acc_number
+                if res.employee_id.bank_account_id and res.employee_id.bank_account_id.bank_id:
+                    res.accountBank = res.employee_id.bank_account_id.bank_id.name
 
     @api.multi
     def get_info_by_dingding_hrm(self):
@@ -131,13 +138,15 @@ class EmployeeWageArchives(models.Model):
         返回该员工的薪资结构数据
         :return:
         """
+        amount_sum = 0
         structure_list = list()
         for line in self.line_ids:
             structure_list.append((0, 0, {
                 'structure_id': line.structure_id.id,
                 'wage_amount': line.wage_amount
             }))
-        return structure_list
+            amount_sum += line.wage_amount
+        return structure_list, amount_sum
 
     @api.multi
     def get_employee_salary(self):

@@ -29,17 +29,15 @@ class WageEmployeePayslip(models.Model):
     date_code = fields.Char(string='期间', index=True, required=True, track_visibility='onchange')
 
     base_wage = fields.Float(string=u'基本工资', digits=(10, 2))
-    structure_wage = fields.Float(string=u'项目加项', digits=(10, 2))
+    structure_sum = fields.Float(string=u'薪资项目', digits=(10, 2))
     absence_sum = fields.Float(string=u'缺勤扣款合计', digits=(10, 2))
     performance_sum = fields.Float(string=u'绩效合计', digits=(10, 2))
     overtime_sum = fields.Float(string=u'加班费合计', digits=(10, 2))
     attendance_sum = fields.Float(string=u'打卡扣款合计', digits=(10, 2))
 
-    personal_social_security = fields.Float(string=u'个人社保', digits=(10, 2))
-    personal_provident_fund = fields.Float(string=u'个人公积金', digits=(10, 2))
+    statement_sum = fields.Float(string=u'社保个人合计', digits=(10, 2))
 
-    taxable_income = fields.Float(string=u'个税', digits=(10, 2))
-
+    this_months_tax = fields.Float(string=u'本月个税', digits=(10, 2))
     pay_wage = fields.Float(string=u'应发工资', digits=(10, 2))
     real_wage = fields.Float(string=u'实发工资', digits=(10, 2))
     notes = fields.Text(string=u'备注')

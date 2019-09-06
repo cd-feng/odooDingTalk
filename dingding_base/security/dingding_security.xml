@@ -29,6 +29,7 @@
         <field name="name">管理员</field>
         <field name="implied_ids" eval="[(4, ref('dingding_base.user_groups'))]"/>
         <field name="category_id" ref="dingding_base.main_groups"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
 </odoo>

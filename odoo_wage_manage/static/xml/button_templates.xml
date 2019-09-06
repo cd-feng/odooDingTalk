@@ -54,6 +54,9 @@ limitations under the License.
         <button type="button" class="btn btn-secondary push_down_the_pay_slip_but_class">
             生成工资条
         </button>
+        <button type="button" class="btn btn-secondary send_wage_payroll_accounting_email_but_class">
+            通过Email发送核算明细
+        </button>
     </t>
     <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_payroll_accounting_buttons">
         <t t-jquery="button.o_list_button_add" t-operation="replace">
@@ -79,6 +82,38 @@ limitations under the License.
                     r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
                 };
             </t>
+        </t>
+    </t>
+
+    <t t-name="OdooWageManageListView.wage_employee_attendance_annal_but">
+        <button type="button" class="btn btn-secondary compute_attendance_annal_buttons_but_class" groups="odoo_wage_manage.supervisor_groups">
+            计算考勤结果
+        </button>
+    </t>
+    <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_employee_attendance_annal_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="OdooWageManageListView.wage_employee_attendance_annal_but"/>
+        </t>
+    </t>
+
+    <t t-name="OdooWageManageListView.wage_employee_performance_manage_but">
+        <button type="button" class="btn btn-secondary compute_wage_employee_performance_manage_but_class" groups="odoo_wage_manage.supervisor_groups">
+            从绩效模块中计算
+        </button>
+    </t>
+    <t t-extend="ListView.buttons" t-name="OdooWageManageListView.wage_employee_performance_manage_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="OdooWageManageListView.wage_employee_performance_manage_but"/>
         </t>
     </t>
 

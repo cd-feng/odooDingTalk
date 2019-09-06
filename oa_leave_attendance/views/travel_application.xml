@@ -19,7 +19,7 @@ limitations under the License.
             <field name="name">出差申请</field>
             <field name="model">oa.travel.application</field>
             <field name="arch" type="xml">
-                <tree default_order="id desc">
+                <tree default_order="id desc" decoration-success="oa_state in ('01', '02')" decoration-muted="oa_result == 'agree'" decoration-warning="oa_result in ('refuse', 'redirect')" >
                     <field name="process_code"/>
                     <field name="originator_user_id"/>
                     <field name="emp_id"/>

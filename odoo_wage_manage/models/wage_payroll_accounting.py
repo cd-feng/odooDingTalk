@@ -14,7 +14,10 @@
 # limitations under the License.
 ###################################################################################
 import logging
-from odoo import api, fields, models
+
+from werkzeug.urls import url_encode
+
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +26,7 @@ _logger = logging.getLogger(__name__)
 class WagePayrollAccounting(models.Model):
     _description = '薪资核算'
     _name = 'wage.payroll.accounting'
-    _rec_name = 'employee_id'
+    _rec_name = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
@@ -42,6 +45,7 @@ class WagePayrollAccounting(models.Model):
     # 基本+缺勤
     base_wage = fields.Float(string='基本工资', track_visibility='onchange', digits=(10, 2))
     structure_ids = fields.One2many('wage.payroll.accounting.structure', 'accounting_id', string=u'薪资项目')
+    structure_sum = fields.Float(string=u'薪资项目合计', digits=(10, 2), compute='_compute_amount_sum')
     attendance_days = fields.Float(string=u'应出勤天数', digits=(10, 2))
     leave_absence = fields.Float(string=u'事假扣款', digits=(10, 2))
     sick_absence = fields.Float(string=u'病假扣款', digits=(10, 2))
@@ -61,8 +65,8 @@ class WagePayrollAccounting(models.Model):
     attendance_sum = fields.Float(string=u'打卡扣款合计', digits=(10, 2), compute='_compute_amount_sum')
     # 社保公积金
     statement_ids = fields.One2many('wage.payroll.accounting.monthly.statement.line', 'accounting_id', string=u'社保公积金')
+    statement_sum = fields.Float(string=u'社保个人合计', digits=(10, 2), compute='_compute_amount_sum')
     # 个税
-    taxable_income = fields.Float(string=u'个税', digits=(10, 2))
     cumulative_expenditure_deduction = fields.Float(string=u'累计子女教育抵扣总额', digits=(10, 2))
     cumulative_home_loan_interest_deduction = fields.Float(string=u'累计住房贷款利息抵扣总额', digits=(10, 2))
     cumulative_housing_rental_expense_deduction = fields.Float(string=u'累计住房租金抵扣总额', digits=(10, 2))
@@ -79,6 +83,7 @@ class WagePayrollAccounting(models.Model):
     pay_wage = fields.Float(string=u'应发工资', digits=(10, 2))
     real_wage = fields.Float(string=u'实发工资', digits=(10, 2))
     notes = fields.Text(string=u'备注')
+    email_state = fields.Boolean(string=u'邮件状态', default=False)
 
     @api.onchange('wage_date')
     @api.constrains('wage_date')
@@ -129,12 +134,36 @@ class WagePayrollAccounting(models.Model):
             overtime_sum = res.work_overtime + res.weekend_overtime + res.holiday_overtime
             # 打卡扣款合计 = 迟到扣款+忘记打卡扣款+早退扣款
             attendance_sum = res.late_attendance + res.notsigned_attendance + res.early_attendance
+            # 薪资结构合计
+            structure_sum = 0
+            for structure in res.structure_ids:
+                structure_sum += structure.wage_amount
+            # 社保个人合计
+            statement_sum = 0
+            for statement in res.statement_ids:
+                statement_sum += statement.pension_pay
             res.update({
                 'absence_sum': absence_sum,
                 'performance_sum': performance_sum,
                 'overtime_sum': overtime_sum,
                 'attendance_sum': attendance_sum,
+                'structure_sum': structure_sum,
+                'statement_sum': statement_sum,
             })
+
+    @api.multi
+    def action_send_employee_email(self):
+        """
+        发送email
+        :return: 
+        """
+        self.ensure_one()
+        if not self.employee_id.work_email:
+            raise UserError('员工%s未设置工作邮箱，无法发送！' % self.employee_id.name)
+        template_id = self.env.ref('odoo_wage_manage.wage_payroll_accounting_email_template', raise_if_not_found=False)
+        if template_id:
+            template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(self.id, force_send=True)
+            self.email_state = True
 
 
 class WagePayrollAccountingLine(models.Model):
