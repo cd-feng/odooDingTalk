@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<odoo>
+	<data>
+
+		<record model="ir.module.category" id="oa_personnel_admin.main">
+			<field name="name">协同办公-行政人事</field>
+			<field name="visible" eval="0" />
+		</record>
+
+		<record id="oa_personnel_admin.personnel" model="res.groups">
+			<field name="name">员工</field>
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+			<field name="category_id" ref="oa_personnel_admin.main"/>
+		</record>
+
+		<record id="oa_personnel_admin.administrative_manager" model="res.groups">
+			<field name="name">部门领导</field>
+			<field name="category_id" ref="oa_personnel_admin.main"/>
+			<field name="implied_ids" eval="[(4, ref('oa_personnel_admin.personnel'))]"/>
+		</record>
+
+		<!-- 默认用户权限 -->
+		<record id="base.default_user" model="res.users">
+			<field name="groups_id" eval="[(4, ref('oa_personnel_admin.personnel'))]" />
+		</record>
+
+	</data>
+</odoo>
