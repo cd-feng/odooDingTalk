@@ -43,4 +43,4 @@ class DimensionManage(models.Model):
     user_index_weights = fields.Integer(string=u'指标自定义权重')
     is_add_index = fields.Boolean(string=u'可在制定目标时增加指标?', help="设定在目标制定、目标确认环节，这个维度下能不能再增加指标", default=True)
     index_res_type = fields.Selection(string=u'指标评分方式', selection=[('00', '指标评分加和计算'), ('01', '指标评分加权计算'), ], default='00')
-    
+

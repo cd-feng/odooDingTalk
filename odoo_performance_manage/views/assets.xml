@@ -23,9 +23,11 @@ limitations under the License.
 
     <menuitem name="绩效" id="odoo_performance_manage.main_menu" web_icon="odoo_performance_manage,static/description/icon.png" sequence="19"/>
 
-    <menuitem name="考核" id="assessment_menu" parent="odoo_performance_manage.main_menu" sequence="30"/>
+    <menuitem name="考核管理" id="assessment_menu" parent="odoo_performance_manage.main_menu" sequence="10"/>
 
-    <menuitem name="指标" id="quota_menu" parent="odoo_performance_manage.main_menu" sequence="70"/>
+    <menuitem name="主数据" id="man_info_menu" parent="odoo_performance_manage.main_menu" sequence="20"/>
+
+    <menuitem name="绩效报表" id="performance_report_menu" parent="odoo_performance_manage.main_menu" sequence="80"/>
 
     <menuitem name="设置" id="configure_menu" parent="odoo_performance_manage.main_menu" sequence="100"/>
 
