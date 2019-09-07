@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <record id="performance_indicator_library_tree_view" model="ir.ui.view">
+        <field name="name">指标库</field>
+        <field name="model">performance.indicator.library</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="name"/>
+                <field name="indicator_type"/>
+                <field name="weights"/>
+                <field name="is_required"/>
+                <field name="designated_scorer"/>
+                <field name="scorer_user"/>
+                <field name="label_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="performance_indicator_library_form_view" model="ir.ui.view">
+        <field name="name">指标库</field>
+        <field name="model">performance.indicator.library</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" confirm="确认归档本记录，你想继续吗？" class="oe_stat_button" icon="fa-archive" groups="odoo_performance_manage.manage_groups">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="indicator_type" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                    <group>
+                        <field name="indicator_unit" attrs="{'invisible':[('indicator_type', '!=', 'quantitative')]}"/>
+                        <field name="threshold_value" attrs="{'invisible':[('indicator_type', '!=', 'quantitative')]}"/>
+                        <field name="target_value" attrs="{'invisible':[('indicator_type', '!=', 'quantitative')]}"/>
+                        <field name="challenge_value" attrs="{'invisible':[('indicator_type', '!=', 'quantitative')]}"/>
+                        <field name="assessment_criteria" attrs="{'invisible':[('indicator_type', 'in', ['bonus', 'deduction'])]}"/>
+                        <field name="extra_standard" attrs="{'invisible':[('indicator_type', '!=', 'bonus')]}"/>
+                        <field name="extra_end" attrs="{'invisible':[('indicator_type', '!=', 'bonus')]}"/>
+                        <field name="deduction_standard" attrs="{'invisible':[('indicator_type', '!=', 'deduction')]}"/>
+                        <field name="deduction_end" attrs="{'invisible':[('indicator_type', '!=', 'deduction')]}"/>
+                        <field name="notes"/>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="weights"/>
+                            <div class="o_row" name="weights">
+                                <field name="weights" nolabel="1"/>
+                                <span>%</span>
+                            </div>
+                            <field name="grading_method" groups="odoo_performance_manage.manage_groups"/>
+                            <field name="is_required" widget="boolean_toggle" groups="odoo_performance_manage.manage_groups"/>
+                        </group>
+                        <group>
+                            <field name="designated_scorer" widget="boolean_toggle" groups="odoo_performance_manage.manage_groups"/>
+                            <field name="scorer_user" groups="odoo_performance_manage.manage_groups"/>
+                            <field name="label_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="performance_indicator_library_action">
+        <field name="name">指标库</field>
+        <field name="res_model">performance.indicator.library</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="performance_indicator_library_search">
+        <field name="model">performance.indicator.library</field>
+        <field name="arch" type="xml">
+            <search string="指标库">
+                <field name="name"/>
+                <field name="indicator_type"/>
+                <field name="weights"/>
+                <field name="is_required"/>
+                <field name="designated_scorer"/>
+                <field name="scorer_user"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="performance_indicator_library_menu" name="指标库" parent="man_info_menu" sequence="2" action="performance_indicator_library_action"/>
+
+</odoo>

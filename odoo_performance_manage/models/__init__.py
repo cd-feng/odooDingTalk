@@ -18,4 +18,11 @@
 #
 ###################################################################################
 
+from . import base_sublist
 from . import res_config_settings
+from . import performance_grade
+from . import dimension_manage
+from . import indicator_library
+from . import evaluation_groups
+from . import performance_assessment
+

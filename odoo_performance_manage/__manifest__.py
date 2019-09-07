@@ -29,8 +29,16 @@
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'data/default_num.xml',
 
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/performance_grade.xml',
+        'views/evaluation_groups.xml',
+        'views/dimension_manage.xml',
+        'views/indicator_library.xml',
+        'views/performance_assessment.xml',
+
+        'wizard/initiate_performance.xml',
     ],
 }
