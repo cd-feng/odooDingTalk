@@ -65,12 +65,12 @@ limitations under the License.
                                 <field name="weights" nolabel="1"/>
                                 <span>%</span>
                             </div>
-                            <field name="grading_method"/>
-                            <field name="is_required" widget="boolean_toggle"/>
+                            <field name="grading_method" groups="odoo_performance_manage.manage_groups"/>
+                            <field name="is_required" widget="boolean_toggle" groups="odoo_performance_manage.manage_groups"/>
                         </group>
                         <group>
-                            <field name="designated_scorer" widget="boolean_toggle"/>
-                            <field name="scorer_user"/>
+                            <field name="designated_scorer" widget="boolean_toggle" groups="odoo_performance_manage.manage_groups"/>
+                            <field name="scorer_user" groups="odoo_performance_manage.manage_groups"/>
                             <field name="label_ids" widget="many2many_tags"/>
                         </group>
                     </group>
@@ -99,6 +99,6 @@ limitations under the License.
         </field>
     </record>
 
-    <menuitem id="performance_indicator_library_menu" name="指标库" parent="quota_menu" sequence="2" action="performance_indicator_library_action"/>
+    <menuitem id="performance_indicator_library_menu" name="指标库" parent="man_info_menu" sequence="2" action="performance_indicator_library_action"/>
 
 </odoo>

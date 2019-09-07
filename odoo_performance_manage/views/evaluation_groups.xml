@@ -45,9 +45,27 @@ limitations under the License.
                     </group>
                     <group string="被考核人员">
                         <field name="evaluation_department_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible':[('cycle_type','=','probation')]}"/>
-                        <field name="no_evaluation_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible':[('cycle_type','=','probation')]}"/>
+<!--                        <field name="no_evaluation_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible':[('cycle_type','=','probation')]}"/>-->
                         <field name="evaluation_user_ids" widget="many2many_tags" options="{'no_create': True}"/>
                     </group>
+                    <notebook>
+                        <page string="考评模板">
+                            <field name="template_ids">
+                                <tree default_order="sequence" model="tree">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="dimension_id"/>
+                                    <field name="dimension_weights"/>
+                                    <field name="indicator_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="考评流程" name="evaluation_process">
+                            <group>
+                                <p>当前版本为固定流程：若需定义流程请购买！</p>
+                                <p>固定流程：目标制定 --> 目标确认 --> 执行中 --> 自评 --> 上级评分 --> 结束</p>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -69,6 +87,28 @@ limitations under the License.
         </field>
     </record>
 
-    <menuitem id="evaluation_groups_manage_menu" name="考评组" parent="assessment_menu" sequence="1" action="evaluation_groups_manage_action"/>
+    <menuitem id="evaluation_groups_manage_menu" name="考评组" parent="man_info_menu" sequence="3" action="evaluation_groups_manage_action"/>
+
+
+    <record id="evaluation_groups_template_form_view" model="ir.ui.view">
+        <field name="name">考评模板</field>
+        <field name="model">evaluation.groups.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="dimension_id"/>
+                        <field name="dimension_weights"/>
+                    </group>
+                    <notebook>
+                        <page string="指标库">
+                            <field name="indicator_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
 </odoo>

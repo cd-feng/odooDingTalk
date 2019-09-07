@@ -37,5 +37,8 @@
         'views/evaluation_groups.xml',
         'views/dimension_manage.xml',
         'views/indicator_library.xml',
+        'views/performance_assessment.xml',
+
+        'wizard/initiate_performance.xml',
     ],
 }
