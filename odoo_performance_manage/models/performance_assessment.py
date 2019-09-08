@@ -28,7 +28,6 @@ class PerformanceAssessment(models.Model):
     PerState = [
         ('setting', '目标制定'),
         ('executing', '执行中'),
-        ('result', '录入结果'),
         ('evaluation', '自评'),
         ('close', '结束'),
     ]
@@ -39,6 +38,7 @@ class PerformanceAssessment(models.Model):
         ('year', '年度'),
         ('probation', '试用期'),
     ]
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
     active = fields.Boolean(string=u'active', default=True)
     name = fields.Char(string='名称', track_visibility='onchange')
     evaluation_id = fields.Many2one(comodel_name='evaluation.groups.manage', string=u'考评组')
@@ -52,6 +52,26 @@ class PerformanceAssessment(models.Model):
     line_ids = fields.One2many('performance.assessment.line', 'performance_id', string=u'绩效考评项目')
     notes = fields.Text(string=u'备注', track_visibility='onchange')
 
+    @api.onchange('state')
+    @api.constrains('state')
+    def _update_line_state(self):
+        """
+        当当前单据状态发生变化时，将状态信息写入到子表
+        :return:
+        """
+        for res in self:
+            for line in res.line_ids:
+                line.state = res.state
+
+    @api.multi
+    def return_setting(self):
+        """
+        回到初始状态
+        :return:
+        """
+        for res in self:
+            res.state = 'setting'
+
     @api.multi
     def summit_performance(self):
         """
@@ -59,7 +79,26 @@ class PerformanceAssessment(models.Model):
         :return:
         """
         for res in self:
+            # 检查权重是否等于100
+            dimension_weights = 0
+            for line in res.line_ids:
+                dimension_weights += line.dimension_weights
+            if dimension_weights != 100:
+                raise UserError("您的考评项目权重小于或大于100，请纠正！")
             res.state = 'executing'
+
+    @api.multi
+    def summit_rating(self):
+        """
+        提交评分
+        :return:
+        """
+        for res in self:
+            for line in res.line_ids:
+                for library in line.library_ids:
+                    if library.employee_rating <= 0:
+                        raise UserError("您还有未评分项未完成或评分值不正确，请纠正！")
+            res.state = 'close'
 
     @api.constrains('assessment_type')
     def _constrains_assessment_type(self):
@@ -83,17 +122,38 @@ class PerformanceAssessment(models.Model):
             res.name = "%s的%s" % (res.employee_id.name, res.performance_name)
             res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
 
+    @api.multi
+    def unlink(self):
+        """
+        删除方法
+        :return:
+        """
+        for res in self:
+            if res.state != 'setting':
+                raise UserError("已在进行中的流程不允许删除！")
+        return super(PerformanceAssessment, self).unlink()
+
 
 class PerformanceAssessmentLine(models.Model):
     _name = 'performance.assessment.line'
     _description = "绩效考评项目"
     _rec_name = 'dimension_id'
 
+    PerState = [
+        ('setting', '目标制定'),
+        ('executing', '执行中'),
+        ('evaluation', '自评'),
+        ('close', '结束'),
+    ]
+
     performance_id = fields.Many2one(comodel_name='performance.assessment', string=u'绩效考评')
+    state = fields.Selection(string=u'考评状态', selection=PerState, default='setting')
     sequence = fields.Integer(string=u'序号')
     dimension_id = fields.Many2one(comodel_name='performance.dimension.manage', string=u'考评维度', required=True)
     dimension_weights = fields.Integer(string=u'权重')
     library_ids = fields.One2many('performance.assessment.line.library', 'assessment_line_id', string=u'考评指标')
+    assessment_result = fields.Integer(string=u'考核结果', compute='_compute_result', store=True)
+    performance_grade_id = fields.Many2one('performance.grade.manage', string=u'绩效等级', compute='_compute_result', store=True)
 
     @api.onchange('dimension_id')
     def _onchange_dimension_id(self):
@@ -104,13 +164,49 @@ class PerformanceAssessmentLine(models.Model):
             self.library_ids = False
             self.dimension_weights = self.dimension_id.dimension_weights
 
+    @api.onchange('state')
+    @api.constrains('state')
+    def _update_line_state(self):
+        """
+        当当前单据状态发生变化时，将状态信息写入到子表
+        :return:
+        """
+        for res in self:
+            for library in res.library_ids:
+                library.state = res.state
+
+    @api.depends('library_ids.employee_rating')
+    def _compute_result(self):
+        """
+        计算结果
+        :return:
+        """
+        for res in self:
+            if res.state == 'evaluation':
+                result = 0
+                for library in res.library_ids:
+                    result += library.employee_rating
+                res.assessment_result = result
+                grades = self.env['performance.grade.manage'].sudo().search([('active', '=', True)])
+                for grade in grades:
+                    if grade.interval_from <= result < grade.interval_end:
+                        res.performance_grade_id = grade.id
+                        break
+
 
 class PerformanceAssessmentLineLibrary(models.Model):
     _name = 'performance.assessment.line.library'
     _description = "考评指标"
     _rec_name = 'indicator_id'
+    PerState = [
+        ('setting', '目标制定'),
+        ('executing', '执行中'),
+        ('evaluation', '自评'),
+        ('close', '结束'),
+    ]
 
     assessment_line_id = fields.Many2one(comodel_name='performance.assessment.line', string=u'绩效考评项目')
+    state = fields.Selection(string=u'考评状态', selection=PerState, default='setting')
     dimension_id = fields.Many2one(comodel_name='performance.dimension.manage', string=u'考评维度')
     sequence = fields.Integer(string=u'序号')
     indicator_id = fields.Many2one(comodel_name='performance.indicator.library', string=u'考评指标', domain=[('name', '=', 'False')])
@@ -121,6 +217,8 @@ class PerformanceAssessmentLineLibrary(models.Model):
     assessment_criteria = fields.Text(string='考核标准')
     weights = fields.Integer(string=u'权重')
     notes = fields.Text(string=u'备注')
+    employee_rating = fields.Integer(string=u'员工评分')
+    employee_notes = fields.Text(string=u'评分说明')
 
     @api.onchange('dimension_id')
     def _onchange_dimension_id(self):

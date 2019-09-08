@@ -22,8 +22,7 @@ _logger = logging.getLogger(__name__)
 
 class InitiatePerformanceAssessment(models.TransientModel):
     _name = 'initiate.performance.assessment'
-    _description = "发起绩效考核"
-    _order = 'id'
+    _description = "发起考核"
 
     AssessmentType = [
         ('month', '月度'),
@@ -65,6 +64,7 @@ class InitiatePerformanceAssessment(models.TransientModel):
             'start_date': str(self.start_date),
             'end_date': str(self.end_date),
         }
+        performance_object = list()
         for evaluation in self.evaluation_ids:
             asset_data['evaluation_id'] = evaluation.id
             # 读取维度和指标模板信息
@@ -101,9 +101,38 @@ class InitiatePerformanceAssessment(models.TransientModel):
             for employee in evaluation.evaluation_user_ids:
                 asset_data['employee_id'] = employee.id
                 asset_data['message_follower_ids'] = False
-                self.env['performance.assessment'].create(asset_data)
+                performance_object.append(self.env['performance.assessment'].create(asset_data))
         if self.is_email:
-            print("发送员工邮件")
+            self.send_email_now(performance_object)
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.model
+    def send_email_now(self, performance_object):
+        """
+        发送员工通知邮件，通过邮件：EMail队列管理器进行发送
+        :return:
+        """
+        self.ensure_one()
+        template_id = self.env.ref('odoo_performance_manage.performance_assessment_email_template', raise_if_not_found=False)
+        if not template_id:
+            return False
+        for performance in performance_object:
+            if performance.employee_id.work_email:
+                logging.info("email至%s" % performance.name)
+                template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(performance.id, force_send=False)
 
+    @api.multi
+    def initiate_rating(self):
+        """
+        发起评分环境
+        :return:
+        """
+        self.ensure_one()
+        domain = [('assessment_type', '=', self.assessment_type), ('start_date', '=', self.start_date),
+                  ('end_date', '=', self.end_date), ('state', 'in', ['executing']),
+                  ('evaluation_id', 'in', self.evaluation_ids.ids)]
+        performances = self.env['performance.assessment'].search(domain)
+        if not performances:
+            raise UserError("没有搜索到日期内考核记录，或许考核已结束或已结束评分环节！")
+        performances.write({'state': 'evaluation'})
+        return {'type': 'ir.actions.act_window_close'}
