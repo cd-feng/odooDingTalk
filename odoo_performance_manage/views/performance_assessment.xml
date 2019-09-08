@@ -5,10 +5,11 @@
         <field name="name">绩效考评</field>
         <field name="model">performance.assessment</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" decoration-success="state == 'close'" decoration-muted="state == 'executing'" decoration-warning="state in ('setting', 'result', 'evaluation')" >
+            <tree  create="0" default_order="id desc" decoration-success="state == 'close'" decoration-muted="state == 'executing'" decoration-info="state =='setting'" decoration-warning="state =='evaluation'" >
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
+                <field name="evaluation_id"/>
                 <field name="assessment_type"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
@@ -21,14 +22,13 @@
         <field name="name">绩效考评</field>
         <field name="model">performance.assessment</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="0" edit="1">
                 <header>
                     <button name="summit_performance" type="object" string="提交目标" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'setting')]}"
                             confirm="确认提交目标吗？提交后请等待绩效管理员发布评分环节！"/>
-                    <button name="summit_performance" type="object" string="录入结果值" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'result')]}"
-                            confirm="确认提交目标吗？提交后请等待绩效管理员发布评分环节！"/>
-                    <button name="summit_performance" type="object" string="评分" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'evaluation')]}"
-                            confirm="确认提交目标吗？提交后请等待绩效管理员发布评分环节！"/>
+                    <button name="summit_rating" type="object" string="提交评分" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'evaluation')]}"
+                            confirm="确认提交评分吗？"/>
+                    <button name="return_setting" type="object" string="回退到初始" class="btn btn-secondary" confirm="确认回退到初始状态吗？" attrs="{'invisible': [('state', '=', 'setting')]}"/>
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
@@ -46,29 +46,33 @@
                     </div>
                     <group string="员工信息">
                         <group>
-                            <field name="employee_id"/>
-                            <field name="department_id"/>
-<!--                            <field name="assessment_type"/>-->
+                            <field name="employee_id" readonly="1"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="assessment_type" readonly="1"/>
                         </group>
                         <group>
-                            <field name="start_date" widget="date"/>
-                            <field name="end_date" widget="date"/>
+                            <field name="start_date" widget="date" readonly="1"/>
+                            <field name="end_date" widget="date" readonly="1"/>
+                            <field name="evaluation_id" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="维度指标列表">
-                            <field name="line_ids">
-                                <tree default_order="sequence" mode="tree">
+                            <field name="line_ids" attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}" context="{'default_state': state}">
+                                <tree default_order="sequence" mode="tree" delete="0">
                                     <field name="sequence" widget="handle"/>
                                     <field name="dimension_id"/>
                                     <field name="dimension_weights"/>
-                                    <field name="library_ids" widget="one2many" mode="tree"/>
+                                    <field name="assessment_result"/>
+                                    <field name="performance_grade_id"/>
+                                    <field name="library_ids"/>
+                                    <field name="state" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                     <group string="备注">
-                        <field name="notes" nolabel="1"/>
+                        <field name="notes" nolabel="1" placeholder="备注消息..." attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -84,7 +88,7 @@
         <field name="name">绩效考评</field>
         <field name="res_model">performance.assessment</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_group_by_performance_name': True, 'search_default_group_by_state': True}</field>
+        <field name="context">{'search_default_group_by_performance_name': True}</field>
     </record>
 
     <record model="ir.ui.view" id="performance_assessment_search">
@@ -118,19 +122,22 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="dimension_id"/>
+                            <field name="dimension_id" attrs="{'readonly':[('state', '!=', 'setting')]}" required="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="assessment_result" attrs="{'invisible':[('state', 'in', ('setting', 'executing'))]}"/>
                         </group>
                         <group>
-                            <label for="dimension_weights"/>
+                            <label for="dimension_weights" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
                             <div class="o_row" name="dimension_weights">
-                                <field name="dimension_weights" nolabel="1"/>
+                                <field name="dimension_weights" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
                                 <span>%</span>
                             </div>
+                            <field name="performance_grade_id" attrs="{'invisible':[('state', 'in', ('setting', 'executing'))]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="指标列表">
-                            <field name="library_ids" context="{'default_dimension_id': dimension_id}">
+                            <field name="library_ids" context="{'default_dimension_id': dimension_id, 'default_state': state}" attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}">
                                 <tree default_order="sequence" model="tree">
                                     <field name="sequence" widget="handle"/>
                                     <field name="dimension_id" invisible="1"/>
@@ -140,6 +147,9 @@
                                     <field name="target_value"/>
                                     <field name="challenge_value"/>
                                     <field name="weights"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="employee_rating"/>
+                                    <field name="employee_notes"/>
                                 </tree>
                             </field>
                         </page>
@@ -156,29 +166,38 @@
             <form>
                 <sheet>
                     <group>
+                        <field name="state" invisible="1"/>
                         <field name="dimension_id" invisible="1"/>
-                        <field name="indicator_id"/>
+                        <field name="indicator_id" attrs="{'readonly':[('state', '!=', 'setting')]}" required="1"/>
                     </group>
                     <group>
                         <group>
-                            <field name="challenge_value"/>
-                            <field name="extra_end"/>
-                            <label for="weights"/>
+                            <field name="challenge_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <field name="extra_end" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <label for="weights" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
                             <div class="o_row" name="weights">
-                                <field name="weights" nolabel="1"/>
+                                <field name="weights" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
                                 <span>%</span>
                             </div>
                         </group>
                         <group>
-                            <field name="threshold_value"/>
-                            <field name="target_value"/>
+                            <field name="threshold_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <field name="target_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
                         </group>
                     </group>
                     <group string="考核标准">
-                        <field name="assessment_criteria" nolabel="1"/>
+                        <field name="assessment_criteria" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                    </group>
+                    <group string="员工自评" attrs="{'invisible':[('state', 'in', ('setting','executing'))]}">
+                        <label for="employee_rating" attrs="{'required':[('state', '=', 'evaluation')], 'invisible':[('state', 'in', ('setting','executing'))]}"/>
+                        <div class="o_row" name="employee_rating">
+                            <field name="employee_rating" nolabel="1"  attrs="{'required':[('state', '=', 'evaluation')], 'invisible':[('state', 'in', ('setting','executing'))]}"/>
+                            <span>分</span>
+                        </div>
+                        <field name="employee_notes" attrs="{'invisible':[('state', 'in', ('setting','executing'))]}"/>
                     </group>
                     <group string="备注">
-                        <field name="notes" nolabel="1"/>
+                        <field name="notes" nolabel="1" placeholder="备注消息..."/>
                     </group>
                 </sheet>
             </form>

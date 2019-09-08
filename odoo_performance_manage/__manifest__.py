@@ -30,6 +30,7 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'data/default_num.xml',
+        'data/mail_template_data.xml',
 
         'views/assets.xml',
         'views/res_config_settings_views.xml',

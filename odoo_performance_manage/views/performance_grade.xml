@@ -72,6 +72,7 @@ limitations under the License.
         </field>
     </record>
 
-    <menuitem id="performance_grade_manage_menu" name="绩效等级" parent="configure_menu" sequence="2" action="performance_grade_manage_action"/>
+    <menuitem id="performance_grade_manage_menu" name="绩效等级" parent="configure_menu" sequence="2"
+              action="performance_grade_manage_action" groups="odoo_performance_manage.manage_groups"/>
 
 </odoo>
