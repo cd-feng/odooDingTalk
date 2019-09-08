@@ -27,8 +27,8 @@ class OutingApplication(models.Model):
     _rec_name = 'emp_id'
 
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'申请人', index=True, copy=False)
-    start_date = fields.Datetime(string=u'开始时间')
-    end_date = fields.Datetime(string=u'结束时间')
+    start_date = fields.Date(string=u'开始时间')
+    end_date = fields.Date(string=u'结束时间')
     reason_leave = fields.Text(string=u'外出事由')
 
     @api.multi
@@ -43,8 +43,8 @@ class OutingApplication(models.Model):
         # 表单参数
         fcv_list = list()
         fcv_list.append({'name': '申请人', 'value': self.emp_id.name})
-        fcv_list.append({'name': '开始时间', 'value': str(datetime.datetime.strptime(str(self.start_date), "%Y-%m-%d %H:%M:%S"))})
-        fcv_list.append({'name': '结束时间', 'value': str(datetime.datetime.strptime(str(self.end_date), "%Y-%m-%d %H:%M:%S"))})
+        fcv_list.append({'name': '开始时间', 'value': str(self.start_date)})
+        fcv_list.append({'name': '结束时间', 'value': str(self.end_date)})
         fcv_list.append({'name': '外出事由', 'value': self.reason_leave})
         # 发送单据信息至钉钉并接受审批实例id
         pid = self._summit_din_approval(process_code, fcv_list)
