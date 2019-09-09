@@ -36,7 +36,7 @@
         'data/dingding_parameter.xml',
         'data/auth_oauth_data.xml',
         'data/dingding_callback_list.xml',
-
+        'wizard/change_mobile.xml',
         'views/menu.xml',
         'views/res_users_views.xml',
         'views/web_widget.xml',
@@ -52,7 +52,6 @@
         'views/dingding_approval_control.xml',
 
         'wizard/synchronous.xml',
-        'wizard/change_mobile.xml',
         'wizard/create_res_user.xml',
     ],
     "qweb": [
