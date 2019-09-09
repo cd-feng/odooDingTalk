@@ -89,7 +89,6 @@ class DingDingChat(models.Model):
     def create_dingding_chat(self):
         """
         创建会话
-
         :param name: 群名称。长度限制为1~20个字符
         :param owner: 群主userId，员工唯一标识ID；必须为该会话useridlist的成员之一
         :param useridlist: 群成员列表，每次最多支持40人，群人数上限为1000
@@ -118,13 +117,13 @@ class DingDingChat(models.Model):
                 result = din_client.chat.create(name, owner, useridlist, show_history_type=show_history_type, searchable=searchable,
                                             validation_type=validation_type, mention_all_authority=mention_all_authority, chat_banned_type=chat_banned_type, management_type=management_type)
                 logging.info(">>>创建会话返回结果%s", result)
-                if result.get('errcode') == 0:
-                    res.write({'chat_id': result.get(
-                        'chatid'), 'state': 'normal'})
-                    res.message_post(body=_("群会话已创建!群会话的ID:{}").format(
-                        result.get('chatid')), message_type='notification')
-                else:
-                    raise UserError(_('创建失败，详情为:{}').format(result.get('errmsg')))
+                res.message_post(body=_("群会话已创建!群会话的ID:{}").format(result), message_type='notification')
+                res.write({'chat_id': result, 'state': 'normal'})
+                # if result.get('errcode') == 0:
+                #     res.write({'chat_id': result.get('chatid'), 'state': 'normal'})
+                #     res.message_post(body=_("群会话已创建!群会话的ID:{}").format(result.get('chatid')), message_type='notification')
+                # else:
+                #     raise UserError(_('创建失败，详情为:{}').format(result.get('errmsg')))
             except Exception as e:
                 raise UserError(e)
 
