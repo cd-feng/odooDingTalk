@@ -33,29 +33,32 @@ class DingDingSynchronous(models.TransientModel):
     _description = "基础数据同步"
     _rec_name = 'employee'
 
-    department = fields.Boolean(string=u'同步钉钉部门', default=True)
-    employee = fields.Boolean(string=u'同步钉钉员工', default=True)
-    employee_avatar = fields.Boolean(string=u'是否替换为钉钉员工头像', default=False)
-    partner = fields.Boolean(string=u'同步钉钉联系人', default=True)
-
+    department = fields.Boolean(string=u'钉钉部门', default=True)
+    employee = fields.Boolean(string=u'钉钉员工', default=True)
+    employee_avatar = fields.Boolean(string=u'替换钉钉员工头像', default=False)
+    partner = fields.Boolean(string=u'钉钉联系人', default=True)
+    synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
+    
     @api.multi
     def start_synchronous_data(self):
         """
         基础数据同步
         :return:
         """
-        for res in self:
-            try:
-                if res.department:
-                    self.synchronous_dingding_department()
-                    self.synchronous_dingding_department()   # 重复的目的是先生成的子部门能关联到后生成的父部门
-                if res.employee:
-                    self.synchronous_dingding_employee(s_avatar=res.employee_avatar)
-                if res.partner:
-                    self.synchronous_dingding_category()
-                    self.synchronous_dingding_partner()
-            except Exception as e:
-                raise UserError(e)
+        self.ensure_one()
+        try:
+            if self.department:
+                self.synchronous_dingding_department()
+            if self.employee:
+                self.synchronous_dingding_employee(s_avatar=self.employee_avatar)
+            if self.partner:
+                self.synchronous_dingding_category()    # 同步标签
+                self.synchronous_dingding_partner()     # 同步员工
+            if self.synchronous_dept_detail:
+                # 获取部门详情
+                self.get_department_details()
+        except Exception as e:
+            raise UserError(e)
 
     @api.model
     def synchronous_dingding_department(self):
@@ -72,10 +75,6 @@ class DingDingSynchronous(models.TransientModel):
                 'name': res.get('name'),
                 'ding_id': res.get('id'),
             }
-            if res.get('parentid') != 1:
-                partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))])
-                if partner_department:
-                    data.update({'parent_id': partner_department[0].id})
             h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id')), ('active', '=', True)])
             if h_department:
                 h_department.write(data)
@@ -89,6 +88,28 @@ class DingDingSynchronous(models.TransientModel):
                 department.write({'active': False})
             else:
                 department.write({'active': True})
+        return True
+
+    @api.model
+    def get_department_details(self):
+        """
+        获取部门详情
+        :return:
+        """
+        departments = self.env['hr.department'].sudo().search([('active', '=', True), ('ding_id', '!=', '')])
+        din_client = self.env['dingding.api.tools'].get_client()
+        for department in departments:
+            result = din_client.department.get(department.ding_id)
+            if result.get('errcode') == 0:
+                if result.get('parentid') != 1:
+                    partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))])
+                    if partner_department:
+                        self._cr.execute("UPDATE hr_department SET parent_id=%s WHERE id=%s" % (partner_department.id, department.id))
+            dept_manageusers = result.get('deptManagerUseridList')
+            if dept_manageusers:
+                depts = dept_manageusers.split("|")
+                manage_users = self.env['hr.employee'].search([('ding_id', 'in', depts)])
+                department.write({'manager_user_ids': [(6, 0, manage_users.ids)], 'manager_id': manage_users[0].id})
         return True
 
     @api.model

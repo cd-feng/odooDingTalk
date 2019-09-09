@@ -30,8 +30,7 @@
         </field>
     </record>
 
-    <menuitem id="dingding_message_type_menu" name="钉钉消息类型" parent="dingding_base.configure_menu"
-              sequence="3" action="dingding_message_type_action"/>
-
+<!--    <menuitem id="dingding_message_type_menu" name="钉钉消息类型" parent="dingding_base.configure_menu"-->
+<!--              sequence="3" action="dingding_message_type_action"/>-->
 
 </odoo>

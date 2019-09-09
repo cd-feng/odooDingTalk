@@ -39,8 +39,6 @@
 
         'views/menu.xml',
         'views/res_users_views.xml',
-        'wizard/synchronous.xml',
-        'wizard/change_mobile.xml',
         'views/web_widget.xml',
         'views/dingding_parameter.xml',
         'views/res_config_settings_views.xml',
@@ -52,6 +50,10 @@
         'views/dingding_callback_manage.xml',
         'views/dingding_approval_template.xml',
         'views/dingding_approval_control.xml',
+
+        'wizard/synchronous.xml',
+        'wizard/change_mobile.xml',
+        'wizard/create_res_user.xml',
     ],
     "qweb": [
         "static/xml/*.xml"

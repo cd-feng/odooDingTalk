@@ -198,3 +198,24 @@ class DingDingTools(models.TransientModel):
                 return {'state': False, 'msg': '钉钉登录获取用户信息失败，详情为:{}'.format(result.get('errmsg'))}
         except ReadTimeout:
             return {'state': False, 'msg': '网络连接超时'}
+
+    @api.model
+    def send_work_message(self, msg, user_id):
+        """
+        发送工作通知消息到指定员工
+        :param msg:
+        :param user_id:
+        :return:
+        """
+        try:
+            agent_id = self.env['ir.config_parameter'].sudo().get_param('dingding_base.agent_id')
+            url, token = self.env['dingding.parameter'].sudo().get_parameter_value_and_token('send_work_message')
+            data = {
+                'agent_id': agent_id,
+                'userid_list': user_id,
+                'msg': msg,
+            }
+            result = self.send_post_request(url, token, data)
+            return True
+        except Exception as e:
+            return False

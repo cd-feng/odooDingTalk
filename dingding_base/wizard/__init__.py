@@ -20,3 +20,4 @@
 
 from . import change_mobile
 from . import synchronous
+from . import create_res_user
