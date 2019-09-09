@@ -37,7 +37,7 @@ class ResUsers(models.Model):
         if provide_id == 'dingtalk':
             user = self.sudo().search([('ding_user_id', '=', oauth_uid)])
         else:
-            user = self.search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', oauth_uid)])
+            user = self.sudo().search([('oauth_provider_id', '=', provide_id), ('oauth_uid', '=', oauth_uid)])
         _logger.info("user: %s", user)
         if not user or len(user) > 1:
             return AccessDenied
