@@ -192,14 +192,11 @@ class DingDingChat(models.Model):
         :param msg: msg
         :return:
         """
-        print(msg)
-        chat = self.env['dingding.chat'].sudo().search(
-            [('chat_id', '=', msg.get('ChatId'))])
+        chat = self.env['dingding.chat'].sudo().search([('chat_id', '=', msg.get('ChatId'))], limit=1)
         # 群会话更换群主
         if msg.get('EventType') == 'chat_update_owner':
             if chat:
-                employee = self.env['hr.employee'].sudo().search(
-                    [('ding_id', '=', msg.get('Owner'))])
+                employee = self.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('Owner'))], limit=1)
                 if employee:
                     chat.sudo().write({'employee_id': employee[0].id})
         # 群会话更换群名称
@@ -212,29 +209,25 @@ class DingDingChat(models.Model):
             for user in chat.useridlist:
                 new_users.append(user.id)
             for user in msg.get('UserId'):
-                employee = self.env['hr.employee'].sudo().search(
-                    [('ding_id', '=', user)])
+                employee = self.env['hr.employee'].sudo().search([('ding_id', '=', user)], limit=1)
                 if employee:
                     new_users.append(employee[0].id)
             chat.sudo().write({'useridlist': [(6, 0, new_users)]})
         # 群会话删除人员
         elif msg.get('EventType') == 'chat_remove_member':
             for user in msg.get('UserId'):
-                employee = self.env['hr.employee'].sudo().search(
-                    [('ding_id', '=', user)])
+                employee = self.env['hr.employee'].sudo().search([('ding_id', '=', user)], limit=1)
                 if employee:
                     chat.sudo().write({'useridlist': [(3, employee[0].id)]})
         # 群会话用户主动退群
         elif msg.get('EventType') == 'chat_quit':
-            employee = self.env['hr.employee'].sudo().search(
-                [('ding_id', '=', msg.get('Operator'))])
+            employee = self.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('Operator'))], limit=1)
             if employee:
                 chat.sudo().write({'useridlist': [(3, employee[0].id)]})
         # 群会话解散群
         elif msg.get('EventType') == 'chat_disband':
             if chat:
-                emp = self.env['hr.employee'].sudo().search(
-                    [('ding_id', '=', msg.get('Operator'))])
+                emp = self.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('Operator'))], limit=1)
                 chat.sudo().write({'state': 'close'})
                 if emp:
                     chat.sudo().message_post(body=_("群会话已被解散，操作人: {}!").format(

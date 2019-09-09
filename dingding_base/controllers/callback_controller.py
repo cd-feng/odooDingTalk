@@ -79,12 +79,12 @@ class DingDingCallBackManage(Home, http.Controller):
         elif event_type == 'bpms_instance_change':
             self.bpms_instance_change(msg)
         # # -----用户签到-----------
-        # elif event_type == 'check_in':
-        #     request.env['dindin.signs.list'].sudo().get_signs_by_user(msg.get('StaffId'), msg.get('TimeStamp'))
+        elif event_type == 'check_in':
+            request.env['dingding.signs.list'].sudo().get_signs_by_user(msg.get('StaffId'), msg.get('TimeStamp'))
         # # -------群会话事件----------
-        # elif event_type == 'chat_add_member' or event_type == 'chat_remove_member' or event_type == 'chat_quit' or \
-        #         event_type == 'chat_update_owner' or event_type == 'chat_update_title' or event_type == 'chat_disband':
-        #     request.env['dingding.chat'].sudo().process_dingding_chat_onchange(msg)
+        elif event_type == 'chat_add_member' or event_type == 'chat_remove_member' or event_type == 'chat_quit' or \
+                event_type == 'chat_update_owner' or event_type == 'chat_update_title' or event_type == 'chat_disband':
+            request.env['dingding.chat'].sudo().process_dingding_chat_onchange(msg)
         # 返回加密结果
         return self.result_success(callback.aes_key, callback.token, corp_id)
 
