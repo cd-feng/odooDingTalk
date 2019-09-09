@@ -61,7 +61,7 @@ class DingDingSignList(models.Model):
             if result.get('errcode') == 0:
                 r_result = result.get('result')
                 for data in r_result.get('page_list'):
-                    emp = self.env['hr.employee'].sudo().search([('din_id', '=', data.get('userid'))], limit=1)
+                    emp = self.env['hr.employee'].sudo().search([('ding_id', '=', data.get('userid'))], limit=1)
                     self.env['dingding.signs.list'].create({
                         'emp_id': emp.id if emp else False,
                         'checkin_time': self.get_time_stamp(data.get('checkin_time')),
