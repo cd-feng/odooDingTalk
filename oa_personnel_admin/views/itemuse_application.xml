@@ -19,7 +19,7 @@ limitations under the License.
             <field name="name">物品领用</field>
             <field name="model">oa.itemuse.application</field>
             <field name="arch" type="xml">
-                <tree default_order="id desc" decoration-success="oa_state in ('01', '02')" decoration-muted="oa_result == 'agree'" decoration-warning="oa_result in ('refuse', 'redirect')" >
+                <tree default_order="id desc" decoration-info="oa_state in ('01', '02')" decoration-warning="oa_result == 'redirect'" decoration-success="oa_result == 'agree'" decoration-danger="oa_result == 'refuse'">
                     <field name="process_code"/>
                     <field name="originator_user_id"/>
                     <field name="emp_id"/>
