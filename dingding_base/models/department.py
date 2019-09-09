@@ -38,6 +38,7 @@ class HrDepartment(models.Model):
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
     dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
     child_ids = fields.One2many(comodel_name='hr.department', inverse_name='parent_id', string=u'下级部门')
+    manager_user_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_department_managr_user_employee_rel', string=u'主管')
 
     @api.multi
     def create_ding_department(self):

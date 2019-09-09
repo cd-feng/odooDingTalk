@@ -40,6 +40,7 @@
         'views/hr_leaves_list.xml',
         'views/hr_attendance_result.xml',
         'views/hr_attendance_record.xml',
+        'views/user_sign_list.xml',
     ],
     'qweb': [
         'static/xml/*.xml'

@@ -10,5 +10,4 @@ access_hr_attendance_result,hr.attendance.result,model_hr_attendance_result,ding
 access_hr_attendance_result_manage_groups,hr.attendance.result.manage.groups,model_hr_attendance_result,dingding_base.manage_groups,1,1,1,1
 access_hr_attendance_record,hr.attendance.record,model_hr_attendance_record,dingding_base.user_groups,1,0,0,0
 access_hr_attendance_record_manage_groups,hr.attendance.record.manage.groups,model_hr_attendance_record,dingding_base.manage_groups,1,1,1,1
-
-
+access_dingding_signs_list_group_user,dingding.signs.list.group.user,model_dingding_signs_list,dingding_base.user_groups,1,0,0,0

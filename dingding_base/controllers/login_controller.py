@@ -22,6 +22,7 @@ import functools
 import json
 import logging
 import requests
+import werkzeug
 from werkzeug.exceptions import BadRequest
 from odoo import SUPERUSER_ID, api, http, _
 from odoo import registry as registry_get
@@ -77,18 +78,17 @@ class OAuthController(Controller):
         :return:
         """
         auth_code = kw.get('authCode')
-        _logger.info(">>>免登授权码: %s", auth_code)
+        logging.info(">>>免登授权码: %s", auth_code)
         user_id = self.get_userid_by_auth_code(auth_code)
         employee = request.env['hr.employee'].sudo().search([('ding_id', '=', user_id)], limit=1)
         if not employee:
             return self._do_err_redirect("系统对应员工不存在!")
-        ensure_db()
-        db_name = request.session.db
-        if not http.db_filter([db_name]):
+        logging.info(">>>员工{}正在尝试登录系统".format(employee.name))
+        dbname = request.session.db
+        if not http.db_filter([dbname]):
             return BadRequest()
         context = {}
-        registry = registry_get(db_name)
-        _logger.info(">>>员工{}正在尝试登录系统".format(employee.name))
+        registry = registry_get(dbname)
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, context)
@@ -96,13 +96,14 @@ class OAuthController(Controller):
                 cr.commit()
                 url = '/web'
                 uid = request.session.authenticate(*credentials)
-                if uid:
-                    _logger.info(">>>员工{}登录成功".format(employee.name))
-                    return http.redirect_with_hash(url)
-                else:
-                    self._do_err_redirect("登录失败")
+                if uid is not False:
+                    logging.info(">>>员工{}登录成功".format(employee.sudo().name))
+                    # request.params['login_success'] = False
+                    return set_cookie_and_redirect(url)
             except Exception as e:
-                self._do_err_redirect("登录失败,原因为:{}".format(str(e)))
+                _logger.exception("OAuth2: %s" % str(e))
+                url = "/web/login?oauth_error=2"
+        return set_cookie_and_redirect(url)
 
     def get_userid_by_auth_code(self, auth_code):
         """
