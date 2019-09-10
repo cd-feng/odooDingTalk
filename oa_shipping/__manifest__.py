@@ -21,8 +21,8 @@
     'category': 'dingding',
     'version': '1.0',
     'depends': ['oa_base', 'fleet'],
-    'installable': True,
-    'auto_install': True,
+    'installable': False,
+    'auto_install': False,
     'data': [
         'groups/group.xml',
         'security/ir.model.access.csv',
