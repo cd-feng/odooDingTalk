@@ -23,6 +23,12 @@ limitations under the License.
                         <field name="soure_type"/>
                     </group>
                     <group>
+                        <field name="is_all_emp"/>
+                    </group>
+                    <group>
+                        <field name="emp_ids" widget="many2many_tags" placeholder="获取的员工..."/>
+                    </group>
+                    <group>
                         <field name="start_date" widget="date"/>
                         <field name="end_date" widget="date"/>
                     </group>
