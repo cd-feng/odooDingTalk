@@ -29,6 +29,9 @@
                         icon="fa-hand-peace-o" groups="dingding_base.manage_groups">
                 </button>
             </button>
+            <xpath expr="//field[@name='manager_id']" position='after'>
+                <field name="manager_user_ids" widget="many2many_tags"/>
+            </xpath>
         </field>
     </record>
 

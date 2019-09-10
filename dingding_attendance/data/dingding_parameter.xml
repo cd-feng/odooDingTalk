@@ -59,6 +59,19 @@
             <field name="value">https://oapi.dingtalk.com/topapi/attendance/getusergroup?access_token=</field>
         </record>
 
+        <!--用户签到-->
+        <record id="dingding_parameter_get_dept_checkin" model="dingding.parameter">
+            <field name="name">获取部门用户签到记录</field>
+            <field name="key">get_dept_checkin</field>
+            <field name="value">https://oapi.dingtalk.com/checkin/record?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_get_user_checkin" model="dingding.parameter">
+            <field name="name">获取用户签到记录</field>
+            <field name="key">get_user_checkin</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/checkin/record/get?access_token=</field>
+        </record>
+
         <!-- 钉钉-考勤自动任务 -->
 		<record id="dingding_attendance_ir_cron" model="ir.cron">
 			<field name="name">钉钉-考勤自动任务</field>

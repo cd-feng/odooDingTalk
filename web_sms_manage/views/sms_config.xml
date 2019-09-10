@@ -60,7 +60,7 @@
                         </group>
                         <group>
                             <field name="app_id"/>
-                            <field name="app_key"/>
+                            <field name="app_key" password="True"/>
                         </group>
                     </group>
                     <notebook>

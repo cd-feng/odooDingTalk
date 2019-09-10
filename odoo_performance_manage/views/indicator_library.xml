@@ -99,6 +99,7 @@ limitations under the License.
         </field>
     </record>
 
-    <menuitem id="performance_indicator_library_menu" name="指标库" parent="man_info_menu" sequence="2" action="performance_indicator_library_action"/>
+    <menuitem id="performance_indicator_library_menu" name="指标库" parent="man_info_menu" sequence="2"
+              action="performance_indicator_library_action" groups="odoo_performance_manage.manage_groups"/>
 
 </odoo>

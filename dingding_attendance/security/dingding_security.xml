@@ -74,5 +74,20 @@
         <field name="domain_force">[]</field>
     </record>
 
+    <!--  员工签到记录列表过滤规则  -->
+     <record id="dingding_signs_list_user_groups_rule" model="ir.rule">
+        <field name="name">签到记录列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_dingding_signs_list"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]),('emp_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dingding_signs_list_manage_groups_rule" model="ir.rule">
+        <field name="name">签到记录列表:所有记录规则</field>
+        <field name="model_id" ref="model_dingding_signs_list"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
 
 </odoo>

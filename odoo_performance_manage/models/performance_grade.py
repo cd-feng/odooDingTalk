@@ -29,8 +29,8 @@ class PerformanceGrade(models.Model):
     active = fields.Boolean(string=u'Active', default=True)
     grade_type = fields.Selection(string=u'等级类型', selection=[('distributed', '强制正态分布(未开发)'), ('interval', '分数区间对应')], default='interval', required=True, index=True)
     name = fields.Char(string='等级名称', required=True, index=True)
-    interval_from = fields.Char(string='分数区间范围起', required=True, index=True)
-    interval_end = fields.Char(string='分数区间范围止', required=True, index=True)
+    interval_from = fields.Integer(string='分数区间范围起', index=True)
+    interval_end = fields.Integer(string='分数区间范围止', index=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "等级名称已存在!"),
