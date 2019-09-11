@@ -13,106 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ###################################################################################
+import calendar
 import logging
 from datetime import datetime, timedelta
-import calendar
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from chinese_calendar import is_workday, is_holiday
 
 _logger = logging.getLogger(__name__)
-
-
-status_choice = [('0', '未使用'), ('1', '使用中'), ('2', '已失效'), ]
-user_status_choice = [('0', '未审核'), ('1', '已审核'), ('2', '已失效'), ]
-
-EditAttendanceType = [
-    ('00', '基本工资/应出勤天数/8*请假小时'),
-    ('01', '基本工资/应出勤天数*请假小时'),
-    ('02', '(按次数) 次数*每次事假扣款'),
-]
-
-rate_choice = [('0', '年'), ('1', '月')]
-
-check_status_choice = [('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工')]
-
-
-TimeResult = [
-    ('Normal', '正常'),
-    ('Early', '早退'),
-    ('Late', '迟到'),
-    ('SeriousLate', '严重迟到'),
-    ('Absenteeism', '旷工迟到'),
-    ('NotSigned', '未打卡'),
-]
-LocationResult = [
-    ('Normal', '范围内'), ('Outside', '范围外'), ('NotSigned', '未打卡'),
-]
-SourceType = [
-    ('ATM', '考勤机'),
-    ('BEACON', 'IBeacon'),
-    ('DING_ATM', '钉钉考勤机'),
-    ('USER', '手机打卡'),
-    ('BOSS', '管理员改签'),
-    ('APPROVE', '审批系统'),
-    ('SYSTEM', '考勤系统'),
-    ('AUTO_CHECK', '自动打卡'),
-    ('odoo', 'Odoo系统'),
-]
-
-DayType = [
-    ('00', '工作日'),
-    ('01', '周末加班'),
-    ('02', '法假加班'),
-]
-
-
-class LegalHoliday(models.Model):
-    _description = '法定节假日'
-    _name = 'legal.holiday'
-    _rec_name = 'legal_holiday_name'
-
-    legal_holiday_name = fields.Char('法定节假日名称')
-    legal_holiday = fields.Date('法定节假日')
-    status = fields.Char('法定节假日状态', selection=status_choice)
-
-
-class AttendanceInfo(models.Model):
-    _description = '考勤日报表'
-    _name = 'attendance.info'
-    _inherit = 'hr.attendance'
-
-    ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    workDate = fields.Date(string=u'工作日')
-    on_timeResult = fields.Selection(string=u'上班考勤结果', selection=TimeResult)
-    off_timeResult = fields.Selection(string=u'下班考勤结果', selection=TimeResult)
-    on_planId = fields.Char(string=u'上班班次ID')
-    off_planId = fields.Char(string=u'下班班次ID')
-    on_sourceType = fields.Selection(string=u'上班数据来源', selection=SourceType)
-    off_sourceType = fields.Selection(string=u'下班数据来源', selection=SourceType)
-    on_approveId = fields.Char(string='上班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
-    on_procInstId = fields.Char(string='上班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
-    off_approveId = fields.Char(string='下班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
-    off_procInstId = fields.Char(string='下班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
-
-    # emp_id = fields.Mnay2one('hr.employee.info', '员工')
-    # attendance_date = fields.Date('考勤日期')
-    # check_in = fields.Datetime('上班时间', null=True)
-    # check_out = fields.Datetime('下班时间', null=True)
-    # check_in_type = fields.Many2one('attendance.exception.status', string='上班打卡状态')
-    # check_out_type = fields.Many2one('attendance.exception.status', string='下班打卡状态')
-    # check_in_status = fields.Char('上午出勤情况', selection=check_status_choice)
-    # check_out_status = fields.Char('下午出勤情况', selection=check_status_choice)
-    check_status = fields.Boolean('是否异常')
-    attendance_date_status = fields.Selection(string=u'日期性质', selection=DayType, default='00')
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建考勤记录
-        :return:
-        """
-        return super(AttendanceInfo, self).create(vals_list)
 
 
 class WageEmpAttendanceAnnal(models.TransientModel):
@@ -147,6 +55,11 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         :return:
         """
         self.attendance_total_cal(self.emp_ids, self.start_date, self.end_date)
+        
+        # 计算后重载考勤统计列表
+        action = self.env.ref('odoo_wage_manage.wage_employee_attendance_annal_action')
+        action_dict = action.read()[0]
+        return action_dict
 
     def date_range(self, start_date, end_date):
         """
@@ -162,10 +75,11 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             date_tmp.append(date_tmp[-1] + timedelta(days=1))
         return date_tmp
 
-    # 生成考勤日报表
     @api.multi
     def attendance_cal(self, emp_list, start_date, end_date):
-
+        """
+        生成考勤日报表
+        """
         # 获取排班信息 get_scheduling_info_dict
         # 获取班次信息 get_shift_info_dict
         # 获取签卡数据 get_edit_attendance_dict
@@ -178,6 +92,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         # shift_info_dict = get_shift_info_dict()
         # 考勤数据列表
         # attendance_info_list = []
+
         for emp in emp_list:
             # 删除已存在的
             old_attendance_info = self.env['attendance.info'].sudo().search(
@@ -188,7 +103,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             # scheduling_info_dict = get_scheduling_info_dict(emp, start_date, end_date)
             # # 获取签卡数据 get_edit_attendance_dict
             # edit_attendance_dict = get_edit_attendance_dict(emp, start_date, end_date)
-            # # 获取请假拆分后的数据 get_leave_detail_dict
+            # 获取请假拆分后的数据 get_leave_detail_dict
             # leave_detail_dict = get_leave_detail_dict(emp, start_date, end_date)
             # 获取原始打卡数据 get_original_card_dict
             # original_card_dict = self.get_original_card_dict(emp, start_date, end_date)
@@ -207,15 +122,18 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                         'ding_group_id': rec.ding_group_id.id,
                         'attendance_date_status': '00',
                     }
+                    # 判断是否周末加班
                     if datetime.isoweekday(date) in (6, 7):
                         data.update({'attendance_date_status': '01'})
-                    elif is_holiday(date):
+                    # 判断是否节假日加班
+                    elif self.env['legal.holiday'].sudo().search([('legal_holiday', '=', date)]):
                         data.update({'attendance_date_status': '02'})
                     if rec.check_type == 'OnDuty':
                         data.update(
                             {'check_in': rec.check_in,
                              'on_planId': rec.plan_id,
                              'on_timeResult': rec.timeResult,
+                             'on_baseCheckTime': rec.baseCheckTime,
                              'on_sourceType': rec.sourceType
                              })
                         OnDuty_list.append(data)
@@ -224,6 +142,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                             'check_out': rec.check_in,
                             'off_planId': rec.plan_id,
                             'off_timeResult': rec.timeResult,
+                            'off_baseCheckTime': rec.baseCheckTime,
                             'off_sourceType': rec.sourceType
                         })
                         OffDuty_list.append(data)
@@ -257,15 +176,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 # 新建记录
                 self.env['attendance.info'].sudo().create(duty_list)
 
-                # if original_card_dict.get(date):
-                #     # 判断原始打卡时间是否在打卡区间内
-                #     if original_card_dict.get(date).get('min') <= shift_info_dict[shift_name].check_in_end:
-                #         check_in = original_card_dict.get(date).get('min')
-                #         check_in_type = attendance_exception_status_card_normal
-                #     if original_card_dict.get(date).get('max') >= shift_info_dict[shift_name].check_out_start:
-                #         check_out = original_card_dict.get(date).get('max')
-                #         check_out_type = attendance_exception_status_card_normal
-
                 # 检索请假， 如果有，覆盖
                 # if leave_detail_dict.get(date):
                 #     if leave_detail_dict.get(date).get('leave_detail_time_start') is not None:
@@ -285,8 +195,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         #             'check_out': check_out,
         #             'check_in_type': check_in_type,
         #             'check_out_type': check_out_type,
-        #             'shift_info': shift_info_dict[shift_name]).attendance_info_ins(),
-        #             'check_in_status': ccc,
+        #             'shift_info': shift_info_dict[shift_name]).attendance_info_ins()
         #         }
         #         attendance_info_list.append(attendance_info_tmp)
         # self.env['attendance.info'].create(attendance_info_list)
@@ -324,24 +233,35 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 start_date_tmp += timedelta(days=current_month_num)
         self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
 
-    # 统计月应出勤及请假天数
     @api.multi
     def attendance_total_cal_sum(self, emp, start_date, attendance_info_dict_list):
-        arrive_total = real_arrive_total = notsigned_attendance_num = late_attendance_num = early_attendance_num = 0
+        """
+        统计月应出勤及请假天数
+        :retur
+        """
+        notsigned_attendance_num = late_attendance_num = early_attendance_num = 0
+        work_overtime_hour = weekend_overtime_hour = holiday_overtime_hour = 0
+        arrive_total = real_arrive_total = 0
+        leave_absence_hour = sick_absence_hour = 0
         leave_dict = {'病假': 0, '事假': 0, '年假': 0, '婚假': 0, '丧假': 0, '陪产假': 0, '产假': 0, '工伤假': 0, '探亲假': 0, '出差（请假）': 0,
                       '其他假': 0}
         for one in attendance_info_dict_list:
-            # 统计迟到早退缺卡
-            if one.attendance_date_status:
-                arrive_total = arrive_total + 1
-                if one.on_timeResult == 'NotSigned':
-                    notsigned_attendance_num = notsigned_attendance_num + 1
-                elif one.on_timeResult == 'Late':
-                    late_attendance_num = late_attendance_num + 1
-                if one.off_timeResult == 'NotSigned':
-                    notsigned_attendance_num = notsigned_attendance_num + 1
-                elif one.off_timeResult == 'Early':
-                    early_attendance_num = early_attendance_num + 1
+            # 统计平时加班、周末加班、节假日加班时数
+            if one.attendance_date_status == '00' and one.worked_hours > one.base_work_hours:
+                work_overtime_hour = work_overtime_hour + one.worked_hours - one.base_work_hours
+            elif one.attendance_date_status == '01':
+                weekend_overtime_hour = weekend_overtime_hour + one.worked_hours
+            elif one.attendance_date_status == '02':
+                holiday_overtime_hour = holiday_overtime_hour + one.worked_hours
+            # 统计迟到早退缺卡次数
+            if one.on_timeResult == 'NotSigned':
+                notsigned_attendance_num = notsigned_attendance_num + 1
+            elif one.on_timeResult == 'Late':
+                late_attendance_num = late_attendance_num + 1
+            if one.off_timeResult == 'NotSigned':
+                notsigned_attendance_num = notsigned_attendance_num + 1
+            elif one.off_timeResult == 'Early':
+                early_attendance_num = early_attendance_num + 1
             # # 统计假期
             # if leave_dict.get(one.check_in_type_id) is not None:
             #     leave_dict[one.check_in_type_id] += 1
@@ -360,6 +280,9 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                                 'attendance_month': start_date,
                                 'arrive_total': arrive_total,
                                 'real_arrive_total': real_arrive_total,
+                                'work_overtime_hour': work_overtime_hour,
+                                'weekend_overtime_hour': weekend_overtime_hour,
+                                'holiday_overtime_hour': holiday_overtime_hour,
                                 'notsigned_attendance_num': notsigned_attendance_num,
                                 'late_attendance_num': late_attendance_num,
                                 'early_attendance_num': early_attendance_num,
@@ -376,6 +299,124 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                                 'other_leave_total': leave_dict['其他假'],
                                 }
         return attendance_total_ins
+
+    # #  请假处理 有效识别
+    # @api.multi
+    # def get_leave_detail_dict(self, emp_one, start_date, end_date):
+    #     # 对 假期的 开始日期小于考勤计算的结束日期 或 假期的 结束日期大于考勤计算的起始日期
+    #     # 此次不需要判断是否生效
+    #     #  测试是否影响 考勤数据
+    #     leave_info_list = self.env['leave.info'].sudo().search(
+    #         [('emp_id', '=', emp_one.id), ('start_date', '<=', end_date), ('end_date', '>=', start_date)])
+    #     if len(leave_info_list):
+    #         self.leave_split_cal(leave_info_list)
+    #     leave_detail_dict = {}
+    #     leave_detail_list = self.env['leave.detail'].sudo().search(
+    #         [('emp_id', '=', emp_one.id), ('leave_date', '<=', end_date), ('leave_date', '>=', start_date), ('leave_info_status', '=', '1')])
+    #     for one in leave_detail_list:
+    #         # leave_detail_dict[one.leave_date] = one
+    #         if leave_detail_dict.get(one.leave_date) is None:
+    #             leave_detail_dict[one.leave_date] = {}
+    #         if one.leave_detail_time_start is not None:
+    #             if leave_detail_dict[one.leave_date].get('leave_detail_time_start') is None:
+    #                 leave_detail_dict[one.leave_date]['leave_detail_time_start'] = one.leave_detail_time_start
+    #                 leave_detail_dict[one.leave_date]['leave_detail_time_start_type'] = one.leave_type
+    #             else:
+    #                 raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
+    #                                                                                   attendance_date=one.leave_date))
+    #         if one.leave_detail_time_end is not None:
+    #             if leave_detail_dict[one.leave_date].get('leave_detail_time_end') is None:
+    #                 leave_detail_dict[one.leave_date]['leave_detail_time_end'] = one.leave_detail_time_end
+    #                 leave_detail_dict[one.leave_date]['leave_detail_time_end_type'] = one.leave_type
+    #             else:
+    #                 raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
+    #                                                                                   attendance_date=one.leave_date))
+    #     return leave_detail_dict
+
+    # # 假期拆分
+    # def leave_split(self, leave_info_ins):
+
+    #     leave_detail_ins_list = []
+    #     # TODO 没有排班会影响<假期拆分>的结果
+    #     # 无 ID 不会删除已关联的 LeaveDetail
+    #     self.env['leave.detail'].sudo().search([('leave_info_id', '=', leave_info_ins)]).unlink()
+    #     for attendance_date, shift_name in scheduling_info_dict.items():
+    #         # 假期类型不含节假日
+    #         if leave_info_ins.leave_type.legal_include is False:
+    #             # 班次为节假日，跳过
+    #             if shift_info_dict[shift_name].type_shift is False:
+    #                 continue
+    #         leave_detail_ins = LeaveDetail()
+    #         leave_detail_ins.emp = leave_info_ins.emp
+    #         leave_detail_ins.leave_info_id = leave_info_ins
+    #         leave_detail_ins.leave_date = attendance_date
+    #         # 当前日期不是第一天 或最后一天 ，开始日期和结束日期为 班次的 上午上班时间、 下午下班时间
+    #         leave_detail_ins.leave_detail_time_start = shift_info_dict[shift_name].check_in
+    #         leave_detail_ins.leave_detail_time_end = shift_info_dict[shift_name].check_out
+    #         # 当前日期为开始日期
+    #         if attendance_date == leave_info_ins.start_date:
+    #             # 开始时间小于 check_in_end 则 开始请假时间 为早上
+    #             if leave_info_ins.leave_info_time_start <= shift_info_dict[shift_name].check_in_end:
+    #                 leave_detail_ins.leave_detail_time_start = leave_info_ins.leave_info_time_start
+    #             # 开始时间大于 check_out_start 则 开始请假时间 为下午
+    #             elif leave_info_ins.leave_info_time_start >= shift_info_dict[shift_name].check_out_start:
+    #                 leave_detail_ins.leave_detail_time_start = None
+    #             # 否则报错
+    #             else:
+    #                 raise UserError("假期起始时间不正确")
+    #         # 当前日期为结束日期
+    #         if attendance_date == leave_info_ins.end_date:
+    #             # leave_info_time_end 小于 check_in_end 则 结束请假时间为早上
+    #             if leave_info_ins.leave_info_time_end <= shift_info_dict[shift_name].check_in_end:
+    #                 leave_detail_ins.leave_detail_time_end = None
+    #             # leave_info_time_end 大于 check_out_start 则 结束请假时间为下午
+    #             elif leave_info_ins.leave_info_time_end >= shift_info_dict[shift_name].check_out_start:
+    #                 leave_detail_ins.leave_detail_time_end = leave_info_ins.leave_info_time_end
+    #             else:
+    #                 raise UserError("假期结束时间不正确")
+    #         leave_detail_ins.leave_type = leave_info_ins.leave_type
+    #         leave_detail_ins.leave_info_status = leave_info_ins.leave_info_status
+    #         #  判断是否有重复单据
+    #         self.leave_info_distinct(leave_detail_ins)
+    #         leave_detail_ins.count_length = float((0 if leave_detail_ins.leave_detail_time_start is None else 0.5) + (
+    #             0 if leave_detail_ins.leave_detail_time_end is None else 0.5))
+    #         leave_detail_ins_list.append(leave_detail_ins)
+    #     return leave_detail_ins_list
+
+    # def leave_info_distinct(self, leave_detail_ins_tmp):
+
+    #     # 上午/下午  全天  上午  下午 无 ,共5种情况 不需要初始化 attendance_date
+    #     leave_detail_ins_list = self.env['leave.detail'].sudo().search([('emp_id', '=', leave_detail_ins_tmp.emp_id), (
+    #         'leave_date', '=', leave_detail_ins_tmp.leave_date), ('leave_info_status', '=', leave_detail_ins_tmp.leave_info_status)])
+    #     attendance_date = {}
+    #     for one in leave_detail_ins_list:
+    #         if one.leave_detail_time_start is not None:
+    #             if attendance_date.get('leave_detail_time_start') is None:
+    #                 attendance_date['leave_detail_time_start'] = one.leave_detail_time_start
+    #             else:
+    #                 raise UserError("上午存在重复记录")
+    #         if one.leave_detail_time_end is not None:
+    #             if attendance_date.get('leave_detail_time_end') is None:
+    #                 attendance_date['leave_detail_time_end'] = one.leave_detail_time_end
+    #             else:
+    #                 raise UserError("下午存在重复记录")
+    #         if attendance_date.get(
+    #                 'leave_detail_time_start') is not None and leave_detail_ins_tmp.leave_detail_time_start is not None:
+    #             raise UserError("存在重复记录，已有{date}上午的请假单".format(date=leave_detail_ins_tmp.leave_date))
+    #         if attendance_date.get(
+    #                 'leave_detail_time_end') is not None and leave_detail_ins_tmp.leave_detail_time_end is not None:
+    #             raise UserError("存在重复记录，已有{date}下午的请假单".format(date=leave_detail_ins_tmp.leave_date))
+
+    # # TODO 出差可以参考这个
+    # # 假期拆分计算
+
+    # def leave_split_cal(self, queryset):
+    #     leave_detail_ins_list = []
+    #     for leave_info_ins in queryset:
+    #         leave_split_list = self.leave_split(leave_info_ins)
+    #         if len(leave_split_list):
+    #             leave_detail_ins_list += leave_split_list
+    #     self.env['leave.detail'].create(leave_detail_ins_list)
 
 
 class WageEmpPerformanceManage(models.TransientModel):

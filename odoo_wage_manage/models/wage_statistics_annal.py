@@ -19,6 +19,98 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+WorkType = [
+    ('00', '正常出勤'),
+    ('01', '周末加班'),
+    ('02', '法假加班'),
+]
+
+status_choice = [('0', '未使用'), ('1', '使用中'), ('2', '已失效'), ]
+
+EditAttendanceType = [
+    ('00', '基本工资/应出勤天数/8*请假小时'),
+    ('01', '基本工资/应出勤天数*请假小时'),
+    ('02', '(按次数) 次数*每次事假扣款'),
+]
+
+rate_choice = [('0', '年'), ('1', '月')]
+
+TimeResult = [
+    ('Normal', '正常'),
+    ('Early', '早退'),
+    ('Late', '迟到'),
+    ('SeriousLate', '严重迟到'),
+    ('Absenteeism', '旷工迟到'),
+    ('NotSigned', '未打卡'),
+]
+LocationResult = [
+    ('Normal', '范围内'), ('Outside', '范围外'), ('NotSigned', '未打卡'),
+]
+SourceType = [
+    ('ATM', '考勤机'),
+    ('BEACON', 'IBeacon'),
+    ('DING_ATM', '钉钉考勤机'),
+    ('USER', '手机打卡'),
+    ('BOSS', '管理员改签'),
+    ('APPROVE', '审批系统'),
+    ('SYSTEM', '考勤系统'),
+    ('AUTO_CHECK', '自动打卡'),
+    ('odoo', 'Odoo系统'),
+]
+
+
+class LegalHoliday(models.Model):
+    _description = '法定节假日'
+    _name = 'legal.holiday'
+    _rec_name = 'legal_holiday_name'
+
+    legal_holiday_name = fields.Char('法定节假日名称')
+    legal_holiday = fields.Date('法定节假日')
+    status = fields.Char('法定节假日状态', selection=status_choice)
+
+
+class AttendanceInfo(models.Model):
+    _description = '考勤日报表'
+    _name = 'attendance.info'
+    _inherit = 'hr.attendance'
+
+    # @api.model
+    # def _get_default_company(self):
+    #     return self.env.user.company_id
+
+    # company_id = fields.Many2one('res.company', '公司', default=_get_default_company, index=True, required=True)
+    ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
+    workDate = fields.Date(string=u'工作日')
+    on_timeResult = fields.Selection(string=u'上班考勤结果', selection=TimeResult)
+    off_timeResult = fields.Selection(string=u'下班考勤结果', selection=TimeResult)
+    on_planId = fields.Char(string=u'上班班次ID')
+    off_planId = fields.Char(string=u'下班班次ID')
+    on_sourceType = fields.Selection(string=u'上班数据来源', selection=SourceType)
+    off_sourceType = fields.Selection(string=u'下班数据来源', selection=SourceType)
+    on_approveId = fields.Char(string='上班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
+    on_procInstId = fields.Char(string='上班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
+    off_approveId = fields.Char(string='下班打卡关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
+    off_procInstId = fields.Char(string='下班打卡审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
+    on_baseCheckTime = fields.Datetime(string=u'上班基准时间', help="计算迟到和早退，基准时间")
+    off_baseCheckTime = fields.Datetime(string=u'下班基准时间', help="计算迟到和早退，基准时间")
+    base_work_hours = fields.Float(string='应出勤小时', compute='_compute_base_work_hours', store=True, readonly=True)
+    attendance_date_status = fields.Selection(string=u'出勤性质', selection=WorkType, default='00')
+
+    @api.depends('on_baseCheckTime', 'off_baseCheckTime')
+    def _compute_base_work_hours(self):
+        for attendance in self:
+            if attendance.off_baseCheckTime:
+                delta = attendance.off_baseCheckTime - attendance.on_baseCheckTime
+                attendance.base_work_hours = delta.total_seconds() / 3600.0
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        支持批量新建考勤记录
+        :return:
+        """
+        return super(AttendanceInfo, self).create(vals_list)
+
 
 class WageEmpAttendanceAnnal(models.Model):
     _description = '员工考勤统计'
@@ -85,9 +177,6 @@ class WageEmpAttendanceAnnal(models.Model):
             if res.attendance_month:
                 month_date = str(res.attendance_month)
                 res.attend_code = "{}/{}".format(month_date[:4], month_date[5:7])
-            # res_count = self.search_count([('employee_id', '=', res.employee_id.id), ('attend_code', '=', res.attend_code)])
-            # if res_count > 1:
-            #     raise UserError("员工：{}和考勤期间：{}已存在！".format(res.employee_id.name, res.attend_code))
 
     @api.constrains('employee_id')
     @api.onchange('employee_id')
