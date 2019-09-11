@@ -73,11 +73,11 @@ limitations under the License.
                         </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
+                <!-- <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
-                </div>
+                </div> -->
             </form>
         </field>
     </record>
@@ -112,6 +112,32 @@ limitations under the License.
     <menuitem id="wage_employee_attendance_annal_menu" name="员工考勤统计" parent="wage_statistics_menu" sequence="1"
               action="wage_employee_attendance_annal_action"/>
 
+    <record id="wage_employee_attendance_info_tree_view" model="ir.ui.view">
+        <field name="name">员工考勤日报</field>
+        <field name="model">attendance.info</field>
+        <field name="arch" type="xml">
+            <tree default_order="employee_id desc">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="workDate"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="on_timeResult"/>
+                <field name="off_timeResult"/>
+                <field name="worked_hours"/>
+                <field name="attendance_date_status"/>  
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_employee_attendance_info_action">
+        <field name="name">员工考勤统计</field>
+        <field name="res_model">attendance.info</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wage_employee_attendance_info_menu" name="员工考勤日报" parent="wage_statistics_menu" sequence="1"
+              action="wage_employee_attendance_info_action"/>
 
     <record id="wage_employee_performance_manage_tree_view" model="ir.ui.view">
         <field name="name">员工绩效统计</field>

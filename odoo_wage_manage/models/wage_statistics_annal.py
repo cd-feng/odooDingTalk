@@ -25,7 +25,7 @@ class WageEmpAttendanceAnnal(models.Model):
     _name = 'wage.employee.attendance.annal'
     _rec_name = 'employee_id'
     _order = 'id'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    # _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def _get_default_company(self):
@@ -85,9 +85,9 @@ class WageEmpAttendanceAnnal(models.Model):
             if res.attendance_month:
                 month_date = str(res.attendance_month)
                 res.attend_code = "{}/{}".format(month_date[:4], month_date[5:7])
-            res_count = self.search_count([('employee_id', '=', res.employee_id.id), ('attend_code', '=', res.attend_code)])
-            if res_count > 1:
-                raise UserError("员工：{}和考勤期间：{}已存在！".format(res.employee_id.name, res.performance_code))
+            # res_count = self.search_count([('employee_id', '=', res.employee_id.id), ('attend_code', '=', res.attend_code)])
+            # if res_count > 1:
+            #     raise UserError("员工：{}和考勤期间：{}已存在！".format(res.employee_id.name, res.attend_code))
 
     @api.constrains('employee_id')
     @api.onchange('employee_id')
