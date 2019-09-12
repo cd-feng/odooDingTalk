@@ -60,33 +60,33 @@ SourceType = [
 ]
 
 
-class LeaveInfo(models.Model):
-    _description = '假期信息表'
-    _name = 'leave.info'
-    _rec_name = 'emp_id'
+# class LeaveInfo(models.Model):
+#     _description = '假期信息表'
+#     _name = 'leave.info'
+#     _rec_name = 'emp_id'
 
-    emp_id = fields.Mnay2one('hr.employee', string='员工')
-    start_date = fields.Date('开始日期')
-    leave_info_time_start = fields.Datetime('请假开始时间')
-    end_date = fields.Date('结束日期')
-    leave_info_time_end = fields.Datetime('请假结束时间')
-    # leave_type = fields.Many2one('leave.type', string='假期类型')
-    leave_info_status = fields.Char('假期单据状态', selection=user_status_choice)
+#     emp_id = fields.Mnay2one('hr.employee', string='员工')
+#     start_date = fields.Date('开始日期')
+#     leave_info_time_start = fields.Datetime('请假开始时间')
+#     end_date = fields.Date('结束日期')
+#     leave_info_time_end = fields.Datetime('请假结束时间')
+#     # leave_type = fields.Many2one('leave.type', string='假期类型')
+#     leave_info_status = fields.Char('假期单据状态', selection=user_status_choice)
 
 
-class LeaveDetail(models.Model):
-    _description = '假期明细表'
-    _name = 'leave.detail'
-    _rec_name = 'leave_info_id'
+# class LeaveDetail(models.Model):
+#     _description = '假期明细表'
+#     _name = 'leave.detail'
+#     _rec_name = 'leave_info_id'
 
-    emp_id = fields.Mnay2one('hr.employee.info', string='员工')
-    leave_info_id = fields.Many2one('leave.info', string='单据主键')
-    leave_date = fields.Date('请假日期')
-    leave_detail_time_start = fields.Datetime('请假开始时间', null=True, blank=True)
-    leave_detail_time_end = fields.Datetime('请假结束时间', null=True, blank=True)
-    # leave_type = fields.Many2one('leave.type', string='假期类型')
-    leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
-    count_length = fields.Float('长度统计')
+#     emp_id = fields.Mnay2one('hr.employee.info', string='员工')
+#     leave_info_id = fields.Many2one('leave.info', string='单据主键')
+#     leave_date = fields.Date('请假日期')
+#     leave_detail_time_start = fields.Datetime('请假开始时间', null=True, blank=True)
+#     leave_detail_time_end = fields.Datetime('请假结束时间', null=True, blank=True)
+#     # leave_type = fields.Many2one('leave.type', string='假期类型')
+#     leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
+#     count_length = fields.Float('长度统计')
 
 
 class LegalHoliday(models.Model):
@@ -124,6 +124,7 @@ class AttendanceInfo(models.Model):
     on_baseCheckTime = fields.Datetime(string=u'上班基准时间', help="计算迟到和早退，基准时间")
     off_baseCheckTime = fields.Datetime(string=u'下班基准时间', help="计算迟到和早退，基准时间")
     base_work_hours = fields.Float(string='应出勤小时', compute='_compute_base_work_hours', store=True, readonly=True)
+    leave_hours = fields.Float(string='请假时长')
     attendance_date_status = fields.Selection(string=u'出勤性质', selection=WorkType, default='00')
 
     @api.depends('on_baseCheckTime', 'off_baseCheckTime')

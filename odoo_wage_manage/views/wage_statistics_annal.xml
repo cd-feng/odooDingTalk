@@ -128,6 +128,7 @@ limitations under the License.
                 <field name="off_procInstId"/>
                 <field name="base_work_hours"/>
                 <field name="worked_hours"/>
+                <field name="leave_hours"/>
                 <field name="attendance_date_status"/>  
             </tree>
         </field>
