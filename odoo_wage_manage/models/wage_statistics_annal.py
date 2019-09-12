@@ -25,6 +25,7 @@ WorkType = [
     ('02', '法假加班'),
 ]
 
+user_status_choice = [('0', '未审核'), ('1', '已审核'), ('2', '已失效'), ]
 status_choice = [('0', '未使用'), ('1', '使用中'), ('2', '已失效'), ]
 
 EditAttendanceType = [
@@ -57,6 +58,35 @@ SourceType = [
     ('AUTO_CHECK', '自动打卡'),
     ('odoo', 'Odoo系统'),
 ]
+
+
+class LeaveInfo(models.Model):
+    _description = '假期信息表'
+    _name = 'leave.info'
+    _rec_name = 'emp_id'
+
+    emp_id = fields.Mnay2one('hr.employee', string='员工')
+    start_date = fields.Date('开始日期')
+    leave_info_time_start = fields.Datetime('请假开始时间')
+    end_date = fields.Date('结束日期')
+    leave_info_time_end = fields.Datetime('请假结束时间')
+    # leave_type = fields.Many2one('leave.type', string='假期类型')
+    leave_info_status = fields.Char('假期单据状态', selection=user_status_choice)
+
+
+class LeaveDetail(models.Model):
+    _description = '假期明细表'
+    _name = 'leave.detail'
+    _rec_name = 'leave_info_id'
+
+    emp_id = fields.Mnay2one('hr.employee.info', string='员工')
+    leave_info_id = fields.Many2one('leave.info', string='单据主键')
+    leave_date = fields.Date('请假日期')
+    leave_detail_time_start = fields.Datetime('请假开始时间', null=True, blank=True)
+    leave_detail_time_end = fields.Datetime('请假结束时间', null=True, blank=True)
+    # leave_type = fields.Many2one('leave.type', string='假期类型')
+    leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
+    count_length = fields.Float('长度统计')
 
 
 class LegalHoliday(models.Model):

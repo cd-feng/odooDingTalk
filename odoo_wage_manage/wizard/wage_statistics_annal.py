@@ -134,7 +134,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                              'on_planId': rec.plan_id,
                              'on_timeResult': rec.timeResult,
                              'on_baseCheckTime': rec.baseCheckTime,
-                             'on_sourceType': rec.sourceType
+                             'on_sourceType': rec.sourceType,
+                             'on_procInstId': rec.procInstId
                              })
                         OnDuty_list.append(data)
                     else:
@@ -143,7 +144,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                             'off_planId': rec.plan_id,
                             'off_timeResult': rec.timeResult,
                             'off_baseCheckTime': rec.baseCheckTime,
-                            'off_sourceType': rec.sourceType
+                            'off_sourceType': rec.sourceType,
+                            'off_procInstId': rec.procInstId
                         })
                         OffDuty_list.append(data)
                 # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
@@ -300,123 +302,167 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                                 }
         return attendance_total_ins
 
-    # #  请假处理 有效识别
-    # @api.multi
-    # def get_leave_detail_dict(self, emp_one, start_date, end_date):
-    #     # 对 假期的 开始日期小于考勤计算的结束日期 或 假期的 结束日期大于考勤计算的起始日期
-    #     # 此次不需要判断是否生效
-    #     #  测试是否影响 考勤数据
-    #     leave_info_list = self.env['leave.info'].sudo().search(
-    #         [('emp_id', '=', emp_one.id), ('start_date', '<=', end_date), ('end_date', '>=', start_date)])
-    #     if len(leave_info_list):
-    #         self.leave_split_cal(leave_info_list)
-    #     leave_detail_dict = {}
-    #     leave_detail_list = self.env['leave.detail'].sudo().search(
-    #         [('emp_id', '=', emp_one.id), ('leave_date', '<=', end_date), ('leave_date', '>=', start_date), ('leave_info_status', '=', '1')])
-    #     for one in leave_detail_list:
-    #         # leave_detail_dict[one.leave_date] = one
-    #         if leave_detail_dict.get(one.leave_date) is None:
-    #             leave_detail_dict[one.leave_date] = {}
-    #         if one.leave_detail_time_start is not None:
-    #             if leave_detail_dict[one.leave_date].get('leave_detail_time_start') is None:
-    #                 leave_detail_dict[one.leave_date]['leave_detail_time_start'] = one.leave_detail_time_start
-    #                 leave_detail_dict[one.leave_date]['leave_detail_time_start_type'] = one.leave_type
-    #             else:
-    #                 raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
-    #                                                                                   attendance_date=one.leave_date))
-    #         if one.leave_detail_time_end is not None:
-    #             if leave_detail_dict[one.leave_date].get('leave_detail_time_end') is None:
-    #                 leave_detail_dict[one.leave_date]['leave_detail_time_end'] = one.leave_detail_time_end
-    #                 leave_detail_dict[one.leave_date]['leave_detail_time_end_type'] = one.leave_type
-    #             else:
-    #                 raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
-    #                                                                                   attendance_date=one.leave_date))
-    #     return leave_detail_dict
 
-    # # 假期拆分
-    # def leave_split(self, leave_info_ins):
+# class LeaveInfo(models.Model):
+#     _description = '假期信息表'
+#     _name = 'leave.info'
+#     _rec_name = 'emp_id'
 
-    #     leave_detail_ins_list = []
-    #     # TODO 没有排班会影响<假期拆分>的结果
-    #     # 无 ID 不会删除已关联的 LeaveDetail
-    #     self.env['leave.detail'].sudo().search([('leave_info_id', '=', leave_info_ins)]).unlink()
-    #     for attendance_date, shift_name in scheduling_info_dict.items():
-    #         # 假期类型不含节假日
-    #         if leave_info_ins.leave_type.legal_include is False:
-    #             # 班次为节假日，跳过
-    #             if shift_info_dict[shift_name].type_shift is False:
-    #                 continue
-    #         leave_detail_ins = LeaveDetail()
-    #         leave_detail_ins.emp = leave_info_ins.emp
-    #         leave_detail_ins.leave_info_id = leave_info_ins
-    #         leave_detail_ins.leave_date = attendance_date
-    #         # 当前日期不是第一天 或最后一天 ，开始日期和结束日期为 班次的 上午上班时间、 下午下班时间
-    #         leave_detail_ins.leave_detail_time_start = shift_info_dict[shift_name].check_in
-    #         leave_detail_ins.leave_detail_time_end = shift_info_dict[shift_name].check_out
-    #         # 当前日期为开始日期
-    #         if attendance_date == leave_info_ins.start_date:
-    #             # 开始时间小于 check_in_end 则 开始请假时间 为早上
-    #             if leave_info_ins.leave_info_time_start <= shift_info_dict[shift_name].check_in_end:
-    #                 leave_detail_ins.leave_detail_time_start = leave_info_ins.leave_info_time_start
-    #             # 开始时间大于 check_out_start 则 开始请假时间 为下午
-    #             elif leave_info_ins.leave_info_time_start >= shift_info_dict[shift_name].check_out_start:
-    #                 leave_detail_ins.leave_detail_time_start = None
-    #             # 否则报错
-    #             else:
-    #                 raise UserError("假期起始时间不正确")
-    #         # 当前日期为结束日期
-    #         if attendance_date == leave_info_ins.end_date:
-    #             # leave_info_time_end 小于 check_in_end 则 结束请假时间为早上
-    #             if leave_info_ins.leave_info_time_end <= shift_info_dict[shift_name].check_in_end:
-    #                 leave_detail_ins.leave_detail_time_end = None
-    #             # leave_info_time_end 大于 check_out_start 则 结束请假时间为下午
-    #             elif leave_info_ins.leave_info_time_end >= shift_info_dict[shift_name].check_out_start:
-    #                 leave_detail_ins.leave_detail_time_end = leave_info_ins.leave_info_time_end
-    #             else:
-    #                 raise UserError("假期结束时间不正确")
-    #         leave_detail_ins.leave_type = leave_info_ins.leave_type
-    #         leave_detail_ins.leave_info_status = leave_info_ins.leave_info_status
-    #         #  判断是否有重复单据
-    #         self.leave_info_distinct(leave_detail_ins)
-    #         leave_detail_ins.count_length = float((0 if leave_detail_ins.leave_detail_time_start is None else 0.5) + (
-    #             0 if leave_detail_ins.leave_detail_time_end is None else 0.5))
-    #         leave_detail_ins_list.append(leave_detail_ins)
-    #     return leave_detail_ins_list
+#     emp_id = fields.Mnay2one('hr.employee', string='员工')
+#     start_date = fields.Date('开始日期')
+#     leave_info_time_start = fields.Datetime('请假开始时间')
+#     end_date = fields.Date('结束日期')
+#     leave_info_time_end = fields.Datetime('请假结束时间')
+#     # leave_type = fields.Many2one('leave.type', string='假期类型')
+#     # leave_info_status = fields.Char('假期单据状态', selection=user_status_choice)
 
-    # def leave_info_distinct(self, leave_detail_ins_tmp):
 
-    #     # 上午/下午  全天  上午  下午 无 ,共5种情况 不需要初始化 attendance_date
-    #     leave_detail_ins_list = self.env['leave.detail'].sudo().search([('emp_id', '=', leave_detail_ins_tmp.emp_id), (
-    #         'leave_date', '=', leave_detail_ins_tmp.leave_date), ('leave_info_status', '=', leave_detail_ins_tmp.leave_info_status)])
-    #     attendance_date = {}
-    #     for one in leave_detail_ins_list:
-    #         if one.leave_detail_time_start is not None:
-    #             if attendance_date.get('leave_detail_time_start') is None:
-    #                 attendance_date['leave_detail_time_start'] = one.leave_detail_time_start
-    #             else:
-    #                 raise UserError("上午存在重复记录")
-    #         if one.leave_detail_time_end is not None:
-    #             if attendance_date.get('leave_detail_time_end') is None:
-    #                 attendance_date['leave_detail_time_end'] = one.leave_detail_time_end
-    #             else:
-    #                 raise UserError("下午存在重复记录")
-    #         if attendance_date.get(
-    #                 'leave_detail_time_start') is not None and leave_detail_ins_tmp.leave_detail_time_start is not None:
-    #             raise UserError("存在重复记录，已有{date}上午的请假单".format(date=leave_detail_ins_tmp.leave_date))
-    #         if attendance_date.get(
-    #                 'leave_detail_time_end') is not None and leave_detail_ins_tmp.leave_detail_time_end is not None:
-    #             raise UserError("存在重复记录，已有{date}下午的请假单".format(date=leave_detail_ins_tmp.leave_date))
+# class LeaveDetail(models.Model):
+#     _description = '假期明细表'
+#     _name = 'leave.detail'
+#     _rec_name = 'leave_info_id'
 
-    # # TODO 出差可以参考这个
-    # # 假期拆分计算
+#     emp_id = fields.Mnay2one('hr.employee.info', string='员工')
+#     leave_info_id = fields.Many2one('leave.info', string='单据主键')
+#     leave_date = fields.Date('请假日期')
+#     leave_detail_time_start = fields.Datetime('请假开始时间', null=True, blank=True)
+#     leave_detail_time_end = fields.Datetime('请假结束时间', null=True, blank=True)
+#     # leave_type = fields.Many2one('leave.type', string='假期类型')
+#     leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
+#     count_length = fields.Float('长度统计')
 
-    # def leave_split_cal(self, queryset):
-    #     leave_detail_ins_list = []
-    #     for leave_info_ins in queryset:
-    #         leave_split_list = self.leave_split(leave_info_ins)
-    #         if len(leave_split_list):
-    #             leave_detail_ins_list += leave_split_list
-    #     self.env['leave.detail'].create(leave_detail_ins_list)
+
+    @api.multi
+    def get_leave_detail_dict(self, emp_one, start_date, end_date):
+        """
+        处理请假数据
+        """
+        # 对 假期的 开始日期小于考勤计算的结束日期 或 假期的 结束日期大于考勤计算的起始日期
+
+        leave_info_list = self.env['leave.info'].sudo().search(
+            [('emp_id', '=', emp_one.id), ('start_date', '<=', end_date), ('end_date', '>=', start_date)])
+        # 判定在统计期间是否有请假记录
+        if len(leave_info_list):
+            self.leave_split_cal(leave_info_list)
+        leave_detail_dict = {}
+        leave_detail_list = self.env['leave.detail'].sudo().search(
+            [('emp_id', '=', emp_one.id), ('leave_date', '<=', end_date), ('leave_date', '>=', start_date), ('leave_info_status', '=', '1')])
+        for one in leave_detail_list:
+            # leave_detail_dict[one.leave_date] = one
+            if leave_detail_dict.get(one.leave_date) is None:
+                leave_detail_dict[one.leave_date] = {}
+            if one.leave_detail_time_start is not None:
+                if leave_detail_dict[one.leave_date].get('leave_detail_time_start') is None:
+                    leave_detail_dict[one.leave_date]['leave_detail_time_start'] = one.leave_detail_time_start
+                    leave_detail_dict[one.leave_date]['leave_detail_time_start_type'] = one.leave_type
+                else:
+                    raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
+                                                                                      attendance_date=one.leave_date))
+            if one.leave_detail_time_end is not None:
+                if leave_detail_dict[one.leave_date].get('leave_detail_time_end') is None:
+                    leave_detail_dict[one.leave_date]['leave_detail_time_end'] = one.leave_detail_time_end
+                    leave_detail_dict[one.leave_date]['leave_detail_time_end_type'] = one.leave_type
+                else:
+                    raise UserError("存在重复记录-{name}的{attendance_date}存在重复的请假数据".format(name=one.emp.name,
+                                                                                      attendance_date=one.leave_date))
+        return leave_detail_dict
+
+    def leave_split_cal(self, queryset):
+        """
+        创建假期明细表
+        """
+        leave_detail_ins_list = []
+        for leave_info_ins in queryset:
+            leave_split_list = self.leave_split(leave_info_ins)
+            if len(leave_split_list):
+                leave_detail_ins_list += leave_split_list
+        self.env['leave.detail'].create(leave_detail_ins_list)
+
+    def leave_split(self, leave_info_ins):
+        """
+        假期拆分，根据排班表拆分
+        """
+
+        leave_detail_ins_list = []
+        # 删除已经存在的关联明细
+        self.env['leave.detail'].sudo().search([('leave_info_id', '=', leave_info_ins.id)]).unlink()
+        scheduling_info_dict = get_scheduling_info_dict(leave_info_ins.emp, leave_info_ins.start_date,
+                                                        leave_info_ins.end_date)
+        for attendance_date, shift_name in scheduling_info_dict.items():
+            # 假期类型不含节假日
+            if leave_info_ins.leave_type.legal_include is False:
+                # 班次为节假日，跳过
+                if shift_info_dict[shift_name].type_shift is False:
+                    continue
+            leave_detail_ins = LeaveDetail()
+            leave_detail_ins.emp = leave_info_ins.emp
+            leave_detail_ins.leave_info_id = leave_info_ins
+            leave_detail_ins.leave_date = attendance_date
+            # 当前日期不是第一天 或最后一天 ，开始日期和结束日期为 班次的 上午上班时间、 下午下班时间
+            leave_detail_ins.leave_detail_time_start = shift_info_dict[shift_name].check_in
+            leave_detail_ins.leave_detail_time_end = shift_info_dict[shift_name].check_out
+            # 当前日期为开始日期
+            if attendance_date == leave_info_ins.start_date:
+                # 开始时间小于 check_in_end 则 开始请假时间 为早上
+                if leave_info_ins.leave_info_time_start <= shift_info_dict[shift_name].check_in_end:
+                    leave_detail_ins.leave_detail_time_start = leave_info_ins.leave_info_time_start
+                # 开始时间大于 check_out_start 则 开始请假时间 为下午
+                elif leave_info_ins.leave_info_time_start >= shift_info_dict[shift_name].check_out_start:
+                    leave_detail_ins.leave_detail_time_start = None
+                # 否则报错
+                else:
+                    raise UserError("假期起始时间不正确")
+            # 当前日期为结束日期
+            if attendance_date == leave_info_ins.end_date:
+                # leave_info_time_end 小于 check_in_end 则 结束请假时间为早上
+                if leave_info_ins.leave_info_time_end <= shift_info_dict[shift_name].check_in_end:
+                    leave_detail_ins.leave_detail_time_end = None
+                # leave_info_time_end 大于 check_out_start 则 结束请假时间为下午
+                elif leave_info_ins.leave_info_time_end >= shift_info_dict[shift_name].check_out_start:
+                    leave_detail_ins.leave_detail_time_end = leave_info_ins.leave_info_time_end
+                else:
+                    raise UserError("假期结束时间不正确")
+            leave_detail_ins.leave_type = leave_info_ins.leave_type
+            leave_detail_ins.leave_info_status = leave_info_ins.leave_info_status
+            #  判断是否有重复单据
+            self.leave_info_distinct(leave_detail_ins)
+            leave_detail_ins.count_length = float((0 if leave_detail_ins.leave_detail_time_start is None else 0.5) + (
+                0 if leave_detail_ins.leave_detail_time_end is None else 0.5))
+            leave_detail_ins_list.append(leave_detail_ins)
+        return leave_detail_ins_list
+
+    def leave_info_distinct(self, leave_detail_ins_tmp):
+
+        # 上午/下午  全天  上午  下午 无 ,共5种情况 不需要初始化 attendance_date
+        leave_detail_ins_list = self.env['leave.detail'].sudo().search([('emp_id', '=', leave_detail_ins_tmp.emp_id), (
+            'leave_date', '=', leave_detail_ins_tmp.leave_date), ('leave_info_status', '=', leave_detail_ins_tmp.leave_info_status)])
+        attendance_date = {}
+        for one in leave_detail_ins_list:
+            if one.leave_detail_time_start is not None:
+                if attendance_date.get('leave_detail_time_start') is None:
+                    attendance_date['leave_detail_time_start'] = one.leave_detail_time_start
+                else:
+                    raise UserError("上午存在重复记录")
+            if one.leave_detail_time_end is not None:
+                if attendance_date.get('leave_detail_time_end') is None:
+                    attendance_date['leave_detail_time_end'] = one.leave_detail_time_end
+                else:
+                    raise UserError("下午存在重复记录")
+            if attendance_date.get(
+                    'leave_detail_time_start') is not None and leave_detail_ins_tmp.leave_detail_time_start is not None:
+                raise UserError("存在重复记录，已有{date}上午的请假单".format(date=leave_detail_ins_tmp.leave_date))
+            if attendance_date.get(
+                    'leave_detail_time_end') is not None and leave_detail_ins_tmp.leave_detail_time_end is not None:
+                raise UserError("存在重复记录，已有{date}下午的请假单".format(date=leave_detail_ins_tmp.leave_date))
+
+    # 获取人员排班信息
+    def get_scheduling_info_dict(self, emp_one, start_date, end_date):
+        scheduling_info_dict = {}
+        scheduling_info_dict_query = self.env['employee.scheduling.info'].sudo().search(
+            [('emp_id', '=', emp_one.id), ('attendance_date', '>=', start_date), ('attendance_date', '<=', end_date)])
+        for one in scheduling_info_dict_query:
+            scheduling_info_dict[one['attendance_date']] = one['shifts_name']
+        return scheduling_info_dict
 
 
 class WageEmpPerformanceManage(models.TransientModel):

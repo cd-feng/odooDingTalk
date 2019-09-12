@@ -28,6 +28,7 @@
                 <field name="check_in"/>
                 <field name="timeResult"/>
                 <field name="sourceType"/>
+                <field name="procInstId"/>
             </tree>
         </field>
     </record>

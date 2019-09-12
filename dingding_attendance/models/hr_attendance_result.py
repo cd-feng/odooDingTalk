@@ -181,6 +181,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'check_type': rec.get('checkType'),
                         'check_in': self.get_time_stamp(rec.get('userCheckTime')),
                         'approveId': rec.get('approveId'),
+                        'procInstId': rec.get('procInstId'),
                     }
                     # 考勤组
                     groups = self.env['dingding.simple.groups'].sudo().search(
