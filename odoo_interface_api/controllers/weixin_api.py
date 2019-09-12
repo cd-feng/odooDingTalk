@@ -70,18 +70,24 @@ class WeiXinApiInterface(Controller):
         new_url = "{}appid={}&secret={}&js_code={}&grant_type=authorization_code".format(url, app_id, secret, wx_code)
         result = requests.get(url=new_url, timeout=5)
         result = json.loads(result.text)
-        employee_num = request.env['hr.employee'].sudo().search_count([('wx_openid', '=', result['openid'])])
-        if employee_num < 1:
+        employee = request.env['hr.employee'].sudo().search([('wx_openid', '=', result['openid'])], limit=1)
+        if not employee:
             return json.dumps({'state': False, 'msg': '未绑定员工', 'openid': result['openid']})
-        return json.dumps({'state': True, 'msg': '已绑定员工', 'openid': result['openid']})
+        employee_data = api_tool.create_employee_data(employee)
+        return json.dumps({'state': True, 'msg': '已绑定员工', 'openid': result['openid'], 'employee': employee_data})
 
-# # 获取微信access_token值 该值有效期为2小时，超过时间需要重新获取
-# @route('/wx/access_token', type='http', auth='public', methods=['get', 'post'], csrf=False)
-# def wx_access_token(self, **kw):
-# 	url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&"
-# 	newurl = ('%s%s%s%s%s' % (url, 'appid=', kw['appid'], '&secret=', kw['secret']))
-# 	logger.info(newurl)
-# 	response = urllib2.urlopen(newurl)
-# 	data = response.read()
-# 	logger.info(data)
-# 	return data
+    @route('/api/wx/post/message', type='json', auth='none', methods=['get', 'post'], csrf=False)
+    def get_wx_post_message(self, **kw):
+        """
+        接受微信端用户发给小程序的消息以及开发者需要的事件推送
+        :param kw:
+        :return:
+        """
+        logging.info("-----微信推送消息-------")
+        json_str = request.jsonrequest
+        logging.info(json_str)
+        logging.info("-----json-str-end-------")
+        params = request.params.copy()
+        logging.info(params)
+        # token = "odoohcmtoken"
+        # EncodingAESKey = "ddbmDYeaW4OUERHWGspWwgOZq62VZdROP0NyVY7idT3"

@@ -46,7 +46,7 @@ class EmployeeAPI(Home, http.Controller):
             'wx_avatar_url': wx_avatar_url,
         })
         employee.sudo().message_post(body=u"账号已绑定外部系统，Code: %s！" % params_data.get('appid'), message_type='notification')
-        return json.dumps({'state': True, 'msg': '注册绑定成功！'})
+        return json.dumps({'state': True, 'msg': '注册绑定成功！', 'employee': api_tool.create_employee_data(employee)})
 
     @http.route('/api/wx/employee/binding/clear', type='http', auth='none', methods=['get', 'post'], csrf=False)
     def api_wx_employee_bingding_clear(self, **kw):

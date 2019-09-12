@@ -18,3 +18,14 @@ def check_api_access(app_id):
     return False if not result else True
 
 
+def create_employee_data(employee):
+    """
+    返回员工dict类型
+    :param employee:
+    :return:
+    """
+    return {
+        'name': employee.name,
+        'id': employee.id,
+    }
+
