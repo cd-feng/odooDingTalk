@@ -76,18 +76,18 @@ class WeiXinApiInterface(Controller):
         employee_data = api_tool.create_employee_data(employee)
         return json.dumps({'state': True, 'msg': '已绑定员工', 'openid': result['openid'], 'employee': employee_data})
 
-    @route('/api/wx/post/message', type='json', auth='none', methods=['get', 'post'], csrf=False)
+    @route('/api/wx/post/message', type='http', auth='none', methods=['get', 'post'], csrf=False)
     def get_wx_post_message(self, **kw):
         """
         接受微信端用户发给小程序的消息以及开发者需要的事件推送
         :param kw:
         :return:
         """
+        params = request.params.copy()
+        logging.info(params)
         logging.info("-----微信推送消息-------")
         json_str = request.jsonrequest
         logging.info(json_str)
         logging.info("-----json-str-end-------")
-        params = request.params.copy()
-        logging.info(params)
         # token = "odoohcmtoken"
         # EncodingAESKey = "ddbmDYeaW4OUERHWGspWwgOZq62VZdROP0NyVY7idT3"
