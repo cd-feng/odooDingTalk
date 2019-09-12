@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api_alow_access,api.alow.access,model_api_alow_access,odoo_interface_api.manage_groups,1,1,1,1
+
