@@ -84,10 +84,9 @@ class WeiXinApiInterface(Controller):
         :return:
         """
         params = request.params.copy()
-        logging.info(params)
         logging.info("-----微信推送消息-------")
-        json_str = request.jsonrequest
-        logging.info(json_str)
+        logging.info(params)
         logging.info("-----json-str-end-------")
+        return params.get('echostr')
         # token = "odoohcmtoken"
         # EncodingAESKey = "ddbmDYeaW4OUERHWGspWwgOZq62VZdROP0NyVY7idT3"
