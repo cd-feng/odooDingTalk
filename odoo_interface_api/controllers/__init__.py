@@ -18,5 +18,7 @@
 #
 ###################################################################################
 
-from . import models
-from . import controllers
+from . import api_tool
+from . import weixin_api
+from . import employee
+from . import res_users
