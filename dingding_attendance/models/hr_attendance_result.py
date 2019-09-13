@@ -66,7 +66,7 @@ class HrAttendanceResult(models.Model):
     ]
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
     ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班')
+    plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班id')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
     work_date = fields.Datetime(string=u'工作日')
     work_month = fields.Char(string='年月字符串', help="为方便其他模块按照月份获取数据时使用", index=True)
@@ -79,16 +79,27 @@ class HrAttendanceResult(models.Model):
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult, index=True)
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
-        创建时触发
-        :param values:
+        支持批量新建考勤记录
         :return:
         """
-        if values['work_date']:
-            values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
-        return super(HrAttendanceResult, self).create(values)
+        for values in vals_list:
+            if values['work_date']:
+                values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
+        return super(HrAttendanceResult, self).create(vals_list)
+
+    # @api.model
+    # def create(self, values):
+    #     """
+    #     创建时触发
+    #     :param values:
+    #     :return:
+    #     """
+    #     if values['work_date']:
+    #         values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
+    #     return super(HrAttendanceResult, self).create(values)
 
 
 class HrAttendanceResultTransient(models.TransientModel):
@@ -119,7 +130,7 @@ class HrAttendanceResultTransient(models.TransientModel):
         :param user:
         :return:
         """
-        # self.clear_attendance() 
+        self.clear_attendance() 
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
@@ -170,6 +181,7 @@ class HrAttendanceResultTransient(models.TransientModel):
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
                                                 user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
             if result.get('errcode') == 0:
+                data_list = list()
                 for rec in result.get('recordresult'):
                     data = {
                         'record_id': rec.get('id'),
@@ -197,9 +209,10 @@ class HrAttendanceResultTransient(models.TransientModel):
                     #     [('emp_id', '=', emp_id[0].id),
                     #      ('check_in', '=', self.get_time_stamp(rec.get('userCheckTime'))),
                     #      ('check_type', '=', rec.get('checkType'))])
-                    attendance = self.env['hr.attendance.result'].sudo().search([('record_id', '=', rec.get('id'))])
-                    if not attendance:
-                        self.env['hr.attendance.result'].sudo().create(data)
+                    # attendance = self.env['hr.attendance.result'].sudo().search([('record_id', '=', rec.get('id'))])
+                    # if not attendance:
+                    data_list.append(data)
+                self.env['hr.attendance.result'].sudo().create(data_list)
                 if result.get('hasMore'):
                     return True
                 else:

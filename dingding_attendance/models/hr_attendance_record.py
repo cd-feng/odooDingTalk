@@ -130,7 +130,7 @@ class HrAttendanceRecordTransient(models.TransientModel):
         din_client = self.env['dingding.api.tools'].get_client()
         try:
             result = din_client.attendance.list_record(user_list, from_date, to_date)
-            logging.info(">>>数据返回结果%s", result)
+            # logging.info(">>>数据返回结果%s", result)
             for rec in result:
                 data = {
                     'userId': emp_data[rec['userId']],
