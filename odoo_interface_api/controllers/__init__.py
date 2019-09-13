@@ -22,3 +22,4 @@ from . import api_tool
 from . import weixin_api
 from . import employee
 from . import res_users
+from . import applet_api

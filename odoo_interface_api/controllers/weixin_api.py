@@ -83,6 +83,8 @@ class WeiXinApiInterface(Controller):
         :param kw:
         :return:
         """
+        # 示例消息体：
+        # 'signature', '82c88ea4f7380758928f594cad9606ad56eef537'), ('echostr', '760986963397047803'), ('timestamp', '1568289201'), ('nonce', '1232323960')
         params = request.params.copy()
         logging.info("-----微信推送消息-------")
         logging.info(params)
