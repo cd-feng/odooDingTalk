@@ -110,7 +110,7 @@ class AttendanceInfo(models.Model):
 
     # company_id = fields.Many2one('res.company', '公司', default=_get_default_company, index=True, required=True)
     ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    workDate = fields.Date(string=u'工作日')
+    workDate = fields.Datetime(string=u'工作日')
     on_timeResult = fields.Selection(string=u'上班考勤结果', selection=TimeResult)
     off_timeResult = fields.Selection(string=u'下班考勤结果', selection=TimeResult)
     on_planId = fields.Char(string=u'上班班次ID')
