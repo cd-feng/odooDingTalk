@@ -18,7 +18,7 @@
 #
 ###################################################################################
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -76,7 +76,15 @@ class HrDingdingPlanTran(models.TransientModel):
         :param stop_date: string 查询的结束日期
         :return:
         """
-        self.clear_hr_dingding_plan()
+        # self.clear_hr_dingding_plan()
+        # 删除已存在的排班信息
+        start_datetime = datetime(start_date.year, start_date.month, start_date.day)
+        stop_datetime = datetime(stop_date.year, stop_date.month, stop_date.day)
+        old_plan_info = self.env['hr.dingding.plan'].sudo().search(
+            [('plan_check_time', '>=', start_datetime), ('plan_check_time', '<=', stop_datetime)])
+        if old_plan_info:
+            old_plan_info.sudo().unlink()
+
         din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>------开始获取排班信息-----------")
         work_date = start_date

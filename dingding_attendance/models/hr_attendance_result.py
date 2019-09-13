@@ -130,7 +130,13 @@ class HrAttendanceResultTransient(models.TransientModel):
         :param user:
         :return:
         """
-        self.clear_attendance() 
+        # self.clear_attendance() 
+        # 删除已存在的考勤信息
+        old_att_info = self.env['hr.attendance.result'].sudo().search(
+            [('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)])
+        if old_att_info:
+            old_att_info.sudo().unlink()
+        
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
