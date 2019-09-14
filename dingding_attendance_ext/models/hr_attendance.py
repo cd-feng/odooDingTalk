@@ -352,12 +352,12 @@ class HrAttendanceTransient(models.TransientModel):
     @api.model
     def get_time_stamp(self, timeNum):
         """
-        将13位时间戳转换为时间(utc=0)
+        将13位时间戳转换为时间
         :param timeNum:
         :return:
         """
         timeStamp = float(timeNum / 1000)
-        timeArray = time.localtime(timeStamp)
+        timeArray = time.gmtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
 

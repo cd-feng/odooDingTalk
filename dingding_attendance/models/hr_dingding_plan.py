@@ -19,7 +19,6 @@
 ###################################################################################
 import logging
 from datetime import datetime, timedelta
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -105,10 +104,8 @@ class HrDingdingPlanTran(models.TransientModel):
                             'class_id': schedules['class_id'] if 'class_id' in schedules else "",
                         }
                         if 'plan_check_time' in schedules:
-                            plan_check_time_utc0 = datetime.strptime(schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
-                            plan_data.update({
-                                'plan_check_time': plan_check_time_utc0,
-                            })
+                            utc_plan_check_time = datetime.strptime(schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
+                            plan_data.update({'plan_check_time': utc_plan_check_time})
                         simple = self.env['dingding.simple.groups'].search(
                             [('group_id', '=', schedules['group_id'])], limit=1)
                         employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)

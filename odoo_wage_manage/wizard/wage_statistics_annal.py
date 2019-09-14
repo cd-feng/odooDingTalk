@@ -130,8 +130,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
 
         for emp in emp_list:
             # 删除已存在的
-            start_datetime = datetime(start_date.year, start_date.month, start_date.day)
-            end_datetime = datetime(end_date.year, end_date.month, end_date.day)
+            start_datetime = fields.Datetime.to_datetime(start_date)
+            end_datetime = fields.Datetime.to_datetime(end_date)
             old_attendance_info = self.env['attendance.info'].sudo().search(
                 [('employee_id', '=', emp.id), ('workDate', '>=', start_datetime), ('workDate', '<=', end_datetime)])
             if old_attendance_info:
@@ -146,89 +146,90 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             # original_card_dict = self.get_original_card_dict(emp, start_date, end_date)
             # 整合打卡、签卡、请假数据，赋值
             # print(scheduling_info_dict, edit_attendance_dict, leave_detail_dict, original_card_dict)
-            # date_list = self.date_range(start_date, end_date)
-            # for work_date in date_list:
-            # work_datetime = datetime(work_date.year, work_date.month, work_date.day)
-            work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
-                [('emp_id', '=', emp.id), ('work_date', '>=', start_datetime), ('work_date', '<=', end_datetime)])
-            # work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
-            #     [('emp_id', '=', emp.id), ('work_date', '=', work_datetime)])
-            OnDuty_list = list()
-            OffDuty_list = list()
-            for rec in work_date_attendance_result:
-                data = {
-                    'employee_id': emp.id,
-                    'workDate': rec.work_date,  # 工作日
-                    'ding_group_id': rec.ding_group_id.id,
-                    'attendance_date_status': '00',
-                }
-                # 判断是否周末加班
-                if datetime.isoweekday(rec.work_date) in (6, 7):
-                    data.update({'attendance_date_status': '01'})
-                # 判断是否节假日加班
-                elif self.env['legal.holiday'].sudo().search([('legal_holiday', '=', rec.work_date.date())]):
-                    data.update({'attendance_date_status': '02'})
-                if rec.check_type == 'OnDuty':
-                    data.update({
-                        'check_in': rec.check_in,
-                        'on_planId': rec.plan_id.plan_id,
-                        'on_timeResult': rec.timeResult,
-                        'on_baseCheckTime': rec.baseCheckTime,
-                        'on_sourceType': rec.sourceType,
-                        'on_procInstId': rec.procInstId
-                    })
-                    OnDuty_list.append(data)
-                elif rec.check_type == 'OffDuty':
-                    data.update({
-                        'check_out': rec.check_in,
-                        'off_planId': rec.plan_id.plan_id,
-                        'off_timeResult': rec.timeResult,
-                        'off_baseCheckTime': rec.baseCheckTime,
-                        'off_sourceType': rec.sourceType,
-                        'off_procInstId': rec.procInstId
-                    })
-                    OffDuty_list.append(data)
-            # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
-            OnDuty_list.sort(key=lambda x: x['check_in'])
-            # logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
-            OffDuty_list.sort(key=lambda x: x['check_out'])
-            # logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
-            duty_list = list()
-            on_planId_list = list()
-            for onduty in OnDuty_list:
-                for offduty in OffDuty_list:
-                    datetime_check_out = offduty.get('check_out')
-                    datetime_check_in = onduty.get('check_in')
-                    if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
-                            offduty.get('workDate') == onduty.get('workDate'):
-                        duty_tmp = dict(onduty, **offduty)
-                        duty_list.append(duty_tmp)
-                        on_planId_list.append(onduty.get('on_planId'))
-                    elif datetime_check_out > datetime_check_in and \
-                            offduty.get('workDate') == onduty.get('workDate') and \
-                            onduty.get('on_planId') not in on_planId_list:
-                        duty_tmp = dict(onduty, **offduty)
-                        duty_list.append(duty_tmp)
-                        on_planId_list.append(onduty.get('on_planId'))
-            # 剩余还未匹配到下班记录的考勤（如当天）
-            for onduty in OnDuty_list:
-                if onduty.get('on_planId') not in on_planId_list:
-                    duty_list.append(onduty)
-            # 将合并的考勤导入odoo考勤
-            duty_list.sort(key=lambda x: x['check_in'])
-            logging.info(">>>获取duty_list结果%s", duty_list)
-            # 判断是否在请假期间
-            # TODO 班次时间段内请假未考虑
-            # duty_info = []
-            # for duty in duty_list:
-            #     leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_datetime), ('end_time', '>=', work_datetime)])
-            #     if len(leave_info) > 0:
-            #         delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
-            #         leave_hours = delta.total_seconds() / 3600.0
-            #         duty.update({'leave_hours': leave_hours})
-            #     duty_info.append(duty)
+            date_list = self.date_range(start_date, end_date)
+            for work_date in date_list:
+                work_datetime = fields.Datetime.to_datetime(work_date)
+                
+                # work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
+                #     [('emp_id', '=', emp.id), ('work_date', '>=', start_datetime), ('work_date', '<=', end_datetime)])
+                work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
+                    [('emp_id', '=', emp.id), ('work_date', '=', work_datetime)], order='check_in')
+                OnDuty_list = list()
+                OffDuty_list = list()
+                for rec in work_date_attendance_result:
+                    data = {
+                        'employee_id': emp.id,
+                        'workDate': rec.work_date,  # 工作日
+                        'ding_group_id': rec.ding_group_id.id,
+                        'attendance_date_status': '00',
+                    }
+                    # 判断是否周末加班
+                    if datetime.isoweekday(rec.work_date) in (6, 7):
+                        data.update({'attendance_date_status': '01'})
+                    # 判断是否节假日加班
+                    elif self.env['legal.holiday'].sudo().search([('legal_holiday', '=', rec.work_date.date())]):
+                        data.update({'attendance_date_status': '02'})
+                    if rec.check_type == 'OnDuty':
+                        data.update({
+                            'check_in': rec.check_in,
+                            'on_planId': rec.plan_id.plan_id,
+                            'on_timeResult': rec.timeResult,
+                            'on_baseCheckTime': rec.baseCheckTime,
+                            'on_sourceType': rec.sourceType,
+                            'on_procInstId': rec.procInstId
+                        })
+                        OnDuty_list.append(data)
+                    elif rec.check_type == 'OffDuty':
+                        data.update({
+                            'check_out': rec.check_in,
+                            'off_planId': rec.plan_id.plan_id,
+                            'off_timeResult': rec.timeResult,
+                            'off_baseCheckTime': rec.baseCheckTime,
+                            'off_sourceType': rec.sourceType,
+                            'off_procInstId': rec.procInstId
+                        })
+                        OffDuty_list.append(data)
+                # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
+                OnDuty_list.sort(key=lambda x: x['check_in'])
+                logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
+                OffDuty_list.sort(key=lambda x: x['check_out'])
+                logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
+                duty_list = list()
+                on_planId_list = list()
+                for onduty in OnDuty_list:
+                    for offduty in OffDuty_list:
+                        datetime_check_out = offduty.get('check_out')
+                        datetime_check_in = onduty.get('check_in')
+                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
+                                offduty.get('workDate') == onduty.get('workDate'):
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
+                        elif datetime_check_out > datetime_check_in and \
+                                offduty.get('workDate') == onduty.get('workDate') and \
+                                onduty.get('on_planId') not in on_planId_list:
+                            duty_tmp = dict(onduty, **offduty)
+                            duty_list.append(duty_tmp)
+                            on_planId_list.append(onduty.get('on_planId'))
+                # 剩余还未匹配到下班记录的考勤（如当天）
+                for onduty in OnDuty_list:
+                    if onduty.get('on_planId') not in on_planId_list:
+                        duty_list.append(onduty)
+                # 将合并的考勤导入odoo考勤
+                duty_list.sort(key=lambda x: x['check_in'])
+                logging.info(">>>获取duty_list结果%s", duty_list)
+                # 判断是否在请假期间
+                # TODO 班次时间段内请假未考虑
+                # duty_info = []
+                # for duty in duty_list:
+                #     leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_datetime), ('end_time', '>=', work_datetime)])
+                #     if len(leave_info) > 0:
+                #         delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
+                #         leave_hours = delta.total_seconds() / 3600.0
+                #         duty.update({'leave_hours': leave_hours})
+                #     duty_info.append(duty)
 
-            self.env['attendance.info'].sudo().create(duty_list)
+                self.env['attendance.info'].sudo().create(duty_list)
 
     @api.multi
     def attendance_cal_v2(self, emp_list, start_date, end_date):
