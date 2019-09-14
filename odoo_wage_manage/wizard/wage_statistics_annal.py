@@ -14,7 +14,6 @@
 # limitations under the License.
 ###################################################################################
 import calendar
-import time
 import logging
 from datetime import date, datetime, timedelta
 
@@ -149,11 +148,12 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             date_list = self.date_range(start_date, end_date)
             for work_date in date_list:
                 work_datetime = fields.Datetime.to_datetime(work_date)
-                
+
                 # work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
                 #     [('emp_id', '=', emp.id), ('work_date', '>=', start_datetime), ('work_date', '<=', end_datetime)])
                 work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
-                    [('emp_id', '=', emp.id), ('work_date', '=', work_datetime)], order='check_in')
+                    [('emp_id', '=', emp.id), ('work_date', '=', work_datetime)], order='check_type, check_in')
+                print('111111111111111111111111111', work_date_attendance_result)
                 OnDuty_list = list()
                 OffDuty_list = list()
                 for rec in work_date_attendance_result:
@@ -194,23 +194,22 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 logging.info(">>>获取OnDuty_list结果%s", OnDuty_list)
                 OffDuty_list.sort(key=lambda x: x['check_out'])
                 logging.info(">>>获取OffDuty_list结果%s", OffDuty_list)
+                
+                # TODO 第一条记录会重复
                 duty_list = list()
                 on_planId_list = list()
                 for onduty in OnDuty_list:
                     for offduty in OffDuty_list:
                         datetime_check_out = offduty.get('check_out')
                         datetime_check_in = onduty.get('check_in')
-                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
-                                offduty.get('workDate') == onduty.get('workDate'):
+                        if onduty.get('on_planId') not in on_planId_list and \
+                            offduty.get('workDate') == onduty.get('workDate') and \
+                            (int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 or
+                             datetime_check_out > datetime_check_in):
                             duty_tmp = dict(onduty, **offduty)
                             duty_list.append(duty_tmp)
                             on_planId_list.append(onduty.get('on_planId'))
-                        elif datetime_check_out > datetime_check_in and \
-                                offduty.get('workDate') == onduty.get('workDate') and \
-                                onduty.get('on_planId') not in on_planId_list:
-                            duty_tmp = dict(onduty, **offduty)
-                            duty_list.append(duty_tmp)
-                            on_planId_list.append(onduty.get('on_planId'))
+
                 # 剩余还未匹配到下班记录的考勤（如当天）
                 for onduty in OnDuty_list:
                     if onduty.get('on_planId') not in on_planId_list:
@@ -228,7 +227,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 #         leave_hours = delta.total_seconds() / 3600.0
                 #         duty.update({'leave_hours': leave_hours})
                 #     duty_info.append(duty)
-
                 self.env['attendance.info'].sudo().create(duty_list)
 
     @api.multi
@@ -277,8 +275,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 OnDuty_list = list()
                 OffDuty_list = list()
                 for rec in work_date_attendance_result:
-                    print('11111111111111111',work_datetime)
-                    print('22222222222222222',rec.work_date)
+                    print('11111111111111111', work_datetime)
+                    print('22222222222222222', rec.work_date)
                     data = {
                         'employee_id': emp.id,
                         'workDate': rec.work_date,  # 工作日
@@ -344,7 +342,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 # TODO 班次时间段内请假未考虑
                 duty_info = []
                 for duty in duty_list:
-                    leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_datetime), ('end_time', '>=', work_datetime)])
+                    leave_info = self.env['hr.leaves.list'].sudo().search(
+                        [('user_id', '=', emp.id), ('start_time', '<=', work_datetime), ('end_time', '>=', work_datetime)])
                     if len(leave_info) > 0:
                         delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
                         leave_hours = delta.total_seconds() / 3600.0
