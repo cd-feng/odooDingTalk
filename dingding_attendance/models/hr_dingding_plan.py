@@ -37,7 +37,7 @@ class HrDingdingPlan(models.Model):
     user_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
     class_id = fields.Char(string='考勤班次id')
     class_setting_id = fields.Char(string='班次配置id', help="没有的话表示使用全局班次配置")
-    plan_check_time = fields.Datetime(string=u'打卡时间')
+    plan_check_time = fields.Datetime(string=u'打卡时间', help="数据库中存储为不含时区的时间UTC=0")
     group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'考勤组')
 
     @api.model_create_multi
@@ -103,8 +103,12 @@ class HrDingdingPlanTran(models.TransientModel):
                             'check_type': schedules['check_type'] if 'check_type' in schedules else "",
                             'plan_id': schedules['plan_id'] if 'plan_id' in schedules else "",
                             'class_id': schedules['class_id'] if 'class_id' in schedules else "",
-                            'plan_check_time': schedules['plan_check_time'] if 'plan_check_time' in schedules else False,
                         }
+                        if 'plan_check_time' in schedules:
+                            plan_check_time_utc0 = datetime.strptime(schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
+                            plan_data.update({
+                                'plan_check_time': plan_check_time_utc0,
+                            })
                         simple = self.env['dingding.simple.groups'].search(
                             [('group_id', '=', schedules['group_id'])], limit=1)
                         employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)
@@ -129,7 +133,7 @@ class HrDingdingPlanTran(models.TransientModel):
         logging.info(">>>------结束获取排班信息-----------")
         return True
 
-    @api.model
+    @api.multi
     def clear_hr_dingding_plan(self):
         """
         清除已下载的所有钉钉排班记录（仅用于测试，生产环境将删除该函数）

@@ -277,7 +277,7 @@ class HrAttendanceResultTransient(models.TransientModel):
             t1 = t2 + timedelta(seconds=1)
         return cut_day
 
-    @api.model
+    @api.multi
     def clear_attendance(self):
         """
         清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）

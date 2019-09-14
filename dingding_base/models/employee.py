@@ -281,7 +281,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_time_stamp(self, time_num):
         """
-        将13位时间戳转换为时间
+        将13位时间戳转换为时间(utc=0)
         :param time_num:
         :return:
         """

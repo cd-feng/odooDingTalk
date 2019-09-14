@@ -352,7 +352,7 @@ class HrAttendanceTransient(models.TransientModel):
     @api.model
     def get_time_stamp(self, timeNum):
         """
-        将13位时间戳转换为时间
+        将13位时间戳转换为时间(utc=0)
         :param timeNum:
         :return:
         """
