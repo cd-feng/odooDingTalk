@@ -101,7 +101,12 @@ class HrAttendanceRecordTransient(models.TransientModel):
         获取用户打卡详情
         :return:
         """
-        # self.clear_attendance() 
+        # 清除旧数据
+        old_att_info = self.env['hr.attendance.record'].sudo().search(
+            [('userId', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)])
+        if old_att_info:
+            old_att_info.sudo().unlink()
+            logging.info(">>>记录已清除...")
         logging.info(">>>开始获取用户打卡详情...")
         user_list = list()
         for emp in self.emp_ids:

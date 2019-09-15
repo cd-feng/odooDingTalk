@@ -133,7 +133,7 @@ class HrAttendanceResultTransient(models.TransientModel):
         # self.clear_attendance()
         # 删除已存在的考勤信息
         old_att_info = self.env['hr.attendance.result'].sudo().search(
-            [('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)])
+            [('emp_id', 'in', self.emp_ids.ids), ('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)])
         if old_att_info:
             old_att_info.sudo().unlink()
 
