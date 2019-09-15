@@ -34,8 +34,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
     ]
 
     soure_type = fields.Selection(string=u'考勤结果来源', selection=SourceType, default='odoo', required=True)
-    start_date = fields.Datetime(string=u'考勤开始日期', required=True)
-    end_date = fields.Datetime(string=u'考勤结束日期', required=True)
+    start_date = fields.Date(string=u'考勤开始日期', required=True)
+    end_date = fields.Date(string=u'考勤结束日期', required=True)
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='attendance_total_and_hr_employee_rel',
                                column1='attendance_id', column2='emp_id', string=u'员工', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
@@ -48,39 +48,36 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 raise UserError("员工钉钉Id不存在！也许是你的员工未同步导致的！")
             self.emp_ids = [(6, 0, emps.ids)]
 
-    # @api.onchange('start_date')
-    # def _compute_end_date(self):
-    #     for rec in self:
-    #         if rec.start_date:
-    #             firstDay, lastDay = self.getMonthFirstDayAndLastDay(year=rec.start_date.year, month=rec.start_date.month)
-    #             rec.end_date = lastDay
+    @api.onchange('start_date')
+    def _compute_end_date(self):
+        for rec in self:
+            if rec.start_date:
+                firstDay, lastDay = self.getMonthFirstDayAndLastDay(
+                    year=rec.start_date.year, month=rec.start_date.month)
+                rec.end_date = lastDay
 
-    # @api.model
-    # def getMonthFirstDayAndLastDay(self, year=None, month=None):
-    #     """
-    #     :param year: 年份，默认是本年，可传int或str类型
-    #     :param month: 月份，默认是本月，可传int或str类型
-    #     :return: firstDay: 当月的第一天，datetime.date类型
-    #               lastDay: 当月的最后一天，datetime.date类型
-    #     """
-    #     if year:
-    #         year = int(year)
-    #     else:
-    #         year = fields.Date.today().year
-
-    #     if month:
-    #         month = int(month)
-    #     else:
-    #         month = fields.Date.today().month
-
-    #     # 获取当月第一天的星期和当月的总天数
-    #     firstDayWeekDay, monthRange = calendar.monthrange(year, month)
-
-    #     # 获取当月的第一天
-    #     firstDay = date(year=year, month=month, day=1)
-    #     lastDay = date(year=year, month=month, day=monthRange)
-
-    #     return firstDay, lastDay
+    @api.model
+    def getMonthFirstDayAndLastDay(self, year=None, month=None):
+        """
+        :param year: 年份，默认是本年，可传int或str类型
+        :param month: 月份，默认是本月，可传int或str类型
+        :return: firstDay: 当月的第一天，datetime.date类型
+                  lastDay: 当月的最后一天，datetime.date类型
+        """
+        if year:
+            year = int(year)
+        else:
+            year = fields.Date.today().year
+        if month:
+            month = int(month)
+        else:
+            month = fields.Date.today().month
+        # 获取当月第一天的星期和当月的总天数
+        firstDayWeekDay, monthRange = calendar.monthrange(year, month)
+        # 获取当月的第一天
+        firstDay = date(year=year, month=month, day=1)
+        lastDay = date(year=year, month=month, day=monthRange)
+        return firstDay, lastDay
 
     @api.multi
     def compute_attendance_result(self):
@@ -88,9 +85,10 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         立即计算考勤结果
         :return:
         """
-        local_start_date = self.to_local_datetime(self.start_date)
-        local_end_date = self.to_local_datetime(self.end_date)
-        self.attendance_total_cal(self.emp_ids, local_start_date, local_end_date)
+        # local_start_date = self.to_local_datetime(self.start_date)
+        # local_end_date = self.to_local_datetime(self.end_date)
+        # self.attendance_total_cal(self.emp_ids, local_start_date, local_end_date)
+        self.attendance_total_cal(self.emp_ids, self.start_date, self.end_date)
 
         # 计算后重载考勤统计列表
         action = self.env.ref('odoo_wage_manage.wage_employee_attendance_annal_action')
@@ -98,6 +96,19 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         return action_dict
 
     def date_range(self, start_date, end_date):
+        """
+        生成一个 起始时间 到 结束时间 的一个日期格式列表
+        TODO 起始时间和结束时间相差过大时，考虑使用 yield
+        :param start_date:
+        :param end_date:
+        :return:
+        """
+        date_tmp = [start_date, ]
+        while date_tmp[-1] < end_date:
+            date_tmp.append(date_tmp[-1] + timedelta(days=1))
+        return date_tmp
+
+    def date_range_v2(self, start_date, end_date):
         """
         生成一个 起始时间 到 结束时间 的一个日期格式列表
         TODO 起始时间和结束时间相差过大时，考虑使用 yield
@@ -225,15 +236,15 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 logging.info(">>>获取duty_list结果%s", duty_list)
                 # 判断是否在请假期间
                 # TODO 班次时间段内请假未考虑
-                # duty_info = []
-                # for duty in duty_list:
-                #     leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_datetime), ('end_time', '>=', work_datetime)])
-                #     if len(leave_info) > 0:
-                #         delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
-                #         leave_hours = delta.total_seconds() / 3600.0
-                #         duty.update({'leave_hours': leave_hours})
-                #     duty_info.append(duty)
-                self.env['attendance.info'].sudo().create(duty_list)
+                duty_info = []
+                for duty in duty_list:
+                    leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_date), ('end_time', '>=', work_date)])
+                    if len(leave_info) > 0:
+                        delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
+                        leave_hours = delta.total_seconds() / 3600.0
+                        duty.update({'leave_hours': leave_hours})
+                    duty_info.append(duty)
+                self.env['attendance.info'].sudo().create(duty_info)
 
                 # 检索请假， 如果有，覆盖
                 # if leave_detail_dict.get(date):

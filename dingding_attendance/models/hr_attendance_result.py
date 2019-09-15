@@ -106,8 +106,8 @@ class HrAttendanceResultTransient(models.TransientModel):
     _name = 'hr.attendance.tran'
     _description = '获取钉钉考勤结果'
 
-    start_date = fields.Datetime(string=u'开始时间', required=True)
-    stop_date = fields.Datetime(string=u'结束时间', required=True, default=str(fields.datetime.now()))
+    start_date = fields.Date(string=u'开始日期', required=True)
+    stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_dingding_attendance_and_hr_employee_rel',
                                column1='attendance_id', column2='emp_id', string=u'员工', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
@@ -230,7 +230,7 @@ class HrAttendanceResultTransient(models.TransientModel):
     @api.model
     def get_time_stamp(self, timeNum):
         """
-        将13位时间戳转换为时间
+        将13位时间戳转换为时间utc=0
         :param timeNum:
         :return:
         """
@@ -276,8 +276,8 @@ class HrAttendanceResultTransient(models.TransientModel):
         :return:
         """
         cut_day = []
-        begin_time = datetime.strptime(str(begin_time), "%Y-%m-%d %H:%M:%S")
-        end_time = datetime.strptime(str(end_time), "%Y-%m-%d %H:%M:%S")
+        begin_time = datetime.strptime(str(begin_time), "%Y-%m-%d")
+        end_time = datetime.strptime(str(end_time), "%Y-%m-%d")
         delta = timedelta(days=days)
         t1 = begin_time
         while t1 <= end_time:

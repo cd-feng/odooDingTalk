@@ -41,8 +41,8 @@ class HrLeavesListTran(models.TransientModel):
     _description = "获取请假列表"
 
     user_ids = fields.Many2many('hr.employee', string=u'待查用户', required=True)
-    start_time = fields.Datetime(string=u'开始时间', required=True)
-    end_time = fields.Datetime(string=u'结束时间', required=True)
+    start_time = fields.Date(string=u'开始时间', required=True)
+    end_time = fields.Date(string=u'结束时间', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
 
     @api.multi

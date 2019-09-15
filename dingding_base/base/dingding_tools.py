@@ -115,7 +115,7 @@ class DingDingTools(models.TransientModel):
         :return: "%Y-%m-%d %H:%M:%S"
         """
         time_stamp = float(time_num / 1000)
-        time_array = time.localtime(time_stamp)
+        time_array = time.gmtime(time_stamp)
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     @api.model
