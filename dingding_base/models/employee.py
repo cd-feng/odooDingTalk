@@ -286,7 +286,7 @@ class HrEmployee(models.Model):
         :return:
         """
         time_stamp = float(time_num / 1000) 
-        time_array = time.localtime(time_stamp)
+        time_array = time.gmtime(time_stamp)
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     # 把时间转成时间戳形式
