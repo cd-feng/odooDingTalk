@@ -79,27 +79,27 @@ class HrAttendanceResult(models.Model):
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult, index=True)
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建考勤记录
-        :return:
-        """
-        for values in vals_list:
-            if values['work_date']:
-                values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
-        return super(HrAttendanceResult, self).create(vals_list)
-
-    # @api.model
-    # def create(self, values):
+    # @api.model_create_multi
+    # def create(self, vals_list):
     #     """
-    #     创建时触发
-    #     :param values:
+    #     支持批量新建考勤记录
     #     :return:
     #     """
-    #     if values['work_date']:
-    #         values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
-    #     return super(HrAttendanceResult, self).create(values)
+    #     for values in vals_list:
+    #         if values['work_date']:
+    #             values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
+    #     return super(HrAttendanceResult, self).create(vals_list)
+
+    @api.model
+    def create(self, values):
+        """
+        创建时触发
+        :param values:
+        :return:
+        """
+        if values['work_date']:
+            values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
+        return super(HrAttendanceResult, self).create(values)
 
 
 class HrAttendanceResultTransient(models.TransientModel):

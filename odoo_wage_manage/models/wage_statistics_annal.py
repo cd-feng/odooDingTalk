@@ -193,14 +193,6 @@ class WageEmpAttendanceAnnal(models.Model):
     travelling_total = fields.Float('出差天数')
     other_leave_total = fields.Float('其他假天数')
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建考勤记录
-        :return:
-        """
-        return super(WageEmpAttendanceAnnal, self).create(vals_list)
-
     @api.constrains('attendance_month')
     @api.onchange('attendance_month')
     def _constrains_attendance_month(self):

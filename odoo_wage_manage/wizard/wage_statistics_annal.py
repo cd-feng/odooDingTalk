@@ -56,80 +56,86 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     year=rec.start_date.year, month=rec.start_date.month)
                 rec.end_date = lastDay
 
-    @api.model
-    def getMonthFirstDayAndLastDay(self, year=None, month=None):
-        """
-        :param year: 年份，默认是本年，可传int或str类型
-        :param month: 月份，默认是本月，可传int或str类型
-        :return: firstDay: 当月的第一天，datetime.date类型
-                  lastDay: 当月的最后一天，datetime.date类型
-        """
-        if year:
-            year = int(year)
-        else:
-            year = fields.Date.today().year
-        if month:
-            month = int(month)
-        else:
-            month = fields.Date.today().month
-        # 获取当月第一天的星期和当月的总天数
-        firstDayWeekDay, monthRange = calendar.monthrange(year, month)
-        # 获取当月的第一天
-        firstDay = date(year=year, month=month, day=1)
-        lastDay = date(year=year, month=month, day=monthRange)
-        return firstDay, lastDay
-
     @api.multi
     def compute_attendance_result(self):
         """
         立即计算考勤结果
         :return:
         """
-        # local_start_date = self.to_local_datetime(self.start_date)
-        # local_end_date = self.to_local_datetime(self.end_date)
-        # self.attendance_total_cal(self.emp_ids, local_start_date, local_end_date)
-        self.attendance_total_cal(self.emp_ids, self.start_date, self.end_date)
+        if self.soure_type == 'dingding':
+            self.attendance_total_cal_dingding(self.emp_ids, self.start_date, self.end_date)
+        elif self.soure_type == 'odoo':
+            self.attendance_total_cal_odoo(self.emp_ids, self.start_date, self.end_date)
+        elif self.soure_type == 'and':
+            raise UserError("暂未实现！！！")
 
         # 计算后重载考勤统计列表
         action = self.env.ref('odoo_wage_manage.wage_employee_attendance_annal_action')
         action_dict = action.read()[0]
         return action_dict
 
-    def date_range(self, start_date, end_date):
+    def attendance_total_cal_dingding(self, emp_list, start_date, end_date):
         """
-        生成一个 起始时间 到 结束时间 的一个日期格式列表
-        TODO 起始时间和结束时间相差过大时，考虑使用 yield
-        :param start_date:
-        :param end_date:
+        考勤汇总计算(考勤数据来源钉钉考勤结果)
         :return:
         """
-        date_tmp = [start_date, ]
-        while date_tmp[-1] < end_date:
-            date_tmp.append(date_tmp[-1] + timedelta(days=1))
-        return date_tmp
+        self.ensure_one()
+        self.attendance_cal(emp_list, start_date, end_date)
+        attendance_total_ins_list = []
+        for emp in emp_list:
+            # 获取年月，取得区间月份
+            month = 0
+            if end_date.year - start_date.year == 0:
+                month = end_date.month - start_date.month
+            elif end_date.year - start_date.year >= 1:
+                month = end_date.month - start_date.month + (end_date.year - start_date.year) * 12
+            start_date_tmp = start_date.replace(day=1)
+            for num in range(month + 1):
+                current_month_num = calendar.monthrange(start_date_tmp.year, start_date_tmp.month)[1]
+                # 删除原有记录
+                del_question_start = self.env['wage.employee.attendance.annal'].sudo().search(
+                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))])
+                if del_question_start:
+                    del_question_start.sudo().unlink()
+                attendance_info_dict_list = self.env['attendance.info'].sudo().search([('employee_id', '=', emp.id), (
+                    'workDate', '>=', start_date_tmp), ('workDate', '<=', start_date_tmp.replace(day=current_month_num))])
+                # check_status_choice = (('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工'))
+                logging.info(">>>获取的考勤结果:%s", attendance_info_dict_list)
+                attendance_total_ins = self.attendance_total_cal_sum(emp, start_date_tmp, attendance_info_dict_list)
+                attendance_total_ins_list.append(attendance_total_ins)
+                start_date_tmp += timedelta(days=current_month_num)
+        self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
 
-    def date_range_v2(self, start_date, end_date):
+    def attendance_total_cal_odoo(self, emp_list, start_date, end_date):
         """
-        生成一个 起始时间 到 结束时间 的一个日期格式列表
-        TODO 起始时间和结束时间相差过大时，考虑使用 yield
-        :param start_date:
-        :param end_date:
+        考勤汇总计算(考勤数据来源odoo考勤)
         :return:
         """
-        start_date = datetime(year=start_date.year, month=start_date.month, day=start_date.day).date()
-        end_date = datetime(year=end_date.year, month=end_date.month, day=end_date.day).date()
-        date_tmp = [start_date, ]
-        while date_tmp[-1] < end_date:
-            date_tmp.append(date_tmp[-1] + timedelta(days=1))
-        return date_tmp
-
-    def to_local_datetime(self, date_time):
-        """
-        生成一个本地日期
-        :return:
-        """
-        local_datetime = fields.Datetime.context_timestamp(self, date_time)
-        return local_datetime
+        self.ensure_one()
+        attendance_total_ins_list = []
+        for emp in emp_list:
+            # 获取年月，取得区间月份
+            month = 0
+            if end_date.year - start_date.year == 0:
+                month = end_date.month - start_date.month
+            elif end_date.year - start_date.year >= 1:
+                month = end_date.month - start_date.month + (end_date.year - start_date.year) * 12
+            start_date_tmp = start_date.replace(day=1)
+            for num in range(month + 1):
+                current_month_num = calendar.monthrange(start_date_tmp.year, start_date_tmp.month)[1]
+                # 删除原有记录
+                del_question_start = self.env['wage.employee.attendance.annal'].sudo().search(
+                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))])
+                if del_question_start:
+                    del_question_start.sudo().unlink()
+                attendance_info_dict_list = self.env['hr.attendance'].sudo().search([('employee_id', '=', emp.id), (
+                    'workDate', '>=', start_date_tmp), ('workDate', '<=', start_date_tmp.replace(day=current_month_num))])
+                # check_status_choice = (('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工'))
+                logging.info(">>>获取的考勤结果:%s", attendance_info_dict_list)
+                attendance_total_ins = self.attendance_total_cal_sum(emp, start_date_tmp, attendance_info_dict_list)
+                attendance_total_ins_list.append(attendance_total_ins)
+                start_date_tmp += timedelta(days=current_month_num)
+        self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
 
     @api.multi
     def attendance_cal(self, emp_list, start_date, end_date):
@@ -255,38 +261,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 #         check_out = leave_detail_dict.get(date)['leave_detail_time_end']
                 #         check_out_type = leave_detail_dict.get(date)['leave_detail_time_end_type']
 
-    def attendance_total_cal(self, emp_list, start_date, end_date):
-        """
-        考勤汇总计算
-        :return:
-        """
-        self.ensure_one()
-        self.attendance_cal(emp_list, start_date, end_date)
-        attendance_total_ins_list = []
-        for emp in emp_list.with_progress(msg="正在进行考勤汇总计算"):
-            # 获取年月，取得区间月份
-            month = 0
-            if end_date.year - start_date.year == 0:
-                month = end_date.month - start_date.month
-            elif end_date.year - start_date.year >= 1:
-                month = end_date.month - start_date.month + (end_date.year - start_date.year) * 12
-            start_date_tmp = start_date.replace(day=1)
-            for num in range(month + 1):
-                current_month_num = calendar.monthrange(start_date_tmp.year, start_date_tmp.month)[1]
-                # 删除原有记录
-                del_question_start = self.env['wage.employee.attendance.annal'].sudo().search(
-                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))])
-                if del_question_start:
-                    del_question_start.sudo().unlink()
-                attendance_info_dict_list = self.env['attendance.info'].sudo().search([('employee_id', '=', emp.id), (
-                    'workDate', '>=', start_date_tmp), ('workDate', '<=', start_date_tmp.replace(day=current_month_num))])
-                # check_status_choice = (('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工'))
-                logging.info(">>>获取的考勤结果:%s", attendance_info_dict_list)
-                attendance_total_ins = self.attendance_total_cal_sum(emp, start_date_tmp, attendance_info_dict_list)
-                attendance_total_ins_list.append(attendance_total_ins)
-                start_date_tmp += timedelta(days=current_month_num)
-        self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
-
     @api.multi
     def attendance_total_cal_sum(self, emp, start_date, attendance_info_dict_list):
         """
@@ -358,6 +332,42 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                                 }
         return attendance_total_ins
 
+    @api.model
+    def date_range(self, start_date, end_date):
+        """
+        生成一个 起始时间 到 结束时间 的一个日期格式列表
+        TODO 起始时间和结束时间相差过大时，考虑使用 yield
+        :param start_date:
+        :param end_date:
+        :return:
+        """
+        date_tmp = [start_date, ]
+        while date_tmp[-1] < end_date:
+            date_tmp.append(date_tmp[-1] + timedelta(days=1))
+        return date_tmp
+
+    @api.model
+    def getMonthFirstDayAndLastDay(self, year=None, month=None):
+        """
+        :param year: 年份，默认是本年，可传int或str类型
+        :param month: 月份，默认是本月，可传int或str类型
+        :return: firstDay: 当月的第一天，datetime.date类型
+                  lastDay: 当月的最后一天，datetime.date类型
+        """
+        if year:
+            year = int(year)
+        else:
+            year = fields.Date.today().year
+        if month:
+            month = int(month)
+        else:
+            month = fields.Date.today().month
+        # 获取当月第一天的星期和当月的总天数
+        firstDayWeekDay, monthRange = calendar.monthrange(year, month)
+        # 获取当月的第一天
+        firstDay = date(year=year, month=month, day=1)
+        lastDay = date(year=year, month=month, day=monthRange)
+        return firstDay, lastDay
 
 # class LeaveInfo(models.Model):
 #     _description = '假期信息表'

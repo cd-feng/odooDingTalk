@@ -69,6 +69,7 @@ class HrLeavesListTran(models.TransientModel):
                     logging.info(">>>查询请假状态返回结果%s", result)
                     leave_status = result['leave_status']
                     if leave_status:
+                        leave_list = list()
                         for leave in leave_status.get('leave_status_v_o'):
                             leave_data = {
                                 'start_time_stamp': leave['start_time'],
@@ -82,13 +83,12 @@ class HrLeavesListTran(models.TransientModel):
                             leave_data.update({
                                 'user_id': employee.id if employee else False,
                             })
-                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id',
-                                                                                       '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
+                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id', '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
                             hr_leaves = self.env['hr.leaves.list'].search(domain)
-                            if not hr_leaves:
-                                self.env['hr.leaves.list'].create(leave_data)
-                            else:
-                                hr_leaves.write(leave_data)
+                            if hr_leaves:
+                                hr_leaves.unlink()
+                            leave_list.append(leave_data)
+                        self.env['hr.leaves.list'].create(leave_list)
                     if not result['has_more']:
                         break
                     else:

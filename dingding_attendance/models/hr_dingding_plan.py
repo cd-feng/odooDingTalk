@@ -39,14 +39,6 @@ class HrDingdingPlan(models.Model):
     plan_check_time = fields.Datetime(string=u'打卡时间', help="数据库中存储为不含时区的时间UTC=0")
     group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'考勤组')
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建记录
-        :return:
-        """
-        return super(HrDingdingPlan, self).create(vals_list)
-
 
 class HrDingdingPlanTran(models.TransientModel):
     _name = "hr.dingding.plan.tran"
