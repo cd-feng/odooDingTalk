@@ -68,7 +68,7 @@ class HrAttendanceResult(models.Model):
     ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
     plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班id')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
-    work_date = fields.Datetime(string=u'工作日')
+    work_date = fields.Date(string=u'工作日')
     work_month = fields.Char(string='年月字符串', help="为方便其他模块按照月份获取数据时使用", index=True)
     check_type = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')], index=True)
     locationResult = fields.Selection(string=u'位置结果', selection=LocationResult)
@@ -130,13 +130,13 @@ class HrAttendanceResultTransient(models.TransientModel):
         :param user:
         :return:
         """
-        # self.clear_attendance() 
+        # self.clear_attendance()
         # 删除已存在的考勤信息
         old_att_info = self.env['hr.attendance.result'].sudo().search(
             [('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)])
         if old_att_info:
             old_att_info.sudo().unlink()
-        
+
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
@@ -191,7 +191,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                 for rec in result.get('recordresult'):
                     data = {
                         'record_id': rec.get('id'),
-                        'work_date': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                        'work_date': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                         'timeResult': rec.get('timeResult'),  # 时间结果
                         'locationResult': rec.get('locationResult'),  # 考勤结果
                         'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
@@ -201,7 +201,6 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'approveId': rec.get('approveId'),
                         'procInstId': rec.get('procInstId'),
                     }
-                    # 考勤组
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
                     data.update({'ding_group_id': groups[0].id if groups else False})
@@ -239,6 +238,21 @@ class HrAttendanceResultTransient(models.TransientModel):
         timeArray = time.gmtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
+
+    @api.model
+    def timestamp_to_local_date(self, timeNum):
+        """
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
+        :return:
+        """
+        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
+        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
+        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
+        return to_str_datetime
 
     @api.model
     def list_cut(self, mylist, limit):
