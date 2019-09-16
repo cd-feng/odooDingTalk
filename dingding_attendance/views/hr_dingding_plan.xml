@@ -19,14 +19,14 @@
         <field name="model">hr.dingding.plan</field>
         <field name="arch" type="xml">
             <tree default_order="id desc">
-                <field name="plan_check_time"/>
+                <field name="group_id"/>
                 <field name="plan_id"/>
+                <field name="plan_check_time"/>
                 <field name="check_type"/>
                 <field name="approve_id"/>
                 <field name="user_id"/>
                 <field name="class_id"/>
                 <field name="class_setting_id"/>
-                <field name="group_id"/>
             </tree>
         </field>
     </record>
@@ -93,12 +93,17 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="start_date"/>
-                    <field name="stop_date"/>
+                    <group>
+                        <field name="start_date"/>
+                    </group>
+                    <group>
+                        <field name="stop_date"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="开始获取" name="get_plan_lists" type="object" class="oe_highlight"/>
                     <button string="取消" class="btn btn-default" special="cancel"/>
+                    <!-- <button string="清空记录" name="clear_hr_dingding_plan" type="object" class="btn-danger oe_highlight"/> -->
                 </footer>
             </form>
         </field>

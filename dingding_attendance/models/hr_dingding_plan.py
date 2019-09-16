@@ -18,8 +18,7 @@
 #
 ###################################################################################
 import logging
-from datetime import timedelta
-
+from datetime import datetime, timedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -28,16 +27,16 @@ _logger = logging.getLogger(__name__)
 
 class HrDingdingPlan(models.Model):
     _name = "hr.dingding.plan"
-    _rec_name = 'user_id'
+    _rec_name = 'plan_id'
     _description = "排班列表"
 
-    plan_id = fields.Char(string='排班id')
+    plan_id = fields.Char(string='钉钉排班ID')
     check_type = fields.Selection(string=u'打卡类型', selection=[('OnDuty', '上班打卡'), ('OffDuty', '下班打卡')])
     approve_id = fields.Char(string='审批id', help="没有的话表示没有审批单")
     user_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
     class_id = fields.Char(string='考勤班次id')
     class_setting_id = fields.Char(string='班次配置id', help="没有的话表示使用全局班次配置")
-    plan_check_time = fields.Date(string=u'打卡时间')
+    plan_check_time = fields.Datetime(string=u'打卡时间', help="数据库中存储为不含时区的时间UTC=0")
     group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'考勤组')
 
 
@@ -68,6 +67,11 @@ class HrDingdingPlanTran(models.TransientModel):
         :param stop_date: string 查询的结束日期
         :return:
         """
+
+        # 删除已存在的排班信息
+        self.env['hr.dingding.plan'].sudo().search([
+            ('plan_check_time', '>=', start_date), ('plan_check_time', '<=', stop_date)]).unlink()
+
         din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>------开始获取排班信息-----------")
         work_date = start_date
@@ -79,14 +83,18 @@ class HrDingdingPlanTran(models.TransientModel):
                 # logging.info(">>>获取排班信息返回结果%s", result)
                 if result.get('ding_open_errcode') == 0:
                     res_result = result.get('result')
+                    plan_data_list = list()
                     for schedules in res_result['schedules']['at_schedule_for_top_vo']:
                         plan_data = {
                             'class_setting_id': schedules['class_setting_id'] if 'class_setting_id' in schedules else "",
                             'check_type': schedules['check_type'] if 'check_type' in schedules else "",
                             'plan_id': schedules['plan_id'] if 'plan_id' in schedules else "",
                             'class_id': schedules['class_id'] if 'class_id' in schedules else "",
-                            'plan_check_time': schedules['plan_check_time'] if 'plan_check_time' in schedules else False,
                         }
+                        if 'plan_check_time' in schedules:
+                            utc_plan_check_time = datetime.strptime(
+                                schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
+                            plan_data.update({'plan_check_time': utc_plan_check_time})
                         simple = self.env['dingding.simple.groups'].search(
                             [('group_id', '=', schedules['group_id'])], limit=1)
                         employee = self.env['hr.employee'].search([('ding_id', '=', schedules['userid'])], limit=1)
@@ -94,11 +102,13 @@ class HrDingdingPlanTran(models.TransientModel):
                             'group_id': simple.id if simple else False,
                             'user_id': employee.id if employee else False,
                         })
-                        plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
-                        if not plan:
-                            self.env['hr.dingding.plan'].create(plan_data)
-                        else:
-                            plan.write(plan_data)
+                        plan_data_list.append(plan_data)
+                    self.env['hr.dingding.plan'].create(plan_data_list)
+                    # plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
+                    # if not plan:
+                    #     self.env['hr.dingding.plan'].create(plan_data)
+                    # else:
+                    #     plan.write(plan_data)
                     if not res_result['has_more']:
                         break
                     else:
@@ -108,3 +118,12 @@ class HrDingdingPlanTran(models.TransientModel):
             work_date = work_date + timedelta(days=1)
         logging.info(">>>------结束获取排班信息-----------")
         return True
+
+    @api.multi
+    def clear_hr_dingding_plan(self):
+        """
+        清除已下载的所有钉钉排班记录（仅用于测试，生产环境将删除该函数）
+        """
+        self._cr.execute("""
+            delete from hr_dingding_plan
+        """)

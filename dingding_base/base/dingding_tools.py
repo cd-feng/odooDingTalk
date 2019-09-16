@@ -110,12 +110,12 @@ class DingDingTools(models.TransientModel):
     @api.model
     def get_time_stamp(self, time_num):
         """
-        将13位时间戳转换为时间
+        将13位时间戳转换为时间(utc=0)
         :param time_num:
         :return: "%Y-%m-%d %H:%M:%S"
         """
         time_stamp = float(time_num / 1000)
-        time_array = time.localtime(time_stamp)
+        time_array = time.gmtime(time_stamp)
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     @api.model
