@@ -295,7 +295,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             elif one.attendance_date_status == '02':
                 holiday_overtime_hour = holiday_overtime_hour + one.worked_hours
             # 统计迟到早退缺卡次数
-            if one.on_timeResult == 'NotSigned':
+            if one.on_timeResult == 'NotSigned' and one.attendance_date_status != '03':
                 notsigned_attendance_num = notsigned_attendance_num + 1
             elif one.on_timeResult == 'Late':
                 late_attendance_num = late_attendance_num + 1
