@@ -245,7 +245,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                         domain1 = [('user_id', '=', emp.id), ('start_time', '<=', on_duty), ('end_time', '>=', off_duty)]
                         domain2 = [('user_id', '=', emp.id), ('start_time', '>', on_duty), ('start_time', '<', off_duty), ('end_time', '>', off_duty)]
                         domain3 = [('user_id', '=', emp.id), ('start_time', '<', on_duty), ('end_time', '>', on_duty), ('end_time', '<', off_duty)]
-                        domain4 = [('user_id', '=', emp.id), ('start_time', '>', on_duty), ('end_time', '<', off_duty)]
+                        domain4 = [('user_id', '=', emp.id), ('start_time', '>=', on_duty), ('end_time', '<=', off_duty)]
                         leave_info1 = self.env['hr.leaves.list'].sudo().search(domain1, limit=1)
                         leave_info2 = self.env['hr.leaves.list'].sudo().search(domain2, limit=1)
                         leave_info3 = self.env['hr.leaves.list'].sudo().search(domain3, limit=1)
@@ -263,7 +263,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                             if duty['on_timeResult'] == 'NotSigned':
                                 leave_delta = leave_info4.end_time - duty['on_baseCheckTime']
                             else:
-                                leave_delta = leave_info4.end_time - leave_info4.start_time
+                                leave_delta = leave_info4.end_time - leave_info4.start_time  # 暂时以请假单为准，员工提前来了也不算？
                         else:
                             pass
                         if leave_delta:
