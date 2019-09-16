@@ -32,7 +32,7 @@ class DingDingSignList(models.Model):
         :return:
         """
         timeStamp = float(time_num / 1000)
-        timeArray = time.localtime(timeStamp)
+        timeArray = time.gmtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
 

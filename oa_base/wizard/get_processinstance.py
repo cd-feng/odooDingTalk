@@ -85,6 +85,7 @@ class GetProcessInstance(models.TransientModel):
         for process_id in process_list:
             data = {'process_instance_id': process_id}
             result = self.env['dingding.api.tools'].send_post_request(url, token, data, 20)
+            logging.info(">>>获取实例详情返回结果%s", result)
             if result['errcode'] == 0:
                 process_instance = result['process_instance']
                 # get发起人和发起部门
@@ -110,38 +111,39 @@ class GetProcessInstance(models.TransientModel):
                 # 表单字段详情
                 field_dict = self._get_model_filed(odoo_model)
                 for form_value in process_instance['form_component_values']:
-                    o_field = field_dict.get(form_value['name'])  # 获取odoo字段
-                    if not o_field and form_value['component_type'] != 'DDPhotoField':
-                        raise UserError("钉钉字段名 '%s' 与系统字段名不一致，无法同步！" % form_value['name'])
-                    # 过滤明细字段和图片附件字段
-                    if form_value['component_type'] != 'TableField' and form_value['component_type'] != 'DDPhotoField':
-                        if o_field.ttype == 'many2one':    # many2one字段类型
-                            domain = [('name', '=', form_value['value'])]
-                            many_model = self.env[o_field.relation].sudo().search(domain, limit=1)  # 只支持查询name字段
-                            model_data.update({o_field.sudo().name: many_model.id if many_model else False})
-                        else:
-                            model_data.update({o_field.name: form_value['value']})
-                    elif form_value['component_type'] == 'TableField':   # 处理列表
-                        # print(form_value)
-                        # print(form_value['name'])
-                        # print(o_field)
-                        line_field_dict = self._get_model_filed(o_field.relation)
-                        values = json.loads(form_value['value'])
-                        line_list = list()
-                        for value in values:
-                            line_data = dict()
-                            for row_value in value['rowValue']:
-                                line_field = line_field_dict.get(row_value['label'])  # 获取odoo字段
-                                if not line_field:
-                                    raise UserError("表单列表明细中字段名 '%s' 与系统字段名不一致，无法同步！" % row_value['label'])
-                                if line_field.ttype == 'many2one':  # many2one字段类型
-                                    domain = [('name', '=', row_value['value'])]
-                                    many_model = self.env[line_field.relation].sudo().search(domain, limit=1)
-                                    line_data.update({line_field.sudo().name: many_model.id if many_model else False})
-                                else:
-                                    line_data.update({line_field.name: row_value['value']})
-                            line_list.append((0, 0, line_data))
-                        model_data.update({o_field.name: line_list})
+                    if 'name' in form_value:
+                        o_field = field_dict.get(form_value['name'])  # 获取odoo字段
+                        if not o_field and form_value['component_type'] != 'DDPhotoField':
+                            raise UserError("钉钉字段名 '%s' 与系统字段名不一致，无法同步！" % form_value['name'])
+                        # 过滤明细字段和图片附件字段
+                        if form_value['component_type'] != 'TableField' and form_value['component_type'] != 'DDPhotoField':
+                            if o_field.ttype == 'many2one':    # many2one字段类型
+                                domain = [('name', '=', form_value['value'])]
+                                many_model = self.env[o_field.relation].sudo().search(domain, limit=1)  # 只支持查询name字段
+                                model_data.update({o_field.sudo().name: many_model.id if many_model else False})
+                            else:
+                                model_data.update({o_field.name: form_value['value']})
+                        elif form_value['component_type'] == 'TableField':   # 处理列表
+                            # print(form_value)
+                            # print(form_value['name'])
+                            # print(o_field)
+                            line_field_dict = self._get_model_filed(o_field.relation)
+                            values = json.loads(form_value['value'])
+                            line_list = list()
+                            for value in values:
+                                line_data = dict()
+                                for row_value in value['rowValue']:
+                                    line_field = line_field_dict.get(row_value['label'])  # 获取odoo字段
+                                    if not line_field:
+                                        raise UserError("表单列表明细中字段名 '%s' 与系统字段名不一致，无法同步！" % row_value['label'])
+                                    if line_field.ttype == 'many2one':  # many2one字段类型
+                                        domain = [('name', '=', row_value['value'])]
+                                        many_model = self.env[line_field.relation].sudo().search(domain, limit=1)
+                                        line_data.update({line_field.sudo().name: many_model.id if many_model else False})
+                                    else:
+                                        line_data.update({line_field.name: row_value['value']})
+                                line_list.append((0, 0, line_data))
+                            model_data.update({o_field.name: line_list})
                 try:
                     model_form = self.env[odoo_model.model].sudo().create(model_data)
                 except Exception as e:
