@@ -33,7 +33,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         ('and', '两者同时获取')
     ]
 
-    soure_type = fields.Selection(string=u'考勤结果来源', selection=SourceType, default='odoo', required=True)
+    soure_type = fields.Selection(string=u'考勤结果来源', selection=SourceType, default='dingding', required=True)
     start_date = fields.Date(string=u'考勤开始日期', required=True)
     end_date = fields.Date(string=u'考勤结束日期', required=True)
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='attendance_total_and_hr_employee_rel',
@@ -65,7 +65,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         if self.soure_type == 'dingding':
             self.attendance_total_cal_dingding(self.emp_ids, self.start_date, self.end_date)
         elif self.soure_type == 'odoo':
-            self.attendance_total_cal_odoo(self.emp_ids, self.start_date, self.end_date)
+            raise UserError("暂未实现！！！")
         elif self.soure_type == 'and':
             raise UserError("暂未实现！！！")
 

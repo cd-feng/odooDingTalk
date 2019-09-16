@@ -102,7 +102,7 @@
                 <footer>
                     <button string="开始获取" name="get_attendance_list_v2" type="object" class="oe_highlight"/>
                     <button string="取消" class="btn btn-default" special="cancel"/>
-                    <button string="清空记录" name="clear_attendance" type="object" class="btn-danger oe_highlight"/>
+                    <!-- <button string="清空记录" name="clear_attendance" type="object" class="btn-danger oe_highlight"/> -->
                 </footer>
             </form>
         </field>
