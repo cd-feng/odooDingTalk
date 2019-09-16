@@ -155,3 +155,20 @@ class EmployeeAPI(Home, http.Controller):
             return json.dumps({'state': False, 'msg': '账户未绑定'})
         return employee.image
 
+    @http.route('/api/employee/job/getlist', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def api_get_all_employee_job(self, **kw):
+        """
+        返回所有的工作职位信息
+        :param kw: appid openid
+        :return:
+        """
+        params_data = request.params.copy()
+        if not api_tool.check_api_access(params_data.get('appid')):
+            return json.dumps({'state': False, 'msg': '拒绝访问'})
+        jobs = request.env['hr.job'].sudo().search([])
+        result_list = list()
+        for job in jobs:
+            result_list.append(job.name)
+        return json.dumps({'state': True, 'msg': '查询成功', 'data': result_list})
+
+

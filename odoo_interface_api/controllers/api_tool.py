@@ -29,3 +29,12 @@ def create_employee_data(employee):
         'id': employee.id,
     }
 
+
+def get_employee_by_wx_openid(openid):
+    """
+    根据微信openid获取员工
+    :param openid:
+    :return:
+    """
+    employee = request.env['hr.employee'].sudo().search([('wx_openid', '=', openid)], limit=1)
+    return employee if employee else False
