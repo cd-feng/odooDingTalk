@@ -171,7 +171,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 #     [('emp_id', '=', emp.id), ('work_date', '>=', start_date), ('work_date', '<=', end_date)])
                 work_date_attendance_result = self.env['hr.attendance.result'].sudo().search(
                     [('emp_id', '=', emp.id), ('work_date', '=', work_date)], order='check_type, check_in')
-
                 OnDuty_list = list()
                 OffDuty_list = list()
                 for rec in work_date_attendance_result:
@@ -300,7 +299,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 notsigned_attendance_num = notsigned_attendance_num + 1
             elif one.on_timeResult == 'Late':
                 late_attendance_num = late_attendance_num + 1
-            if one.off_timeResult == 'NotSigned':  # todo 请假也显示未打卡要排除
+            if one.off_timeResult == 'NotSigned' and one.attendance_date_status != '03':
                 notsigned_attendance_num = notsigned_attendance_num + 1
             elif one.off_timeResult == 'Early':
                 early_attendance_num = early_attendance_num + 1
