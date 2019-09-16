@@ -21,8 +21,8 @@
             <tree default_order="check_in desc">
                 <field name="emp_id"/>
                 <field name="ding_group_id"/>
+                <field name="ding_plan_id"/>
                 <field name="work_date"/>
-                <field name="plan_id"/>
                 <field name="check_type"/>
                 <field name="locationResult"/>
                 <field name="baseCheckTime"/>
@@ -205,14 +205,14 @@
                 <group>
                     <group>
                         <field name="start_date"/>
-                        <field name="stop_date"/>
                     </group>
                     <group>
-                        <field name="is_all_emp"/>
+                        <field name="stop_date"/>
                     </group>
                 </group>
                 <group>
-                    <field name="emp_ids" widget="many2many_tags" placeholder="获取的员工..."/>
+                    <field name="is_all_emp"/>
+                    <field name="emp_ids" widget="many2many_tags" placeholder="员工..."/>
                 </group>
                 <footer>
                     <button string="开始获取" name="get_attendance_list" type="object" class="oe_highlight"/>

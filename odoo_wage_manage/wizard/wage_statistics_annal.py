@@ -93,10 +93,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             for num in range(month + 1):
                 current_month_num = calendar.monthrange(start_date_tmp.year, start_date_tmp.month)[1]
                 # 删除原有记录
-                del_question_start = self.env['wage.employee.attendance.annal'].sudo().search(
-                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))])
-                if del_question_start:
-                    del_question_start.sudo().unlink()
+                self.env['wage.employee.attendance.annal'].sudo().search(
+                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))]).unlink()
                 attendance_info_dict_list = self.env['attendance.info'].sudo().search([('employee_id', '=', emp.id), (
                     'workDate', '>=', start_date_tmp), ('workDate', '<=', start_date_tmp.replace(day=current_month_num))])
                 # check_status_choice = (('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工'))
@@ -124,10 +122,8 @@ class WageEmpAttendanceAnnal(models.TransientModel):
             for num in range(month + 1):
                 current_month_num = calendar.monthrange(start_date_tmp.year, start_date_tmp.month)[1]
                 # 删除原有记录
-                del_question_start = self.env['wage.employee.attendance.annal'].sudo().search(
-                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))])
-                if del_question_start:
-                    del_question_start.sudo().unlink()
+                self.env['wage.employee.attendance.annal'].sudo().search(
+                    [('employee_id', '=', emp.id), ('attend_code', '=', start_date_tmp.strftime('%Y/%m'))]).unlink()
                 attendance_info_dict_list = self.env['hr.attendance'].sudo().search([('employee_id', '=', emp.id), (
                     'workDate', '>=', start_date_tmp), ('workDate', '<=', start_date_tmp.replace(day=current_month_num))])
                 # check_status_choice = (('0', '正常'), ('1', '迟到'), ('2', '早退'), ('3', '旷工'))
@@ -156,11 +152,9 @@ class WageEmpAttendanceAnnal(models.TransientModel):
         # attendance_info_list = []
 
         for emp in emp_list:
-            # 删除已存在的
-            old_attendance_info = self.env['attendance.info'].sudo().search(
-                [('employee_id', '=', emp.id), ('workDate', '>=', start_date), ('workDate', '<=', end_date)])
-            if old_attendance_info:
-                old_attendance_info.sudo().unlink()
+            # 删除已存在的该员工考勤日报
+            self.env['attendance.info'].sudo().search(
+                [('employee_id', '=', emp.id), ('workDate', '>=', start_date), ('workDate', '<=', end_date)]).unlink()
             # # 获取排班信息 get_scheduling_info_dict
             # scheduling_info_dict = get_scheduling_info_dict(emp, start_date, end_date)
             # # 获取签卡数据 get_edit_attendance_dict
@@ -196,7 +190,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     if rec.check_type == 'OnDuty':
                         data.update({
                             'check_in': rec.check_in,
-                            'on_planId': rec.plan_id.plan_id,
+                            'on_planId': rec.plan_id.plan_id if rec.plan_id else rec.ding_plan_id,
                             'on_timeResult': rec.timeResult,
                             'on_baseCheckTime': rec.baseCheckTime,
                             'on_sourceType': rec.sourceType,
@@ -206,7 +200,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     elif rec.check_type == 'OffDuty':
                         data.update({
                             'check_out': rec.check_in,
-                            'off_planId': rec.plan_id.plan_id,
+                            'off_planId': rec.plan_id.plan_id if rec.plan_id else rec.ding_plan_id,
                             'off_timeResult': rec.timeResult,
                             'off_baseCheckTime': rec.baseCheckTime,
                             'off_sourceType': rec.sourceType,

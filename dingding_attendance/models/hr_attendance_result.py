@@ -66,7 +66,8 @@ class HrAttendanceResult(models.Model):
     ]
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
     ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班id')
+    plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班')
+    ding_plan_id = fields.Char(string='钉钉排班ID')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
     work_date = fields.Date(string=u'工作日')
     work_month = fields.Char(string='年月字符串', help="为方便其他模块按照月份获取数据时使用", index=True)
@@ -130,12 +131,10 @@ class HrAttendanceResultTransient(models.TransientModel):
         :param user:
         :return:
         """
-        # self.clear_attendance()
+
         # 删除已存在的考勤信息
-        old_att_info = self.env['hr.attendance.result'].sudo().search(
-            [('emp_id', 'in', self.emp_ids.ids), ('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)])
-        if old_att_info:
-            old_att_info.sudo().unlink()
+        self.env['hr.attendance.result'].sudo().search([(
+            'emp_id', 'in', self.emp_ids.ids), ('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)]).unlink()
 
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
@@ -200,6 +199,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'check_in': self.get_time_stamp(rec.get('userCheckTime')),
                         'approveId': rec.get('approveId'),
                         'procInstId': rec.get('procInstId'),
+                        'ding_plan_id': rec.get('planId'),
                     }
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
@@ -217,6 +217,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                     # attendance = self.env['hr.attendance.result'].sudo().search([('record_id', '=', rec.get('id'))])
                     # if not attendance:
                     data_list.append(data)
+                # 批量存储记录
                 self.env['hr.attendance.result'].sudo().create(data_list)
                 if result.get('hasMore'):
                     return True

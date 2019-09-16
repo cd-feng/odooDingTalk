@@ -21,7 +21,7 @@
             <tree default_order="id desc" js_class="dingding_hr_attendance_record_tree">
                 <field name="userId"/>
                 <field name="groupId"/>
-                <field name="planId"/>
+                <field name="ding_plan_id"/>
                 <field name="workDate"/>
                 <field name="baseCheckTime"/>
                 <field name="userCheckTime"/>
@@ -112,13 +112,13 @@
                 <group>
                     <group>
                         <field name="start_date"/>
-                        <field name="stop_date"/>
                     </group>
                     <group>
-                        <field name="is_all_emp"/>
+                        <field name="stop_date"/>
                     </group>
                 </group>
                 <group>
+                    <field name="is_all_emp"/>
                     <field name="emp_ids" widget="many2many_tags" placeholder="员工..."/>
                 </group>
                 <footer>

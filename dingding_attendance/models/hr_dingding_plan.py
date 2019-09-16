@@ -30,7 +30,7 @@ class HrDingdingPlan(models.Model):
     _rec_name = 'plan_id'
     _description = "排班列表"
 
-    plan_id = fields.Char(string='排班id')
+    plan_id = fields.Char(string='钉钉排班ID')
     check_type = fields.Selection(string=u'打卡类型', selection=[('OnDuty', '上班打卡'), ('OffDuty', '下班打卡')])
     approve_id = fields.Char(string='审批id', help="没有的话表示没有审批单")
     user_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
@@ -67,14 +67,10 @@ class HrDingdingPlanTran(models.TransientModel):
         :param stop_date: string 查询的结束日期
         :return:
         """
-        # self.clear_hr_dingding_plan()
+
         # 删除已存在的排班信息
-        start_datetime = datetime(start_date.year, start_date.month, start_date.day)
-        stop_datetime = datetime(stop_date.year, stop_date.month, stop_date.day)
-        old_plan_info = self.env['hr.dingding.plan'].sudo().search(
-            [('plan_check_time', '>=', start_datetime), ('plan_check_time', '<=', stop_datetime)])
-        if old_plan_info:
-            old_plan_info.sudo().unlink()
+        self.env['hr.dingding.plan'].sudo().search([
+            ('plan_check_time', '>=', start_date), ('plan_check_time', '<=', stop_date)]).unlink()
 
         din_client = self.env['dingding.api.tools'].get_client()
         logging.info(">>>------开始获取排班信息-----------")
@@ -96,7 +92,8 @@ class HrDingdingPlanTran(models.TransientModel):
                             'class_id': schedules['class_id'] if 'class_id' in schedules else "",
                         }
                         if 'plan_check_time' in schedules:
-                            utc_plan_check_time = datetime.strptime(schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
+                            utc_plan_check_time = datetime.strptime(
+                                schedules['plan_check_time'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
                             plan_data.update({'plan_check_time': utc_plan_check_time})
                         simple = self.env['dingding.simple.groups'].search(
                             [('group_id', '=', schedules['group_id'])], limit=1)
@@ -107,11 +104,11 @@ class HrDingdingPlanTran(models.TransientModel):
                         })
                         plan_data_list.append(plan_data)
                     self.env['hr.dingding.plan'].create(plan_data_list)
-                        # plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
-                        # if not plan:
-                        #     self.env['hr.dingding.plan'].create(plan_data)
-                        # else:
-                        #     plan.write(plan_data)
+                    # plan = self.env['hr.dingding.plan'].search([('plan_id', '=', schedules['plan_id'])])
+                    # if not plan:
+                    #     self.env['hr.dingding.plan'].create(plan_data)
+                    # else:
+                    #     plan.write(plan_data)
                     if not res_result['has_more']:
                         break
                     else:

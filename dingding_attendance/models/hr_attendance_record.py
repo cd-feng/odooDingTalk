@@ -58,6 +58,7 @@ class HrAttendanceRecord(models.Model):
     record_id = fields.Char(string='唯一标识')
     groupId = fields.Many2one(comodel_name='dingding.simple.groups', string=u'考勤组', index=True)
     planId = fields.Many2one(comodel_name='hr.dingding.plan', string=u'班次', index=True)
+    ding_plan_id = fields.Char(string='钉钉排班ID')
     workDate = fields.Date(string=u'工作日', index=True)
     corpId = fields.Char(string='企业ID')
     checkType = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')])
@@ -102,11 +103,9 @@ class HrAttendanceRecordTransient(models.TransientModel):
         :return:
         """
         # 清除旧数据
-        old_att_info = self.env['hr.attendance.record'].sudo().search(
-            [('userId', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)])
-        if old_att_info:
-            old_att_info.sudo().unlink()
-            logging.info(">>>记录已清除...")
+        self.env['hr.attendance.record'].sudo().search(
+            [('userId', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)]).unlink()
+        
         logging.info(">>>开始获取用户打卡详情...")
         user_list = list()
         for emp in self.emp_ids:
@@ -136,10 +135,12 @@ class HrAttendanceRecordTransient(models.TransientModel):
         try:
             result = din_client.attendance.list_record(user_list, from_date, to_date)
             # logging.info(">>>数据返回结果%s", result)
+            data_list = list()
             for rec in result:
                 data = {
                     'userId': emp_data[rec['userId']],
                     'record_id': rec.get('id'),
+                    'ding_plan_id': rec.get('planId'),
                     'workDate': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                     'corpId': rec.get('corpId'),  # 企业ID
                     'checkType': rec.get('checkType'),  # 考勤类型
@@ -162,9 +163,9 @@ class HrAttendanceRecordTransient(models.TransientModel):
                 # 班次
                 plan = self.env['hr.dingding.plan'].sudo().search([('plan_id', '=', rec.get('planId'))], limit=1)
                 data.update({'planId': plan[0].id if plan else False})
-                attendance = self.env['hr.attendance.record'].sudo().search([('record_id', '=', rec.get('id'))])
-                if not attendance:
-                    self.env['hr.attendance.record'].sudo().create(data)
+                data_list.append(data)
+            # 批量存储记录
+            self.env['hr.attendance.record'].sudo().create(data_list)
         except Exception as e:
             raise UserError(e)
         return True
