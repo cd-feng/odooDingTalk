@@ -10,7 +10,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'api',
     'version': '1.0',
-    'depends': ['base', 'hr', 'mail'],
+    'depends': ['base', 'hr', 'mail', 'hr_attendance'],
     'installable': True,
     'application': False,
     'auto_install': False,
@@ -21,5 +21,6 @@
         'views/assets.xml',
         'views/alow_access_api.xml',
         'views/hr_employee.xml',
+        'views/applet_configs.xml',
     ],
 }
