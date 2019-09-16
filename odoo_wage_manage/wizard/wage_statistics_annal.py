@@ -234,26 +234,46 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 # 将合并的考勤导入odoo考勤
                 duty_list.sort(key=lambda x: x['check_in'])
                 logging.info(">>>获取duty_list结果%s", duty_list)
+
                 # 判断是否在请假期间
-                # TODO 班次时间段内请假未考虑
+                leave_delta = False
                 duty_info = []
                 for duty in duty_list:
-                    leave_info = self.env['hr.leaves.list'].sudo().search([('user_id', '=', emp.id), ('start_time', '<=', work_date), ('end_time', '>=', work_date)])
-                    if len(leave_info) > 0:
-                        delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
-                        leave_hours = delta.total_seconds() / 3600.0
-                        duty.update({'leave_hours': leave_hours})
-                    duty_info.append(duty)
+                    if datetime.isoweekday(duty['workDate']) not in (7,) and \
+                            not self.env['legal.holiday'].sudo().search([('legal_holiday', '=', duty['workDate'])]):
+                        on_duty = duty['on_baseCheckTime'] if 'on_baseCheckTime' in duty else duty['workDate']
+                        off_duty = duty['off_baseCheckTime'] if 'off_baseCheckTime' in duty else duty['workDate'] + timedelta(hours=24)
+                        domain1 = [('user_id', '=', emp.id), ('start_time', '<=', on_duty), ('end_time', '>=', off_duty)]
+                        domain2 = [('user_id', '=', emp.id), ('start_time', '>', on_duty), ('start_time', '<', off_duty), ('end_time', '>', off_duty)]
+                        domain3 = [('user_id', '=', emp.id), ('start_time', '<', on_duty), ('end_time', '>', on_duty), ('end_time', '<', off_duty)]
+                        domain4 = [('user_id', '=', emp.id), ('start_time', '>', on_duty), ('end_time', '<', off_duty)]
+                        leave_info1 = self.env['hr.leaves.list'].sudo().search(domain1, limit=1)
+                        leave_info2 = self.env['hr.leaves.list'].sudo().search(domain2, limit=1)
+                        leave_info3 = self.env['hr.leaves.list'].sudo().search(domain3, limit=1)
+                        leave_info4 = self.env['hr.leaves.list'].sudo().search(domain4, limit=1)
+                        if len(leave_info1) > 0:
+                            leave_delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
+                        elif len(leave_info2) > 0:
+                            if duty['on_timeResult'] == 'NotSigned':
+                                leave_delta = duty['off_baseCheckTime'] - duty['on_baseCheckTime']
+                            else:
+                                leave_delta = duty['off_baseCheckTime'] - leave_info2.start_time
+                        elif len(leave_info3) > 0:
+                            leave_delta = leave_info3.end_time - duty['on_baseCheckTime']
+                        elif len(leave_info4) > 0:
+                            if duty['on_timeResult'] == 'NotSigned':
+                                leave_delta = leave_info4.end_time - duty['on_baseCheckTime']
+                            else:
+                                leave_delta = leave_info4.end_time - leave_info4.start_time
+                        else:
+                            pass
+                        if leave_delta:
+                            leave_hours = leave_delta.total_seconds() / 3600.0
+                            duty.update({'leave_hours': leave_hours, 'attendance_date_status': '03'})
+                        duty_info.append(duty)
+                    else:
+                        duty_info.append(duty)
                 self.env['attendance.info'].sudo().create(duty_info)
-
-                # 检索请假， 如果有，覆盖
-                # if leave_detail_dict.get(date):
-                #     if leave_detail_dict.get(date).get('leave_detail_time_start') is not None:
-                #         check_in = leave_detail_dict.get(date)['leave_detail_time_start']
-                #         check_in_type = leave_detail_dict.get(date)['leave_detail_time_start_type']
-                #     if leave_detail_dict.get(date).get('leave_detail_time_end') is not None:
-                #         check_out = leave_detail_dict.get(date)['leave_detail_time_end']
-                #         check_out_type = leave_detail_dict.get(date)['leave_detail_time_end_type']
 
     @api.multi
     def attendance_total_cal_sum(self, emp, start_date, attendance_info_dict_list):
