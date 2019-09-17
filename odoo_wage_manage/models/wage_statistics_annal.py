@@ -136,7 +136,7 @@ class AttendanceInfo(models.Model):
                 [('plan_id', '=', attendance.on_planId)], limit=1).class_id
             dingding_simple_groups = self.env['dingding.simple.groups.list'].sudo().search(
                 [('class_id', '=', hr_dingding_plan_class_id)], limit=1)
-            if dingding_simple_groups.work_time_minutes:
+            if dingding_simple_groups.rest_begin_time and dingding_simple_groups.rest_end_time:
                 attendance.base_work_hours = int(dingding_simple_groups.work_time_minutes) / 60
             elif attendance.off_baseCheckTime:
                 delta = attendance.off_baseCheckTime - attendance.on_baseCheckTime
