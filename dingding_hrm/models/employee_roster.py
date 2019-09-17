@@ -126,4 +126,11 @@ class EmployeeRoster(models.Model):
                 'identification_id': res.certNo,
             })
 
+    @api.multi
+    def name_get(self):
+        """
+        重写name_get方法
+        :return:
+        """
+        return [(res.id, '%s-%s' % (res.name, res.mainDept.name)) for res in self]
 
