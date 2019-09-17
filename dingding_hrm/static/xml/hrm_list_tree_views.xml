@@ -15,7 +15,7 @@
 <templates>
 
     <t t-name="HrmListView.get_hrm_button">
-        <button type="button" class="btn btn-secondary o_button_get_dingding_employee_roster_list">
+        <button type="button" class="btn btn-secondary o_button_get_dingding_employee_roster_list" groups="dingding_base.manage_groups">
             获取员工花名册
         </button>
     </t>
