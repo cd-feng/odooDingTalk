@@ -32,7 +32,7 @@ class AlowAccessApi(models.Model):
         ('dd_xcx', '钉钉小程序'),
         ('other', '其他应用'),
     ]
-    name = fields.Char(string='名称', index=True)
+    name = fields.Char(string='名称', index=True, required=True)
     system_type = fields.Selection(string=u'系统类型', selection=SystemType, default='wx_xcx', index=True)
     app_id = fields.Char(string='应用ID(应用标识)', help="用于odoo识别该应用是否允许获取api，外部系统需在请求时传递本参数", index=True)
     active = fields.Boolean(string=u'有效', default=True, index=True)

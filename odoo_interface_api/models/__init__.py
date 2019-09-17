@@ -16,3 +16,4 @@
 
 from . import employee
 from . import alow_access_api
+from . import applet_configs

@@ -2,6 +2,7 @@
 ###################################################################################
 #    Copyright (C) 2019 SuXueFeng GNU
 ###################################################################################
+import datetime
 import json
 import logging
 from odoo import http, _
@@ -46,7 +47,7 @@ class EmployeeAPI(Home, http.Controller):
             'wx_avatar_url': wx_avatar_url,
         })
         employee.sudo().message_post(body=u"账号已绑定外部系统，Code: %s！" % params_data.get('appid'), message_type='notification')
-        return json.dumps({'state': True, 'msg': '注册绑定成功！'})
+        return json.dumps({'state': True, 'msg': '注册绑定成功！', 'employee': api_tool.create_employee_data(employee)})
 
     @http.route('/api/wx/employee/binding/clear', type='http', auth='none', methods=['get', 'post'], csrf=False)
     def api_wx_employee_bingding_clear(self, **kw):
@@ -102,3 +103,72 @@ class EmployeeAPI(Home, http.Controller):
             }
         }
         return json.dumps({'state': True, 'msg': '查询成功', 'data': return_data})
+
+    @http.route('/api/attendance/employee/get', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def api_get_employee_attendance(self, **kw):
+        """
+        获取员工近7天的出勤数据
+        :param kw: appid openid
+        :return:
+        """
+        params_data = request.params.copy()
+        if not api_tool.check_api_access(params_data.get('appid')):
+            return json.dumps({'state': False, 'msg': '拒绝访问'})
+        if not params_data.get('openid'):
+            return json.dumps({'state': False, 'msg': '参数openid不正确'})
+        employee = request.env['hr.employee'].sudo().search([('wx_openid', '=', params_data.get('openid'))], limit=1)
+        if not employee:
+            return json.dumps({'state': False, 'msg': '账户未绑定'})
+        # 得到近7天的日期
+        today = datetime.date.today()
+        new_date = today - datetime.timedelta(days=7)
+        attendances = request.env['hr.attendance'].sudo().search([('employee_id', '=', employee.id), ('create_date', '>', new_date)])
+        return_list = list()
+        for attendance in attendances:
+            return_list.append({
+                'signDate': datetime.datetime.strftime(attendance.check_in, "%Y-%m-%d %H:%M:%S"),
+                'signType': 'in',
+                'location': '暂无打卡地点',
+            })
+            if attendance.check_out:
+                return_list.append({
+                    'signDate': datetime.datetime.strftime(attendance.check_out, "%Y-%m-%d %H:%M:%S"),
+                    'signType': 'out',
+                    'location': '暂无打卡地点',
+                })
+        return json.dumps({'state': True, 'msg': '查询成功', 'data': return_list})
+
+    @http.route('/api/employee/image/get', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def api_get_employee_image(self, **kw):
+        """
+        返回员工的头像
+        :param kw: appid openid
+        :return:
+        """
+        params_data = request.params.copy()
+        if not api_tool.check_api_access(params_data.get('appid')):
+            return json.dumps({'state': False, 'msg': '拒绝访问'})
+        if not params_data.get('openid'):
+            return json.dumps({'state': False, 'msg': '参数openid不正确'})
+        employee = request.env['hr.employee'].sudo().search([('wx_openid', '=', params_data.get('openid'))], limit=1)
+        if not employee:
+            return json.dumps({'state': False, 'msg': '账户未绑定'})
+        return employee.image
+
+    @http.route('/api/employee/job/getlist', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def api_get_all_employee_job(self, **kw):
+        """
+        返回所有的工作职位信息
+        :param kw: appid openid
+        :return:
+        """
+        params_data = request.params.copy()
+        if not api_tool.check_api_access(params_data.get('appid')):
+            return json.dumps({'state': False, 'msg': '拒绝访问'})
+        jobs = request.env['hr.job'].sudo().search([])
+        result_list = list()
+        for job in jobs:
+            result_list.append(job.name)
+        return json.dumps({'state': True, 'msg': '查询成功', 'data': result_list})
+
+
