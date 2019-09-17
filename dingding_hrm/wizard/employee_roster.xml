@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng License(GNU)
+-->
+<odoo>
+
+    <record id="dingding_get_hrm_list_form_view" model="ir.ui.view">
+        <field name="name">花名册同步</field>
+        <field name="model">dingding.employee.roster.synchronous</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>选择需要同步的钉钉智能人事花名册~~</p>
+                </div>
+                <div class="oe_title">
+                    <div name="options">
+                        <div>
+                            <field name="synchronous_onjob"/>
+                            <label for="synchronous_onjob"/>
+                        </div>
+                        <div>
+                            <field name="synchronous_dimission"/>
+                            <label for="synchronous_dimission"/>
+                        </div>
+                        <div attrs="{'invisible': [('synchronous_dimission', '!=', True)]}">
+                            <field name="synchronous_dimission_info"/>
+                            <label for="synchronous_dimission_info"/>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button string="开始同步" name="start_synchronous_data" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
