@@ -14,6 +14,7 @@
 # limitations under the License.
 ###################################################################################
 import logging
+from datetime import datetime
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -131,17 +132,32 @@ class AttendanceInfo(models.Model):
     @api.depends('on_baseCheckTime', 'off_baseCheckTime')
     def _compute_base_work_hours(self):
         for attendance in self:
-            if attendance.off_baseCheckTime:
+            hr_dingding_plan_class_id = self.env['hr.dingding.plan'].sudo().search(
+                [('plan_id', '=', attendance.on_planId)], limit=1).class_id
+            dingding_simple_groups = self.env['dingding.simple.groups.list'].sudo().search(
+                [('class_id', '=', hr_dingding_plan_class_id)], limit=1)
+            if dingding_simple_groups.work_time_minutes:
+                attendance.base_work_hours = int(dingding_simple_groups.work_time_minutes) / 60
+            elif attendance.off_baseCheckTime:
                 delta = attendance.off_baseCheckTime - attendance.on_baseCheckTime
                 attendance.base_work_hours = delta.total_seconds() / 3600.0
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建考勤记录
-        :return:
-        """
-        return super(AttendanceInfo, self).create(vals_list)
+    @api.depends('check_in', 'check_out')
+    def _compute_worked_hours(self):
+        for attendance in self:
+            hr_dingding_plan_class_id = self.env['hr.dingding.plan'].sudo().search(
+                [('plan_id', '=', attendance.on_planId)], limit=1).class_id
+            dingding_simple_groups = self.env['dingding.simple.groups.list'].sudo().search(
+                [('class_id', '=', hr_dingding_plan_class_id)], limit=1)
+            if attendance.check_out and dingding_simple_groups.rest_begin_time and dingding_simple_groups.rest_end_time:
+                rest_start = datetime.strptime(dingding_simple_groups.rest_begin_time, "%Y-%m-%d %H:%M:%S")
+                rest_end = datetime.strptime(dingding_simple_groups.rest_end_time, "%Y-%m-%d %H:%M:%S")
+                rest_time = rest_end - rest_start
+                delta = attendance.check_out - attendance.check_in - rest_time
+                attendance.worked_hours = delta.total_seconds() / 3600.0
+            elif attendance.check_out:
+                delta = attendance.check_out - attendance.check_in
+                attendance.worked_hours = delta.total_seconds() / 3600.0
 
 
 class WageEmpAttendanceAnnal(models.Model):
@@ -161,7 +177,8 @@ class WageEmpAttendanceAnnal(models.Model):
 
     company_id = fields.Many2one('res.company', '公司', default=_get_default_company, index=True, required=True)
     department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', index=True, track_visibility='onchange')
-    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True, track_visibility='onchange')
+    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工',
+                                  required=True, index=True, track_visibility='onchange')
     job_id = fields.Many2one(comodel_name='hr.job', string=u'在职岗位')
     employee_number = fields.Char(string='员工工号')
     attendance_month = fields.Date(string=u'考勤日期', required=True, index=True, default=_get_default_date)
@@ -229,13 +246,14 @@ class WageEmployeePerformance(models.Model):
 
     company_id = fields.Many2one('res.company', '公司', default=_get_default_company, index=True, required=True)
     department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', index=True, track_visibility='onchange')
-    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True, track_visibility='onchange')
+    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工',
+                                  required=True, index=True, track_visibility='onchange')
     job_id = fields.Many2one(comodel_name='hr.job', string=u'在职岗位')
     employee_number = fields.Char(string='员工工号')
     performance_month = fields.Date(string=u'绩效日期', required=True, index=True, default=_get_default_date)
     performance_code = fields.Char(string='绩效期间', index=True)
     line_ids = fields.One2many('wage.employee.performance.manage.line', 'manage_id', string=u'绩效明细')
-    
+
     performance_wage = fields.Float(string=u'绩效工资', digits=(10, 2))
     work_reward = fields.Float(string=u'工作奖励', digits=(10, 2))
     class_fee = fields.Float(string=u'课时费', digits=(10, 2))
@@ -250,7 +268,8 @@ class WageEmployeePerformance(models.Model):
             if res.performance_month:
                 month_date = str(res.performance_month)
                 res.performance_code = "{}/{}".format(month_date[:4], month_date[5:7])
-            res_count = self.search_count([('employee_id', '=', res.employee_id.id), ('performance_code', '=', res.performance_code)])
+            res_count = self.search_count([('employee_id', '=', res.employee_id.id),
+                                           ('performance_code', '=', res.performance_code)])
             if res_count > 1:
                 raise UserError("员工：{}和绩效期间：{}已存在！".format(res.employee_id.name, res.performance_code))
 
@@ -286,5 +305,3 @@ class WageEmployeePerformanceLine(models.Model):
     manage_id = fields.Many2one(comodel_name='wage.employee.performance.manage', string=u'绩效统计')
     performance_id = fields.Many2one(comodel_name='wage.performance.list', string=u'绩效项目')
     wage_amount = fields.Float(string=u'绩效金额')
-    
-    
