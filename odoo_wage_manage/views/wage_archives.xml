@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <record id="wage_archives_tree_view" model="ir.ui.view">
+        <field name="name">薪资档案</field>
+        <field name="model">wage.archives</field>
+        <field name="arch" type="xml">
+            <tree default_order="employee_id asc" js_class="wage_archives_js_class">
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="base_wage"/>
+                <field name="trial_period_salary"/>
+                <field name="payroll_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_archives_form_view" model="ir.ui.view">
+        <field name="name">薪资档案</field>
+        <field name="model">wage.archives</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="get_info_by_dingding_hrm" type="object" string="从钉钉花名册获取资料"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="code" class="oe_edit_only"/>
+                        <h1>
+                            <field name="code" placeholder="档案编号" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group col="2">
+                        <group>
+                            <field name="company_id" required="1"/>
+                            <field name="employee_id" required="1"/>
+                            <field name="employee_code"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="employee_type"/>
+                            <field name="trial_period_start_date" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <field name="trial_period_end_date" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <label for="trial_period_salary" attrs="{'invisible': [('employee_type','!=', 'probation')]}"/>
+                            <div class="o_row" name="wage" attrs="{'invisible': [('employee_type','!=', 'probation')]}">
+                                <field name="trial_period_salary" nolabel="1" required="1"/>
+                                <span>￥ / 月</span>
+                            </div>
+                            <label for="base_wage"/>
+                            <div class="o_row" name="wage">
+                                <field name="base_wage" nolabel="1" required="1"/>
+                                <span>￥ / 月</span>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="工资信息">
+                            <field name="line_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="structure_id" required="1"/>
+                                    <field name="wage_amount" required="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="其他">
+                            <group col="2">
+                                <group>
+                                    <field name="bank_account_number"/>
+                                    <field name="accountBank"/>
+                                </group>
+                                <group>
+                                    <field name="payroll_company"/>
+                                    <field name="household_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group string="备注">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_archives_action">
+        <field name="name">薪资档案</field>
+        <field name="res_model">wage.archives</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="wage_archives_search">
+        <field name="model">wage.archives</field>
+        <field name="arch" type="xml">
+            <search string="薪资档案">
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="base_wage"/>
+                <field name="payroll_company"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="wage_archives_menu" name="薪资档案" parent="wage_menu" sequence="1"
+              action="wage_archives_action"/>
+
+</odoo>

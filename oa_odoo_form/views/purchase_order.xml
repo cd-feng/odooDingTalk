@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="purchase_order_tree_inherit" model="ir.ui.view">
+        <field name="name">product.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="oa_state"/>
+                <field name="oa_message"/>
+                <field name="oa_result"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[2]" position="after">
+                <button name="send_to_dingding_approval" class="oe_highlight" string="钉钉审批" type="object" states="draft" groups="oa_base.user_groups"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="originator_user_id"/>
+                <field name="originator_dept_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

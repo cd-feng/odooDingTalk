@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="performance_assessment_tree_view" model="ir.ui.view">
+        <field name="name">绩效考评</field>
+        <field name="model">performance.assessment</field>
+        <field name="arch" type="xml">
+            <tree  create="0" default_order="id desc" decoration-success="state == 'close'" decoration-muted="state == 'executing'" decoration-info="state =='setting'" decoration-warning="state =='evaluation'" >
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="evaluation_id"/>
+                <field name="assessment_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="performance_assessment_form_view" model="ir.ui.view">
+        <field name="name">绩效考评</field>
+        <field name="model">performance.assessment</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="1">
+                <header>
+                    <button name="summit_performance" type="object" string="提交目标" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'setting')]}"
+                            confirm="确认提交目标吗？提交后请等待绩效管理员发布评分环节！"/>
+                    <button name="summit_rating" type="object" string="提交评分" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'evaluation')]}"
+                            confirm="确认提交评分吗？"/>
+                    <button name="return_setting" type="object" string="回退到初始" class="btn btn-secondary" confirm="确认回退到初始状态吗？" attrs="{'invisible': [('state', '=', 'setting')]}"/>
+                    <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" confirm="确认归档本记录，你想继续吗？" class="oe_stat_button"
+                                icon="fa-archive" groups="odoo_performance_manage.manage_groups">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h2>
+                            <field name="name" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group string="员工信息">
+                        <group>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="assessment_type" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" widget="date" readonly="1"/>
+                            <field name="end_date" widget="date" readonly="1"/>
+                            <field name="evaluation_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="维度指标列表">
+                            <field name="line_ids" attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}" context="{'default_state': state}">
+                                <tree default_order="sequence" mode="tree" delete="0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="dimension_id"/>
+                                    <field name="dimension_weights"/>
+                                    <field name="assessment_result"/>
+                                    <field name="performance_grade_id"/>
+                                    <field name="library_ids"/>
+                                    <field name="state" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group string="备注">
+                        <field name="notes" nolabel="1" placeholder="备注消息..." attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="performance_assessment_action">
+        <field name="name">绩效考评</field>
+        <field name="res_model">performance.assessment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_performance_name': True}</field>
+    </record>
+
+    <record model="ir.ui.view" id="performance_assessment_search">
+        <field name="model">performance.assessment</field>
+        <field name="arch" type="xml">
+            <search string="绩效考评">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="assessment_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+                <group expand="0" string="分类">
+                    <filter name="group_by_performance_name" string="考评期" context="{'group_by':'performance_name'}"/>
+                    <filter name="group_by_state" string="状态" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="绩效考评" id="performance_assessment_menu" parent="assessment_menu" sequence="1"
+              action="performance_assessment_action"/>
+
+
+    <record id="performance_assessment_line_form_view" model="ir.ui.view">
+        <field name="name">绩效考评项目</field>
+        <field name="model">performance.assessment.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="dimension_id" attrs="{'readonly':[('state', '!=', 'setting')]}" required="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="assessment_result" attrs="{'invisible':[('state', 'in', ('setting', 'executing'))]}"/>
+                        </group>
+                        <group>
+                            <label for="dimension_weights" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <div class="o_row" name="dimension_weights">
+                                <field name="dimension_weights" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                                <span>%</span>
+                            </div>
+                            <field name="performance_grade_id" attrs="{'invisible':[('state', 'in', ('setting', 'executing'))]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="指标列表">
+                            <field name="library_ids" context="{'default_dimension_id': dimension_id, 'default_state': state}" attrs="{'readonly':[('state', 'in', ('executing', 'close'))]}">
+                                <tree default_order="sequence" model="tree">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="dimension_id" invisible="1"/>
+                                    <field name="indicator_id"/>
+                                    <field name="extra_end"/>
+                                    <field name="threshold_value"/>
+                                    <field name="target_value"/>
+                                    <field name="challenge_value"/>
+                                    <field name="weights"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="employee_rating"/>
+                                    <field name="employee_notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="performance_assessment_line_library_form_view" model="ir.ui.view">
+        <field name="name">考评指标</field>
+        <field name="model">performance.assessment.line.library</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="state" invisible="1"/>
+                        <field name="dimension_id" invisible="1"/>
+                        <field name="indicator_id" attrs="{'readonly':[('state', '!=', 'setting')]}" required="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="challenge_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <field name="extra_end" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <label for="weights" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <div class="o_row" name="weights">
+                                <field name="weights" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                                <span>%</span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="threshold_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                            <field name="target_value" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                        </group>
+                    </group>
+                    <group string="考核标准">
+                        <field name="assessment_criteria" nolabel="1" attrs="{'readonly':[('state', '!=', 'setting')]}"/>
+                    </group>
+                    <group string="员工自评" attrs="{'invisible':[('state', 'in', ('setting','executing'))]}">
+                        <label for="employee_rating" attrs="{'required':[('state', '=', 'evaluation')], 'invisible':[('state', 'in', ('setting','executing'))]}"/>
+                        <div class="o_row" name="employee_rating">
+                            <field name="employee_rating" nolabel="1"  attrs="{'required':[('state', '=', 'evaluation')], 'invisible':[('state', 'in', ('setting','executing'))]}"/>
+                            <span>分</span>
+                        </div>
+                        <field name="employee_notes" attrs="{'invisible':[('state', 'in', ('setting','executing'))]}"/>
+                    </group>
+                    <group string="备注">
+                        <field name="notes" nolabel="1" placeholder="备注消息..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

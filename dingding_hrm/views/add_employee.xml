@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <odoo>
 
     <record id="dingding_add_employee_tree_view" model="ir.ui.view">
@@ -71,7 +84,7 @@
         <field name="name">待入职员工</field>
         <field name="model">dingding.add.employee</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="true">
+            <kanban class="o_kanban_mobile" create="true" js_class="dindin_get_preentry_kanban">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="mobile"/>
@@ -122,10 +135,6 @@
         <field name="target">inline</field>
     </record>
 
-    <menuitem name="待入职员工"
-              id="dingding_add_employee_menu"
-              parent="zhineng_hrm_menu"
-              sequence="3"
-              action="dingding_add_employee_action"/>
+    <menuitem name="待入职员工" id="dingding_add_employee_menu" parent="hrm_employee_changes_menu" sequence="1" action="dingding_add_employee_action"/>
 
 </odoo>

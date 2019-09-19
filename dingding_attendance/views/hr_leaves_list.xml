@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <record id="hr_leaves_list_tree_view" model="ir.ui.view">
+        <field name="name">请假列表</field>
+        <field name="model">hr.leaves.list</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top" create="false" edit="false">
+                <field name="user_id"/>
+                <field name="duration_percent"/>
+                <field name="duration_unit"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hr_leaves_list_action">
+        <field name="name">请假列表</field>
+        <field name="res_model">hr.leaves.list</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_leaves_list_search">
+        <field name="model">hr.leaves.list</field>
+        <field name="arch" type="xml">
+            <search string="请假列表">
+                <field name="user_id"/>
+                <field name="duration_percent"/>
+                <field name="duration_unit"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+                <separator/>
+                <filter name="groupby_user_id" string="员工" context="{'group_by': 'user_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="hr_leaves_list_menu" name="员工请假列表" parent="dingding_attendance.attendance_two_menu" sequence="1"
+              action="hr_leaves_list_action"/>
+
+
+    <record id="hr_leaves_list_tran_form_view" model="ir.ui.view">
+        <field name="name">获取请假列表</field>
+        <field name="model">hr.leaves.list.tran</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="start_time"/>
+                    </group>
+                    <group>
+                        <field name="end_time"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="is_all_emp"/>
+                    <field name="user_ids" widget="many2many_tags" placeholder="待查员工"/>
+                </group>
+                <footer>
+                    <button string="开始获取" name="get_leaves_list" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leaves_list_tran_action" model="ir.actions.act_window">
+        <field name="name">获取请假列表</field>
+        <field name="res_model">hr.leaves.list.tran</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

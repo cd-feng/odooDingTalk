@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <!--联系人标签from-->
+    <record id="dingding_base.view_partner_category_form_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="before">
+                <field name="din_category_type" string="标签分类名"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--联系人标签tree-->
+    <record id="dingding_base.view_partner_category_tree_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="din_category_type" string="标签分类名"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--联系人-->
+    <record id="dingding_base.partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <newline/>
+                <field name="din_company_name"/>
+                <field name="din_employee_id"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="create_ding_partner" type="object" string="上传钉钉联系人" class="oe_highlight"
+                            confirm="确认要将此联系人上传至钉钉吗？若不是新创建的联系人则无法上传!" groups="dingding_base.manage_groups"/>
+                    <button name="update_ding_partner" type="object" string="修改钉钉联系人" class="oe_highlight"
+                            confirm="系统将新的信息上传至钉钉,确认?" groups="dingding_base.manage_groups"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

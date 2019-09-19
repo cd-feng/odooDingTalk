@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <template id="odoo_wage_manage_asset" name="Odoo Wage Manage Asset" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_insured_monthly_statement.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_archives.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_payroll_accounting.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_tax_details.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_attendance_annal.js"></script>
+            <script type="text/javascript" src="/odoo_wage_manage/static/src/js/wage_employee_performance_manage.js"></script>
+        </xpath>
+    </template>
+
+    <menuitem name="薪酬" id="odoo_wage_manage.main_menu" web_icon="odoo_wage_manage,static/description/icon.png" sequence="18"/>
+
+    <menuitem name="统计" id="wage_statistics_menu" parent="odoo_wage_manage.main_menu" sequence="10"/>
+
+    <menuitem name="薪资" id="wage_menu" parent="odoo_wage_manage.main_menu" sequence="20"/>
+
+    <menuitem name="社保" id="social_security_menu" parent="odoo_wage_manage.main_menu" sequence="40"/>
+
+    <menuitem name="个税" id="tax_main" parent="odoo_wage_manage.main_menu" sequence="60"/>
+
+    <menuitem name="个税抵扣申请" id="tax_application" parent="tax_main" sequence="10"/>
+
+    <menuitem name="报表" id="report_menu" parent="odoo_wage_manage.main_menu" sequence="80"/>
+
+    <menuitem name="设置" id="configure_menu" parent="odoo_wage_manage.main_menu" sequence="100"/>
+
+</odoo>

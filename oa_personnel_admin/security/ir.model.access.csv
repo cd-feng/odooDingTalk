@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_oa_transfer_application,oa.transfer.application,model_oa_transfer_application,oa_base.user_groups,1,1,1,1
+access_oa_resignation_application,oa.resignation.application,model_oa_resignation_application,oa_base.user_groups,1,1,1,1
+access_oa_vehicle_application,oa.vehicle.application,model_oa_vehicle_application,oa_base.user_groups,1,1,1,1
+access_oa_itemuse_application,oa.itemuse.application,model_oa_itemuse_application,oa_base.user_groups,1,1,1,1
+access_oa_vehicle_application_line,oa.vehicle.application.line,model_oa_vehicle_application_line,oa_base.user_groups,1,1,1,1
+access_oa_itemuse_application_line,oa.itemuse.application.line,model_oa_itemuse_application_line,oa_base.user_groups,1,1,1,1
+access_oa_file_type,oa.file.type,model_oa_file_type,oa_base.user_groups,1,1,1,1
+access_oa_seal_type,oa.seal.type,model_oa_seal_type,oa_base.user_groups,1,1,1,1
+access_oa_seal_application_line,oa.seal.application.line,model_oa_seal_application_line,oa_base.user_groups,1,1,1,1
+access_oa_seal_application,oa.seal.application,model_oa_seal_application,oa_base.user_groups,1,1,1,1
+access_oa_general_application,oa.general.application,model_oa_general_application,oa_base.user_groups,1,1,1,1

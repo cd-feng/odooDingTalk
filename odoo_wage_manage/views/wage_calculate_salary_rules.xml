@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <record id="wage_calculate_salary_rules_tree_view" model="ir.ui.view">
+        <field name="name">计薪规则</field>
+        <field name="model">wage.calculate.salary.rules</field>
+        <field name="arch" type="xml">
+            <tree default_order="id">
+                <field name="name"/>
+                <field name="personnel_information"/>
+                <field name="fixed_salary"/>
+                <field name="performance_bonus"/>
+                <field name="leave_deduction"/>
+                <field name="sick_deduction"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_calculate_salary_rules_form_view" model="ir.ui.view">
+        <field name="name">计薪规则</field>
+        <field name="model">wage.calculate.salary.rules</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="oe_title" name="title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="规则名称" required="1"/>
+                    </h1>
+                </div>
+                <group col="2">
+                    <group>
+                        <field name="personnel_information" required="1"/>
+                        <field name="fixed_salary" required="1"/>
+                        <field name="performance_bonus" required="1"/>
+                    </group>
+                </group>
+                <group string="考勤-计算规则">
+                    <group>
+                        <field name="leave_deduction" required="1"/>
+                        <label for="hour_leave_number"/>
+                        <div class="o_row" name="wage" attrs="{'invisible':[('leave_deduction', '!=', '02')]}">
+                            <field name="hour_leave_number" nolabel="1"/>
+                            <span>小时</span>
+                        </div>
+                        <label for="leave_money"/>
+                        <div class="o_row" name="wage" attrs="{'invisible':[('leave_deduction', '!=', '02')]}">
+                            <field name="leave_money" nolabel="1"/>
+                            <span>￥</span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="sick_deduction" required="1"/>
+                        <label for="hour_sick_number"/>
+                        <div class="o_row" name="wage">
+                            <field name="hour_sick_number" nolabel="1" attrs="{'invisible':[('sick_deduction', '!=', '03')]}"/>
+                            <span>小时</span>
+                        </div>
+                        <label for="sick_money"/>
+                        <div class="o_row" name="wage">
+                            <field name="sick_money" nolabel="1" attrs="{'invisible':[('sick_deduction', '!=', '03')]}"/>
+                            <span>￥</span>
+                        </div>
+                        <label for="sick_deduction_ratio"/>
+                        <div class="o_row" name="wage">
+                            <field name="sick_deduction_ratio" nolabel="1" attrs="{'invisible':[('sick_deduction', '!=', '03')]}"/>
+                            <span>%</span>
+                        </div>
+                    </group>
+                    <group string="工作日加班-计算规则">
+                        <field name="work_overtime_deduction" required="1"/>
+                        <field name="work_overtime_multiple" attrs="{'invisible':[('work_overtime_deduction', '!=', '00')]}"/>
+                        <field name="work_overtime_money" attrs="{'invisible':[('work_overtime_deduction', '!=', '01')]}"/>
+                    </group>
+                    <group string="周末加班-计算规则">
+                        <field name="weekend_deduction" required="1"/>
+                        <field name="weekend_multiple" attrs="{'invisible':[('weekend_deduction', '!=', '00')]}"/>
+                        <field name="weekend_money" attrs="{'invisible':[('weekend_deduction', '!=', '01')]}"/>
+                    </group>
+                    <group string="节假日加班-计算规则">
+                        <field name="holiday_deduction" required="1"/>
+                        <field name="holiday_multiple" attrs="{'invisible':[('holiday_deduction', '!=', '00')]}"/>
+                        <field name="holiday_money" attrs="{'invisible':[('holiday_deduction', '!=', '01')]}"/>
+                    </group>
+                    <group string="考勤-迟到计算规则">
+                        <field name="late_attendance_deduction" required="1"/>
+                        <field name="late_attendance_money" attrs="{'invisible':[('late_attendance_deduction', '!=', '00')]}"/>
+                    </group>
+                    <group string="考勤-忘记打卡计算规则">
+                        <field name="notsigned_deduction" required="1"/>
+                        <field name="notsigned_money" attrs="{'invisible':[('notsigned_deduction', '!=', '00')]}"/>
+                    </group>
+                    <group string="考勤-早退计算规则">
+                        <field name="early_deduction" required="1"/>
+                        <field name="early_money" attrs="{'invisible':[('early_deduction', '!=', '00')]}"/>
+                    </group>
+                </group>
+                <group string="备注">
+                    <field name="notes" nolabel="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_calculate_salary_rules_action">
+        <field name="name">计薪规则</field>
+        <field name="res_model">wage.calculate.salary.rules</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wage_calculate_salary_rules_menu" name="计薪规则" parent="configure_menu" sequence="3"
+              action="wage_calculate_salary_rules_action"/>
+
+</odoo>

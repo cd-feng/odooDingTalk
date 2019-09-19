@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingding_message_type,dingding.message.type,model_dingding_message_type,dingding_base.user_groups,1,1,1,1
+access_dingding_work_message,dingding.work.message,model_dingding_work_message,dingding_base.user_groups,1,1,1,1
+access_dingding_work_message_user_list,dingding.work.message.user.list,model_dingding_work_message_user_list,dingding_base.user_groups,1,1,1,1
+access_dingding_work_message_dept_list,dingding.work.message.dept.list,model_dingding_work_message_dept_list,dingding_base.user_groups,1,1,1,1
+access_dingding_work_card_message_list,dingding.work.card.message.list,model_dingding_work_card_message_list,dingding_base.user_groups,1,1,1,1
+access_dingding_work_oa_message_list,dingding.work.oa.message.list,model_dingding_work_oa_message_list,dingding_base.user_groups,1,1,1,1
+access_dingding_message_template,dingding.message.template,model_dingding_message_template,dingding_base.user_groups,1,1,1,1
+access_dingding_message_template_line,dingding.message.template.line,model_dingding_message_template_line,dingding_base.user_groups,1,1,1,1
+access_dingding_chat,dingding.chat,model_dingding_chat,dingding_base.user_groups,1,1,1,1
+access_dingding_message_template,dingding_message_template,model_dingding_message_template,dingding_base.user_groups,1,1,1,1
+access_dingding_robot,dingding.robot,model_dingding_robot,dingding_base.user_groups,1,1,1,1

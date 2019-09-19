@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+    <record id="wage_payroll_accounting_tree_view" model="ir.ui.view">
+        <field name="name">薪资核算</field>
+        <field name="model">wage.payroll.accounting</field>
+        <field name="arch" type="xml">
+            <tree default_order="employee_id asc" js_class="compute_wage_payroll_accounting">
+                <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="employee_code"/>
+                <field name="date_code"/>
+                <field name="pay_wage"/>
+                <field name="real_wage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wage_payroll_accounting_form_view" model="ir.ui.view">
+        <field name="name">薪资核算</field>
+        <field name="model">wage.payroll.accounting</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <field name="email_state" invisible="1"/>
+                    <button name="action_send_employee_email" string="通过Email发送" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('email_state','=', True)]}"/>
+                    <button name="action_send_employee_email" string="重新发送邮件" type="object"
+                            attrs="{'invisible': [('email_state','=', False)]}" confirm="确认重新发送吗？"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="名称" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group col="2" string="基础信息">
+                        <group>
+                            <field name="company_id" required="1"/>
+                            <field name="employee_id" required="1"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="employee_code"/>
+                            <field name="wage_date"/>
+                            <field name="date_code" readonly="1"/>
+                            <label for="base_wage"/>
+                            <div class="o_row" name="base_wage">
+                                <field name="base_wage" nolabel="1" required="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                    </group>
+                    <group col="3" string="增减项">
+                        <group string="缺勤">
+                            <label for="attendance_days"/>
+                            <div class="o_row" name="attendance_days">
+                                <field name="attendance_days" nolabel="1" required="1"/>
+                                <span>天</span>
+                            </div>
+                            <field name="leave_absence" required="1"/>
+                            <field name="sick_absence"/>
+                            <label for="absence_sum"/>
+                            <div class="o_row" name="absence_sum">
+                                <field name="absence_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                        <group string="加班">
+                            <field name="work_overtime"/>
+                            <field name="weekend_overtime"/>
+                            <field name="holiday_overtime"/>
+                            <label for="overtime_sum"/>
+                            <div class="o_row" name="overtime_sum">
+                                <field name="overtime_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                        <group string="打卡">
+                            <field name="late_attendance"/>
+                            <field name="notsigned_attendance"/>
+                            <field name="early_attendance"/>
+                            <label for="attendance_sum"/>
+                            <div class="o_row" name="attendance_sum">
+                                <field name="attendance_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="薪资结构">
+                            <field name="structure_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="structure_id" required="1"/>
+                                    <field name="wage_amount" required="1" sum="wage_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="绩效明细">
+                            <field name="performance_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="performance_id" required="1"/>
+                                    <field name="wage_amount" required="1" sum="wage_amount"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                            <label for="performance_sum"/>
+                            <div class="o_row" name="performance_sum">
+                                <field name="performance_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </page>
+                        <page string="社保公积金">
+                            <field name="statement_ids">
+                                <tree editable="bottom" default_order="sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="insurance_id"/>
+                                    <field name="base_number" sum="base_number"/>
+                                    <field name="company_pay" sum="company_pay"/>
+                                    <field name="pension_pay" sum="pension_pay"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="个税明细">
+                            <group col="2">
+                                <group>
+                                    <field name="cumulative_expenditure_deduction"/>
+                                    <field name="cumulative_home_loan_interest_deduction"/>
+                                    <field name="cumulative_housing_rental_expense_deduction"/>
+                                    <field name="cumulative_support_for_the_elderly"/>
+                                    <field name="cumulative_continuing_education_deduction"/>
+                                    <field name="cumulative_total_tax_deduction"/>
+                                </group>
+                                <group>
+                                    <field name="taxable_salary_this_month"/>
+                                    <field name="cumulative_tax_pay"/>
+                                    <label for="tax_rate"/>
+                                    <div class="o_row" name="tax_rate">
+                                        <field name="tax_rate" nolabel="1"/>
+                                        <span>%</span>
+                                    </div>
+                                    <field name="quick_deduction"/>
+                                    <field name="this_months_tax"/>
+                                    <field name="cumulative_tax"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group string="合计">
+                        <group col="2">
+                            <label for="structure_sum"/>
+                            <div class="o_row" name="structure_sum">
+                                <field name="structure_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                            <label for="pay_wage"/>
+                            <div class="o_row" name="pay_wage">
+                                <field name="pay_wage" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="statement_sum"/>
+                            <div class="o_row" name="statement_sum">
+                                <field name="statement_sum" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                            <label for="real_wage"/>
+                            <div class="o_row" name="real_wage">
+                                <field name="real_wage" nolabel="1"/>
+                                <span>￥</span>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="备注">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_payroll_accounting_action">
+        <field name="name">薪资核算</field>
+        <field name="res_model">wage.payroll.accounting</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_date_code': True}</field>
+    </record>
+
+    <record model="ir.ui.view" id="wage_payroll_accounting_search">
+        <field name="model">wage.payroll.accounting</field>
+        <field name="arch" type="xml">
+            <search string="薪资核算">
+                <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="employee_code"/>
+                <field name="date_code"/>
+                <field name="pay_wage"/>
+                <field name="real_wage"/>
+                <group expand="0" string="分类">
+                    <filter name="group_by_date_code" string="期间" context="{'group_by':'date_code'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="wage_payroll_accounting_menu" name="薪资核算" parent="wage_menu" sequence="2"
+              action="wage_payroll_accounting_action"/>
+
+</odoo>

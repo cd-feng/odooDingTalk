@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<data noupdate="1">
+
+<!-- 工资条-->
+        <record id="odoo_wage_payslip_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-工资条过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_odoo_wage_payslip"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="odoo_wage_payslip_manage_groups_rule" model="ir.rule">
+            <field name="name">管理员-工资条过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_odoo_wage_payslip"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.manage_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+<!-- 考勤统计-->
+        <record id="wage_employee_attendance_annal_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-考勤统计过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_employee_attendance_annal"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="wage_employee_attendance_annal_supervisor_groups_rule" model="ir.rule">
+            <field name="name">主管-考勤统计过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_employee_attendance_annal"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.supervisor_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- 绩效统计统计-->
+        <record id="wage_employee_performance_manage_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-绩效统计过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_employee_performance_manage"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="wage_employee_performance_manage_supervisor_groups_rule" model="ir.rule">
+            <field name="name">主管-绩效统计过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_employee_performance_manage"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.supervisor_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+<!--专项附加税扣除-->
+        <record id="wage_special_additional_deduction_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-专项附加税扣除过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_special_additional_deduction"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="wage_special_additional_deduction_supervisor_groups_rule" model="ir.rule">
+            <field name="name">主管-专项附加税扣除过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_special_additional_deduction"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.supervisor_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+<!--社保月结账单-->
+        <record id="wage_insured_monthly_statement_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-社保月结账单过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_insured_monthly_statement"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="wage_insured_monthly_statement_supervisor_groups_rule" model="ir.rule">
+            <field name="name">主管-社保月结账单过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_insured_monthly_statement"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.supervisor_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+<!--纳税信息-->
+        <record id="wage_tax_information_user_groups_ir_rule" model="ir.rule">
+            <field name="name">员工-纳税信息过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_tax_information"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.user_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="wage_tax_information_supervisor_groups_rule" model="ir.rule">
+            <field name="name">主管-纳税信息过滤规则</field>
+            <field name="model_id" ref="odoo_wage_manage.model_wage_tax_information"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('odoo_wage_manage.supervisor_groups'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+	</data>
+</odoo>

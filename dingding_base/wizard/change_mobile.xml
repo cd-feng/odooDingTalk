@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <record id="chang_mobile_form" model="ir.ui.view">
+        <field name="name">更换手机号</field>
+        <field name="model">change.mobile</field>
+        <field name="arch" type="xml">
+            <form string="更换手机号">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="old_mobile"/>
+                            <field name="new_mobile"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="ding_id"/>
+                            <field name="dep_ding_id"/>
+                            <field name="din_active"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <group>
+                        <span>
+                            <button string="确认" type="object" class="oe_highlight" name="change_mobile_action"/>
+                            <button string="取消" class="oe_link" special="cancel" />
+                        </span>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="change_mobile_action" model="ir.actions.act_window">
+        <field name="name">更换手机号</field>
+        <field name="res_model">change.mobile</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

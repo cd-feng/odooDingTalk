@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+     <record id="wage_employee_attendance_annal_transient_form_view" model="ir.ui.view">
+        <field name="name">计算考勤结果</field>
+        <field name="model">wage.employee.attendance.annal.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="soure_type"/>
+                    </group>
+                    <group>
+                        <field name="start_date" widget="date"/>
+                        <field name="end_date" widget="date"/>
+                    </group>
+                </group>
+                <p>
+                    请注意: 当选择为"从钉钉考勤计算"时，请确保你已经安装了钉钉模块并启用考勤功能！Odoo考勤也是一样；否则系统将会提示错误！！
+                </p>
+                <footer>
+                    <button string="立即计算" name="compute_attendance_result" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wage_employee_attendance_annal_transient_action" model="ir.actions.act_window">
+        <field name="name">计算考勤结果</field>
+        <field name="res_model">wage.employee.attendance.annal.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="wage_employee_performance_manage_transient_form_view" model="ir.ui.view">
+        <field name="name">从绩效计算结果</field>
+        <field name="model">wage.employee.performance.manage.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="start_date" widget="date"/>
+                    </group>
+                    <group>
+                        <field name="end_date" widget="date"/>
+                    </group>
+                </group>
+                <p>
+                    请注意: 本功能将依赖绩效模块，若未安装并启用时，系统将无法获取结果！！！
+                </p>
+                <footer>
+                    <button string="立即获取" name="compute_performance_result" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wage_employee_performance_manage_transient_action" model="ir.actions.act_window">
+        <field name="name">从绩效计算结果</field>
+        <field name="res_model">wage.employee.performance.manage.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

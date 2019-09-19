@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <!--智能人事-->
+        <record id="dingding_parameter_hrm_list" model="dingding.parameter">
+            <field name="name">获取员工花名册字段信息</field>
+            <field name="key">hrm_list</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/list?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_search_hrm_querypreentry" model="dingding.parameter">
+            <field name="name">查询企业待入职员工列表</field>
+            <field name="key">hrm_querypreentry</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/querypreentry?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_hrm_queryonjob" model="dingding.parameter">
+            <field name="name">查询企业在职员工列表</field>
+            <field name="key">hrm_queryonjob</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/queryonjob?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_hrm_querydimission" model="dingding.parameter">
+            <field name="name">查询企业离职员工列表</field>
+            <field name="key">hrm_querydimission</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/querydimission?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_hrm_listdimission" model="dingding.parameter">
+            <field name="name">获取离职员工离职信息</field>
+            <field name="key">hrm_listdimission</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/listdimission?access_token=</field>
+        </record>
+
+        <record id="dingding_parameter_hrm_addpreentry" model="dingding.parameter">
+            <field name="name">添加企业待入职员工</field>
+            <field name="key">hrm_addpreentry</field>
+            <field name="value">https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/addpreentry?access_token=</field>
+        </record>
+
+    </data>
+</odoo>

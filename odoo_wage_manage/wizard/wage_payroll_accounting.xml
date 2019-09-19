@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+     <record id="wage_payroll_accounting_transient_form_view" model="ir.ui.view">
+        <field name="name">薪资计算</field>
+        <field name="model">wage.payroll.accounting.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="wage_date" widget="date"/>
+                        <field name="date_code" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="all_emp"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="emp_ids" widget="many2many_tags" placeholder="选择员工..."  required="1"/>
+                </group>
+                <footer>
+                    <button string="立即计算" name="compute_payroll_accounting" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wage_payroll_accounting_transient_action" model="ir.actions.act_window">
+        <field name="name">薪资计算</field>
+        <field name="res_model">wage.payroll.accounting.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="wage_payroll_accounting_to_payslip_transient_form_view" model="ir.ui.view">
+        <field name="name">生成工资条</field>
+        <field name="model">wage.payroll.accounting.to.payslip.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="start_date" widget="date"/>
+                        <field name="end_date" widget="date"/>
+                    </group>
+                    <group>
+                        <field name="date_code" readonly="1"/>
+                        <field name="all_emp"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="emp_ids" widget="many2many_tags" placeholder="选择员工..."  required="1"/>
+                </group>
+                <footer>
+                    <button string="立即生成" name="create_employee_payslip" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wage_payroll_accounting_to_payslip_transient_action" model="ir.actions.act_window">
+        <field name="name">生成工资条</field>
+        <field name="res_model">wage.payroll.accounting.to.payslip.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="send_wage_payroll_to_email_transient_form_view" model="ir.ui.view">
+        <field name="name">通过EMAIL发送核算明细至员工</field>
+        <field name="model">send.wage.payroll.to.email.transient</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="wage_date" widget="date"/>
+                    </group>
+                    <group>
+                        <field name="date_code" readonly="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即发送" name="send_email_now" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="send_wage_payroll_to_email_transient_action" model="ir.actions.act_window">
+        <field name="name">通过EMAIL发送核算明细至员工</field>
+        <field name="res_model">send.wage.payroll.to.email.transient</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,12 +1,28 @@
 # -*- coding: utf-8 -*-
-import json
+###################################################################################
+#
+#    Copyright (C) 2019 SuXueFeng
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
+import base64
 import logging
-import requests
-from requests import ReadTimeout
-from odoo import api, fields, models, tools
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.modules import get_module_resource
-import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +34,8 @@ class AddDingDingEmployee(models.Model):
 
     @api.model
     def _default_image(self):
-        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        image_path = get_module_resource(
+            'hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     USERSTATE = [
@@ -27,17 +44,19 @@ class AddDingDingEmployee(models.Model):
         ('ing', '已入职')
     ]
 
-    active = fields.Boolean(string=u'有效', default=True)
+    active = fields.Boolean(string='有效', default=True)
     user_id = fields.Char(string='钉钉用户Id')
     name = fields.Char(string='员工姓名', required=True)
     mobile = fields.Char(string='手机号', required=True)
-    pre_entry_time = fields.Datetime(string=u'预期入职时间', required=True)
-    dept_id = fields.Many2one(comodel_name='hr.department', string=u'入职部门', required=True)
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
+    pre_entry_time = fields.Datetime(string='预期入职时间', required=True)
+    dept_id = fields.Many2one(comodel_name='hr.department', string='入职部门')
+    company_id = fields.Many2one(
+        'res.company', '公司', default=lambda self: self.env.user.company_id.id)
     image = fields.Binary("照片", default=_default_image, attachment=True)
     image_medium = fields.Binary("Medium-sized photo", attachment=True)
     image_small = fields.Binary("Small-sized photo", attachment=True)
-    state = fields.Selection(string=u'状态', selection=USERSTATE, default='new', track_visibility='onchange')
+    state = fields.Selection(
+        string='状态', selection=USERSTATE, default='new', track_visibility='onchange')
 
     @api.model
     def create(self, values):
@@ -52,42 +71,52 @@ class AddDingDingEmployee(models.Model):
     @api.multi
     def add_employee(self):
         """
-        添加待入职员工
-        :return:
+        智能人事添加企业待入职员工
+
+        :param param: 添加待入职入参
         """
+        din_client = self.env['dingding.api.tools'].get_client()
         self.ensure_one()
         logging.info(">>>添加待入职员工start")
-        url = self.env['ali.dindin.system.conf'].search([('key', '=', 'hrm_addpreentry')]).value
-        token = self.env['ali.dindin.system.conf'].search([('key', '=', 'token')]).value
-        if not self.dept_id.din_id:
-            raise UserError("所选部门在钉钉中不存在!")
-        user = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-        data = {
-            'param': {
-                'name': self.name,
-                'mobile': self.mobile,
-                'pre_entry_time': str(self.pre_entry_time),
-                'op_userid': user[0].din_id if user else '',
-                'extend_info': {'depts': self.dept_id.din_id}
-            }
-        }
+        user = self.env['hr.employee'].search(
+            [('user_id', '=', self.env.user.id)])
+        name = self.name
+        mobile = self.mobile
+        pre_entry_time = self.pre_entry_time
+        op_userid = user[0].ding_id if user else ''
+        extend_info = {'depts': self.dept_id.ding_id} if self.dept_id else ''
         try:
-            headers = {'Content-Type': 'application/json'}
-            result = requests.post(url="{}{}".format(url, token), headers=headers, data=json.dumps(data), timeout=2)
-            result = json.loads(result.text)
-            logging.info("添加待入职员工结果:{}".format(result))
-            if result.get('errcode') == 0:
-                self.write({
-                    'user_id': result.get('userid'),
-                    'state': 'lod'
-                })
-            else:
-                raise UserError("添加失败,原因:{}!".format(result.get('errmsg')))
-        except ReadTimeout:
-            raise UserError("网络连接超时")
+            result = din_client.employeerm.addpreentry(
+                name, mobile, pre_entry_time=pre_entry_time, op_userid=op_userid, extend_info=extend_info)
+            logging.info(">>>添加待入职员工返回结果%s", result)
+            self.write({
+                'user_id': result.get('userid'),
+                'state': 'lod'
+            })
+        except Exception as e:
+            raise UserError(e)
         logging.info(">>>添加待入职员工end")
+
+    @api.model
+    def count_pre_entry(self):
+        """
+        智能人事查询公司待入职员工列表,返回待入职总人数
+        智能人事业务，企业/ISV分页查询公司待入职员工id列表
+
+        :param offset: 分页起始值，默认0开始
+        :param size: 分页大小，最大50
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        try:
+            result = din_client.employeerm.querypreentry(offset=0, size=50)
+            logging.info(">>>查询待入职员工列表返回结果%s", result)
+            if result['data_list']['string']:
+                pre_entry_list = result['data_list']['string']
+                return len(pre_entry_list)
+        except Exception as e:
+            raise UserError(e)
 
     @api.multi
     def employees_have_joined(self):
         self.ensure_one()
-        raise UserError("还没有做这个功能")
+        raise UserError(_("还没有做这个功能"))

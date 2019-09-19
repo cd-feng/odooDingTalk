@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="PullDinDinApprovalTemplate">
+        <div class="alert alert-info">
+            <p>即将从钉钉中获取审批模板信息</p>
+        </div>
+	</t>
+
+</template>
+
+
+
+
