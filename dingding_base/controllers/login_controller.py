@@ -80,6 +80,8 @@ class OAuthController(Controller):
         auth_code = kw.get('authCode')
         logging.info(">>>免登授权码: %s", auth_code)
         user_id = self.get_userid_by_auth_code(auth_code)
+        if not user_id:
+            return self._do_err_redirect("钉钉免登失败！具体原因是无法获取用户code，请检查后台IP是否发生变化!")
         employee = request.env['hr.employee'].sudo().search([('ding_id', '=', user_id)], limit=1)
         if not employee:
             return self._do_err_redirect("系统对应员工不存在!")
