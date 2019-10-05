@@ -45,7 +45,6 @@ class HrLeavesListTran(models.TransientModel):
     end_time = fields.Date(string=u'结束时间', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
 
-    
     def get_leaves_list(self):
         """
         查询请假状态
@@ -85,7 +84,8 @@ class HrLeavesListTran(models.TransientModel):
                             })
                             leave_list.append(leave_data)
                             # 删除已存在的请假记录
-                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id', '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
+                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id',
+                                                                                       '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
                             self.env['hr.leaves.list'].search(domain).unlink()
                         # 批量存储记录
                         self.env['hr.leaves.list'].create(leave_list)

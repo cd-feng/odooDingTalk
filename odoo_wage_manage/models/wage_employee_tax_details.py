@@ -49,11 +49,11 @@ class WageEmployeeTaxDetails(models.Model):
             self.write({
                 'year': str(res.start_date)[:4]
             })
-            count_num = self.search_count([('employee_id', '=', res.employee_id.id), ('year', '=', str(res.start_date)[:4])])
+            count_num = self.search_count([('employee_id', '=', res.employee_id.id),
+                                           ('year', '=', str(res.start_date)[:4])])
             if count_num > 1:
                 raise UserError("员工:{}已存在{}年份的员工个税明细表！请勿重复创建！".format(res.employee_id.name, str(res.start_date)[:4]))
 
-    
     def set_employee_tax_detail(self, month_code, line_data):
         """
         修改员工个税明细
@@ -96,4 +96,3 @@ class WageEmployeeTaxDetailsLine(models.Model):
     accumulated_deductible_tax = fields.Float(string=u'累计应扣个税', digits=(10, 2))
     this_months_tax = fields.Float(string=u'本月个税', digits=(10, 2))
     cumulative_actual_tax = fields.Float(string=u'累计实际个税', digits=(10, 2))
-

@@ -101,7 +101,6 @@ class WageCalculateSalaryRules(models.Model):
     early_deduction = fields.Selection(string=u'早退打卡规则', selection=early_selection, default='00')
     early_money = fields.Float(string=u'扣款金额', digits=(10, 2))
 
-    
     def compute_leave_deduction(self, base_wage, days, hours):
         """
         计算事假
@@ -120,7 +119,6 @@ class WageCalculateSalaryRules(models.Model):
             # (按次数) 次数*每次事假扣款
             return (hours / self.hour_leave_number) * self.leave_money
 
-    
     def compute_sick_absence(self, base_wage, days, hours):
         """
         计算病假扣款
@@ -131,7 +129,7 @@ class WageCalculateSalaryRules(models.Model):
         """
         if self.sick_deduction == '00':
             # 基本工资/2/应出勤天数/8*请假小时
-            return base_wage/2/days/8*hours
+            return base_wage / 2 / days / 8 * hours
         elif self.sick_deduction == '01':
             # 基本工资/应出勤天数*请假小时*病假扣款比例
             return base_wage / days * hours * self.sick_deduction_ratio
@@ -140,9 +138,8 @@ class WageCalculateSalaryRules(models.Model):
             return base_wage / days * hours / 8 * self.sick_deduction_ratio
         else:
             # (按次数) 次数*每次病假扣款')
-            return int(hours/self.hour_sick_number) * self.sick_money
+            return int(hours / self.hour_sick_number) * self.sick_money
 
-    
     def compute_work_overtime(self, base_wage, days, hours):
         """
         计算工作日加班费用
@@ -153,12 +150,11 @@ class WageCalculateSalaryRules(models.Model):
         """
         if self.work_overtime_deduction == '00':
             # 基本工资/应出勤天数/8*加班小时*倍数
-            return base_wage/days/8*hours*self.work_overtime_multiple
+            return base_wage / days / 8 * hours * self.work_overtime_multiple
         else:
             # 加班小时*固定金额
             return hours * self.work_overtime_money
 
-    
     def compute_weekend_overtime(self, base_wage, days, hours):
         """
         计算周末加班费用
@@ -169,12 +165,11 @@ class WageCalculateSalaryRules(models.Model):
         """
         if self.weekend_deduction == '00':
             # 基本工资/应出勤天数/8*加班小时*倍数
-            return base_wage/days/8*hours*self.weekend_multiple
+            return base_wage / days / 8 * hours * self.weekend_multiple
         else:
             # 加班小时*固定金额
             return hours * self.weekend_multiple
 
-    
     def compute_holiday_overtime(self, base_wage, days, hours):
         """
         计算节假日加班费用
@@ -185,12 +180,11 @@ class WageCalculateSalaryRules(models.Model):
         """
         if self.holiday_deduction == '00':
             # 基本工资/应出勤天数/8*加班小时*倍数
-            return base_wage/days/8*hours*self.holiday_multiple
+            return base_wage / days / 8 * hours * self.holiday_multiple
         else:
             # 加班小时*固定金额
             return hours * self.holiday_money
 
-    
     def compute_late_attendance(self, attendance_num):
         """
         计算迟到扣款费用
@@ -203,7 +197,6 @@ class WageCalculateSalaryRules(models.Model):
         else:
             return 0
 
-    
     def compute_notsigned_attendance(self, attendance_num):
         """
         计算忘记打卡扣款费用
@@ -216,7 +209,6 @@ class WageCalculateSalaryRules(models.Model):
         else:
             return 0
 
-    
     def compute_early_attendance(self, attendance_num):
         """
         计算早退扣款费用
@@ -228,4 +220,3 @@ class WageCalculateSalaryRules(models.Model):
             return attendance_num * self.early_money
         else:
             return 0
-

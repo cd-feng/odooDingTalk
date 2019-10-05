@@ -28,12 +28,14 @@ class WageInsuredMonthlyStatement(models.Model):
 
     active = fields.Boolean(string=u'Active', default=True)
     name = fields.Char(string='名称')
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id, index=True, required=True)
+    company_id = fields.Many2one(
+        'res.company', '公司', default=lambda self: self.env.user.company_id, index=True, required=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'参保员工', required=True, index=True)
     department_id = fields.Many2one(comodel_name='hr.department', string=u'员工部门', index=True)
     monthly_date = fields.Date(string=u'月结日期', required=True)
     date_code = fields.Char(string='期间代码', index=True)
-    payment_method = fields.Selection(string=u'缴纳方式', selection=[('company', '公司自缴'), ('other', '其他')], default='company')
+    payment_method = fields.Selection(string=u'缴纳方式', selection=[(
+        'company', '公司自缴'), ('other', '其他')], default='company')
     line_ids = fields.One2many('wage.insured.monthly.statement.line', 'statement_id', string=u'账单明细')
     personal_sum = fields.Float(string=u'个人缴纳总计', digits=(10, 4), compute='_compute_statement_sum')
     company_sum = fields.Float(string=u'公司缴纳合计', digits=(10, 4), compute='_compute_statement_sum')
@@ -76,7 +78,6 @@ class WageInsuredMonthlyStatement(models.Model):
                 'personal_sum': personal_sum,
             })
 
-    
     def get_employee_monthly_statement_line(self):
         """
         返回员工月结明细列表

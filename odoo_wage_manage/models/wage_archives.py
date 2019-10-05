@@ -63,7 +63,6 @@ class EmployeeWageArchives(models.Model):
             values.update({'code': self.env['ir.sequence'].sudo().next_by_code('wage.employee.archives.code')})
         return super(EmployeeWageArchives, self).create(values)
 
-    
     def create_all_structure(self):
         """
         初始化所有薪资结构
@@ -93,7 +92,6 @@ class EmployeeWageArchives(models.Model):
                 if res.employee_id.bank_account_id and res.employee_id.bank_account_id.bank_id:
                     res.accountBank = res.employee_id.bank_account_id.bank_id.name
 
-    
     def get_info_by_dingding_hrm(self):
         """
         从钉钉花名册中获取员工信息
@@ -132,7 +130,6 @@ class EmployeeWageArchives(models.Model):
             if emp_count > 1:
                 raise UserError("员工'%s'薪资合同已存在，请不要重复创建！" % res.employee_id.name)
 
-    
     def get_employee_wage_structure(self):
         """
         返回该员工的薪资结构数据
@@ -148,7 +145,6 @@ class EmployeeWageArchives(models.Model):
             amount_sum += line.wage_amount
         return structure_list, amount_sum
 
-    
     def get_employee_salary(self):
         """
         返回该员工的工资，需要在本函数中判断该员工是否为试用期
@@ -170,4 +166,3 @@ class EmployeeWageArchivesLine(models.Model):
     archives_id = fields.Many2one(comodel_name='wage.archives', string=u'薪资档案')
     structure_id = fields.Many2one(comodel_name='wage.structure', string=u'薪资项目')
     wage_amount = fields.Float(string=u'薪资金额', digits=(10, 2))
-

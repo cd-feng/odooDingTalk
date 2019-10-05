@@ -151,7 +151,6 @@ class WagePayrollAccounting(models.Model):
                 'statement_sum': statement_sum,
             })
 
-    
     def action_send_employee_email(self):
         """
         发送email
@@ -197,5 +196,3 @@ class WagePayrollMonthlyStatementLine(models.Model):
     base_number = fields.Float(string=u'险种基数', digits=(10, 2))
     company_pay = fields.Float(string=u'公司缴纳', digits=(10, 4))
     pension_pay = fields.Float(string=u'个人缴纳', digits=(10, 4))
-
-

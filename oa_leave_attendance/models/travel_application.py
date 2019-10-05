@@ -30,7 +30,6 @@ class LeaveApplication(models.Model):
     sum_days = fields.Integer(string=u'总天数', compute='_compute_sum_days')
     line_ids = fields.One2many(comodel_name='oa.travel.application.line', inverse_name='oa_ta_id', string=u'明细')
 
-    
     def summit_approval(self):
         """
         提交到钉钉
@@ -105,4 +104,3 @@ class LeaveApplicationLine(models.Model):
             start_date = datetime.datetime.strptime(str(self.start_date), "%Y-%m-%d")
             end_date = datetime.datetime.strptime(str(self.end_date), "%Y-%m-%d")
             self.ta_days = str((end_date - start_date).days)
-

@@ -23,7 +23,6 @@ class PurchaseOrder(models.Model):
             if res.oa_state == '02':
                 res.state = 'purchase'
 
-    
     def send_to_dingding_approval(self):
         """
         提交到钉钉
@@ -45,16 +44,14 @@ class PurchaseOrder(models.Model):
             fcv_line_list = list()
             fcv_line_list.append({"name": "产品", "value": line.product_id.name})
             fcv_line_list.append({"name": "说明", "value": line.name})
-            fcv_line_list.append({"name": "计划日期", "value": str(fields.datetime.strftime(line.date_planned, '%Y-%m-%d'))})
+            fcv_line_list.append({"name": "计划日期", "value": str(
+                fields.datetime.strftime(line.date_planned, '%Y-%m-%d'))})
             fcv_line_list.append({"name": "数量", "value": line.product_qty})
             fcv_line_list.append({"name": "单价", "value": line.price_unit})
-            fcv_line_list.append({"name": "小计", "value": line.product_qty*line.price_unit})
+            fcv_line_list.append({"name": "小计", "value": line.product_qty * line.price_unit})
             fcv_line.append(fcv_line_list)
         fcv_list.append({'name': '产品明细', 'value': fcv_line})
         # 发送单据信息至钉钉并接受审批实例id
         pid = self._summit_din_approval(process_code, fcv_list)
         self.write({'oa_state': '01', 'process_instance_id': pid})
         self.message_post(body=u"已提交至钉钉，请等待审批人进行审批！", message_type='notification')
-
-
-

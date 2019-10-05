@@ -42,7 +42,6 @@ class OaStockRequisition(models.Model):
     line_ids = fields.One2many(comodel_name='oa.stock.requisition.line', inverse_name='requisition_id', string=u'调拨明细')
     reason_leave = fields.Text(string=u'备注')
 
-    
     def summit_approval(self):
         """
         提交到钉钉
@@ -101,5 +100,3 @@ class OaStockRequisitionLine(models.Model):
     approval_number_transfers = fields.Float(string=u'申请调拨数量', required=True)
     actual_number_transfers = fields.Float(string=u'实际调拨数量', required=True)
     control_feedback = fields.Char(string=u'品控反馈')
-
-

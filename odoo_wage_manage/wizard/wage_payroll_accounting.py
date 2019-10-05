@@ -50,7 +50,6 @@ class WagePayrollAccountingTransient(models.TransientModel):
                 wage_date = str(res.wage_date)
                 res.date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
 
-    
     def compute_payroll_accounting(self):
         """
         计算薪资
@@ -112,9 +111,11 @@ class WagePayrollAccountingTransient(models.TransientModel):
                 # 工作日加班费
                 work_overtime = rules.compute_work_overtime(base_wage, attendance_days, attendance.work_overtime_hour)
                 # 周末加班费
-                weekend_overtime = rules.compute_weekend_overtime(base_wage, attendance_days, attendance.weekend_overtime_hour)
+                weekend_overtime = rules.compute_weekend_overtime(
+                    base_wage, attendance_days, attendance.weekend_overtime_hour)
                 # 节假日加班费
-                holiday_overtime = rules.compute_holiday_overtime(base_wage, attendance_days, attendance.holiday_overtime_hour)
+                holiday_overtime = rules.compute_holiday_overtime(
+                    base_wage, attendance_days, attendance.holiday_overtime_hour)
                 # 迟到扣款
                 late_attendance = rules.compute_late_attendance(attendance.late_attendance_num)
                 # 忘记打卡扣款
@@ -132,11 +133,12 @@ class WagePayrollAccountingTransient(models.TransientModel):
                     'early_attendance': early_attendance,
                 })
                 absence_amount_sum = leave_absence + sick_absence
-                overtime_amount_sum = work_overtime+weekend_overtime+holiday_overtime
-                attendance_amount_sum = late_attendance+notsigned_attendance+early_attendance
+                overtime_amount_sum = work_overtime + weekend_overtime + holiday_overtime
+                attendance_amount_sum = late_attendance + notsigned_attendance + early_attendance
             # 计算应发工资
             # 应发工资=基本工资+薪资结构+ 绩效合计-缺勤扣款合计+加班费合计-打卡扣款合计
-            pay_wage = base_wage+structure_amount_sum+performance_amount_sum-absence_amount_sum+overtime_amount_sum-attendance_amount_sum
+            pay_wage = base_wage + structure_amount_sum + performance_amount_sum - \
+                absence_amount_sum + overtime_amount_sum - attendance_amount_sum
             payroll_data.update({'pay_wage': pay_wage})
             payroll_data = self._compute_employee_tax(pay_wage, payroll_data, emp, date_code)
             # 判断是否已存在该期间的员工核算信息
@@ -166,7 +168,8 @@ class WagePayrollAccountingTransient(models.TransientModel):
         """
         month_code = date_code[5:7]
         # 获取个税明细
-        emp_tax = self.env['wage.employee.tax.details'].sudo().search([('employee_id', '=', emp.id), ('year', '=', date_code[:4])], limit=1)
+        emp_tax = self.env['wage.employee.tax.details'].sudo().search(
+            [('employee_id', '=', emp.id), ('year', '=', date_code[:4])], limit=1)
         if not emp_tax:
             raise UserError("员工'%s'不存在年度'%s'个税明细！请先创建或初始化..." % (emp.name, date_code[:4]))
         # 获取专项附加扣除
@@ -185,7 +188,7 @@ class WagePayrollAccountingTransient(models.TransientModel):
             cumulative_housing_rental_expense_deduction = deduction.cumulative_housing_rental_expense_deduction
         # 累计个税抵扣总额
         total_tax_deduction = cumulative_expenditure_deduction + cumulative_support_for_the_elderly + cumulative_continuing_education_deduction + \
-                              cumulative_home_loan_interest_deduction + cumulative_housing_rental_expense_deduction
+            cumulative_home_loan_interest_deduction + cumulative_housing_rental_expense_deduction
         cumulative_tax_pay = 0       # 累计计税工资
         exemption = 0                # 累计免征额
         cumulative_actual_tax = 0    # 累计实际个税
@@ -194,7 +197,7 @@ class WagePayrollAccountingTransient(models.TransientModel):
             # 获取月份的前一个月
             if int(month_code) == 1:
                 exemption = 5000
-            elif int(month_code)-1 == int(line.month):
+            elif int(month_code) - 1 == int(line.month):
                 exemption += line.accumulated_exemption + 5000
                 cumulative_tax_pay = line.cumulative_tax_pay + pay_wage
                 cumulative_actual_tax = line.cumulative_actual_tax
@@ -204,7 +207,8 @@ class WagePayrollAccountingTransient(models.TransientModel):
         # 累计应税工资 = 本月计税工资 + 历史月份计税工资 - 累计个税抵扣 - 累计免税额
         cumulative_tax = pay_wage + lsy_tax_wage - total_tax_deduction - exemption
         # 累计应扣个税 税率  速算扣除数
-        accumulated_deductible_tax, tax, quick_deduction = self._compute_cumulative_tax_payable_by_number(cumulative_tax)
+        accumulated_deductible_tax, tax, quick_deduction = self._compute_cumulative_tax_payable_by_number(
+            cumulative_tax)
         # 本月个税 = 累计应扣个税 - 累计实际个税
         this_months_tax = accumulated_deductible_tax - cumulative_actual_tax
         # 创建该员工个税明细
@@ -323,7 +327,6 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
                 start_date = str(res.start_date)
                 res.date_code = "{}/{}".format(start_date[:4], start_date[5:7])
 
-    
     def create_employee_payslip(self):
         """
         生成工资条
@@ -375,7 +378,8 @@ class SendPayrollAccountingToPayslipEmailTransient(models.TransientModel):
 
     wage_date = fields.Date(string=u'核算月份', required=True)
     date_code = fields.Char(string='期间代码')
-    payroll_ids = fields.Many2many('wage.payroll.accounting', relation='payroll_accounting_email_wage_payroll_accounting_rel', string=u'核算明细')
+    payroll_ids = fields.Many2many('wage.payroll.accounting',
+                                   relation='payroll_accounting_email_wage_payroll_accounting_rel', string=u'核算明细')
     all_payroll = fields.Boolean(string=u'所有核算明细?')
 
     @api.onchange('wage_date')
@@ -389,7 +393,6 @@ class SendPayrollAccountingToPayslipEmailTransient(models.TransientModel):
                 wage_date = str(res.wage_date)
                 res.date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
 
-    
     def send_email_now(self):
         """
         批量发送核算明细至员工email,注意不是立即发送，通过邮件：EMail队列管理器进行发送

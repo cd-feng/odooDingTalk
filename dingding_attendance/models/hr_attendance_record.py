@@ -96,7 +96,6 @@ class HrAttendanceRecordTransient(models.TransientModel):
                 raise UserError("员工钉钉Id不存在！也许是你的员工未同步导致的！")
             self.emp_ids = [(6, 0, emps.ids)]
 
-    
     def get_attendance_list(self):
         """
         获取用户打卡详情
@@ -105,7 +104,7 @@ class HrAttendanceRecordTransient(models.TransientModel):
         # 清除旧数据
         self.env['hr.attendance.record'].sudo().search(
             [('userId', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)]).unlink()
-        
+
         logging.info(">>>开始获取用户打卡详情...")
         user_list = list()
         for emp in self.emp_ids:
@@ -209,7 +208,6 @@ class HrAttendanceRecordTransient(models.TransientModel):
             emp_data.update({emp.ding_id: emp.id})
         return emp_data
 
-    
     def clear_attendance_record(self):
         """
         清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）

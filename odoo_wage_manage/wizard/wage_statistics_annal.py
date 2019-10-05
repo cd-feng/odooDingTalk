@@ -54,7 +54,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     year=rec.start_date.year, month=rec.start_date.month)
                 rec.end_date = lastDay
 
-    
     def compute_attendance_result(self):
         """
         立即计算考勤结果
@@ -131,7 +130,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 start_date_tmp += timedelta(days=current_month_num)
         self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
 
-    
     def attendance_cal(self, emp_list, start_date, end_date):
         """
         生成考勤日报表
@@ -239,11 +237,16 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     if datetime.isoweekday(duty['workDate']) not in (7,) and \
                             not self.env['legal.holiday'].sudo().search([('legal_holiday', '=', duty['workDate'])]):
                         on_duty = duty['on_baseCheckTime'] if 'on_baseCheckTime' in duty else duty['workDate']
-                        off_duty = duty['off_baseCheckTime'] if 'off_baseCheckTime' in duty else duty['workDate'] + timedelta(hours=24)
-                        domain1 = [('user_id', '=', emp.id), ('start_time', '<=', on_duty), ('end_time', '>=', off_duty)]
-                        domain2 = [('user_id', '=', emp.id), ('start_time', '>', on_duty), ('start_time', '<', off_duty), ('end_time', '>', off_duty)]
-                        domain3 = [('user_id', '=', emp.id), ('start_time', '<', on_duty), ('end_time', '>', on_duty), ('end_time', '<', off_duty)]
-                        domain4 = [('user_id', '=', emp.id), ('start_time', '>=', on_duty), ('end_time', '<=', off_duty)]
+                        off_duty = duty['off_baseCheckTime'] if 'off_baseCheckTime' in duty else duty['workDate'] + \
+                            timedelta(hours=24)
+                        domain1 = [('user_id', '=', emp.id), ('start_time',
+                                                              '<=', on_duty), ('end_time', '>=', off_duty)]
+                        domain2 = [('user_id', '=', emp.id), ('start_time', '>', on_duty),
+                                   ('start_time', '<', off_duty), ('end_time', '>', off_duty)]
+                        domain3 = [('user_id', '=', emp.id), ('start_time', '<', on_duty),
+                                   ('end_time', '>', on_duty), ('end_time', '<', off_duty)]
+                        domain4 = [('user_id', '=', emp.id), ('start_time',
+                                                              '>=', on_duty), ('end_time', '<=', off_duty)]
                         leave_info1 = self.env['hr.leaves.list'].sudo().search(domain1, limit=1)
                         leave_info2 = self.env['hr.leaves.list'].sudo().search(domain2, limit=1)
                         leave_info3 = self.env['hr.leaves.list'].sudo().search(domain3, limit=1)
@@ -272,7 +275,6 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                         duty_info.append(duty)
                 self.env['attendance.info'].sudo().create(duty_info)
 
-    
     def attendance_total_cal_sum(self, emp, start_date, attendance_info_dict_list):
         """
         统计月应出勤及请假天数
@@ -408,7 +410,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
 #     leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
 #     count_length = fields.Float('长度统计')
 
-    # 
+    #
     # def get_leave_detail_dict(self, emp_one, start_date, end_date):
     #     """
     #     处理请假数据
@@ -571,7 +573,6 @@ class WageEmpPerformanceManage(models.TransientModel):
     start_date = fields.Date(string=u'开始日期', required=True)
     end_date = fields.Date(string=u'结束日期', required=True)
 
-    
     def compute_performance_result(self):
         """
         从绩效计算结果

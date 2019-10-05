@@ -5,7 +5,6 @@ from odoo import models, api, registry, fields, _
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    
     def render_template(self, template, values=None):
         """
         Add progress_iter to the context in order to track progress of iterations inside report generation method
@@ -17,8 +16,6 @@ class IrActionsReport(models.Model):
             new_values = values
         return super(IrActionsReport, self).render_template(template, values=new_values)
 
-
-    
     def render_qweb_pdf(self, res_ids=None, data=None):
         """
         Add progress_iter to the context in order to track progress of iterations inside report generation method
@@ -26,8 +23,6 @@ class IrActionsReport(models.Model):
         self.web_progress_percent(30, 'Rendering PDF')
         return super(IrActionsReport, self).render_qweb_pdf(res_ids=res_ids, data=data)
 
-
-    
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         self.web_progress_percent(90, 'Merging PDF')
         return super(IrActionsReport, self)._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=res_ids)

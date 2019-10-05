@@ -31,7 +31,6 @@ class OvertimeApplication(models.Model):
     duration = fields.Integer(string=u'时长(小时)')
     reason_leave = fields.Text(string=u'加班原因', required=True)
 
-    
     def summit_approval(self):
         """
         提交到钉钉

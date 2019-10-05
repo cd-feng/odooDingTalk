@@ -44,7 +44,6 @@ class ResignationApplication(models.Model):
     reason_type = fields.Selection(string=u'离职原因', selection=REASONTYPE, default='个人原因')
     reason_text = fields.Text(string=u'离职原因备注')
 
-    
     def summit_approval(self):
         """
         提交到钉钉

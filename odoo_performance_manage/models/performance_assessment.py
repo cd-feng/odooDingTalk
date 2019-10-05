@@ -63,7 +63,6 @@ class PerformanceAssessment(models.Model):
             for line in res.line_ids:
                 line.state = res.state
 
-    
     def return_setting(self):
         """
         回到初始状态
@@ -72,7 +71,6 @@ class PerformanceAssessment(models.Model):
         for res in self:
             res.state = 'setting'
 
-    
     def summit_performance(self):
         """
         提交目标
@@ -87,7 +85,6 @@ class PerformanceAssessment(models.Model):
                 raise UserError("您的考评项目权重小于或大于100，请纠正！")
             res.state = 'executing'
 
-    
     def summit_rating(self):
         """
         提交评分
@@ -122,7 +119,6 @@ class PerformanceAssessment(models.Model):
             res.name = "%s的%s" % (res.employee_id.name, res.performance_name)
             res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
 
-    
     def unlink(self):
         """
         删除方法
@@ -153,7 +149,8 @@ class PerformanceAssessmentLine(models.Model):
     dimension_weights = fields.Integer(string=u'权重')
     library_ids = fields.One2many('performance.assessment.line.library', 'assessment_line_id', string=u'考评指标')
     assessment_result = fields.Integer(string=u'考核结果', compute='_compute_result', store=True)
-    performance_grade_id = fields.Many2one('performance.grade.manage', string=u'绩效等级', compute='_compute_result', store=True)
+    performance_grade_id = fields.Many2one('performance.grade.manage', string=u'绩效等级',
+                                           compute='_compute_result', store=True)
 
     @api.onchange('dimension_id')
     def _onchange_dimension_id(self):
@@ -209,7 +206,8 @@ class PerformanceAssessmentLineLibrary(models.Model):
     state = fields.Selection(string=u'考评状态', selection=PerState, default='setting')
     dimension_id = fields.Many2one(comodel_name='performance.dimension.manage', string=u'考评维度')
     sequence = fields.Integer(string=u'序号')
-    indicator_id = fields.Many2one(comodel_name='performance.indicator.library', string=u'考评指标', domain=[('name', '=', 'False')])
+    indicator_id = fields.Many2one(comodel_name='performance.indicator.library',
+                                   string=u'考评指标', domain=[('name', '=', 'False')])
     extra_end = fields.Integer(string=u'加扣分上限')
     threshold_value = fields.Integer(string='门槛值')
     target_value = fields.Char(string='目标值')
@@ -252,4 +250,3 @@ class PerformanceAssessmentLineLibrary(models.Model):
                     res.extra_end = res.indicator_id.deduction_end
                 else:
                     res.extra_end = 0
-
