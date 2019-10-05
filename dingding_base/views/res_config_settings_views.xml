@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="app_secret" placeholder="请输入AppSecret！"/>
+                                <field name="app_secret" placeholder="请输入AppSecret！" password="password"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="app_secret"/>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="din_login_appsecret" placeholder="请输入钉钉登录appSecret！"/>
+                                <field name="din_login_appsecret" placeholder="请输入钉钉登录appSecret！" password="password"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="din_login_appsecret"/>

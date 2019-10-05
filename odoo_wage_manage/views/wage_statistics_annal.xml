@@ -112,45 +112,14 @@ limitations under the License.
     <menuitem id="wage_employee_attendance_annal_menu" name="员工考勤统计" parent="wage_statistics_menu" sequence="1"
               action="wage_employee_attendance_annal_action"/>
 
-    <record id="wage_employee_attendance_info_tree_view" model="ir.ui.view">
-        <field name="name">员工考勤日报</field>
-        <field name="model">attendance.info</field>
-        <field name="arch" type="xml">
-            <tree default_order="employee_id desc">
-                <field name="employee_id"/>
-                <field name="department_id"/>
-                <field name="workDate"/>
-                <field name="check_in"/>
-                <field name="check_out"/>
-                <field name="on_timeResult"/>
-                <field name="off_timeResult"/>
-                <field name="on_procInstId"/>
-                <field name="off_procInstId"/>
-                <field name="base_work_hours"/>
-                <field name="worked_hours"/>
-                <field name="leave_hours"/>
-                <field name="attendance_date_status"/>  
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="wage_employee_attendance_info_action">
-        <field name="name">员工考勤日报统计</field>
-        <field name="res_model">attendance.info</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <menuitem id="wage_employee_attendance_info_menu" name="员工考勤日报" parent="wage_statistics_menu" sequence="1"
-              action="wage_employee_attendance_info_action"/>
-
     <record id="wage_holiday_tree_view" model="ir.ui.view">
         <field name="name">法定节假日表</field>
         <field name="model">legal.holiday</field>
         <field name="arch" type="xml">
             <tree default_order="id desc" editable="top">
-                <field name="legal_holiday_name"/>
-                <field name="legal_holiday"/>
-                <field name="status"/>
+                <field name="legal_holiday_name" required="1"/>
+                <field name="legal_holiday" required="1"/>
+                <field name="status" required="1"/>
             </tree>
         </field>
     </record>

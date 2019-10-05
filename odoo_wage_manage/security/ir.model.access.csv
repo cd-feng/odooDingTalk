@@ -5,8 +5,6 @@ access_wage_tax_child_education_application_line,wage.tax.child.education.applic
 
 access_legal_holiday,legal.holiday,model_legal_holiday,odoo_wage_manage.user_groups,1,0,0,0
 access_legal_holiday_supervisor_groups,legal.holiday.supervisor.groups,model_legal_holiday,odoo_wage_manage.supervisor_groups,1,1,1,1
-access_wage_employee_attendance_info,attendance.info,model_attendance_info,odoo_wage_manage.user_groups,1,0,0,0
-access_wage_employee_attendance_info_supervisor_groups,attendance.info.supervisor.groups,model_attendance_info,odoo_wage_manage.supervisor_groups,1,1,1,1
 access_wage_employee_attendance_annal,wage.employee.attendance.annal,model_wage_employee_attendance_annal,odoo_wage_manage.user_groups,1,0,0,0
 access_wage_employee_attendance_annal_supervisor_groups,wage.employee.attendance.annal.supervisor.groups,model_wage_employee_attendance_annal,odoo_wage_manage.supervisor_groups,1,1,1,1
 access_wage_employee_performance_manage,wage.employee.performance.manage,model_wage_employee_performance_manage,odoo_wage_manage.user_groups,1,0,0,0
