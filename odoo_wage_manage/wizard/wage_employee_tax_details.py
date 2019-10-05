@@ -58,7 +58,7 @@ class WageEmployeeTaxDetailsTransient(models.TransientModel):
         self.ensure_one()
         year = str(self.start_date)[:4]
         line_list = self._get_detail_line()
-        for emp in self.emp_ids.with_progress(msg="初始化员工个税"):
+        for emp in self.emp_ids:
             detail_data = {
                 'employee_id': emp.id,
                 'start_date': self.start_date,

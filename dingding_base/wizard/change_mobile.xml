@@ -47,7 +47,6 @@
     <record id="change_mobile_action" model="ir.actions.act_window">
         <field name="name">更换手机号</field>
         <field name="res_model">change.mobile</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
