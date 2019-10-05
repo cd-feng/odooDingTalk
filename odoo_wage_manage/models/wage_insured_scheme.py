@@ -50,7 +50,7 @@ class WageInsuredScheme(models.Model):
     line_ids = fields.One2many('wage.insured.scheme.line', inverse_name='scheme_id', string=u'参保险种')
     notes = fields.Text(string=u'备注')
 
-    @api.multi
+    
     def create_all_insurance(self):
         """
         把所有的险种信息拉取到列表中

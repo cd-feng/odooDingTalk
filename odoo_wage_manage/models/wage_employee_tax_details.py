@@ -53,7 +53,7 @@ class WageEmployeeTaxDetails(models.Model):
             if count_num > 1:
                 raise UserError("员工:{}已存在{}年份的员工个税明细表！请勿重复创建！".format(res.employee_id.name, str(res.start_date)[:4]))
 
-    @api.multi
+    
     def set_employee_tax_detail(self, month_code, line_data):
         """
         修改员工个税明细

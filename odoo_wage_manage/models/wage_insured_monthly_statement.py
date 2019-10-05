@@ -76,7 +76,7 @@ class WageInsuredMonthlyStatement(models.Model):
                 'personal_sum': personal_sum,
             })
 
-    @api.multi
+    
     def get_employee_monthly_statement_line(self):
         """
         返回员工月结明细列表

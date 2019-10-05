@@ -32,7 +32,7 @@ class SendSmsMessage(models.TransientModel):
     emp_ids = fields.Many2many('hr.employee', string=u'员工', required=True)
     message = fields.Text(string=u'消息内容', required=True, help="要发送的消息内容")
 
-    @api.multi
+    
     def send_sms_message(self):
         """
         发送短信到收信人

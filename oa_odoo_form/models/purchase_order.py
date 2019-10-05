@@ -23,7 +23,7 @@ class PurchaseOrder(models.Model):
             if res.oa_state == '02':
                 res.state = 'purchase'
 
-    @api.multi
+    
     def send_to_dingding_approval(self):
         """
         提交到钉钉

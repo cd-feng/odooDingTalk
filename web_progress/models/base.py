@@ -34,7 +34,7 @@ class Base(models.AbstractModel):
     # Progress reporting
     #
 
-    @api.multi
+    
     def with_progress(self, msg='', total=None, cancellable=True, log_level="info"):
         """
         Wrap self (current recordset) with progress reporting generator
@@ -142,7 +142,7 @@ class Base(models.AbstractModel):
         else:
             return extracted
 
-    @api.multi
+    
     def _export_rows(self, fields, *args, _is_toplevel_call=True):
         """
         Add progress reporting to base export (on batch-level)

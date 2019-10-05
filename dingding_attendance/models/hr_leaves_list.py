@@ -45,7 +45,7 @@ class HrLeavesListTran(models.TransientModel):
     end_time = fields.Date(string=u'结束时间', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
 
-    @api.multi
+    
     def get_leaves_list(self):
         """
         查询请假状态

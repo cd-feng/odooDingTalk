@@ -39,7 +39,7 @@ class DingDingSynchronous(models.TransientModel):
     partner = fields.Boolean(string=u'钉钉联系人', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
     
-    @api.multi
+    
     def start_synchronous_data(self):
         """
         基础数据同步

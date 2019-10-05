@@ -31,7 +31,7 @@ class ReissueApplication(models.Model):
                                     default='上班卡', required=True)
     reissue_text = fields.Char(string=u'补签事由', required=True)
 
-    @api.multi
+    
     def summit_approval(self):
         """
         提交到钉钉

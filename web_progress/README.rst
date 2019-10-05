@@ -48,7 +48,7 @@ Say, your operation's main method looks as follows:
 
 .. code-block::
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self:
             rec.do_somethig()
@@ -58,7 +58,7 @@ Then a progress-reporting-ready version would be:
 
 .. code-block::
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self.web_progress_iter(self, msg="Message"):
             rec.do_something()
@@ -68,7 +68,7 @@ or a simpler version for recordsets:
 
 .. code-block::
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self.with_progress(msg="Message"):
             rec.do_something()
@@ -77,7 +77,7 @@ Progress tracking may be added to sub-operations as well:
 
 .. code-block::
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self.with_progress(msg="Message"):
             lines = rec.get_lines()

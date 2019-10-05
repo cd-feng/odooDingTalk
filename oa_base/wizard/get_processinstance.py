@@ -36,7 +36,7 @@ class GetProcessInstance(models.TransientModel):
     start_time = fields.Datetime(string=u'开始时间')
     end_time = fields.Datetime(string=u'结束时间')
 
-    @api.multi
+    
     def get_process_list(self):
         """
         根据选择的审批模型批量获取实例id，再通过实例id去获取实例详情

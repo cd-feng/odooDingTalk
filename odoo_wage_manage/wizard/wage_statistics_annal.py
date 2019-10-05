@@ -54,7 +54,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                     year=rec.start_date.year, month=rec.start_date.month)
                 rec.end_date = lastDay
 
-    @api.multi
+    
     def compute_attendance_result(self):
         """
         立即计算考勤结果
@@ -131,7 +131,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                 start_date_tmp += timedelta(days=current_month_num)
         self.env['wage.employee.attendance.annal'].sudo().create(attendance_total_ins_list)
 
-    @api.multi
+    
     def attendance_cal(self, emp_list, start_date, end_date):
         """
         生成考勤日报表
@@ -272,7 +272,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
                         duty_info.append(duty)
                 self.env['attendance.info'].sudo().create(duty_info)
 
-    @api.multi
+    
     def attendance_total_cal_sum(self, emp, start_date, attendance_info_dict_list):
         """
         统计月应出勤及请假天数
@@ -408,7 +408,7 @@ class WageEmpAttendanceAnnal(models.TransientModel):
 #     leave_info_status = fields.Char('假期明细单据状态', selection=status_choice)
 #     count_length = fields.Float('长度统计')
 
-    # @api.multi
+    # 
     # def get_leave_detail_dict(self, emp_one, start_date, end_date):
     #     """
     #     处理请假数据
@@ -571,7 +571,7 @@ class WageEmpPerformanceManage(models.TransientModel):
     start_date = fields.Date(string=u'开始日期', required=True)
     end_date = fields.Date(string=u'结束日期', required=True)
 
-    @api.multi
+    
     def compute_performance_result(self):
         """
         从绩效计算结果

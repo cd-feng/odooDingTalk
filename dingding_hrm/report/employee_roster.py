@@ -28,7 +28,7 @@ class EmployeeRosterReport(models.AbstractModel):
     _name = 'dingding.employee.roster.report'
     _description = "打印花名册"
 
-    @api.multi
+    
     def _get_report_values(self, docids, data=None):
         docs = self.env['dingding.employee.roster'].browse(docids)
         return {

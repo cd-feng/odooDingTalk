@@ -85,7 +85,7 @@ class DingDingWorkMessage(models.Model):
                 })
             self.user_ids = user_list
 
-    @api.multi
+    
     def send_message(self):
         """发送消息函数"""
         user_str = ''
@@ -236,7 +236,7 @@ class DingDingWorkMessage(models.Model):
         except Exception as e:
             raise UserError(e)
 
-    @api.multi
+    
     def search_message_state(self):
         """
         获取异步发送企业会话消息的发送进度
@@ -257,7 +257,7 @@ class DingDingWorkMessage(models.Model):
         except Exception as e:
             raise UserError(e)
 
-    @api.multi
+    
     def search_message_result(self):
         """
         获取异步向企业会话发送消息的结果
@@ -308,7 +308,7 @@ class DingDingWorkMessage(models.Model):
         except Exception as e:
             raise UserError(e)
 
-    @api.multi
+    
     def recall_work_message(self):
         """
         撤回工作通知消息

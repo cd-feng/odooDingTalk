@@ -50,7 +50,7 @@ class WageEmployeeTaxDetailsTransient(models.TransientModel):
             if res.start_date:
                 res.date_code = str(res.start_date)[:4]
 
-    @api.multi
+    
     def init_employee_tax_details(self):
         """
         初始化员工个税

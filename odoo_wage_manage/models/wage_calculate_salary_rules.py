@@ -101,7 +101,7 @@ class WageCalculateSalaryRules(models.Model):
     early_deduction = fields.Selection(string=u'早退打卡规则', selection=early_selection, default='00')
     early_money = fields.Float(string=u'扣款金额', digits=(10, 2))
 
-    @api.multi
+    
     def compute_leave_deduction(self, base_wage, days, hours):
         """
         计算事假
@@ -120,7 +120,7 @@ class WageCalculateSalaryRules(models.Model):
             # (按次数) 次数*每次事假扣款
             return (hours / self.hour_leave_number) * self.leave_money
 
-    @api.multi
+    
     def compute_sick_absence(self, base_wage, days, hours):
         """
         计算病假扣款
@@ -142,7 +142,7 @@ class WageCalculateSalaryRules(models.Model):
             # (按次数) 次数*每次病假扣款')
             return int(hours/self.hour_sick_number) * self.sick_money
 
-    @api.multi
+    
     def compute_work_overtime(self, base_wage, days, hours):
         """
         计算工作日加班费用
@@ -158,7 +158,7 @@ class WageCalculateSalaryRules(models.Model):
             # 加班小时*固定金额
             return hours * self.work_overtime_money
 
-    @api.multi
+    
     def compute_weekend_overtime(self, base_wage, days, hours):
         """
         计算周末加班费用
@@ -174,7 +174,7 @@ class WageCalculateSalaryRules(models.Model):
             # 加班小时*固定金额
             return hours * self.weekend_multiple
 
-    @api.multi
+    
     def compute_holiday_overtime(self, base_wage, days, hours):
         """
         计算节假日加班费用
@@ -190,7 +190,7 @@ class WageCalculateSalaryRules(models.Model):
             # 加班小时*固定金额
             return hours * self.holiday_money
 
-    @api.multi
+    
     def compute_late_attendance(self, attendance_num):
         """
         计算迟到扣款费用
@@ -203,7 +203,7 @@ class WageCalculateSalaryRules(models.Model):
         else:
             return 0
 
-    @api.multi
+    
     def compute_notsigned_attendance(self, attendance_num):
         """
         计算忘记打卡扣款费用
@@ -216,7 +216,7 @@ class WageCalculateSalaryRules(models.Model):
         else:
             return 0
 
-    @api.multi
+    
     def compute_early_attendance(self, attendance_num):
         """
         计算早退扣款费用

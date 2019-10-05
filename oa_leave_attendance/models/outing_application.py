@@ -31,7 +31,7 @@ class OutingApplication(models.Model):
     end_date = fields.Date(string=u'结束时间')
     reason_leave = fields.Text(string=u'外出事由')
 
-    @api.multi
+    
     def summit_approval(self):
         """
         提交到钉钉

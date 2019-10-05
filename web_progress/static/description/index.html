@@ -49,7 +49,7 @@
 
         <pre>
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self:
             rec.do_somethig()
@@ -57,7 +57,7 @@
         <p>then a progress-reporting-ready version would be:</p>
         <pre>
 
-    @api.multi
+    
     def action_operation(self):
         for rec in <b>self.web_progress_iter</b>(self, msg="Message"):
             rec.do_something()
@@ -65,7 +65,7 @@
         <p>or a simpler version for recordsets:</p>
         <pre>
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self.<b>with_progress</b>(msg="Message"):
             rec.do_something()
@@ -75,7 +75,7 @@
 
         <pre>
 
-    @api.multi
+    
     def action_operation(self):
         for rec in self.<b>with_progress</b>(msg="Message"):
             lines = rec.get_lines()

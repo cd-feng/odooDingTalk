@@ -30,7 +30,7 @@ class HrEmployee(models.Model):
     wx_nick_name = fields.Char(string='微信昵称')
     wx_avatar_url = fields.Char(string='微信头像Url')
 
-    @api.multi
+    
     def clear_wx_openid(self):
         """
         清除微信openid、昵称、头像url

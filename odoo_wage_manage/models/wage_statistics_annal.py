@@ -153,7 +153,7 @@ class WageEmployeePerformance(models.Model):
                 res.department_id = res.employee_id.department_id.id
                 res.employee_number = res.employee_id.din_jobnumber
 
-    @api.multi
+    
     def get_emp_performance_list(self):
         performance_list = list()
         amount_sum = 0

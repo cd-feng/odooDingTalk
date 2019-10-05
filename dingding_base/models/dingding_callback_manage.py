@@ -79,7 +79,7 @@ class DingDingCallback(models.Model):
                     call_ids.append(li.id)
             self.call_ids = [(6, 0, call_ids)]
 
-    @api.multi
+    
     def register_call_back(self):
         """
         注册事件
@@ -105,7 +105,7 @@ class DingDingCallback(models.Model):
                 raise UserError("注册失败！原因:{}".format(result.get('errmsg')))
         logging.info(">>>注册事件End...")
 
-    @api.multi
+    
     def update_call_back(self):
         """
         更新事件
@@ -129,7 +129,7 @@ class DingDingCallback(models.Model):
             else:
                 raise UserError("更新失败！原因:{}".format(result.get('errmsg')))
 
-    @api.multi
+    
     def unlink(self):
         """
         重写删除方法

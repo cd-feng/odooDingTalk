@@ -42,7 +42,7 @@ class OaStockRequisition(models.Model):
     line_ids = fields.One2many(comodel_name='oa.stock.requisition.line', inverse_name='requisition_id', string=u'调拨明细')
     reason_leave = fields.Text(string=u'备注')
 
-    @api.multi
+    
     def summit_approval(self):
         """
         提交到钉钉

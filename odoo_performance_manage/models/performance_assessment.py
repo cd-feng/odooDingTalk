@@ -63,7 +63,7 @@ class PerformanceAssessment(models.Model):
             for line in res.line_ids:
                 line.state = res.state
 
-    @api.multi
+    
     def return_setting(self):
         """
         回到初始状态
@@ -72,7 +72,7 @@ class PerformanceAssessment(models.Model):
         for res in self:
             res.state = 'setting'
 
-    @api.multi
+    
     def summit_performance(self):
         """
         提交目标
@@ -87,7 +87,7 @@ class PerformanceAssessment(models.Model):
                 raise UserError("您的考评项目权重小于或大于100，请纠正！")
             res.state = 'executing'
 
-    @api.multi
+    
     def summit_rating(self):
         """
         提交评分
@@ -122,7 +122,7 @@ class PerformanceAssessment(models.Model):
             res.name = "%s的%s" % (res.employee_id.name, res.performance_name)
             res.department_id = res.employee_id.department_id.id if res.employee_id.department_id else False
 
-    @api.multi
+    
     def unlink(self):
         """
         删除方法

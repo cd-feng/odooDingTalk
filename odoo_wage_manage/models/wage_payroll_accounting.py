@@ -151,7 +151,7 @@ class WagePayrollAccounting(models.Model):
                 'statement_sum': statement_sum,
             })
 
-    @api.multi
+    
     def action_send_employee_email(self):
         """
         发送email

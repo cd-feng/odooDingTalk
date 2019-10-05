@@ -29,7 +29,7 @@ class ComputeWageInsuredMonthlyStatement(models.TransientModel):
     emp_ids = fields.Many2many('hr.employee', string=u'月结员工')
     all_emp = fields.Boolean(string=u'全部员工?')
     
-    @api.multi
+    
     def compute_emp_detail(self):
         """
         生成员工月结账单

@@ -41,7 +41,7 @@ class WageArchivesTransient(models.TransientModel):
     line_ids = fields.One2many(comodel_name='wage.archives.transient.line', inverse_name='transient_id', string=u'明细',
                                default=_get_default_line)
 
-    @api.multi
+    
     def create_employee_archives(self):
         """
         批量初始化档案
