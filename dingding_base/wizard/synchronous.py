@@ -346,8 +346,6 @@ class DingDingSynchronous(models.TransientModel):
                     'mobile': res.get('mobile'),  # 手机
                     'phone': res.get('mobile'),  # 电话
                     'din_company_name': res.get('company_name'),  # 钉钉公司名称
-                    'customer': True,   # 是否客户
-                    'supplier': True,   # 是否供应商
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):
