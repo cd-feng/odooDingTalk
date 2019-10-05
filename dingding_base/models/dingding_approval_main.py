@@ -61,13 +61,6 @@ class DingDingApprovalMain(models.Model):
     oa_message = fields.Char(string='审批消息')
     oa_url = fields.Char(string='钉钉单据url')
     approver_users = fields.Many2many('hr.employee', string=u'审批人')
-    make_copy_users = fields.Many2many(
-        string=u'抄送人',
-        comodel_name='hr.employee',
-        relation='dingding_approval_main_and_hr_employee_rel',
-        column1='approval_id',
-        column2='emp_id',
-    )
 
     def summit_approval(self):
         """

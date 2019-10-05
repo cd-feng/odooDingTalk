@@ -9,7 +9,6 @@ class GeneratorWithLenIndexable(object):
     """
     A class that mimics a generator, but also supports length and indexing
     """
-
     def __init__(self, gen, length, data):
         self.gen = gen
         self.length = length
@@ -34,6 +33,7 @@ class Base(models.AbstractModel):
     #
     # Progress reporting
     #
+
 
     def with_progress(self, msg='', total=None, cancellable=True, log_level="info"):
         """
@@ -137,10 +137,23 @@ class Base(models.AbstractModel):
         if 'progress_code' in self._context:
             total = len(data)
             return self.web_progress_iter(extracted, _("importing to {}").
-                                          format(self._description.lower()), total=total, cancellable=True,
-                                          log_level="info")
+                                             format(self._description.lower()), total=total, cancellable=True,
+                                             log_level="info")
         else:
             return extracted
+
+    @api.model
+    def load(self, fields, data):
+        """
+        Add progress reporting to collection used in base_import.import
+        It adds progress reporting to all standard imports and additionally makes them cancellable
+        """
+        if 'progress_code' in self._context:
+            total = len(data)
+            return super().load(fields, self.web_progress_iter(data, _("importing to {}").
+                                                 format(self._description.lower()), total=total, cancellable=True,
+                                                 log_level="info"))
+        return super().load(fields, data)
 
     def _export_rows(self, fields, *args, _is_toplevel_call=True):
         """

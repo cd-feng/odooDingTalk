@@ -172,10 +172,10 @@ class WebProgress(models.TransientModel):
                 recur_depths[code] += 1
             else:
                 recur_depths[code] = 1
-        params = dict(done=0, progress=0.0, state='ongoing', code=code, total=total, msg=msg, recur_depth=recur_depth,
-                      cancellable=cancellable, log_level=log_level)
-        precise_code = self._get_precise_code(params)
-        progress_data[precise_code] = dict(params)
+            params = dict(done=0, progress=0.0, state='ongoing', code=code, total=total, msg=msg, recur_depth=recur_depth,
+                          cancellable=cancellable, log_level=log_level)
+            precise_code = self._get_precise_code(params)
+            progress_data[precise_code] = dict(params)
         try:
             for done, rec in zip(range(total), data):
                 params['done'] = done
