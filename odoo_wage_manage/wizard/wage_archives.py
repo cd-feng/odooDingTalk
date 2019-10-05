@@ -41,7 +41,6 @@ class WageArchivesTransient(models.TransientModel):
     line_ids = fields.One2many(comodel_name='wage.archives.transient.line', inverse_name='transient_id', string=u'明细',
                                default=_get_default_line)
 
-    @api.multi
     def create_employee_archives(self):
         """
         批量初始化档案
@@ -55,7 +54,8 @@ class WageArchivesTransient(models.TransientModel):
                 'wage_amount': line.wage_amount,
             }))
         # 遍历所选员工
-        for emp in self.emp_ids.with_progress(msg="批量初始化档案"):
+        # for emp in self.emp_ids.with_progress(msg="批量初始化档案"):
+        for emp in self.emp_ids:
             logging.info(">>>生成员工：'%s' 档案" % emp.name)
             archives_data = {
                 'employee_id': emp.id,
@@ -86,11 +86,11 @@ class WageArchivesTransient(models.TransientModel):
         if not roster:
             return archives_data
         archives_data.update({
-            'department_id':  roster.mainDept.id,
-            'employee_code':  roster.jobNumber,
-            'job_id':  roster.position.id,
-            'bank_account_number':  roster.bankAccountNo,
-            'accountBank':  roster.accountBank,
+            'department_id': roster.mainDept.id,
+            'employee_code': roster.jobNumber,
+            'job_id': roster.position.id,
+            'bank_account_number': roster.bankAccountNo,
+            'accountBank': roster.accountBank,
         })
         # 搜索发薪公司
         if roster.contractCompanyName:

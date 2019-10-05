@@ -40,7 +40,7 @@ class HrDepartment(models.Model):
     child_ids = fields.One2many(comodel_name='hr.department', inverse_name='parent_id', string=u'下级部门')
     manager_user_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_department_managr_user_employee_rel', string=u'主管')
 
-    @api.multi
+    
     def create_ding_department(self):
         for res in self:
             if res.ding_id:
@@ -66,7 +66,7 @@ class HrDepartment(models.Model):
             except ReadTimeout:
                 raise UserError("上传至钉钉网络超时！")
 
-    @api.multi
+    
     def update_ding_department(self):
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'department_update')]).value
@@ -93,7 +93,7 @@ class HrDepartment(models.Model):
                 raise UserError("上传至钉钉超时！")
 
     # 重写删除方法
-    @api.multi
+    
     def unlink(self):
         for res in self:
             ding_id = res.ding_id

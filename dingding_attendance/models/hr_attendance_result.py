@@ -75,21 +75,11 @@ class HrAttendanceResult(models.Model):
     locationResult = fields.Selection(string=u'位置结果', selection=LocationResult)
     approveId = fields.Char(string='关联的审批id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关")
     procInstId = fields.Char(string='审批实例id', help="当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用")
+    procInst_title = fields.Char(string='审批标题')
     baseCheckTime = fields.Datetime(string=u'基准时间', help="计算迟到和早退，基准时间")
     check_in = fields.Datetime(string="实际打卡时间", required=True, help="实际打卡时间,  用户打卡时间的毫秒数")
     timeResult = fields.Selection(string=u'时间结果', selection=TimeResult, index=True)
     sourceType = fields.Selection(string=u'数据来源', selection=SourceType)
-
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     """
-    #     支持批量新建考勤记录
-    #     :return:
-    #     """
-    #     for values in vals_list:
-    #         if values['work_date']:
-    #             values.update({'work_month': "{}/{}".format(values['work_date'][:4], values['work_date'][5:7])})
-    #     return super(HrAttendanceResult, self).create(vals_list)
 
     @api.model
     def create(self, values):
@@ -121,7 +111,6 @@ class HrAttendanceResultTransient(models.TransientModel):
                 raise UserError("员工钉钉Id不存在！也许是你的员工未同步导致的！")
             self.emp_ids = [(6, 0, emps.ids)]
 
-    @api.multi
     def get_attendance_list(self):
         """
         根据日期获取员工打卡信息，当user存在时将获取指定user的打卡，若不存在时，将获取所有员工的打卡信息，
@@ -201,6 +190,9 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'procInstId': rec.get('procInstId'),
                         'ding_plan_id': rec.get('planId'),
                     }
+                    if rec.get('procInstId'):
+                        result = din_client.bpms.processinstance_get(rec.get('procInstId'))
+                        data.update({'procInst_title': result.get('title')})
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
                     data.update({'ding_group_id': groups[0].id if groups else False})
@@ -210,12 +202,6 @@ class HrAttendanceResultTransient(models.TransientModel):
                     # 班次
                     plan = self.env['hr.dingding.plan'].sudo().search([('plan_id', '=', rec.get('planId'))], limit=1)
                     data.update({'plan_id': plan[0].id if plan else False})
-                    # attendance = self.env['hr.attendance.result'].sudo().search(
-                    #     [('emp_id', '=', emp_id[0].id),
-                    #      ('check_in', '=', self.get_time_stamp(rec.get('userCheckTime'))),
-                    #      ('check_type', '=', rec.get('checkType'))])
-                    # attendance = self.env['hr.attendance.result'].sudo().search([('record_id', '=', rec.get('id'))])
-                    # if not attendance:
                     data_list.append(data)
                 # 批量存储记录
                 self.env['hr.attendance.result'].sudo().create(data_list)
@@ -292,7 +278,6 @@ class HrAttendanceResultTransient(models.TransientModel):
             t1 = t2 + timedelta(seconds=1)
         return cut_day
 
-    @api.multi
     def clear_attendance(self):
         """
         清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）

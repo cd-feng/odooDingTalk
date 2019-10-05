@@ -172,7 +172,8 @@ class DingDingCallBackManage(Home, http.Controller):
         if temp:
             appro = request.env['dingding.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
             if appro:
-                oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+                oa_model = request.env[appro.oa_model_id.model].sudo().search(
+                    [('process_instance_id', '=', msg.get('processInstanceId'))])
                 emp = request.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('staffId'))])
                 if msg.get('type') == 'start' and oa_model:
                     if oa_model.sudo().oa_state != '02':
@@ -183,7 +184,8 @@ class DingDingCallBackManage(Home, http.Controller):
                     dobys = "{}: (评论消息)-评论人:{}; 评论内容:{}".format(now_time, emp.name, msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'finish' and oa_model:
-                    dobys = "{}: {}已审批; 审批结果:{}; 审批意见:{}".format(now_time, emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
+                    dobys = "{}: {}已审批; 审批结果:{}; 审批意见:{}".format(
+                        now_time, emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True
 
@@ -229,7 +231,8 @@ class DingDingCallBackManage(Home, http.Controller):
             if result.get('department'):
                 dep_ding_ids = result.get('department')
                 dep_list = request.env['hr.department'].sudo().search([('ding_id', 'in', dep_ding_ids)])
-                data.update({'department_ids': [(6, 0, dep_list.ids)], 'department_id': dep_list[0].id if dep_list else False})
+                data.update({'department_ids': [(6, 0, dep_list.ids)],
+                             'department_id': dep_list[0].id if dep_list else False})
             if event_type == 'user_add_org':
                 request.env['hr.employee'].sudo().create(data)
             else:
@@ -268,5 +271,3 @@ class DingDingCallBackManage(Home, http.Controller):
                 if h_department:
                     h_department.sudo().write(data)
         return True
-
-

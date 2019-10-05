@@ -126,7 +126,7 @@ class EmployeeRoster(models.Model):
                 'identification_id': res.certNo,
             })
 
-    @api.multi
+    
     def name_get(self):
         """
         重写name_get方法

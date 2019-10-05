@@ -30,8 +30,14 @@ class LeaveApplication(models.Model):
     start_date = fields.Date(string=u'开始时间')
     end_date = fields.Date(string=u'结束时间')
     reason_leave = fields.Text(string=u'请假事由')
+    make_copy_users = fields.Many2many(
+        string=u'抄送人',
+        comodel_name='hr.employee',
+        relation='oa_leave_application_employee_rel',
+        column1='leave_id',
+        column2='emp_id',
+    )
 
-    @api.multi
     def summit_approval(self):
         """
         提交到钉钉

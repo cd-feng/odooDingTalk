@@ -46,11 +46,11 @@ class WageInsuredScheme(models.Model):
     active = fields.Boolean(string=u'Active', default=True)
     name = fields.Char(string='方案名称', required=True)
     country_id = fields.Many2one(comodel_name='res.country', string=u'国家', default=_get_default_country_id)
-    country_state_id = fields.Many2one(comodel_name='res.country.state', string=u'参保城市', index=True, domain="[('country_id', '=?', country_id)]")
+    country_state_id = fields.Many2one(comodel_name='res.country.state', string=u'参保城市',
+                                       index=True, domain="[('country_id', '=?', country_id)]")
     line_ids = fields.One2many('wage.insured.scheme.line', inverse_name='scheme_id', string=u'参保险种')
     notes = fields.Text(string=u'备注')
 
-    @api.multi
     def create_all_insurance(self):
         """
         把所有的险种信息拉取到列表中
@@ -88,7 +88,7 @@ class WageInsuredSchemeLine(models.Model):
     base_number = fields.Float(string=u'险种基数', digits=(10, 2))
     company_number = fields.Float(string=u'公司比例', digits=(10, 4))
     personal_number = fields.Float(string=u'个人比例', digits=(10, 4))
-    
+
     @api.onchange('insurance_id')
     def _onchange_insurance_id(self):
         """

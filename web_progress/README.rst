@@ -6,13 +6,13 @@ Progress bar for Odoo waiting screen, possibility to cancel an ongoing operation
 
 .. class:: no-web
 
-    .. image:: https://raw.githubusercontent.com/gmarczynski/odoo-web-progress/12.0/web_progress/static/description/progress_bar_loading_cancelling.gif
+    .. image:: https://raw.githubusercontent.com/gmarczynski/odoo-web-progress/13.0/web_progress/static/description/progress_bar_loading_cancelling.gif
         :alt: Progress Bar
         :width: 100%
         :align: center
 
 
-**web_progress** exists for Odoo 11.0 and 12.0 (CE and EE).
+**web_progress** exists for Odoo 11.0, 12.0 and 13.0 (CE and EE).
 
 Author: Grzegorz Marczyński
 
@@ -32,7 +32,7 @@ Features
 
 .. class:: no-web
 
-    .. image:: https://raw.githubusercontent.com/gmarczynski/odoo-web-progress/12.0/web_progress/static/description/progress_bar_loading_systray.gif
+    .. image:: https://raw.githubusercontent.com/gmarczynski/odoo-web-progress/13.0/web_progress/static/description/progress_bar_loading_systray.gif
         :alt: Progress Systray Menu
         :width: 50%
         :align: right

@@ -46,7 +46,7 @@ class ResPartner(models.Model):
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
     din_employee_id = fields.Many2one(comodel_name='hr.employee', string=u'负责人', ondelete='cascade')
 
-    @api.multi
+    
     def create_ding_partner(self):
         for res in self:
             if res.din_userid:
@@ -90,7 +90,7 @@ class ResPartner(models.Model):
             except ReadTimeout:
                 raise UserError("上传联系人至钉钉超时！")
 
-    @api.multi
+    
     def update_ding_partner(self):
         """修改员工时同步至钉钉"""
         for res in self:
@@ -133,7 +133,7 @@ class ResPartner(models.Model):
                 raise UserError("上传联系人至钉钉超时！")
 
     # 重写删除方法
-    @api.multi
+    
     def unlink(self):
         for res in self:
             din_userid = res.din_userid

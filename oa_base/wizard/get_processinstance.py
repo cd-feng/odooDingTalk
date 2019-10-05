@@ -36,7 +36,6 @@ class GetProcessInstance(models.TransientModel):
     start_time = fields.Datetime(string=u'开始时间')
     end_time = fields.Datetime(string=u'结束时间')
 
-    @api.multi
     def get_process_list(self):
         """
         根据选择的审批模型批量获取实例id，再通过实例id去获取实例详情
@@ -89,14 +88,16 @@ class GetProcessInstance(models.TransientModel):
             if result['errcode'] == 0:
                 process_instance = result['process_instance']
                 # get发起人和发起部门
-                emp_id, dept_id = self._get_originator_user_and_dept(process_instance['originator_userid'], process_instance['originator_dept_id'])
+                emp_id, dept_id = self._get_originator_user_and_dept(
+                    process_instance['originator_userid'], process_instance['originator_dept_id'])
                 model_data = {
                     'originator_user_id': emp_id,   # 发起人
                     'originator_dept_id': dept_id,  # 发起部门
                     'oa_result': process_instance['result'],  # 审批结果
                     'title': process_instance['title'],  # 标题
                     'create_date': process_instance['create_time'],  # 创建时间
-                    'write_date': process_instance['finish_time'] if 'finish_time' in process_instance else False,  # 修改/结束时间
+                    # 修改/结束时间
+                    'write_date': process_instance['finish_time'] if 'finish_time' in process_instance else False,
                     'business_id': process_instance['business_id'],  # 审批实例业务编号
                     'process_instance_id': process_instance['business_id'],  # 钉钉审批实例id
                 }
@@ -139,7 +140,8 @@ class GetProcessInstance(models.TransientModel):
                                     if line_field.ttype == 'many2one':  # many2one字段类型
                                         domain = [('name', '=', row_value['value'])]
                                         many_model = self.env[line_field.relation].sudo().search(domain, limit=1)
-                                        line_data.update({line_field.sudo().name: many_model.id if many_model else False})
+                                        line_data.update(
+                                            {line_field.sudo().name: many_model.id if many_model else False})
                                     else:
                                         line_data.update({line_field.name: row_value['value']})
                                 line_list.append((0, 0, line_data))

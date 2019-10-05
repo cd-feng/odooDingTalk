@@ -30,6 +30,7 @@
                 <field name="timeResult"/>
                 <field name="sourceType"/>
                 <field name="procInstId"/>
+                <field name="procInst_title"/>
             </tree>
         </field>
     </record>
@@ -189,7 +190,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">11</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <xpath expr="//button[@id='hr_presence_button']" position="before">
                 <button type="object" name="dingding_attendance_action_employee" class="oe_stat_button" string="钉钉出勤"
                         icon="fa-calendar-check-o">
                 </button>

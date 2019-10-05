@@ -39,7 +39,7 @@ class DingDingSynchronous(models.TransientModel):
     partner = fields.Boolean(string=u'钉钉联系人', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
     
-    @api.multi
+    
     def start_synchronous_data(self):
         """
         基础数据同步
@@ -122,7 +122,8 @@ class DingDingSynchronous(models.TransientModel):
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
-        for department in departments.with_progress(msg="正在同步部门员工"):
+        # for department in departments.with_progress(msg="正在同步部门员工"):
+        for department in departments:
             emp_offset = 0
             emp_size = 100
             while True:
@@ -210,7 +211,8 @@ class DingDingSynchronous(models.TransientModel):
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
         ding_user_list = list()
-        for department in departments.with_progress(msg="正在同步部门员工"):
+        # for department in departments.with_progress(msg="正在同步部门员工"):
+        for department in departments:
             emp_offset = 0
             emp_size = 100
             while True:
@@ -346,8 +348,6 @@ class DingDingSynchronous(models.TransientModel):
                     'mobile': res.get('mobile'),  # 手机
                     'phone': res.get('mobile'),  # 电话
                     'din_company_name': res.get('company_name'),  # 钉钉公司名称
-                    'customer': True,   # 是否客户
-                    'supplier': True,   # 是否供应商
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):

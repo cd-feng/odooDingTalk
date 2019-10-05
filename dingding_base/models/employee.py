@@ -56,7 +56,7 @@ class HrEmployee(models.Model):
     department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='所属部门')
 
     # 上传员工到钉钉
-    @api.multi
+    
     def create_ding_employee(self):
         """
         上传员工到钉钉
@@ -108,7 +108,7 @@ class HrEmployee(models.Model):
         return super(HrEmployee, self).create(vals_list)
 
     # 修改员工同步到钉钉
-    @api.multi
+    
     def update_ding_employee(self):
         """
         修改员工时同步至钉钉
@@ -174,7 +174,7 @@ class HrEmployee(models.Model):
                 self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(self.ding_id, self.mobile_phone, self.user_id.id))
 
     # 从钉钉手动获取用户详情
-    @api.multi
+    
     def update_employee_from_dingding(self):
         """
         从钉钉获取用户详情
@@ -231,7 +231,7 @@ class HrEmployee(models.Model):
                 raise UserError("从钉钉同步员工详情超时！")
 
     # 重写删除方法
-    @api.multi
+    
     def unlink(self):
         for res in self:
             userid = res.ding_id
@@ -267,7 +267,7 @@ class HrEmployee(models.Model):
             res.dingding_type = 'yes' if res.ding_id else 'no'
 
     # 单独获取钉钉头像设为员工头像
-    @api.multi
+    
     def using_dingding_avatar(self):
         """
         单独获取钉钉头像设为员工头像

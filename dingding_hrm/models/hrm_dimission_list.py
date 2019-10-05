@@ -76,7 +76,7 @@ class GetDingDingHrmDimissionList(models.TransientModel):
         else:
             self.emp_ids = False
 
-    @api.multi
+    
     def get_hrm_dimission_list(self):
         """
         批量获取员工离职信息
@@ -149,7 +149,7 @@ class GetDingDingHrmDimissionList(models.TransientModel):
             raise UserError(e)
         logging.info(">>>获取获取离职员工信息end")
 
-    @api.multi
+    
     def get_hrm_employee_state(self):
         self.ensure_one()
         # 更新在职员工

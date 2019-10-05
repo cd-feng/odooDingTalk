@@ -17,7 +17,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
-import io, base64, binascii, hashlib, string, struct
+import io
+import base64
+import binascii
+import hashlib
+import string
+import struct
 from random import choice
 from Crypto.Cipher import AES
 

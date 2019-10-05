@@ -28,7 +28,6 @@
         <field name="name">添加群成员</field>
         <field name="res_model">dingding.chat.user.model.add</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingding_message.add_dingding_chat_users_form_view"/>
         <field name="target">new</field>
@@ -60,7 +59,6 @@
         <field name="name">删除群成员</field>
         <field name="res_model">dingding.chat.user.model.del</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingding_message.del_dingding_chat_users_form_view"/>
         <field name="target">new</field>
@@ -87,7 +85,6 @@
         <field name="name">发送群消息</field>
         <field name="res_model">dingding.send.chat.message</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingding_message.dingding_send_chat_message_form_view"/>
         <field name="target">new</field>

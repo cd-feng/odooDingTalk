@@ -34,7 +34,6 @@ class GeneralApplication(models.Model):
         if self.emp_id:
             self.dept_id = self.emp_id.department_id.id
 
-    @api.multi
     def summit_approval(self):
         """
         提交到钉钉
