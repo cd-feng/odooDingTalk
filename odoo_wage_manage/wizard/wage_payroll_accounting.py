@@ -64,6 +64,7 @@ class WagePayrollAccountingTransient(models.TransientModel):
         rules = self.env['wage.calculate.salary.rules'].search([], limit=1)
         if not rules:
             raise UserError("请先配置一个薪资计算规则！")
+        # for emp in self.emp_ids.with_progress(msg="开始计算薪资"):
         for emp in self.emp_ids:
             payroll_data = {
                 'wage_date': self.wage_date,
@@ -335,6 +336,7 @@ class PayrollAccountingToPayslipTransient(models.TransientModel):
         self.ensure_one()
         start_date = str(self.start_date)
         date_code = "{}/{}".format(start_date[:4], start_date[5:7])
+        # for emp in self.emp_ids.with_progress(msg="开始生成工资条"):
         for emp in self.emp_ids:
             payroll_data = {
                 'start_date': self.start_date,
@@ -405,6 +407,7 @@ class SendPayrollAccountingToPayslipEmailTransient(models.TransientModel):
         wage_date = str(self.wage_date)
         date_code = "{}/{}".format(wage_date[:4], wage_date[5:7])
         payrolls = self.env['wage.payroll.accounting'].sudo().search([('date_code', '=', date_code)])
+        # for payroll in payrolls.with_progress(msg="开始发送Emial"):
         for payroll in payrolls:
             if payroll.employee_id.work_email:
                 logging.info("email至%s" % payroll.name)
