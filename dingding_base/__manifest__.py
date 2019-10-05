@@ -25,7 +25,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '2.0',
-    'depends': ['base', 'hr', 'contacts', 'auth_oauth', 'mail', 'web_progress'],
+    'depends': ['base', 'hr', 'contacts', 'auth_oauth', 'mail'],
     'installable': True,
     'application': True,
     'auto_install': False,

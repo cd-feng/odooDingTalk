@@ -13,11 +13,11 @@
     'author': "Grzegorz Marczyński",
     'category': 'Productivity',
 
-    'version': '12.0.1.3',
+    'version': '13.0.1.3',
 
     'depends': ['web',
                 'bus',
-                'base_import'
+                'base_import',
                 ],
 
     'data': [
@@ -38,7 +38,7 @@
 
     'license': 'LGPL-3',
 
-    'installable': True,
-    'auto_install': True,
+    'installable': False,
+    'auto_install': False,
     'application': False,
 }

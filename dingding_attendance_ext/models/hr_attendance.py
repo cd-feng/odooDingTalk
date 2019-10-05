@@ -103,7 +103,6 @@ class HrAttendanceTransient(models.TransientModel):
                 raise UserError("员工钉钉Id不存在！也许是你的员工未同步导致的！")
             self.emp_ids = [(6, 0, emps.ids)]
 
-    @api.multi
     def get_attendance_list_v2(self):
         """
         根据日期获取员工打卡信息，当user存在时将获取指定user的打卡，若不存在时，将获取所有员工的打卡信息，
@@ -356,7 +355,6 @@ class HrAttendanceTransient(models.TransientModel):
         to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
         return to_str_datetime
 
-    @api.multi
     def get_attendance_list_sync(self):
         """
         每隔1小时自动下载钉钉全员考勤记录
@@ -390,7 +388,6 @@ class HrAttendanceTransient(models.TransientModel):
                     offset = offset + limit
         logging.info(">>>根据日期获取员工打卡信息结束...")
 
-    @api.multi
     def clear_attendance(self):
         """
         清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）

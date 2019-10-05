@@ -53,7 +53,6 @@ class OdooDingDingBaseForm(models.Model):
     oa_message = fields.Char(string='审批消息')
     oa_url = fields.Char(string='钉钉单据url')
 
-    @api.multi
     def summit_approval(self):
         """
         提交审批按钮，将单据审批信息发送到钉钉
@@ -96,7 +95,6 @@ class OdooDingDingBaseForm(models.Model):
             raise UserError("没有对应的审批关联！请前往钉钉->审批关联中进行配置!")
         return dac.template_id.process_code
 
-    @api.multi
     def _get_originator_user_id(self):
         """
         返回发起人钉钉id和部门id
@@ -104,7 +102,3 @@ class OdooDingDingBaseForm(models.Model):
         """
         for res in self:
             return res.originator_user_id.ding_id, res.originator_user_id.department_id.ding_id
-
-
-
-

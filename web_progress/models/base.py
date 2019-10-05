@@ -34,7 +34,7 @@ class Base(models.AbstractModel):
     # Progress reporting
     #
 
-    @api.multi
+
     def with_progress(self, msg='', total=None, cancellable=True, log_level="info"):
         """
         Wrap self (current recordset) with progress reporting generator
@@ -142,7 +142,19 @@ class Base(models.AbstractModel):
         else:
             return extracted
 
-    @api.multi
+    @api.model
+    def load(self, fields, data):
+        """
+        Add progress reporting to collection used in base_import.import
+        It adds progress reporting to all standard imports and additionally makes them cancellable
+        """
+        if 'progress_code' in self._context:
+            total = len(data)
+            return super().load(fields, self.web_progress_iter(data, _("importing to {}").
+                                                 format(self._description.lower()), total=total, cancellable=True,
+                                                 log_level="info"))
+        return super().load(fields, data)
+
     def _export_rows(self, fields, *args, _is_toplevel_call=True):
         """
         Add progress reporting to base export (on batch-level)

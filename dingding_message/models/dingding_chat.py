@@ -59,12 +59,12 @@ class DingDingChat(models.Model):
         tools.image_resize_images(values)
         return super(DingDingChat, self).create(values)
 
-    @api.multi
+    
     def write(self, values):
         tools.image_resize_images(values)
         return super(DingDingChat, self).write(values)
 
-    @api.multi
+    
     def _compute_get_robot_count(self):
         """
         获取当前群的群机器人数量
@@ -74,7 +74,7 @@ class DingDingChat(models.Model):
             res.robot_count = self.env['dingding.robot'].search_count(
                 [('chat_id', '=', res.id)])
 
-    @api.multi
+    
     def action_view_robot(self):
         """
         跳转到群机器人列表
@@ -85,7 +85,7 @@ class DingDingChat(models.Model):
         action['domain'] = [('chat_id', '=', self.id)]
         return action
 
-    @api.multi
+    
     def create_dingding_chat(self):
         """
         创建会话
@@ -127,7 +127,7 @@ class DingDingChat(models.Model):
             except Exception as e:
                 raise UserError(e)
 
-    @api.multi
+    
     def write_dingding_chat(self):
         """
         修改会话
@@ -262,7 +262,7 @@ class DingDingChatUserModelAdd(models.TransientModel):
             res.update({'on_user_ids': [(6, 0, ding_chat.useridlist.ids)]})
         return res
 
-    @api.multi
+    
     def add_chat_users(self):
         """
         添加群成员
@@ -328,7 +328,7 @@ class DingDingChatUserModelDel(models.TransientModel):
             res.update({'old_user_ids': [(6, 0, ding_chat.useridlist.ids)]})
         return res
 
-    @api.multi
+    
     def del_chat_users(self):
         """
         删除群成员
@@ -367,7 +367,7 @@ class DingDingSendChatMessage(models.TransientModel):
 
     message = fields.Text(string='消息内容', required=True)
 
-    @api.multi
+    
     def send_dingding_test_message(self):
         """
         点击群会话发送群消息按钮
@@ -448,7 +448,7 @@ class DingDingChatList(models.TransientModel):
 
     chat_id = fields.Char(string='群会话Id', required=True)
 
-    @api.multi
+    
     def get_chat_info(self):
         """
         获取群会话

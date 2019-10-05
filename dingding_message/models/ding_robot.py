@@ -33,7 +33,6 @@ class DingDingRobot(models.Model):
     chat_id = fields.Many2one(
         comodel_name='dingding.chat', string='关联群组', index=True)
 
-    @api.multi
     def test_robot_connection(self):
         for res in self:
             logging.info(">>>机器人测试连接")
@@ -115,7 +114,6 @@ class DingDingRobotSendMessage(models.TransientModel):
                 'domain': {'at_user_ids': domain}
             }
 
-    @api.multi
     def dingding_robot_send_message(self):
         """
         点击通过群机器人发送消息按钮

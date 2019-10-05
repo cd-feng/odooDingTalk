@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 class BaseImport(models.TransientModel):
     _inherit = 'base_import.import'
 
-    @api.multi
+
     def do(self, fields, columns, options, dryrun=False):
         """
         Catch UserError exception and pass it as an error.

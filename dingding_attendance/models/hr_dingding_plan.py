@@ -47,7 +47,6 @@ class HrDingdingPlanTran(models.TransientModel):
     start_date = fields.Date(string=u'开始日期', required=True)
     stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
 
-    @api.multi
     def get_plan_lists(self):
         """
         获取企业考勤排班详情
@@ -119,7 +118,6 @@ class HrDingdingPlanTran(models.TransientModel):
         logging.info(">>>------结束获取排班信息-----------")
         return True
 
-    @api.multi
     def clear_hr_dingding_plan(self):
         """
         清除已下载的所有钉钉排班记录（仅用于测试，生产环境将删除该函数）

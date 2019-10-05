@@ -19,16 +19,15 @@
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.view_department_form"/>
         <field name="arch" type="xml">
-            <button name="toggle_active" position="before">
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <field name="dingding_type" invisible="1"/>
-                <button name="create_ding_department" string="上传至钉钉" type="object" class="oe_stat_button"
-                        icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
-                        groups="dingding_base.manage_groups">
-                </button>
-                <button name="update_ding_department" string="更新至钉钉" type="object" class="oe_stat_button"
-                        icon="fa-hand-peace-o" groups="dingding_base.manage_groups">
-                </button>
-            </button>
+                <div name="button_box" class="oe_button_box">
+                    <button name="create_ding_department" string="上传至钉钉" type="object" class="oe_stat_button" icon="fa-hand-scissors-o" attrs="{'invisible':[('dingding_type','=', 'yes')]}" groups="dingding_base.manage_groups">
+                    </button>
+                    <button name="update_ding_department" string="更新至钉钉" type="object" class="oe_stat_button" icon="fa-hand-peace-o" groups="dingding_base.manage_groups">
+                    </button>
+                </div>
+            </xpath>
             <xpath expr="//field[@name='manager_id']" position='after'>
                 <field name="manager_user_ids" widget="many2many_tags"/>
             </xpath>

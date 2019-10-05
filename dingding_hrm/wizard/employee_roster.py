@@ -18,7 +18,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
     synchronous_dimission = fields.Boolean(string=u'同步离职花名册', default=True)
     synchronous_dimission_info = fields.Boolean(string=u'同步离职信息', default=True)
 
-    @api.multi
+    
     def start_synchronous_data(self):
         """
         花名册同步
@@ -66,7 +66,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 raise UserError(e)
         return onjob_list
 
-    @api.multi
+    
     def get_onjob_list(self):
         """
         获取钉钉在职员工花名册
@@ -155,7 +155,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 raise UserError(e)
         return dimission_list
 
-    @api.multi
+    
     def get_dimission_list(self):
         """
         获取钉钉离职员工花名册

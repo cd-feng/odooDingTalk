@@ -21,7 +21,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'wage',
     'version': '1.0',
-    'depends': ['base', 'web_progress', 'hr', 'mail'],
+    'depends': ['base', 'hr', 'mail'],
     'installable': True,
     'application': True,
     'auto_install': False,

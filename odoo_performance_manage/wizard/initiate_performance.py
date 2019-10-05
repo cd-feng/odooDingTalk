@@ -50,7 +50,6 @@ class InitiatePerformanceAssessment(models.TransientModel):
                 res.evaluation_ids = [(2, 0, res.evaluation_ids.ids)]
                 return {'domain': {'evaluation_ids': [('cycle_type', '=', self.assessment_type)]}}
 
-    @api.multi
     def initiate_performance(self):
         """
         发起考核
@@ -113,7 +112,8 @@ class InitiatePerformanceAssessment(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        template_id = self.env.ref('odoo_performance_manage.performance_assessment_email_template', raise_if_not_found=False)
+        template_id = self.env.ref(
+            'odoo_performance_manage.performance_assessment_email_template', raise_if_not_found=False)
         if not template_id:
             return False
         for performance in performance_object:
@@ -121,7 +121,6 @@ class InitiatePerformanceAssessment(models.TransientModel):
                 logging.info("email至%s" % performance.name)
                 template_id.sudo().with_context(lang=self.env.context.get('lang')).send_mail(performance.id, force_send=False)
 
-    @api.multi
     def initiate_rating(self):
         """
         发起评分环境

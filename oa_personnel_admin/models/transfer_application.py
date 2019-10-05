@@ -34,7 +34,6 @@ class TransferApplication(models.Model):
     sum_up = fields.Text(string=u'试用期内对工作的总结')
     opinion_text = fields.Text(string=u'对公司的意见和建议')
 
-    @api.multi
     def summit_approval(self):
         """
         提交到钉钉

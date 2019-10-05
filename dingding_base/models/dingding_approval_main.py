@@ -46,7 +46,7 @@ class DingDingApprovalMain(models.Model):
         ('refuse', '拒绝'),
         ('redirect', '转交'),
     ]
-    
+
     active = fields.Boolean(string=u'Active', default=True)
     process_code = fields.Char(string='单据编号', index=True, copy=False)
     business_id = fields.Char(string='审批实例业务编号', index=True, copy=False)
@@ -61,9 +61,7 @@ class DingDingApprovalMain(models.Model):
     oa_message = fields.Char(string='审批消息')
     oa_url = fields.Char(string='钉钉单据url')
     approver_users = fields.Many2many('hr.employee', string=u'审批人')
-    make_copy_users = fields.Many2many('hr.employee', string=u'抄送人')
 
-    @api.multi
     def summit_approval(self):
         """
         提交审批按钮，将单据审批信息发送到钉钉
@@ -71,7 +69,6 @@ class DingDingApprovalMain(models.Model):
         """
         pass
 
-    @api.multi
     def unlink(self):
         for res in self:
             if res.oa_state != '00':
@@ -114,7 +111,6 @@ class DingDingApprovalMain(models.Model):
             raise UserError("没有对应的审批关联！请前往钉钉->审批关联中进行配置!")
         return dac.template_id.process_code
 
-    @api.multi
     def _get_originator_user_id(self):
         """
         返回发起人钉钉id和部门id
@@ -122,7 +118,4 @@ class DingDingApprovalMain(models.Model):
         """
         for res in self:
             return res.originator_user_id.ding_id, res.originator_user_id.department_id.ding_id
-
-
-
 

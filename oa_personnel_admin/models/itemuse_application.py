@@ -41,7 +41,6 @@ class ItemuseApplication(models.Model):
     remarks = fields.Text(string=u'领用详情')
     line_ids = fields.One2many(comodel_name='oa.itemuse.application.line', inverse_name='oa_itemuse_id', string=u'物品明细')
 
-    @api.multi
     def summit_approval(self):
         """
         提交到钉钉

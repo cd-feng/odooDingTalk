@@ -56,13 +56,17 @@ class ResConfigSettings(models.TransientModel):
             app_key=self.env['ir.config_parameter'].sudo().get_param('dingding_base.app_key'),
             app_secret=self.env['ir.config_parameter'].sudo().get_param('dingding_base.app_secret'),
             token=self.env['ir.config_parameter'].sudo().get_param('dingding_base.token'),
-            din_delete_extcontact=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_delete_extcontact'),
+            din_delete_extcontact=self.env['ir.config_parameter'].sudo(
+            ).get_param('dingding_base.din_delete_extcontact'),
             din_create_employee=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_create_employee'),
             din_update_employee=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_update_employee'),
             din_delete_employee=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_delete_employee'),
-            din_create_department=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_create_department'),
-            din_update_department=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_update_department'),
-            din_delete_department=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_delete_department'),
+            din_create_department=self.env['ir.config_parameter'].sudo(
+            ).get_param('dingding_base.din_create_department'),
+            din_update_department=self.env['ir.config_parameter'].sudo(
+            ).get_param('dingding_base.din_update_department'),
+            din_delete_department=self.env['ir.config_parameter'].sudo(
+            ).get_param('dingding_base.din_delete_department'),
             din_login_appid=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_login_appid'),
             din_login_appsecret=self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_login_appsecret'),
         )
@@ -75,13 +79,17 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.app_key', self.app_key)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.app_secret', self.app_secret)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.token', self.token)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_delete_extcontact', self.din_delete_extcontact)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'dingding_base.din_delete_extcontact', self.din_delete_extcontact)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_create_employee', self.din_create_employee)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_update_employee', self.din_update_employee)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_delete_employee', self.din_delete_employee)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_create_department', self.din_create_department)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_update_department', self.din_update_department)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_delete_department', self.din_delete_department)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'dingding_base.din_create_department', self.din_create_department)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'dingding_base.din_update_department', self.din_update_department)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'dingding_base.din_delete_department', self.din_delete_department)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_login_appid', self.din_login_appid)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_login_appsecret', self.din_login_appsecret)
 

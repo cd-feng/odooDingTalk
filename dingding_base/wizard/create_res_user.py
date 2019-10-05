@@ -35,7 +35,7 @@ class CreateResUser(models.TransientModel):
     employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=[('user_id', '=', False), ('work_email', '!=', '')])
     groups = fields.Many2many(comodel_name='res.groups', string=u'指定权限')
 
-    @api.multi
+    
     def create_user(self):
         """
         根据员工创建系统用户

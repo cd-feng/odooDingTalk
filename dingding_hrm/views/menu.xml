@@ -26,4 +26,6 @@
 
     <menuitem name="设置" id="hrm_setting_menu" parent="zhineng_hrm_menu"/>
 
+    <!-- <menuitem name="考勤统计" id="hrm_employee_attendance_analysis_menu" parent="hrm_employee_analysis_menu" action="odoo_wage_manage.wage_employee_attendance_annal_action"/> -->
+
 </odoo>

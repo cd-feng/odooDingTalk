@@ -44,7 +44,6 @@ class SmsConfig(models.Model):
     state = fields.Selection(string=u'状态', selection=[('close', '关闭'), ('open', '启用')], default='close')
     template_ids = fields.One2many(comodel_name='sms.service.template', inverse_name='service_id', string=u'短信模板')
 
-    @api.multi
     def update_sms_status(self):
         """
         开启服务时，强制要检查模板列表是否满足条件；

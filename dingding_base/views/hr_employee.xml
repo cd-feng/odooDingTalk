@@ -52,8 +52,7 @@
                     </group>
                 </page>
             </xpath>
-
-            <button name="toggle_active" position="before">
+            <xpath expr="//button[@id='hr_presence_button']" position="before">
                 <button name="create_ding_employee" string="上传至钉钉" type="object" class="oe_stat_button"
                         icon="fa-upload" attrs="{'invisible':[('dingding_type','=', 'yes')]}"
                         groups="dingding_base.manage_groups">
@@ -61,7 +60,7 @@
                 <button name="update_ding_employee" string="更新至钉钉" type="object" class="oe_stat_button"
                         icon="fa-cloud-upload" groups="dingding_base.manage_groups">
                 </button>
-            </button>
+            </xpath>
         </field>
     </record>
 
