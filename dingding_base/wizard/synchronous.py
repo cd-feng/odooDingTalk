@@ -181,7 +181,7 @@ class DingDingSynchronous(models.TransientModel):
                 if s_avatar and user.get('avatar'):
                     try:
                         binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
-                        data.update({'image': binary_data})
+                        data.update({'image_1920': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")
                         logging.info(">>>SSL异常:%s", e)

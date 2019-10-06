@@ -279,7 +279,7 @@ class HrEmployee(models.Model):
         for emp in self:
             if emp.din_avatar:
                 binary_data = base64.b64encode(requests.get(emp.din_avatar).content)
-                emp.sudo().write({'image': binary_data})
+                emp.sudo().write({'image_1920': binary_data})
 
     @api.model
     def get_time_stamp(self, time_num):
