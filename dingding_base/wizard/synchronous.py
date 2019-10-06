@@ -21,7 +21,9 @@
 import base64
 import json
 import logging
+
 import requests
+
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -178,8 +180,7 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
-                        binary_data = tools.image_resize_image_big(
-                            base64.b64encode(requests.get(user.get('avatar')).content))
+                        binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
                         data.update({'image': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")
@@ -268,8 +269,7 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
-                        binary_data = tools.image_resize_image_big(
-                            base64.b64encode(requests.get(user.get('avatar')).content))
+                        binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
                         data.update({'image': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")

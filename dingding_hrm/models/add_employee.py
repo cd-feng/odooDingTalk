@@ -36,7 +36,7 @@ class AddDingDingEmployee(models.Model):
     def _default_image(self):
         image_path = get_module_resource(
             'hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     USERSTATE = [
         ('new', '创建'),
