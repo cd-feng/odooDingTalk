@@ -40,8 +40,7 @@ class DingDingSynchronous(models.TransientModel):
     employee_avatar = fields.Boolean(string=u'替换钉钉员工头像', default=False)
     partner = fields.Boolean(string=u'钉钉联系人', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
-    
-    
+
     def start_synchronous_data(self):
         """
         基础数据同步
@@ -106,7 +105,8 @@ class DingDingSynchronous(models.TransientModel):
                 if result.get('parentid') != 1:
                     partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))])
                     if partner_department:
-                        self._cr.execute("UPDATE hr_department SET parent_id=%s WHERE id=%s" % (partner_department.id, department.id))
+                        self._cr.execute("UPDATE hr_department SET parent_id=%s WHERE id=%s" %
+                                         (partner_department.id, department.id))
             dept_manageusers = result.get('deptManagerUseridList')
             if dept_manageusers:
                 depts = dept_manageusers.split("|")
@@ -129,7 +129,8 @@ class DingDingSynchronous(models.TransientModel):
             emp_size = 100
             while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state = self.get_dingding_employees(din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
+                result_state = self.get_dingding_employees(
+                    din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
@@ -216,7 +217,8 @@ class DingDingSynchronous(models.TransientModel):
             emp_size = 100
             while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state, user_list = self.get_dingding_employees_v2(din_client, department, ding_user_list, emp_offset, emp_size, s_avatar=s_avatar)
+                result_state, user_list = self.get_dingding_employees_v2(
+                    din_client, department, ding_user_list, emp_offset, emp_size, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                     ding_user_list = user_list
@@ -309,7 +311,8 @@ class DingDingSynchronous(models.TransientModel):
                         'din_category_type': res.get('name'),
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('ding_id'))])
+                res_category = self.env['res.partner.category'].sudo().search(
+                    [('ding_id', '=', category.get('ding_id'))])
                 if res_category:
                     res_category.sudo().write(category)
                 else:
@@ -349,7 +352,8 @@ class DingDingSynchronous(models.TransientModel):
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):
-                    follower_user = self.env['hr.employee'].sudo().search([('ding_id', '=', res.get('follower_user_id'))])
+                    follower_user = self.env['hr.employee'].sudo().search(
+                        [('ding_id', '=', res.get('follower_user_id'))])
                     data.update({'din_employee_id': follower_user[0].id if follower_user else ''})
                 # 根据userid查询联系人是否存在
                 partner = self.env['res.partner'].sudo().search(

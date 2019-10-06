@@ -44,7 +44,7 @@
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="员工名称." attrs="{'readonly': [('state', '!=', 'new')]}"/>
@@ -90,14 +90,15 @@
                 <field name="mobile"/>
                 <field name="pre_entry_time"/>
                 <field name="dept_id"/>
+                <field name="image_128"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                             <div class="o_kanban_image_fill_left d-none d-md-block"
-                                 t-attf-style="background-image: url(#{kanban_image('dingding.add.employee', 'image_medium', record.id.raw_value)})"
+                                 t-attf-style="background-image: url(#{kanban_image('dingding.add.employee', 'image_128', record.id.raw_value)})"
                                  role="img"/>
                             <div class="o_kanban_image d-md-none rounded-circle"
-                                 t-attf-style="background-image: url(#{kanban_image('dingding.add.employee', 'image_small', record.id.raw_value)})"
+                                 t-attf-style="background-image: url(#{kanban_image('dingding.add.employee', 'image_128', record.id.raw_value)})"
                                  role="img"/>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
