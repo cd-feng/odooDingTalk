@@ -14,18 +14,24 @@
 -->
 <odoo>
 
+    <!-- 主菜单 -->
     <menuitem name="智能人事" id="zhineng_hrm_menu" web_icon="dingding_hrm,static/description/icon.png" sequence="16"/>
-
     <menuitem name="员工管理" id="hrm_employee_manager_menu" parent="zhineng_hrm_menu"/>
-
     <menuitem name="人事异动" id="hrm_employee_changes_menu" parent="zhineng_hrm_menu"/>
-
-    <menuitem name="假勤管理" id="hrm_employee_attendance_menu" parent="zhineng_hrm_menu"/>
-
+    <menuitem name="钉钉考勤" id="hrm_employee_dingding_attendance_menu" parent="zhineng_hrm_menu"/>
     <menuitem name="统计分析" id="hrm_employee_analysis_menu" parent="zhineng_hrm_menu"/>
-
     <menuitem name="设置" id="hrm_setting_menu" parent="zhineng_hrm_menu"/>
 
-    <!-- <menuitem name="考勤统计" id="hrm_employee_attendance_analysis_menu" parent="hrm_employee_analysis_menu" action="odoo_wage_manage.wage_employee_attendance_annal_action"/> -->
+    <!-- 考勤设置 -->
+    <menuitem name="考勤设置" id="hrm_dingding_attendance_setting_menu" parent="hrm_employee_dingding_attendance_menu"/>
+    <menuitem id="hrm_dingding_simple_groups_menu" name="考勤组" parent="hrm_dingding_attendance_setting_menu" sequence="1" action="dingding_attendance.dingding_simple_groups_action"/>
+    <menuitem id="hrm_dingding_plan_menu" name="排班列表" parent="hrm_dingding_attendance_setting_menu" sequence="2" action="dingding_attendance.hr_dingding_plan_action"/>
+
+    <!-- 考勤记录 -->
+    <menuitem name="考勤记录" id="hrm_dingding_attendance_annal_menu" parent="hrm_employee_dingding_attendance_menu"/>
+    <menuitem id="hrm_leaves_list_menu" name="员工请假列表" parent="hrm_dingding_attendance_annal_menu" sequence="3" action="dingding_attendance.hr_leaves_list_action"/>
+    <menuitem id="hrm_attendance_result_menu" name="员工打卡结果" parent="hrm_dingding_attendance_annal_menu" sequence="4" action="dingding_attendance.hr_attendance_result_action"/>
+    <menuitem id="hrm_attendance_record_menu" name="员工打卡详情" parent="hrm_dingding_attendance_annal_menu" sequence="5" action="dingding_attendance.hr_attendance_record_action"/>
+    <menuitem id="hrm_dingding_signs_list_menu" name="签到记录" parent="hrm_dingding_attendance_annal_menu" sequence="6" action="dingding_attendance.dingding_signs_list_action"/>
 
 </odoo>
