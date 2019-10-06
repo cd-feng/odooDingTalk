@@ -122,8 +122,7 @@ class DingDingSynchronous(models.TransientModel):
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
-        # for department in departments.with_progress(msg="正在同步部门员工"):
-        for department in departments:
+        for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
@@ -211,8 +210,7 @@ class DingDingSynchronous(models.TransientModel):
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
         ding_user_list = list()
-        # for department in departments.with_progress(msg="正在同步部门员工"):
-        for department in departments:
+        for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
