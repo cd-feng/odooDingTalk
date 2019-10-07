@@ -105,8 +105,9 @@ class DingDingSynchronous(models.TransientModel):
                 if result.get('parentid') != 1:
                     partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))])
                     if partner_department:
-                        self._cr.execute("UPDATE hr_department SET parent_id=%s WHERE id=%s" %
-                                         (partner_department.id, department.id))
+                        h_department = self.env['hr.department'].search([('id', '=', department.id), ('active', '=', True)])
+                        if h_department:
+                            h_department.write({'parent_id': partner_department.id})
             dept_manageusers = result.get('deptManagerUseridList')
             if dept_manageusers:
                 depts = dept_manageusers.split("|")
