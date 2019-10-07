@@ -24,7 +24,7 @@ import logging
 import time
 import requests
 from requests import ReadTimeout, ConnectTimeout
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 import hmac
 from urllib.parse import quote
 from odoo.exceptions import UserError
@@ -47,6 +47,8 @@ class DingDingTools(models.TransientModel):
         """
         corp_id = self.env['ir.config_parameter'].sudo().get_param('dingding_base.corp_id')
         app_key, app_secret = self._get_key_and_secrect()
+        if not app_key or not app_secret or not corp_id:
+            raise UserError(_('钉钉设置项中的CorpId、AppKey和AppSecret不能为空'))
         return AppKeyClient(corp_id, app_key, app_secret, storage=mem_storage)
 
     @api.model

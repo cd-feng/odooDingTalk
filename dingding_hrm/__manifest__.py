@@ -10,7 +10,7 @@
     'website': "https://www.sxfblog.com",
     'category': 'dingding',
     'version': '2.0',
-    'depends': ['base', 'dingding_base'],
+    'depends': ['base', 'dingding_base', 'dingding_attendance'],
     'installable': True,
     'application': False,
     'auto_install': True,

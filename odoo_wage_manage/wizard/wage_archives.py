@@ -54,8 +54,7 @@ class WageArchivesTransient(models.TransientModel):
                 'wage_amount': line.wage_amount,
             }))
         # 遍历所选员工
-        # for emp in self.emp_ids.with_progress(msg="批量初始化档案"):
-        for emp in self.emp_ids:
+        for emp in self.emp_ids.with_progress(msg="批量初始化档案"):
             logging.info(">>>生成员工：'%s' 档案" % emp.name)
             archives_data = {
                 'employee_id': emp.id,

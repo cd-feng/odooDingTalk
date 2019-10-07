@@ -38,6 +38,7 @@ class EmployeeRoster(models.Model):
         ('正式', '正式'),
         ('离职', '离职'),
         ('未知', '未知'),
+        ('待入职', '待入职'),
     ]
     EMPLOYEETYPES = [
         ('无类型', '无类型'),
@@ -126,11 +127,9 @@ class EmployeeRoster(models.Model):
                 'identification_id': res.certNo,
             })
 
-    
     def name_get(self):
         """
         重写name_get方法
         :return:
         """
         return [(res.id, '%s-%s' % (res.name, res.mainDept.name)) for res in self]
-
