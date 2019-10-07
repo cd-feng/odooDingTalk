@@ -19,7 +19,7 @@ class DingDingChat(models.Model):
     def _default_image(self):
         image_path = get_module_resource(
             'dingding_message', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     chat_id = fields.Char(string='群会话Id')
     chat_icon = fields.Char(string='群头像mediaId')

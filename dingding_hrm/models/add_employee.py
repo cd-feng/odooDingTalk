@@ -20,7 +20,7 @@
 import base64
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import get_module_resource
 
@@ -36,7 +36,7 @@ class AddDingDingEmployee(models.Model):
     def _default_image(self):
         image_path = get_module_resource(
             'hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     USERSTATE = [
         ('new', '创建'),
@@ -52,20 +52,23 @@ class AddDingDingEmployee(models.Model):
     dept_id = fields.Many2one(comodel_name='hr.department', string='入职部门')
     company_id = fields.Many2one(
         'res.company', '公司', default=lambda self: self.env.user.company_id.id)
-    image = fields.Binary("照片", default=_default_image, attachment=True)
-    image_medium = fields.Binary("Medium-sized photo", attachment=True)
-    image_small = fields.Binary("Small-sized photo", attachment=True)
     state = fields.Selection(
         string='状态', selection=USERSTATE, default='new', track_visibility='onchange')
+    image_1920 = fields.Image("照片", compute='_compute_image', compute_sudo=True)
+    image_1024 = fields.Image("Image 1024", compute='_compute_image', compute_sudo=True)
+    image_512 = fields.Image("Image 512", compute='_compute_image', compute_sudo=True)
+    image_256 = fields.Image("Image 256", compute='_compute_image', compute_sudo=True)
+    image_128 = fields.Image("Image 128", compute='_compute_image', compute_sudo=True)
 
-    @api.model
-    def create(self, values):
-        tools.image_resize_images(values)
-        return super(AddDingDingEmployee, self).create(values)
-
-    def write(self, values):
-        tools.image_resize_images(values)
-        return super(AddDingDingEmployee, self).write(values)
+    def _compute_image(self):
+        for employee in self:
+            # We have to be in sudo to have access to the images
+            employee_id = self.sudo().env['dingding.add.employee'].browse(employee.id)
+            employee.image_1920 = employee_id.image_1920
+            employee.image_1024 = employee_id.image_1024
+            employee.image_512 = employee_id.image_512
+            employee.image_256 = employee_id.image_256
+            employee.image_128 = employee_id.image_128
 
     def add_employee(self):
         """
