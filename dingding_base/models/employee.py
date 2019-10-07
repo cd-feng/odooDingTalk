@@ -18,11 +18,14 @@
 #
 ###################################################################################
 
+import base64
 import json
 import logging
-import requests
 import time
+
+import requests
 from requests import ReadTimeout
+
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -275,8 +278,8 @@ class HrEmployee(models.Model):
         """
         for emp in self:
             if emp.din_avatar:
-                binary_data = tools.image_resize_image_big(base64.b64encode(requests.get(emp.din_avatar).content))
-                emp.sudo().write({'image': binary_data})
+                binary_data = base64.b64encode(requests.get(emp.din_avatar).content)
+                emp.sudo().write({'image_1920': binary_data})
 
     @api.model
     def get_time_stamp(self, time_num):
@@ -301,4 +304,3 @@ class HrEmployee(models.Model):
         date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
         date_stamp = date_stamp * 1000
         return date_stamp
-

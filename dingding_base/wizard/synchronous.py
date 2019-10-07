@@ -21,7 +21,9 @@
 import base64
 import json
 import logging
+
 import requests
+
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 
@@ -38,8 +40,7 @@ class DingDingSynchronous(models.TransientModel):
     employee_avatar = fields.Boolean(string=u'替换钉钉员工头像', default=False)
     partner = fields.Boolean(string=u'钉钉联系人', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
-    
-    
+
     def start_synchronous_data(self):
         """
         基础数据同步
@@ -104,7 +105,9 @@ class DingDingSynchronous(models.TransientModel):
                 if result.get('parentid') != 1:
                     partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))])
                     if partner_department:
-                        self._cr.execute("UPDATE hr_department SET parent_id=%s WHERE id=%s" % (partner_department.id, department.id))
+                        h_department = self.env['hr.department'].search([('id', '=', department.id), ('active', '=', True)])
+                        if h_department:
+                            h_department.write({'parent_id': partner_department.id})
             dept_manageusers = result.get('deptManagerUseridList')
             if dept_manageusers:
                 depts = dept_manageusers.split("|")
@@ -122,13 +125,13 @@ class DingDingSynchronous(models.TransientModel):
         # 获取所有部门
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
-        # for department in departments.with_progress(msg="正在同步部门员工"):
-        for department in departments:
+        for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state = self.get_dingding_employees(din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
+                result_state = self.get_dingding_employees(
+                    din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
@@ -179,9 +182,8 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
-                        binary_data = tools.image_resize_image_big(
-                            base64.b64encode(requests.get(user.get('avatar')).content))
-                        data.update({'image': binary_data})
+                        binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
+                        data.update({'image_1920': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")
                         logging.info(">>>SSL异常:%s", e)
@@ -211,13 +213,13 @@ class DingDingSynchronous(models.TransientModel):
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
         ding_user_list = list()
-        # for department in departments.with_progress(msg="正在同步部门员工"):
-        for department in departments:
+        for department in departments.with_progress(msg="正在同步部门员工"):
             emp_offset = 0
             emp_size = 100
             while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state, user_list = self.get_dingding_employees_v2(din_client, department, ding_user_list, emp_offset, emp_size, s_avatar=s_avatar)
+                result_state, user_list = self.get_dingding_employees_v2(
+                    din_client, department, ding_user_list, emp_offset, emp_size, s_avatar=s_avatar)
                 if result_state:
                     emp_offset = emp_offset + 1
                     ding_user_list = user_list
@@ -270,8 +272,7 @@ class DingDingSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
-                        binary_data = tools.image_resize_image_big(
-                            base64.b64encode(requests.get(user.get('avatar')).content))
+                        binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
                         data.update({'image': binary_data})
                     except Exception as e:
                         logging.info(">>>--------------------------------")
@@ -311,7 +312,8 @@ class DingDingSynchronous(models.TransientModel):
                         'din_category_type': res.get('name'),
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search([('ding_id', '=', category.get('ding_id'))])
+                res_category = self.env['res.partner.category'].sudo().search(
+                    [('ding_id', '=', category.get('ding_id'))])
                 if res_category:
                     res_category.sudo().write(category)
                 else:
@@ -351,7 +353,8 @@ class DingDingSynchronous(models.TransientModel):
                 }
                 # 获取负责人
                 if res.get('follower_user_id'):
-                    follower_user = self.env['hr.employee'].sudo().search([('ding_id', '=', res.get('follower_user_id'))])
+                    follower_user = self.env['hr.employee'].sudo().search(
+                        [('ding_id', '=', res.get('follower_user_id'))])
                     data.update({'din_employee_id': follower_user[0].id if follower_user else ''})
                 # 根据userid查询联系人是否存在
                 partner = self.env['res.partner'].sudo().search(

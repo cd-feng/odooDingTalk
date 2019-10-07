@@ -18,7 +18,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
     synchronous_dimission = fields.Boolean(string=u'同步离职花名册', default=True)
     synchronous_dimission_info = fields.Boolean(string=u'同步离职信息', default=True)
 
-    
     def start_synchronous_data(self):
         """
         花名册同步
@@ -66,7 +65,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 raise UserError(e)
         return onjob_list
 
-    
     def get_onjob_list(self):
         """
         获取钉钉在职员工花名册
@@ -114,7 +112,8 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                 roster_data.update({
                                     fie['field_code'][6:]: fie['label'] if "label" in fie else ''
                                 })
-                        roster = self.env['dingding.employee.roster'].sudo().search([('ding_userid', '=', rec['userid'])])
+                        roster = self.env['dingding.employee.roster'].sudo().search(
+                            [('ding_userid', '=', rec['userid'])])
                         if roster:
                             roster.sudo().write(roster_data)
                         else:
@@ -155,7 +154,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 raise UserError(e)
         return dimission_list
 
-    
     def get_dimission_list(self):
         """
         获取钉钉离职员工花名册
@@ -172,14 +170,29 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 # logging.info(">>>获取花名册返回结果%s", result)
                 if result.get('emp_field_info_v_o'):
                     for rec in result.get('emp_field_info_v_o'):
-                        # logging.info(">>>当前离职员工%s", rec)
+                        logging.info(">>>当前离职员工%s", rec)
                         roster_data = {
                             'emp_id': emp_data[rec['userid']] if rec['userid'] in emp_data else False,
                             'ding_userid': rec['userid']
                         }
                         for fie in rec['field_list']['emp_field_v_o']:
+                            # 获取姓名
+                            if fie['field_code'][6:] == 'name' and 'value' in fie:
+                                roster_data.update({'name': fie['value']})
+                            # 获取性别
+                            elif fie['field_code'][6:] == 'sexType' and 'label' in fie:
+                                roster_data.update({'sexType': fie['label']})
+                            # 获取手机
+                            elif fie['field_code'][6:] == 'mobile' and 'value' in fie:
+                                roster_data.update({'mobile': fie['value']})
+                            # 获取员工状态
+                            elif fie['field_code'][6:] == 'employeeStatus' and 'label' in fie:
+                                roster_data.update({'employeeStatus': fie['label']})
+                            # 获取员工类型
+                            elif fie['field_code'][6:] == 'employeeType' and 'label' in fie:
+                                roster_data.update({'employeeType': fie['label']})
                             # 获取部门（可能会多个）
-                            if fie['field_code'][6:] == 'deptIds' and 'value' in fie:
+                            elif fie['field_code'][6:] == 'deptIds' and 'value' in fie:
                                 dept_ding_ids = list()
                                 for depa in fie['value'].split('|'):
                                     dept_ding_ids.append(depa)
@@ -203,10 +216,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                         hr_job = self.env['hr.job'].sudo().create({'name': fie['label']})
                                 roster_data.update({
                                     'position': hr_job.id
-                                })
-                            else:
-                                roster_data.update({
-                                    fie['field_code'][6:]: fie['label'] if "label" in fie else ''
                                 })
                         roster = self.env['dingding.employee.roster'].sudo().search(
                             [('ding_userid', '=', rec['userid'])])
