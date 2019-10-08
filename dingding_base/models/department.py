@@ -132,7 +132,6 @@ class HrDepartment(models.Model):
         """
         din_client = self.env['dingding.api.tools'].get_client()
         for department in self:
-            # result_state = True
             emp_offset = 0
             emp_size = 100
             while True:
