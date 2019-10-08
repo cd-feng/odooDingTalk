@@ -125,17 +125,17 @@ class DingDingSynchronous(models.TransientModel):
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
         for department in departments.with_progress(msg="正在同步部门员工"):
-            result_state = True
             emp_offset = 0
             emp_size = 100
-            while result_state == True:
+            while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state = self.env['dingding.bash.data.synchronous'].get_dingding_employees(
+                result_state = self.get_dingding_employees(
                     din_client, department, emp_offset, emp_size, s_avatar=None)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
                     break
+        return True
 
     @api.model
     def get_dingding_employees(self, din_client, department, offset=0, size=100, s_avatar=None):

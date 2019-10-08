@@ -132,10 +132,10 @@ class HrDepartment(models.Model):
         """
         din_client = self.env['dingding.api.tools'].get_client()
         for department in self:
-            result_state = True
+            # result_state = True
             emp_offset = 0
             emp_size = 100
-            while result_state == True:
+            while True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
                 result_state = self.env['dingding.bash.data.synchronous'].get_dingding_employees(
                     din_client, department, emp_offset, emp_size, s_avatar=None)
