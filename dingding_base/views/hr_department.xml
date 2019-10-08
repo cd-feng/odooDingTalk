@@ -35,7 +35,7 @@
     </record>
 
     <record id='update_ding_employee_action' model='ir.actions.server'>
-        <field name='name'>从钉钉同步用户</field>
+        <field name='name'>从钉钉同步部门员工列表</field>
         <field name="model_id" ref="hr.model_hr_department"/>
         <field name="binding_model_id" ref="model_hr_department"/>
         <field name="state">code</field>
@@ -44,5 +44,5 @@ if records:
     action = records.update_ding_employee()
         </field>
     </record>
-    
+
 </odoo>
