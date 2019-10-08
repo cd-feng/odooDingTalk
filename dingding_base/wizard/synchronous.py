@@ -19,12 +19,11 @@
 ###################################################################################
 
 import base64
-import json
 import logging
 
 import requests
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -126,17 +125,17 @@ class DingDingSynchronous(models.TransientModel):
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
         din_client = self.env['dingding.api.tools'].get_client()
         for department in departments.with_progress(msg="正在同步部门员工"):
+            result_state = True
             emp_offset = 0
             emp_size = 100
-            while True:
+            while result_state == True:
                 logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state = self.get_dingding_employees(
-                    din_client, department, emp_offset, emp_size, s_avatar=s_avatar)
+                result_state = self.env['dingding.bash.data.synchronous'].get_dingding_employees(
+                    din_client, department, emp_offset, emp_size, s_avatar=None)
                 if result_state:
                     emp_offset = emp_offset + 1
                 else:
                     break
-        return True
 
     @api.model
     def get_dingding_employees(self, din_client, department, offset=0, size=100, s_avatar=None):
@@ -178,7 +177,7 @@ class DingDingSynchronous(models.TransientModel):
                 if user.get('stateCode') != '86':
                     data.update({'mobile_phone': '+{}-{}'.format(user.get('stateCode'), user.get('mobile'))})
                 if user.get('hiredDate'):
-                    time_stamp = self.env['dingding.api.tools'].get_time_stamp(user.get('hiredDate'))
+                    time_stamp = self.env['dingding.api.tools'].timestamp_to_local_date(user.get('hiredDate'))
                     data.update({'din_hiredDate': time_stamp})
                 if s_avatar and user.get('avatar'):
                     try:
@@ -198,97 +197,6 @@ class DingDingSynchronous(models.TransientModel):
                 else:
                     self.env['hr.employee'].sudo().create(data)
             return result.get('hasMore')
-        except Exception as e:
-            raise UserError(e)
-
-    # 留着备用
-    @api.model
-    def synchronous_dingding_employee_v2(self, s_avatar=None):
-        """
-        同步钉钉部门员工列表
-        :param s_avatar: 是否同步头像
-        :return:
-        """
-        # 获取所有部门
-        departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '=', True)])
-        din_client = self.env['dingding.api.tools'].get_client()
-        ding_user_list = list()
-        for department in departments.with_progress(msg="正在同步部门员工"):
-            emp_offset = 0
-            emp_size = 100
-            while True:
-                logging.info(">>>开始获取%s部门的员工", department.name)
-                result_state, user_list = self.get_dingding_employees_v2(
-                    din_client, department, ding_user_list, emp_offset, emp_size, s_avatar=s_avatar)
-                if result_state:
-                    emp_offset = emp_offset + 1
-                    ding_user_list = user_list
-                else:
-                    break
-        return True
-
-    @api.model
-    def get_dingding_employees_v2(self, din_client, department, ding_user_list, offset=0, size=100, s_avatar=None):
-        """
-        获取部门成员（详情）
-        :param din_client:
-        :param department:
-        :param offset:
-        :param size:
-        :param s_avatar:
-        :return:
-        """
-        try:
-            result = din_client.user.list(department.ding_id, offset, size, order='custom')
-            user_list = list()
-            for user in result.get('userlist'):
-                data = {
-                    'name': user.get('name'),  # 员工名称
-                    'ding_id': user.get('userid'),  # 钉钉用户Id
-                    'din_unionid': user.get('unionid'),  # 钉钉唯一标识
-                    'mobile_phone': user.get('mobile'),  # 手机号
-                    'work_phone': user.get('tel'),  # 分机号
-                    'work_location': user.get('workPlace'),  # 办公地址
-                    'notes': user.get('remark'),  # 备注
-                    'job_title': user.get('position'),  # 职位
-                    'work_email': user.get('email'),  # email
-                    'din_jobnumber': user.get('jobnumber'),  # 工号
-                    'department_id': department[0].id,  # 部门
-                    'din_avatar': user.get('avatar') if user.get('avatar') else '',  # 钉钉头像url
-                    'din_isSenior': user.get('isSenior'),  # 高管模式
-                    'din_isAdmin': user.get('isAdmin'),  # 是管理员
-                    'din_isBoss': user.get('isBoss'),  # 是老板
-                    'din_isLeader': user.get('isLeader'),  # 是部门主管
-                    'din_isHide': user.get('isHide'),  # 隐藏手机号
-                    'din_active': user.get('active'),  # 是否激活
-                    'din_isLeaderInDepts': user.get('isLeaderInDepts'),  # 是否为部门主管
-                    'din_orderInDepts': user.get('orderInDepts'),  # 所在部门序位
-                }
-                # 支持显示国际手机号
-                if user.get('stateCode') != '86':
-                    data.update({'mobile_phone': '+{}-{}'.format(user.get('stateCode'), user.get('mobile'))})
-                if user.get('hiredDate'):
-                    time_stamp = self.env['dingding.api.tools'].get_time_stamp(user.get('hiredDate'))
-                    data.update({'din_hiredDate': time_stamp})
-                if s_avatar and user.get('avatar'):
-                    try:
-                        binary_data = base64.b64encode(requests.get(user.get('avatar')).content)
-                        data.update({'image': binary_data})
-                    except Exception as e:
-                        logging.info(">>>--------------------------------")
-                        logging.info(">>>SSL异常:%s", e)
-                        logging.info(">>>--------------------------------")
-                if user.get('department'):
-                    dep_din_ids = user.get('department')
-                    dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids)])
-                    data.update({'department_ids': [(6, 0, dep_list.ids)]})
-                if user.get('userid') not in ding_user_list:
-                    user_list.append(data)
-                    ding_user_list.append(user.get('userid'))
-                    # logging.info(">>>获取钉钉用户集结果%s", ding_user_list)
-            # 批量新建员工，未做已存在记录检查
-            self.env['hr.employee'].sudo().create(user_list)
-            return result.get('hasMore'), ding_user_list
         except Exception as e:
             raise UserError(e)
 
