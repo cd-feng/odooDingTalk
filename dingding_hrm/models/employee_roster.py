@@ -39,6 +39,7 @@ class EmployeeRoster(models.Model):
         ('离职', '离职'),
         ('未知', '未知'),
         ('待入职', '待入职'),
+        ('待离职', '待离职'),
     ]
     EMPLOYEETYPES = [
         ('无类型', '无类型'),
