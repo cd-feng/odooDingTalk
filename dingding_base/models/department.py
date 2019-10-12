@@ -36,11 +36,12 @@ class HrDepartment(models.Model):
 
     ding_id = fields.Char(string='钉钉Id', index=True)
     din_sy_state = fields.Boolean(string=u'钉钉同步标识', default=False, help="避免使用同步时,会执行创建、修改上传钉钉方法")
-    dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
+    dingding_type = fields.Selection(string=u'钉钉状态', selection=[(
+        'no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
     child_ids = fields.One2many(comodel_name='hr.department', inverse_name='parent_id', string=u'下级部门')
-    manager_user_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_department_managr_user_employee_rel', string=u'主管')
+    manager_user_ids = fields.Many2many(comodel_name='hr.employee',
+                                        relation='hr_department_managr_user_employee_rel', string=u'主管')
 
-    
     def create_ding_department(self):
         for res in self:
             if res.ding_id:
@@ -66,7 +67,6 @@ class HrDepartment(models.Model):
             except ReadTimeout:
                 raise UserError("上传至钉钉网络超时！")
 
-    
     def update_ding_department(self):
         for res in self:
             url = self.env['dingding.parameter'].search([('key', '=', 'department_update')]).value
@@ -93,12 +93,12 @@ class HrDepartment(models.Model):
                 raise UserError("上传至钉钉超时！")
 
     # 重写删除方法
-    
     def unlink(self):
         for res in self:
             ding_id = res.ding_id
             super(HrDepartment, self).unlink()
-            din_delete_department = self.env['ir.config_parameter'].sudo().get_param('dingding_base.din_delete_department')
+            din_delete_department = self.env['ir.config_parameter'].sudo(
+            ).get_param('dingding_base.din_delete_department')
             if din_delete_department:
                 self.delete_din_department(ding_id)
             return True
@@ -124,3 +124,21 @@ class HrDepartment(models.Model):
         for res in self:
             res.dingding_type = 'yes' if res.ding_id else 'no'
 
+    def update_ding_employee(self):
+        """
+        同步指定部门员工列表
+        :param s_avatar: 是否同步头像
+        :return:
+        """
+        din_client = self.env['dingding.api.tools'].get_client()
+        for department in self:
+            emp_offset = 0
+            emp_size = 100
+            while True:
+                logging.info(">>>开始获取%s部门的员工", department.name)
+                result_state = self.env['dingding.bash.data.synchronous'].get_dingding_employees(
+                    din_client, department, emp_offset, emp_size, s_avatar=None)
+                if result_state:
+                    emp_offset = emp_offset + 1
+                else:
+                    break

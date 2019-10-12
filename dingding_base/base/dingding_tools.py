@@ -121,6 +121,21 @@ class DingDingTools(models.TransientModel):
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     @api.model
+    def timestamp_to_local_date(self, timeNum):
+        """
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
+        :return:
+        """
+        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
+        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
+        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
+        return to_str_datetime
+
+    @api.model
     def datetime_to_stamp(self, date):
         """
         将时间转成13位时间戳
