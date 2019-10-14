@@ -185,6 +185,23 @@ class DingDingTools(models.TransientModel):
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
 
     @api.model
+    def get_userid_by_mobile(self, mobile):
+        """
+        根据手机号获取userid
+        :param mobile:
+        :return:
+        """
+        url, token = self.env['dingding.parameter'].sudo().get_parameter_value_and_token('getUseridByMobile')
+        data = {'mobile': mobile}
+        result = requests.get(url="{}{}".format(url, token), params=data, timeout=2)
+        logging.info(">>>根据手机号获取userid获取结果:{}".format(result.text))
+        result = json.loads(result.text)
+        if result.get('errcode') == 0:
+            return result.get('userid')
+        else:
+            logging.info(">>>根据手机号获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
+
+    @api.model
     def get_user_info_by_code(self, code):
         """
         用于在钉钉登录时根据返回的临时授权码获取用户信息
