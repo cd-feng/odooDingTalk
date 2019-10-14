@@ -17,7 +17,7 @@ models.BaseModel.fields_view_get = fields_view_get
 
 
 def modify_tree_view(obj, result):
-    fields_info = obj.fields_get(allfields=['dd_doc_state', 'dd_approval_state'])
+    fields_info = obj.fields_get(allfields=['dd_doc_state', 'dd_approval_state', 'dd_approval_result'])
     if 'dd_doc_state' in fields_info:
         dd_doc_state = fields_info['dd_doc_state']
         dd_doc_state.update({'view': {}})

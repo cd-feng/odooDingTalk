@@ -37,12 +37,14 @@ def setup_approval_state_fields(self):
         if len(res) != 0:
             add('dd_doc_state', fields.Char(string=u'审批描述'))
             add('dd_approval_state', fields.Selection(string=u'审批状态', selection=[('draft', '草稿'), ('approval', '审批中'), ('stop', '审批结束')],
-                                 default='draft'))
-            add('dd_approval_result', fields.Selection(string=u'审批结果', selection=[('agree', '同意'), ('refuse', '拒绝'), ('redirect', '转交')]))
+                                                      default='draft'))
+            add('dd_approval_result', fields.Selection(string=u'审批结果', selection=[('load', '等待'), ('agree', '同意'), ('refuse', '拒绝'), ('redirect', '转交')],
+                                                       default='load'))
             add('dd_process_instance', fields.Char(string='钉钉审批实例id'))
 
 
 Model._setup_base = _setup_base
+
 create_origin = models.BaseModel.create
 
 write_origin = models.BaseModel.write

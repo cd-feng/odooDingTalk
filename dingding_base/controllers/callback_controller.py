@@ -161,7 +161,7 @@ class DingDingCallBackManage(Home, http.Controller):
                             UPDATE {} SET 
                                 dd_approval_state='approval', 
                                 dd_doc_state='审批结束',
-                                dd_approval_result={} 
+                                dd_approval_result='{}' 
                             WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
                         dobys = "审批流程结束-时间:{}".format(now_time)
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
@@ -185,7 +185,7 @@ class DingDingCallBackManage(Home, http.Controller):
                     if oa_model.sudo().dd_approval_state != 'stop':
                         doc_text = "待{}审批".format(emp.name if emp else '')
                         request.env.cr.execute(
-                            "UPDATE {} SET dd_doc_state={} WHERE id={}".format(model_name, doc_text, oa_model[0].id))
+                            "UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, doc_text, oa_model[0].id))
                     dobys = "{}: 等待{}审批".format(now_time, emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
