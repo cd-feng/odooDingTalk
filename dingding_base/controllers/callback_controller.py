@@ -154,10 +154,10 @@ class DingDingCallBackManage(Home, http.Controller):
                     model_name = oa_model._name.replace('.', '_')
                     if msg.get('type') == 'start':
                         dobys = "审批流程开始-时间:{}".format(now_time)
-                        self.env.cr.execute("UPDATE {} SET dd_doc_state='审批流程开始' WHERE id={}".format(model_name, oa_model[0].id))
+                        request.env.cr.execute("UPDATE {} SET dd_doc_state='审批流程开始' WHERE id={}".format(model_name, oa_model[0].id))
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
                     else:
-                        self.env.cr.execute("""
+                        request.env.cr.execute("""
                             UPDATE {} SET 
                                 dd_approval_state='approval', 
                                 dd_doc_state='审批结束',
@@ -184,7 +184,7 @@ class DingDingCallBackManage(Home, http.Controller):
                 if msg.get('type') == 'start' and oa_model:
                     if oa_model.sudo().dd_approval_state != 'stop':
                         doc_text = "待{}审批".format(emp.name if emp else '')
-                        self.env.cr.execute(
+                        request.env.cr.execute(
                             "UPDATE {} SET dd_doc_state={} WHERE id={}".format(model_name, doc_text, oa_model[0].id))
                     dobys = "{}: 等待{}审批".format(now_time, emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
