@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="app_secret" placeholder="请输入AppSecret！"/>
+                                <field name="app_secret" placeholder="请输入AppSecret！" password="password"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="app_secret"/>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <field name="din_login_appsecret" placeholder="请输入钉钉登录appSecret！"/>
+                                <field name="din_login_appsecret" placeholder="请输入钉钉登录appSecret！" password="password"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="din_login_appsecret"/>
@@ -136,60 +136,6 @@
                                 <label for="din_delete_department"/>
                                 <div class="text-muted">
                                     删除部门时自动同步至钉钉
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h2>钉钉审批功能-模块选择</h2>
-                    <ul>
-                        <li>钉钉审批介绍</li>
-                        <li>在Odoo中不涉及审批流程的配置，请自行在钉钉后台配置相应单据的审批流程</li>
-                        <li>本功能是将Odoo的单据提送到钉钉上对应的单据，利用钉钉审批流程进行审批</li>
-                        <li>审批中的状态、评论信息利用会回调功能实时返回结果，需在回调管理中注册</li>
-                        <li>关于支持的单据以及在钉钉中单据的字段格式详见说明文档</li>
-                    </ul>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_oa_leave_attendance"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_oa_leave_attendance"/>
-                                <div class="text-muted">
-                                    钉钉审批-出勤休假
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_oa_personnel_admin"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_oa_personnel_admin"/>
-                                <div class="text-muted">
-                                    钉钉审批-行政人事
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_oa_odoo_form"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_oa_odoo_form"/>
-                                <div class="text-muted">
-                                    钉钉审批-支持系统单据(采购、销售)推送到钉钉进行审批
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_oa_stock"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_oa_stock"/>
-                                <div class="text-muted">
-                                    库存相关单据，安装成功后在钉钉审批中模块中进行提交审批
                                 </div>
                             </div>
                         </div>

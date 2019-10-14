@@ -41,8 +41,8 @@ class HrLeavesListTran(models.TransientModel):
     _description = "获取请假列表"
 
     user_ids = fields.Many2many('hr.employee', string=u'待查用户', required=True)
-    start_time = fields.Datetime(string=u'开始时间', required=True)
-    end_time = fields.Datetime(string=u'结束时间', required=True)
+    start_time = fields.Date(string=u'开始时间', required=True)
+    end_time = fields.Date(string=u'结束时间', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
 
     @api.multi
@@ -69,6 +69,7 @@ class HrLeavesListTran(models.TransientModel):
                     logging.info(">>>查询请假状态返回结果%s", result)
                     leave_status = result['leave_status']
                     if leave_status:
+                        leave_list = list()
                         for leave in leave_status.get('leave_status_v_o'):
                             leave_data = {
                                 'start_time_stamp': leave['start_time'],
@@ -82,13 +83,12 @@ class HrLeavesListTran(models.TransientModel):
                             leave_data.update({
                                 'user_id': employee.id if employee else False,
                             })
-                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id',
-                                                                                       '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
-                            hr_leaves = self.env['hr.leaves.list'].search(domain)
-                            if not hr_leaves:
-                                self.env['hr.leaves.list'].create(leave_data)
-                            else:
-                                hr_leaves.write(leave_data)
+                            leave_list.append(leave_data)
+                            # 删除已存在的请假记录
+                            domain = [('start_time_stamp', '=', leave['start_time']), ('user_id', '=', employee.id), ('end_time_stamp', '=', leave['end_time'])]
+                            self.env['hr.leaves.list'].search(domain).unlink()
+                        # 批量存储记录
+                        self.env['hr.leaves.list'].create(leave_list)
                     if not result['has_more']:
                         break
                     else:

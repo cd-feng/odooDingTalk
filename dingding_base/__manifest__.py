@@ -37,7 +37,7 @@
         'data/auth_oauth_data.xml',
         'data/dingding_callback_list.xml',
         'wizard/change_mobile.xml',
-        'views/menu.xml',
+        'views/assets.xml',
         'views/res_users_views.xml',
         'views/web_widget.xml',
         'views/dingding_parameter.xml',

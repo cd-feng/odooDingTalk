@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Copyright (C) 2019 SuXueFeng
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	Copyright (C) 2019 SuXueFeng License(GNU)
 -->
 <odoo>
 
@@ -20,17 +10,18 @@
         <field name="arch" type="xml">
             <tree edit="false" js_class="dingding_employee_roster_tree">
                 <field name="company_id"/>
-                <!-- <field name="emp_id"/> -->
+<!--                <field name="emp_id"/>-->
                 <field name="name"/>
-                <field name="ding_userid"/>
+                <field name="ding_userid" invisible="1"/>
                 <field name="jobNumber"/>
                 <field name="sexType"/>
-                <field name="dept"/>
+                <field name="dept" widget="many2many_tags"/>
+                <field name="mainDept"/>
                 <field name="email"/>
                 <field name="position"/>
                 <field name="mobile"/>
-                <field name="workPlace"/>
                 <field name="employeeStatus"/>
+                <field name="employeeType"/>
             </tree>
         </field>
     </record>
@@ -47,9 +38,9 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="emp_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" required="1"/>
+                            <field name="emp_id" required="1"/>
                         </h1>
                     </div>
                     <group string="简要信息">
@@ -67,7 +58,7 @@
                             <group>
                                 <group>
                                     <field name="name"/>
-                                    <field name="email"/>
+                                    <field name="email" widget="email"/>
                                     <field name="dept" widget="many2many_tags"/>
                                     <field name="mainDept"/>
                                     <field name="position"/>
@@ -158,15 +149,17 @@
                 <field name="mobile"/>
                 <field name="employeeStatus"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <filter string="在职" name="status_onjob" domain="[('employeeStatus','in',['正式','待离职','试用期'])]"/>
+                <filter string="在职" name="status_onjob" domain="[('employeeStatus','in',['正式','待离职','试用'])]"/>
                 <filter string="待入职" name="status_to_be_hired" domain="[('employeeStatus','=','待入职')]"/>
-                <filter string="试用期" name="status_on_trial" domain="[('employeeStatus','=','试用期')]"/>
+                <filter string="试用期" name="status_on_trial" domain="[('employeeStatus','=','试用')]"/>
                 <filter string="正式" name="status_official" domain="[('employeeStatus','=','正式')]"/>
                 <separator/>
                 <filter string="待离职" name="status_will_dimission" domain="[('employeeStatus','=','待离职')]"/>
                 <filter string="已离职" name="status_dimission" domain="['|',('employeeStatus','=','离职'),('employeeStatus','=',None)]"/>
                 <separator/>
                 <filter name="groupby_mainDept" string="主部门" context="{'group_by': 'mainDept'}"/>
+                <filter name="group_by_employee_status" string="员工状态" context="{'group_by': 'employeeStatus'}"/>
+                <filter name="group_by_employee_Type" string="员工类型" context="{'group_by': 'employeeType'}"/>
             </search>
         </field>
     </record>
@@ -175,47 +168,9 @@
         <field name="name">员工花名册</field>
         <field name="res_model">dingding.employee.roster</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_employee_status': True}</field>
     </record>
 
     <menuitem name="员工花名册" id="dingding_employee_roster_menu" parent="hrm_employee_manager_menu" sequence="1" action="dingding_employee_roster_action"/>
-
-    <record id="dingding_get_hrm_list_form_view" model="ir.ui.view">
-        <field name="name">花名册同步</field>
-        <field name="model">dingding.employee.roster.synchronous</field>
-        <field name="arch" type="xml">
-            <form>
-                <div class="alert alert-info" role="alert">
-                    <p>选择需要同步的钉钉智能人事花名册~~</p>
-                </div>
-                <div class="oe_title">
-                    <div name="options">
-                        <div>
-                            <field name="synchronous_onjob"/>
-                            <label for="synchronous_onjob"/>
-                        </div>
-                        <div>
-                            <field name="synchronous_dimission"/>
-                            <label for="synchronous_dimission"/>
-                        </div>
-                        <div attrs="{'invisible': [('synchronous_dimission', '!=', True)]}">
-                            <field name="synchronous_dimission_info"/>
-                            <label for="synchronous_dimission_info"/>
-                        </div>
-                    </div>
-                </div>
-                <footer>
-                    <button string="开始同步" name="start_synchronous_data" type="object" class="oe_highlight"/>
-                    <button string="取消" class="btn btn-default" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
-    <!-- <record id="dingding_get_hrm_list_action" model="ir.actions.act_window">
-        <field name="name">DingDing Get Hrm List</field>
-        <field name="res_model">dingding.employee.roster</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record> -->
 
 </odoo>

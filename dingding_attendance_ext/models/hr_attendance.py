@@ -52,7 +52,7 @@ class HrAttendance(models.Model):
         ('odoo', 'Odoo系统'),
     ]
     ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    workDate = fields.Datetime(string=u'工作日')
+    workDate = fields.Date(string=u'工作日')
     on_timeResult = fields.Selection(string=u'上班考勤结果', selection=TimeResult)
     off_timeResult = fields.Selection(string=u'下班考勤结果', selection=TimeResult)
     on_planId = fields.Char(string=u'上班班次ID')
@@ -72,14 +72,6 @@ class HrAttendance(models.Model):
         """
         return True
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建考勤记录
-        :return:
-        """
-        return super(HrAttendance, self).create(vals_list)
-
     @api.depends('on_timeResult', 'off_timeResult')
     @api.depends('on_sourceType', 'off_sourceType')
     @api.depends('check_in', 'check_out')
@@ -95,8 +87,8 @@ class HrAttendanceTransient(models.TransientModel):
     _name = 'hr.attendance.tran.v2'
     _description = '获取钉钉考勤信息'
 
-    start_date = fields.Datetime(string=u'开始日期', required=True)
-    stop_date = fields.Datetime(string=u'结束日期', required=True, default=str(fields.datetime.now()))
+    start_date = fields.Date(string=u'开始日期', required=True)
+    stop_date = fields.Date(string=u'结束日期', required=True, default=str(fields.datetime.now()))
     emp_ids = fields.Many2many(comodel_name='hr.employee', relation='hr_dingtalk_attendance_and_hr_employee_rel',
                                column1='attendance_id', column2='emp_id', string=u'员工', required=True)
     is_all_emp = fields.Boolean(string=u'全部员工')
@@ -121,10 +113,13 @@ class HrAttendanceTransient(models.TransientModel):
         :param user:
         :return:
         """
-        # 清除已下载的所有钉钉出勤记录（仅用于测试）
-        if self.is_clear_data:
-            self.clear_attendance()
+        # 清除已下载的相关出勤记录
+        old_att_info = self.env['hr.attendance'].sudo().search(
+            [('employee_id', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)])
+        if old_att_info:
+            old_att_info.sudo().unlink()
             logging.info(">>>记录已清除...")
+
         logging.info(">>>开始获取员工打卡信息...")
         user_list = list()
         for emp in self.emp_ids:
@@ -160,10 +155,7 @@ class HrAttendanceTransient(models.TransientModel):
                 'offset': offset,
                 'limit': limit,
             }
-            if self.is_check:
-                has_more = self.send_post_dingding(data)
-            else:
-                has_more = self.send_post_dingding_v2(data)
+            has_more = self.send_post_dingding_v2(data)
             logging.info(">>>是否还有剩余数据：{}".format(has_more))
             if not has_more:
                 break
@@ -184,7 +176,7 @@ class HrAttendanceTransient(models.TransientModel):
                 OffDuty_list = list()
                 for rec in result.get('recordresult'):
                     data = {
-                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                        'workDate': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                     }
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
@@ -222,16 +214,11 @@ class HrAttendanceTransient(models.TransientModel):
                     for offduty in OffDuty_list:
                         datetime_check_out = datetime.strptime(offduty.get('check_out'), "%Y-%m-%d %H:%M:%S")
                         datetime_check_in = datetime.strptime(onduty.get('check_in'), "%Y-%m-%d %H:%M:%S")
-                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
-                                offduty.get('employee_id') == onduty.get('employee_id') and \
-                                offduty.get('workDate') == onduty.get('workDate'):
-                            duty_tmp = dict(onduty, **offduty)
-                            duty_list.append(duty_tmp)
-                            on_planId_list.append(onduty.get('on_planId'))
-                        elif datetime_check_out > datetime_check_in and \
-                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                        if offduty.get('employee_id') == onduty.get('employee_id') and \
+                                onduty.get('on_planId') not in on_planId_list and \
                                 offduty.get('workDate') == onduty.get('workDate') and \
-                                onduty.get('on_planId') not in on_planId_list:
+                                (int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 or
+                                 datetime_check_out > datetime_check_in):
                             duty_tmp = dict(onduty, **offduty)
                             duty_list.append(duty_tmp)
                             on_planId_list.append(onduty.get('on_planId'))
@@ -284,7 +271,7 @@ class HrAttendanceTransient(models.TransientModel):
                 OffDuty_list = list()
                 for rec in result.get('recordresult'):
                     data = {
-                        'workDate': self.get_time_stamp(rec.get('workDate')),  # 工作日
+                        'workDate': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                     }
                     groups = self.env['dingding.simple.groups'].sudo().search(
                         [('group_id', '=', rec.get('groupId'))], limit=1)
@@ -292,20 +279,18 @@ class HrAttendanceTransient(models.TransientModel):
                     emp_id = self.env['hr.employee'].sudo().search([('ding_id', '=', rec.get('userId'))], limit=1)
                     data.update({'employee_id': emp_id[0].id if emp_id else False})
                     if rec.get('checkType') == 'OnDuty':
-                        data.update(
-                            {'check_in': self.get_time_stamp(rec.get('userCheckTime')),
-                             'on_planId': rec.get('planId'),
-                             'on_timeResult': rec.get('timeResult'),
-                             'on_sourceType': rec.get('sourceType')
-                             })
+                        data.update({'check_in': self.get_time_stamp(rec.get('userCheckTime')),
+                                     'on_planId': rec.get('planId'),
+                                     'on_timeResult': rec.get('timeResult'),
+                                     'on_sourceType': rec.get('sourceType')
+                                     })
                         OnDuty_list.append(data)
                     else:
-                        data.update({
-                            'check_out': self.get_time_stamp(rec.get('userCheckTime')),
-                            'off_planId': rec.get('planId'),
-                            'off_timeResult': rec.get('timeResult'),
-                            'off_sourceType': rec.get('sourceType')
-                        })
+                        data.update({'check_out': self.get_time_stamp(rec.get('userCheckTime')),
+                                     'off_planId': rec.get('planId'),
+                                     'off_timeResult': rec.get('timeResult'),
+                                     'off_sourceType': rec.get('sourceType')
+                                     })
                         OffDuty_list.append(data)
                 # 上班考勤结果列表与下班考勤结果列表按时间排序后合并
                 OnDuty_list.sort(key=lambda x: (x['employee_id'], x['check_in']))
@@ -318,16 +303,11 @@ class HrAttendanceTransient(models.TransientModel):
                     for offduty in OffDuty_list:
                         datetime_check_out = datetime.strptime(offduty.get('check_out'), "%Y-%m-%d %H:%M:%S")
                         datetime_check_in = datetime.strptime(onduty.get('check_in'), "%Y-%m-%d %H:%M:%S")
-                        if int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 and \
-                                offduty.get('employee_id') == onduty.get('employee_id') and \
-                                offduty.get('workDate') == onduty.get('workDate'):
-                            duty_tmp = dict(onduty, **offduty)
-                            duty_list.append(duty_tmp)
-                            on_planId_list.append(onduty.get('on_planId'))
-                        elif datetime_check_out > datetime_check_in and \
-                                offduty.get('employee_id') == onduty.get('employee_id') and \
+                        if offduty.get('employee_id') == onduty.get('employee_id') and \
+                                onduty.get('on_planId') not in on_planId_list and \
                                 offduty.get('workDate') == onduty.get('workDate') and \
-                                onduty.get('on_planId') not in on_planId_list:
+                                (int(offduty.get('off_planId')) == int(onduty.get('on_planId')) + 1 or
+                                 datetime_check_out > datetime_check_in):
                             duty_tmp = dict(onduty, **offduty)
                             duty_list.append(duty_tmp)
                             on_planId_list.append(onduty.get('on_planId'))
@@ -357,9 +337,24 @@ class HrAttendanceTransient(models.TransientModel):
         :return:
         """
         timeStamp = float(timeNum / 1000)
-        timeArray = time.localtime(timeStamp)
+        timeArray = time.gmtime(timeStamp)
         otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return otherStyleTime
+
+    @api.model
+    def timestamp_to_local_date(self, timeNum):
+        """
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
+        :return:
+        """
+        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
+        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
+        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
+        return to_str_datetime
 
     @api.multi
     def get_attendance_list_sync(self):
@@ -387,7 +382,7 @@ class HrAttendanceTransient(models.TransientModel):
                     'offset': offset,
                     'limit': limit,
                 }
-                has_more = self.send_post_dingding(data)
+                has_more = self.send_post_dingding_v2(data)
 
                 if not has_more:
                     break
@@ -395,7 +390,7 @@ class HrAttendanceTransient(models.TransientModel):
                     offset = offset + limit
         logging.info(">>>根据日期获取员工打卡信息结束...")
 
-    @api.model
+    @api.multi
     def clear_attendance(self):
         """
         清除已下载的所有钉钉出勤记录（仅用于测试，生产环境将删除该函数）

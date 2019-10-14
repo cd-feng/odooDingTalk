@@ -147,16 +147,22 @@ class DingDingCallBackManage(Home, http.Controller):
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         temp = request.env['dingding.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
         if temp:
-            appro = request.env['dingding.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
-            if appro:
-                oa_model = request.env[appro.oa_model_id.model].sudo().search(
-                    [('process_instance_id', '=', msg.get('processInstanceId'))])
+            approval = request.env['dingding.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+            if approval:
+                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))])
                 if oa_model:
+                    model_name = oa_model._name.replace('.', '_')
                     if msg.get('type') == 'start':
                         dobys = "审批流程开始-时间:{}".format(now_time)
+                        # request.env.cr.execute("UPDATE {} SET dd_doc_state='审批流程开始' WHERE id={}".format(model_name, oa_model[0].id))
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
                     else:
-                        oa_model.sudo().write({'oa_state': '02', 'oa_message': "审批结束", 'oa_result': msg.get('result')})
+                        request.env.cr.execute("""
+                            UPDATE {} SET 
+                                dd_approval_state='stop', 
+                                dd_doc_state='<span style="color:blue">审批结束</span>',
+                                dd_approval_result='{}' 
+                            WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
                         dobys = "审批流程结束-时间:{}".format(now_time)
                         oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True
@@ -165,25 +171,29 @@ class DingDingCallBackManage(Home, http.Controller):
         """
         钉钉回调-审批任务开始/结束/转交
         :param msg:
+
         :return:
         """
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        temp = request.env['dingding.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
+        temp = request.env['dingding.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))], limit=1)
         if temp:
-            appro = request.env['dingding.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
-            if appro:
-                oa_model = request.env[appro.oa_model_id.model].sudo().search([('process_instance_id', '=', msg.get('processInstanceId'))])
+            approval = request.env['dingding.approval.control'].sudo().search([('template_id', '=', temp.id)])
+            if approval:
+                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))])
                 emp = request.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('staffId'))])
+                model_name = oa_model._name.replace('.', '_')
                 if msg.get('type') == 'start' and oa_model:
-                    if oa_model.sudo().oa_state != '02':
-                        oa_model.sudo().write({'oa_message': "等待{}审批".format(emp.name if emp else '')})
+                    if oa_model.sudo().dd_approval_state != 'stop':
+                        doc_text = '待<span style="color:red">{}</span>审批'.format(emp.name if emp else '')
+                        request.env.cr.execute(
+                            "UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, doc_text, oa_model[0].id))
                     dobys = "{}: 等待{}审批".format(now_time, emp.name)
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'comment' and oa_model:
                     dobys = "{}: (评论消息)-评论人:{}; 评论内容:{}".format(now_time, emp.name, msg.get('content'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
                 elif msg.get('type') == 'finish' and oa_model:
-                    dobys = "{}: {}已审批; 审批结果:{}; 审批意见:{}".format(now_time, emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
+                    dobys = "{} {}：审批结果:{}，审批意见:{}".format(now_time, emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
                     oa_model.sudo().message_post(body=dobys, message_type='notification')
         return True
 

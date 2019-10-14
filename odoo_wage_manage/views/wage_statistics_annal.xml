@@ -112,6 +112,26 @@ limitations under the License.
     <menuitem id="wage_employee_attendance_annal_menu" name="员工考勤统计" parent="wage_statistics_menu" sequence="1"
               action="wage_employee_attendance_annal_action"/>
 
+    <record id="wage_holiday_tree_view" model="ir.ui.view">
+        <field name="name">法定节假日表</field>
+        <field name="model">legal.holiday</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" editable="top">
+                <field name="legal_holiday_name" required="1"/>
+                <field name="legal_holiday" required="1"/>
+                <field name="status" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wage_holiday_action">
+        <field name="name">法定节假日表</field>
+        <field name="res_model">legal.holiday</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wage_holiday_menu" name="节假日" parent="wage_istructure_setting_menu" sequence="5"
+              action="wage_holiday_action"/>
 
     <record id="wage_employee_performance_manage_tree_view" model="ir.ui.view">
         <field name="name">员工绩效统计</field>

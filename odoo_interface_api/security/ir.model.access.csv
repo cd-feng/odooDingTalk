@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api_alow_access,api.alow.access,model_api_alow_access,odoo_interface_api.manage_groups,1,1,1,1
+access_applet_home_images,applet.home.images,model_applet_home_images,odoo_interface_api.manage_groups,1,1,1,1
+access_applet_enterprise_dynamic_tag,applet.enterprise.dynamic.tag,model_applet_enterprise_dynamic_tag,odoo_interface_api.manage_groups,1,1,1,1
+access_applet_enterprise_dynamic,applet.enterprise.dynamic,model_applet_enterprise_dynamic,odoo_interface_api.manage_groups,1,1,1,1
+
