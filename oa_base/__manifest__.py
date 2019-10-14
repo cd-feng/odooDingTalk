@@ -15,14 +15,14 @@
 ###################################################################################
 {
     'name': "钉钉审批",
-    'summary': """基于钉钉审批功能将odoo指定单据推送到钉钉进行审批""",
-    'description': """基于钉钉审批功能将odoo指定单据推送到钉钉进行审批""",
+    'summary': """展示由用户提交的钉钉单据及审批结果概览""",
+    'description': """展示由用户提交的钉钉单据及审批结果概览""",
     'author': "SuXueFeng",
     'website': "http://sxfblog.com",
     'category': 'dingding',
     'version': '1.0',
-    'installable': True,
-    'application': False,
+    'installable': False,
+    'application': True,
     'auto_install': False,
     'depends': ['dingding_base'],
     'data': [
