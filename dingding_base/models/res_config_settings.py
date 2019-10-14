@@ -42,11 +42,7 @@ class ResConfigSettings(models.TransientModel):
     din_login_appid = fields.Char(string=u'钉钉登录appId')
     din_login_appsecret = fields.Char(string=u'钉钉登录appSecret')
     # 安装钉钉模块
-    module_oa_leave_attendance = fields.Boolean('钉钉审批-出勤休假')
-    module_oa_personnel_admin = fields.Boolean('钉钉审批-行政人事')
-    module_oa_odoo_form = fields.Boolean('钉钉审批-采购销售')
     module_dingding_attendance_ext = fields.Boolean('考勤拓展模块')
-    module_oa_stock = fields.Boolean('钉钉审批-库存')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
