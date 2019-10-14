@@ -159,8 +159,8 @@ class DingDingCallBackManage(Home, http.Controller):
                     else:
                         request.env.cr.execute("""
                             UPDATE {} SET 
-                                dd_approval_state='approval', 
-                                dd_doc_state='审批结束',
+                                dd_approval_state='stop', 
+                                dd_doc_state='<span style="color:blue">审批结束</span>',
                                 dd_approval_result='{}' 
                             WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
                         dobys = "审批流程结束-时间:{}".format(now_time)
@@ -171,6 +171,7 @@ class DingDingCallBackManage(Home, http.Controller):
         """
         钉钉回调-审批任务开始/结束/转交
         :param msg:
+
         :return:
         """
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -183,7 +184,7 @@ class DingDingCallBackManage(Home, http.Controller):
                 model_name = oa_model._name.replace('.', '_')
                 if msg.get('type') == 'start' and oa_model:
                     if oa_model.sudo().dd_approval_state != 'stop':
-                        doc_text = "待{}审批".format(emp.name if emp else '')
+                        doc_text = '待<span style="color:red">{}</span>审批'.format(emp.name if emp else '')
                         request.env.cr.execute(
                             "UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, doc_text, oa_model[0].id))
                     dobys = "{}: 等待{}审批".format(now_time, emp.name)
