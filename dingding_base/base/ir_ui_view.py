@@ -53,7 +53,7 @@ def modify_tree_view(obj, result):
         result['arch'] = etree.tostring(root)
     # 添加tree颜色区分
     root = etree.fromstring(result['arch'])
-    root.set('decoration-info', "dd_approval_state in ('approval', 'stop')")
+    root.set('decoration-info', "dd_approval_result == 'load'")
     root.set('decoration-warning', "dd_approval_result == 'redirect'")
     root.set('decoration-success', "dd_approval_result == 'agree'")
     root.set('decoration-danger', "dd_approval_result == 'refuse'")
