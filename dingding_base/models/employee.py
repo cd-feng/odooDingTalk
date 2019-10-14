@@ -26,14 +26,10 @@ import time
 import requests
 from requests import ReadTimeout
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
-try:
-    import base64
-except ImportError:
-    _logger.debug('Cannot `import base64`.')
 
 
 class HrEmployee(models.Model):
@@ -43,7 +39,7 @@ class HrEmployee(models.Model):
     din_unionid = fields.Char(string='钉钉唯一标识', index=True)
     din_jobnumber = fields.Char(string='钉钉员工工号')
     din_avatar = fields.Char(string='钉钉头像url')
-    din_hiredDate = fields.Datetime(string='入职时间')
+    din_hiredDate = fields.Date(string='入职时间')
     din_isAdmin = fields.Boolean("是管理员", default=False)
     din_isBoss = fields.Boolean("是老板", default=False)
     din_isLeader = fields.Boolean("是部门主管", default=False)
@@ -54,12 +50,14 @@ class HrEmployee(models.Model):
     din_isLeaderInDepts = fields.Char("是否为部门主管")
     din_sy_state = fields.Boolean(string=u'同步标识', default=False)
     work_status = fields.Selection(string=u'入职状态', selection=[('1', '待入职'), ('2', '在职'), ('3', '离职')], default='2')
-    office_status = fields.Selection(string=u'在职子状态', selection=[('2', '试用期'), ('3', '正式'), ('5', '待离职'), ('-1', '无状态')], default='-1')
-    dingding_type = fields.Selection(string=u'钉钉状态', selection=[('no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
-    department_ids = fields.Many2many('hr.department', 'employee_department_rel', 'emp_id', 'department_id', string='所属部门')
+    office_status = fields.Selection(string=u'在职子状态', selection=[(
+        '2', '试用期'), ('3', '正式'), ('5', '待离职'), ('-1', '无状态')], default='-1')
+    dingding_type = fields.Selection(string=u'钉钉状态', selection=[(
+        'no', '不存在'), ('yes', '存在')], compute="_compute_dingding_type")
+    department_ids = fields.Many2many('hr.department', 'employee_department_rel',
+                                      'emp_id', 'department_id', string='所属部门')
 
     # 上传员工到钉钉
-    
     def create_ding_employee(self):
         """
         上传员工到钉钉
@@ -87,6 +85,7 @@ class HrEmployee(models.Model):
                 'remark': res.notes if res.notes else '',  # 备注
                 'email': res.work_email if res.work_email else '',  # 邮箱
                 'jobnumber': res.din_jobnumber if res.din_jobnumber else '',  # 工号
+                'hiredDate': self.date_to_stamp(res.din_hiredDate) if res.din_hiredDate else '',  # 入职日期
             }
             headers = {'Content-Type': 'application/json'}
             try:
@@ -102,16 +101,7 @@ class HrEmployee(models.Model):
             except ReadTimeout:
                 raise UserError("上传员工至钉钉超时！")
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        支持批量新建员工记录
-        :return:
-        """
-        return super(HrEmployee, self).create(vals_list)
-
     # 修改员工同步到钉钉
-    
     def update_ding_employee(self):
         """
         修改员工时同步至钉钉
@@ -174,10 +164,10 @@ class HrEmployee(models.Model):
                 raise UserError("Sorry!，系统用户只能关联一个员工！")
             # 把员工的钉钉id和手机号写入到系统用户oauth
             if self.ding_id and self.mobile_phone:
-                self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(self.ding_id, self.mobile_phone, self.user_id.id))
+                self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(
+                    self.ding_id, self.mobile_phone, self.user_id.id))
 
     # 从钉钉手动获取用户详情
-    
     def update_employee_from_dingding(self):
         """
         从钉钉获取用户详情
@@ -214,10 +204,10 @@ class HrEmployee(models.Model):
                     # 支持显示国际手机号
                     if result.get('stateCode') != '86':
                         data.update({
-                            'mobile_phone':'+{}-{}'.format(result.get('stateCode'), result.get('mobile')),
+                            'mobile_phone': '+{}-{}'.format(result.get('stateCode'), result.get('mobile')),
                         })
                     if result.get('hiredDate'):
-                        date_str = self.get_time_stamp(result.get('hiredDate'))
+                        date_str = self.timestamp_to_local_date(result.get('hiredDate'))
                         data.update({
                             'din_hiredDate': date_str,
                         })
@@ -234,7 +224,6 @@ class HrEmployee(models.Model):
                 raise UserError("从钉钉同步员工详情超时！")
 
     # 重写删除方法
-    
     def unlink(self):
         for res in self:
             userid = res.ding_id
@@ -270,7 +259,6 @@ class HrEmployee(models.Model):
             res.dingding_type = 'yes' if res.ding_id else 'no'
 
     # 单独获取钉钉头像设为员工头像
-    
     def using_dingding_avatar(self):
         """
         单独获取钉钉头像设为员工头像
@@ -282,15 +270,19 @@ class HrEmployee(models.Model):
                 emp.sudo().write({'image_1920': binary_data})
 
     @api.model
-    def get_time_stamp(self, time_num):
+    def timestamp_to_local_date(self, timeNum):
         """
-        将13位时间戳转换为时间(utc=0)
-        :param time_num:
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
         :return:
         """
-        time_stamp = float(time_num / 1000) 
-        time_array = time.gmtime(time_stamp)
-        return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
+        to_second_timestamp = float(timeNum / 1000)
+        to_utc_datetime = time.gmtime(to_second_timestamp)
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)
+        to_datetime = fields.Datetime.from_string(to_str_datetime)
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime) 
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)
+        return to_str_datetime
 
     # 把时间转成时间戳形式
     @api.model

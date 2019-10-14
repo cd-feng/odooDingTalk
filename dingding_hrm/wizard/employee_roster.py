@@ -31,6 +31,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
                     self.get_dimission_list()
                 if res.synchronous_dimission_info:
                     self.get_dimission_info()
+                return self.env['ir.actions.act_window'].for_xml_id('dingding_hrm', 'dingding_employee_roster_action')
             except Exception as e:
                 raise UserError(e)
 

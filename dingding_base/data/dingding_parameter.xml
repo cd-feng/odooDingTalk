@@ -39,6 +39,12 @@
 			<field name="value">https://oapi.dingtalk.com/user/getUseridByUnionid?access_token=</field>
 		</record>
 
+		<record id="dingding_parameter_getUseridByMobile" model="dingding.parameter">
+			<field name="name">根据手机号获取userid</field>
+			<field name="key">getUseridByMobile</field>
+			<field name="value">https://oapi.dingtalk.com/user/get_by_mobile?access_token=</field>
+		</record>
+
 		<!--联系人api-->
 		<record id="dingding_parameter_get_listlabelgroups" model="dingding.parameter">
 			<field name="name">获取外部联系人标签列表</field>

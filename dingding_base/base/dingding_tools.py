@@ -121,6 +121,21 @@ class DingDingTools(models.TransientModel):
         return time.strftime("%Y-%m-%d %H:%M:%S", time_array)
 
     @api.model
+    def timestamp_to_local_date(self, timeNum):
+        """
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
+        :return:
+        """
+        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
+        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
+        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
+        return to_str_datetime
+
+    @api.model
     def datetime_to_stamp(self, date):
         """
         将时间转成13位时间戳
@@ -168,6 +183,23 @@ class DingDingTools(models.TransientModel):
             return result.get('userid')
         else:
             logging.info(">>>根据unionid获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
+
+    @api.model
+    def get_userid_by_mobile(self, mobile):
+        """
+        根据手机号获取userid
+        :param mobile:
+        :return:
+        """
+        url, token = self.env['dingding.parameter'].sudo().get_parameter_value_and_token('getUseridByMobile')
+        data = {'mobile': mobile}
+        result = requests.get(url="{}{}".format(url, token), params=data, timeout=2)
+        logging.info(">>>根据手机号获取userid获取结果:{}".format(result.text))
+        result = json.loads(result.text)
+        if result.get('errcode') == 0:
+            return result.get('userid')
+        else:
+            logging.info(">>>根据手机号获取userid获取结果失败，原因为:{}".format(result.get('errmsg')))
 
     @api.model
     def get_user_info_by_code(self, code):
