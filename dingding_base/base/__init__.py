@@ -18,4 +18,7 @@
 #
 ###################################################################################
 from . import dingding_tools
-from . import http
+from . import ir_http
+from . import ir_ui_view
+from . import odoo_model
+from . import dingding_approval

@@ -13,7 +13,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <odoo>
-    <data>
+        <template id="dingding_base_assets" name="dingding base template assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/dingding_base/static/src/js/approval_state.js" />
+            </xpath>
+        </template>
+
         <menuitem name="钉钉" id="dingding_base.main_menu" web_icon="dingding_base,static/description/icon.png"
                   groups="dingding_base.user_groups" sequence="15"/>
 
@@ -25,6 +30,4 @@
 
         <menuitem name="设置" id="dingding_base.configure_menu" parent="dingding_base.main_menu" sequence="100"/>
 
-
-    </data>
 </odoo>
