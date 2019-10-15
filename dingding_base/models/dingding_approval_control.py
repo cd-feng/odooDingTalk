@@ -34,7 +34,6 @@ class DingDingApprovalControl(models.Model):
         odoo_cls += [model.model for model in self.env['ir.model'].search([('transient', '=', True)])]  # 排除临时对象
         return [('model', 'not in', odoo_cls)]
 
-    active = fields.Boolean(string=u'Active', default=True)
     name = fields.Char('名称', required=1, track_visibility='onchange')
     oa_model_id = fields.Many2one('ir.model', string=u'Odoo模型', index=True, domain=_compute_domain, track_visibility='onchange', ondelete="set null")
     template_id = fields.Many2one('dingding.approval.template', string=u'钉钉审批模板', index=True, track_visibility='onchange', ondelete="set null")
