@@ -49,10 +49,11 @@ class DingDingApprovalControl(models.Model):
 
     def action_reload_current_page(self):
         """
-        配置审批后需要自动升级配置的模型对应的模块，然后刷新界面
+        配置审批后需要自动升级配置的模型对应的模块，然后刷新界面，专业版功能
         :return:
         """
         module_name = self.oa_model_id.modules
-        current_module = self.env['ir.module.module'].search([('name', '=', module_name)])
+        module_names = module_name.replace(' ', '').split(',')
+        current_module = self.env['ir.module.module'].search([('name', 'in', module_names)])
         current_module.button_immediate_upgrade()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
