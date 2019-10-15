@@ -2,6 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_dingding_parameter,dingding.parameter,model_dingding_parameter,base.group_user,1,1,1,1
 access_dingding_callback_list,dingding.callback.list,model_dingding_callback_list,dingding_base.manage_groups,1,1,1,1
 access_dingding_callback_manage,dingding.callback.manage,model_dingding_callback_manage,dingding_base.manage_groups,1,1,1,1
-access_dingding_approval_main,dingding.approval.main,model_dingding_approval_main,base.group_user,1,1,1,1
 access_dingding_approval_control,dingding.approval.control,model_dingding_approval_control,dingding_base.manage_groups,1,1,1,1
 access_dingding_approval_template,dingding.approval.template,model_dingding_approval_template,dingding_base.manage_groups,1,1,1,1
