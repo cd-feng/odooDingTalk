@@ -93,7 +93,8 @@ class DingDingMessageTemplate(models.Model):
     active = fields.Boolean(default=True)
     email = fields.Boolean(string='Email消息时触发')
     comment = fields.Boolean(string='备注消息时触发')
-    notification = fields.Boolean(string='讨论消息时触发')
+    notification = fields.Boolean(string='系统消息时触发')
+    user_notification = fields.Boolean(string='用户消息时触发')
     chat_id = fields.Many2one(comodel_name='dingding.chat', string='To群会话')
     send_to = fields.Selection(
         string='发送到', selection=SENDTOTYPE, default='chat', required=True)
