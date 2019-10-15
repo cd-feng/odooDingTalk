@@ -13,7 +13,6 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 ###################################################################################
 import logging
 from odoo import api, fields, models
@@ -37,10 +36,8 @@ class DingDingApprovalControl(models.Model):
 
     active = fields.Boolean(string=u'Active', default=True)
     name = fields.Char('名称', required=1, track_visibility='onchange')
-    oa_model_id = fields.Many2one('ir.model', string=u'Odoo模型', index=True, domain=_compute_domain,
-                                  track_visibility='onchange', ondelete="set null")
-    template_id = fields.Many2one('dingding.approval.template', string=u'钉钉审批模板', index=True,
-                                  track_visibility='onchange', ondelete="set null")
+    oa_model_id = fields.Many2one('ir.model', string=u'Odoo模型', index=True, domain=_compute_domain, track_visibility='onchange', ondelete="set null")
+    template_id = fields.Many2one('dingding.approval.template', string=u'钉钉审批模板', index=True, track_visibility='onchange', ondelete="set null")
     company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
 
     _sql_constraints = [
@@ -49,10 +46,11 @@ class DingDingApprovalControl(models.Model):
 
     def action_reload_current_page(self):
         """
-        配置审批后需要自动升级配置的模型对应的模块，然后刷新界面
+        配置审批后需要自动升级配置的模型对应的模块，然后刷新界面，专业版功能
         :return:
         """
         module_name = self.oa_model_id.modules
-        current_module = self.env['ir.module.module'].search([('name', '=', module_name)])
+        module_names = module_name.replace(' ', '').split(',')
+        current_module = self.env['ir.module.module'].search([('name', 'in', module_names)])
         current_module.button_immediate_upgrade()
         return {'type': 'ir.actions.client', 'tag': 'reload'}

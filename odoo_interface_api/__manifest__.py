@@ -12,7 +12,7 @@
     'version': '1.0',
     'depends': ['base', 'hr', 'mail', 'hr_attendance'],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'data': [
         'security/res_groups.xml',
