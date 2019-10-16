@@ -109,7 +109,8 @@ class DingDingSynchronous(models.TransientModel):
             if dept_manageusers:
                 depts = dept_manageusers.split("|")
                 manage_users = self.env['hr.employee'].search([('ding_id', 'in', depts)])
-                department.write({'manager_user_ids': [(6, 0, manage_users.ids)], 'manager_id': manage_users[0].id})
+                if manage_users:
+                    department.write({'manager_user_ids': [(6, 0, manage_users.ids)], 'manager_id': manage_users[0].id})
         return True
 
     @api.model

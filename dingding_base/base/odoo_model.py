@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+import uuid
+from psycopg2 import ProgrammingError
 from odoo import models, api, fields
 from odoo.exceptions import ValidationError
 
@@ -57,17 +59,24 @@ def write(self, vals):
 
 
 def dingding_approval_write(self, vals):
-    """非草稿单据不允许修改"""
+    """不允许单据修改"""
     res_state_obj = self.env.get('dingding.approval.control')
     if res_state_obj is None:
+        return
+    # 关注与取消关注处理
+    if len(vals.keys()) == 1 and list(vals.keys())[0] == 'message_follower_ids':
         return
     for res in self:
         model_id = self.env['ir.model'].sudo().search([('model', '=', res._name)]).id
         flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id)])
         if not flows:
             continue
-        if res.dd_approval_state != 'draft':
-            raise ValidationError(u'注意：非草稿的单据不能修改。 *_*!!')
+        if res.dd_approval_state == 'approval':
+            # 审批中
+            raise ValidationError(u'注意：单据审批中，不允许进行修改。 *_*!!')
+        elif res.dd_approval_state == 'stop':
+            # 审批完成
+            raise ValidationError(u'注意：单据已审批完成，不允许进行修改。 *_*!!')
     return
 
 

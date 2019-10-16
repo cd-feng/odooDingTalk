@@ -84,7 +84,7 @@ def modify_form_view(self, result):
     button.set('type', 'object')
     button.set('name', 'commit_dingding_approval')
     button.set('confirm', '确认提交到钉钉进行审批吗？')
-    button.set("attrs", "{'invisible': [('dd_approval_state', '!=', 'draft')]}")
+    button.set('modifiers', '{"invisible": [["dd_approval_state", "!=", "draft"]]}')
     header.insert(len(header.xpath('button')), button)
 
     # mail.chatter
