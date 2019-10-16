@@ -160,7 +160,7 @@ class DingDingCallBackManage(Home, http.Controller):
                         request.env.cr.execute("""
                             UPDATE {} SET 
                                 dd_approval_state='stop', 
-                                dd_doc_state='<span style="color:blue">审批结束</span>',
+                                dd_doc_state='审批结束',
                                 dd_approval_result='{}' 
                             WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
                         dobys = "审批流程结束-时间:{}".format(now_time)
