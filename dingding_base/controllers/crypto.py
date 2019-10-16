@@ -54,7 +54,7 @@ class DingTalkCrypto:
         l = len(content)
         output = io.StringIO()
         val = 32 - (l % 32)
-        for _ in xrange(val):
+        for _ in range(val):
             output.write('%02x' % val)
         return bytes(content, 'utf-8') + binascii.unhexlify(output.getvalue())
 
