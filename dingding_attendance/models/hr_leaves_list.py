@@ -28,6 +28,7 @@ class HrLeavesList(models.Model):
     _description = "请假列表"
 
     user_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
+    din_jobnumber = fields.Char(string='工号')
     duration_unit = fields.Selection(string=u'请假单位', selection=[('percent_day', '天'), ('percent_hour', '小时')])
     duration_percent = fields.Float(string=u'请假时长', digits=(10, 1))
     start_time = fields.Datetime(string=u'请假开始时间')
@@ -82,6 +83,7 @@ class HrLeavesListTran(models.TransientModel):
                             employee = self.env['hr.employee'].search([('ding_id', '=', leave['userid'])], limit=1)
                             leave_data.update({
                                 'user_id': employee.id if employee else False,
+                                'din_jobnumber': employee.din_jobnumber if employee else False,
                             })
                             leave_list.append(leave_data)
                             # 删除已存在的请假记录
