@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from lxml import etree
 from odoo import models, api
 
@@ -69,31 +71,41 @@ def modify_form_view(self, result):
         root.insert(0, header)
     else:
         header = headers[0]
-
     # 状态栏
-    state_field = etree.Element('field')
-    state_field.set('name', 'dd_approval_state')
-    state_field.set('widget', 'statusbar')
-    state_field.set('modifiers', '{"readonly": true}')
-    header.insert(len(header.xpath('button')), state_field)
-
+    dd_approval_state_field = etree.Element('field')
+    dd_approval_state_field.set('name', 'dd_approval_state')
+    dd_approval_state_field.set('widget', 'statusbar')
+    dd_approval_state_field.set('modifiers', '{"readonly": true}')
+    header.insert(len(header.xpath('button')), dd_approval_state_field)
+    # 审批结果
+    dd_approval_result_field = etree.Element('field')
+    dd_approval_result_field.set('name', 'dd_approval_result')
+    dd_approval_result_field.set('modifiers', '{"invisible": true}')
+    header.insert(len(header.xpath('button')), dd_approval_result_field)
     # 钉钉审批
-    button = etree.Element('button')
-    button.set('string', u'钉钉审批')
-    button.set('class', 'btn-primary')
-    button.set('type', 'object')
-    button.set('name', 'commit_dingding_approval')
-    button.set('confirm', '确认提交到钉钉进行审批吗？')
-    button.set('modifiers', '{"invisible": [["dd_approval_state", "!=", "draft"]]}')
-    header.insert(len(header.xpath('button')), button)
-
+    dd_submit_button = etree.Element('button')
+    dd_submit_button.set('string', u'钉钉审批')
+    dd_submit_button.set('class', 'btn-primary')
+    dd_submit_button.set('type', 'object')
+    dd_submit_button.set('name', 'commit_dingding_approval')
+    dd_submit_button.set('confirm', '确认提交到钉钉进行审批吗？')
+    dd_submit_button.set('modifiers', '{"invisible": [["dd_approval_state", "!=", "draft"]]}')
+    header.insert(len(header.xpath('button')), dd_submit_button)
+    # 重新提交
+    restart_button = etree.Element('button')
+    restart_button.set('string', u'重新提交')
+    restart_button.set('class', 'btn-primary')
+    restart_button.set('type', 'object')
+    restart_button.set('name', 'restart_commit_approval')
+    restart_button.set('confirm', '确认重新提交单据至钉钉进行审批吗？ *_*!')
+    restart_button.set('modifiers', '{"invisible": [["dd_approval_result", "not in", ["refuse"]]]}')
+    header.insert(len(header.xpath('button')), restart_button)
     # mail.chatter
     chatter = root.xpath('//div[@class="oe_chatter"]')
     if not chatter:
         form = root.xpath('//form')[0]
         chatter = etree.SubElement(form, 'div')
         chatter.set('class', 'oe_chatter')
-
     result['arch'] = etree.tostring(root)
 
 
