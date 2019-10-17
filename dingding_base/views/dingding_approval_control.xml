@@ -50,6 +50,7 @@
                             </group>
                             <group>
                                 <field name="company_id" required="1"/>
+                                <field name="ftype" help="OA单据审批完成后不可修改，业务单据可视情况修改" widget="radio" options="{'horizontal': true}"/>
                             </group>
                         </group>
                     </sheet>
