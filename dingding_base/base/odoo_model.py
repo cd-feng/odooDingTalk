@@ -76,7 +76,8 @@ def dingding_approval_write(self, vals):
             raise ValidationError(u'注意：单据审批中，不允许进行修改。 *_*!!')
         elif res.dd_approval_state == 'stop':
             # 审批完成
-            raise ValidationError(u'注意：单据已审批完成，不允许进行修改。 *_*!!')
+            if flows[0].ftype == 'oa':
+                raise ValidationError(u'注意：单据已审批完成，不允许进行修改。 *_*!!')
     return
 
 
