@@ -11,6 +11,7 @@
 > 在使用本模块前，请先将钉钉中你创建的E应用或微应用权限放开和配置出口ip，得到钉钉应用的 **AppKey**和 **AppSecret**， 至于钉钉后台中的配置请参照：>https://open-doc.dingtalk.com/microapp/bgb96b 
 
 
+
 ## 安装
 
 在安装模块前，务必先安装额外的三方库`（requirements.txt）`文件中，安装方式示例：
