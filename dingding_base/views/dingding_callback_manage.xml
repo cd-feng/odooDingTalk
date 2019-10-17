@@ -27,7 +27,7 @@
             <tree default_order="id desc">
                 <field name="value_type"/>
                 <field name="token"/>
-                <field name="aes_key"/>
+                <field name="aes_key" password="password" />
                 <field name="url"/>
                 <field name="state"/>
             </tree>
