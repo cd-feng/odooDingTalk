@@ -15,12 +15,13 @@
 <odoo>
 
     <record id="create_res_user_form_view" model="ir.ui.view">
-        <field name="name">创建员工登录账号</field>
+        <field name="name">创建用户</field>
         <field name="model">create.res.user</field>
         <field name="arch" type="xml">
             <form>
-                <p>员工工作Email必须不能为空，否则将选取不到！</p>
+                <p>账号类型：即根据选择的类型作为该用户的登录用户名.</p>
                 <group>
+                    <field name="ttype" widget="radio" options="{'horizontal': true}"/>
                     <field name="employee_ids" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>
                     <field name="groups" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>
                 </group>
@@ -33,15 +34,14 @@
     </record>
 
     <record id="create_res_user_action" model="ir.actions.act_window">
-        <field name="name">创建员工登录账号</field>
+        <field name="name">创建用户</field>
         <field name="res_model">create.res.user</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <menuitem name="辅助" id="other_base_menu" parent="dingding_base.bash_menu" sequence="10" groups="dingding_base.manage_groups"/>
 
-    <menuitem name="创建员工登录账号" id="create_res_user_menu" parent="other_base_menu" sequence="1"
+    <menuitem name="创建用户" id="create_res_user_menu" parent="dingding_base.bash_menu" sequence="10"
           action="create_res_user_action" groups="dingding_base.manage_groups"/>
 
 </odoo>

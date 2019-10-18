@@ -22,7 +22,7 @@
         <menuitem name="钉钉" id="dingding_base.main_menu" web_icon="dingding_base,static/description/icon.png"
                   groups="dingding_base.user_groups" sequence="15"/>
 
-        <menuitem name="主数据" id="bash_menu" parent="dingding_base.main_menu" sequence="1"/>
+        <menuitem name="数据" id="bash_menu" parent="dingding_base.main_menu" sequence="1"/>
 
         <menuitem name="消息" id="dingding_base.message_menu" parent="dingding_base.main_menu" sequence="10"/>
 
