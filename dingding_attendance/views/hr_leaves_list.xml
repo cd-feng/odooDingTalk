@@ -19,6 +19,7 @@
         <field name="model">hr.leaves.list</field>
         <field name="arch" type="xml">
             <tree default_order="id desc" editable="top" create="false" edit="false">
+                <field name="din_jobnumber"/>
                 <field name="user_id"/>
                 <field name="duration_percent"/>
                 <field name="duration_unit"/>
