@@ -30,10 +30,15 @@ _logger = logging.getLogger(__name__)
 
 class CreateResUser(models.TransientModel):
     _name = 'create.res.user'
-    _description = "创建员工系统账号"
+    _description = "创建用户"
 
-    employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=[('user_id', '=', False), ('work_email', '!=', '')])
-    groups = fields.Many2many(comodel_name='res.groups', string=u'指定权限')
+    @api.model
+    def _default_domain(self):
+        return [('user_id', '=', False)]
+
+    employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=_default_domain)
+    groups = fields.Many2many(comodel_name='res.groups', string=u'分配权限')
+    ttype = fields.Selection(string=u'账号类型', selection=[('phone', '工作手机'), ('email', '工作Email')], default='phone')
 
     @api.multi
     def create_user(self):
@@ -51,15 +56,25 @@ class CreateResUser(models.TransientModel):
         for employee in self.employee_ids:
             values = {
                 'active': True,
-                "login": employee.work_email,
-                "password": employee.work_email,
                 "name": employee.name,
                 'email': employee.work_email,
                 'groups_id': [(6, 0, group_ids)],
                 'ding_user_id': employee.ding_id,
                 'ding_user_phone': employee.mobile_phone,
             }
-            user = self.env['res.users'].sudo().search([('login', '=', employee.work_email)], limit=1)
+            user_login = False
+            if self.ttype == 'email':
+                if not employee.work_email:
+                    raise UserError("员工{}不存在工作邮箱，无法创建用户!".format(employee.name))
+                values.update({'login': employee.work_email, "password": employee.work_email})
+                user_login = employee.work_email
+            else:
+                if not employee.mobile_phone:
+                    raise UserError("员工{}办公手机为空，无法创建用户!".format(employee.name))
+                values.update({'login': employee.mobile_phone, "password": employee.mobile_phone})
+                user_login = employee.mobile_phone
+            domain = ['|', ('login', '=', employee.work_email), ('login', '=', employee.mobile_phone)]
+            user = self.env['res.users'].sudo().search(domain, limit=1)
             if user:
                 employee.sudo().write({'user_id': user.id})
             else:
@@ -70,10 +85,10 @@ class CreateResUser(models.TransientModel):
                 user = self.env['res.users'].sudo().create(values)
                 employee.sudo().write({'user_id': user.id})
                 # 首次自动创建odoo用户后发送钉钉工作通知给该员工
-                self.send_create_user_message(employee, employee.work_email)
+                self.send_create_user_message(employee, user_login)
 
     @api.model
-    def send_create_user_message(self, employee, user_name):
+    def send_create_user_message(self, employee, user_login):
         """
         发送钉钉工作通知给该员工
         :param employee:
@@ -84,7 +99,7 @@ class CreateResUser(models.TransientModel):
         msg = {
             'msgtype': 'text',
             'text': {
-                "content": "您好：{},欢迎加入Odoo，登陆名：{}，初始密码：{}，请及时修改初始密码！您也可以使用工作台中(OdooERP应用)进行免密登录，请知悉！*_*".format(employee.name, user_name, user_name),
+                "content": "您好：{},欢迎加入Odoo，登陆名：{}，初始密码：{}，请及时修改初始密码！您也可以使用工作台中(OdooERP应用)进行免密登录，请知悉！*_*".format(employee.name, user_login, user_login),
             }
         }
         return self.env['dingding.api.tools'].send_work_message(msg, employee.ding_id)
