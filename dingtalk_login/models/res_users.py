@@ -21,6 +21,9 @@ class ResUsers(models.Model):
     def auth_oauth(self, provider, params):
         if provider == 'dingtalk':
             user = self.search([('ding_user_id', '=', params)], limit=1)
+            if not user:
+                _logger.info(">>>员工关联的用户不正确或则未关联成功.")
+                return False
             return (self.env.cr.dbname, user[0].login, params)
         else:
             return super(ResUsers, self).auth_oauth(provider, params)

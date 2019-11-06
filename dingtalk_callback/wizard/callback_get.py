@@ -4,7 +4,7 @@
 ###################################################################################
 
 import logging
-from odoo import api, fields, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_base.tools import dingtalk_api
 
