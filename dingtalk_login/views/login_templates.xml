@@ -20,7 +20,7 @@
     <template id="dingtalk_login.auto_login_signup" name="DingTalk Auto Login View">
         <t t-call="web.login_layout">
             <form class="oe_signup_form">
-                <p class="alert alert-success" id="message-result">正在验证用户身份，请勿跳转页面...</p>
+                <p class="alert alert-success" id="message-result">正在验证用户身份，请勿跳转页面...<br/> 若页面长时间无反应（一般不超过30s），请尝试刷新页面.</p>
                 <p id="corp-id" style="display:none;">
                     <t t-esc="corp_id"/>
                 </p>
@@ -28,7 +28,7 @@
                     <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
                 </div>
             </form>
-            <script src="//g.alicdn.com/dingding/dingtalk-jsapi/2.0.57/dingtalk.open.js"></script>
+            <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
             <script>
                 window.onload = function() {
                     var ua = window.navigator.userAgent.toLowerCase();
@@ -38,7 +38,7 @@
                         var corpId = document.querySelector("#corp-id").innerHTML.trim();
                         // 调用钉钉JSAPI
                         dd.runtime.permission.requestAuthCode({
-                            corpId,
+                            corpId: corpId,
                             onSuccess: function(result) {
                                 $("#message-result").html("已获取身份，用户登录中...");
                                 window.location.replace("/web/dingtalk/auto/login/action?authCode=" + result.code);
