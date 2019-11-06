@@ -20,5 +20,6 @@
         'data/callback_list.xml',
 
         'views/callback_manage.xml',
+        'wizard/callback_get.xml',
     ],
 }
