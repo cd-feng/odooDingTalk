@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record id="dingtalk_hr_synchronous_form_view" model="ir.ui.view">
+        <field name="name">dingtalk.hr.synchronous.form</field>
+        <field name="model">dingtalk.hr.synchronous</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>选择需要同步的钉钉数据，同步数据量较大的话，等待时间可能会很久额~~</p>
+                </div>
+                <group>
+                    <group string="部门">
+                        <field name="department" widget="boolean_toggle"/>
+                        <field name="active_dept" widget="boolean_toggle" attrs="{'invisible' : [('department', '=', False)]}"/>
+                        <field name="synchronous_dept_detail" widget="boolean_toggle" attrs="{'invisible' : [('department', '=', False)]}"/>
+                        <field name="dept_repeat" attrs="{'invisible' : [('department', '=', False)]}" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                    <group string="员工">
+                        <field name="employee" widget="boolean_toggle"/>
+                        <field name="emp_repeat" attrs="{'invisible' : [('employee', '=', False)]}" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即同步" name="start_synchronous_data" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_hr_synchronous_action" model="ir.actions.act_window">
+        <field name="name">钉钉基础数据同步</field>
+        <field name="res_model">dingtalk.hr.synchronous</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="钉钉数据同步" id="dingtalk_hr_synchronous_menu" parent="hr.menu_hr_root" sequence="6"
+              action="dingtalk_hr_synchronous_action" groups="dingtalk_hr.manage_group"/>
+
+
+    <record id="dingtalk_synchronous_partner_form_view" model="ir.ui.view">
+        <field name="name">同步钉钉联系人</field>
+        <field name="model">dingtalk.hr.synchronous.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="partner_repeat" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即同步" name="start_synchronous_partner" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_synchronous_partner_action" model="ir.actions.act_window">
+        <field name="name">同步钉钉联系人</field>
+        <field name="res_model">dingtalk.hr.synchronous.partner</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="同步钉钉联系人" id="dingtalk_synchronous_partner_menu" parent="contacts.menu_contacts" sequence="2"
+              action="dingtalk_synchronous_partner_action" groups="dingtalk_hr.manage_group"/>
+
+</odoo>
