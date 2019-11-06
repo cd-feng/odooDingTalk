@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_stock_transfer_method,stock.transfer.method,model_stock_transfer_method,oa_base.user_groups,1,1,1,1
-access_stock_bank_channel,stock.bank.channel,model_stock_bank_channel,oa_base.user_groups,1,1,1,1
-access_stock_delivery_method,stock.delivery.method,model_stock_delivery_method,oa_base.user_groups,1,1,1,1
-access_oa_stock_requisition,oa.stock.requisition,model_oa_stock_requisition,oa_base.user_groups,1,1,1,1
-access_oa_stock_requisition_line,oa.stock.requisition.line,model_oa_stock_requisition_line,oa_base.user_groups,1,1,1,1
