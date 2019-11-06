@@ -1,0 +1,57 @@
+/**
+ * Style for progress bar
+ */
+
+#progress_frame {
+    width: 100%;
+    background-color: rgba(45, 53, 17, 0.38);
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#progress_bar {
+    width: 1%;
+    height: 10px;
+    background-color: #00EE00;
+    border-radius: 5px;
+}
+
+#progress_bar.o_progress_bar_timeout {
+    transition: background-color 50s ease;
+    background-color: yellow;
+}
+
+#progress_bar.o_progress_bar_timeout_destroy {
+    transition: background-color 50s ease;
+    background-color: red;
+}
+
+.progress_cancel_button {
+    font-size: 10px;
+}
+
+.o_progress_message {
+    color: white;
+}
+
+.o_cancel_message_systray {
+    color: gray;
+}
+
+.o_progress_message_systray {
+    color: gray;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 10px;
+}
+
+.oe_cancelling_message {
+    color: white;
+}
+
+.o_progress_systray {
+    margin: 10px;
+    width: 300px;
+    overflow: auto;
+}
