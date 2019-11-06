@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <!-- 考勤结果过滤规则 -->
+   <record id="dd_attendance_user_group_rule" model="ir.rule">
+        <field name="name">员工打卡结果列表:用户记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_result"/>
+        <field name="domain_force">[('emp_id.user_id', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dd_attendance_admin_group_rule" model="ir.rule">
+        <field name="name">员工打卡结果列表:管理员记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_result"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+    <!--  排班列表过滤规则  -->
+     <record id="dd_hr_dingding_plan_rule" model="ir.rule">
+        <field name="name">考勤排班列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_dingding_plan"/>
+        <field name="domain_force">['|', ('user_id.user_id', 'in', [user.id]),('user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dd_simple_groups_admin_rule" model="ir.rule">
+        <field name="name">考勤排班列表:所有记录规则</field>
+        <field name="model_id" ref="model_hr_dingding_plan"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+    <!--  请假列表过滤规则  -->
+     <record id="dd_hr_leaves_list_user_rule" model="ir.rule">
+        <field name="name">考勤请假列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_leaves_list"/>
+        <field name="domain_force">['|', ('user_id.user_id', 'in', [user.id]),('user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dd_hr_leaves_list_admin_rule" model="ir.rule">
+        <field name="name">考勤请假列表:所有记录规则</field>
+        <field name="model_id" ref="model_hr_leaves_list"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+        <!--  员工打卡详情过滤规则  -->
+     <record id="dd_hr_attendance_record_user_rule" model="ir.rule">
+        <field name="name">员工打卡详情:仅自己记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_record"/>
+        <field name="domain_force">['|', ('userId.user_id', 'in', [user.id]),('userId', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dd_hr_attendance_record_admin_rule" model="ir.rule">
+        <field name="name">员工打卡详情:所有记录规则</field>
+        <field name="model_id" ref="model_hr_attendance_record"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+    <!--  员工签到记录列表过滤规则  -->
+     <record id="dingding_signs_list_user_groups_rule" model="ir.rule">
+        <field name="name">签到记录列表:仅自己记录规则</field>
+        <field name="model_id" ref="model_dingding_signs_list"/>
+        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]),('emp_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
+    </record>
+
+    <record id="dingding_signs_list_manage_groups_rule" model="ir.rule">
+        <field name="name">签到记录列表:所有记录规则</field>
+        <field name="model_id" ref="model_dingding_signs_list"/>
+        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
+        <field name="domain_force">[]</field>
+    </record>
+
+
+</odoo>

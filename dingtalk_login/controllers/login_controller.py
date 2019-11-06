@@ -81,7 +81,7 @@ class OAuthController(Controller):
             except Exception as e:
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
-        return set_cookie_and_redirect(url)
+        return http.redirect_with_hash(url)
 
     def _do_err_redirect(self, errmsg):
         """
@@ -91,7 +91,6 @@ class OAuthController(Controller):
         """
         err_values = request.params.copy()
         err_values['error'] = _(errmsg)
-        http.redirect_with_hash('/web/login')
         return request.render('dingtalk_login.result_signup', err_values)
 
 
@@ -184,7 +183,8 @@ class DingTalkLogin(Home, http.Controller):
             except Exception as e:
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
-        return set_cookie_and_redirect(url)
+        # return set_cookie_and_redirect(url)
+        return http.redirect_with_hash(url)
 
     def _do_error_redirect(self, errmsg):
         """
@@ -194,6 +194,5 @@ class DingTalkLogin(Home, http.Controller):
         """
         err_values = request.params.copy()
         err_values['error'] = _(errmsg)
-        http.redirect_with_hash('/web/login')
         return request.render('dingtalk_login.result_signup', err_values)
 
