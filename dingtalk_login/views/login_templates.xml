@@ -4,31 +4,28 @@
 -->
 <odoo>
 
-    <template id="dingtalk_login.result_signup" name="DingTalk Login Signup">
+    <template id="dingtalk_login.result_signup" name="DingTalk Login Result Signup">
         <t t-call="web.login_layout">
-            <form class="oe_signup_form" role="form" method="post" t-if="not message">
+            <form class="oe_signup_form">
                 <p class="alert alert-danger" t-if="error">
                     <t t-raw="error"/>
                 </p>
-                <p class="alert alert-success" t-if="message">
-                    <t t-esc="message"/>
-                </p>
                 <div class="text-center oe_login_buttons pt-3">
-                    <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link btn-sm" role="button">使用账号登录</a>
+                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
                 </div>
             </form>
         </t>
     </template>
 
-    <template id="dingtalk_login.auto_login_signup">
+    <template id="dingtalk_login.auto_login_signup" name="DingTalk Auto Login View">
         <t t-call="web.login_layout">
-            <form class="oe_signup_form" method="post">
+            <form class="oe_signup_form">
                 <p class="alert alert-success" id="message-result">正在验证用户身份，请勿跳转页面...</p>
                 <p id="corp-id" style="display:none;">
                     <t t-esc="corp_id"/>
                 </p>
                 <div class="text-center oe_login_buttons pt-3">
-                    <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link btn-sm" role="button">使用账号登录</a>
+                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
                 </div>
             </form>
             <script src="//g.alicdn.com/dingding/dingtalk-jsapi/2.0.57/dingtalk.open.js"></script>

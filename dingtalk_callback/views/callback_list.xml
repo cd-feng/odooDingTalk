@@ -4,43 +4,37 @@
 -->
 <odoo>
 
-    <record id="dingtalk_callback_list_tree_view" model="ir.ui.view">
-        <field name="name">回调类型列表</field>
-        <field name="model">dingtalk.callback.list</field>
-        <field name="arch" type="xml">
-            <tree default_order="id desc" editable="top" create="false">
-                <field name="name"/>
-                <field name="value"/>
-                <field name="call_back_url"/>
-                <field name="value_type"/>
-            </tree>
-        </field>
-    </record>
+<!--    <record id="dingtalk_callback_list_tree_view" model="ir.ui.view">-->
+<!--        <field name="name">回调类型列表</field>-->
+<!--        <field name="model">dingtalk.callback.list</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree default_order="id desc" editable="top" create="false">-->
+<!--                <field name="name"/>-->
+<!--                <field name="value"/>-->
+<!--                <field name="call_back_url"/>-->
+<!--                <field name="value_type"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
 
-    <record model="ir.actions.act_window" id="dingtalk_callback_list_action">
-        <field name="name">回调类型列表</field>
-        <field name="res_model">dingtalk.callback.list</field>
-        <field name="view_mode">tree</field>
-        <field name="context">{'search_default_group_by_value_type': True}</field>
-    </record>
+<!--    <record model="ir.actions.act_window" id="dingtalk_callback_list_action">-->
+<!--        <field name="name">回调类型列表</field>-->
+<!--        <field name="res_model">dingtalk.callback.list</field>-->
+<!--        <field name="view_mode">tree</field>-->
+<!--        <field name="context">{'search_default_group_by_value_type': True}</field>-->
+<!--    </record>-->
 
-    <record model="ir.ui.view" id="dingtalk_callback_list_search">
-        <field name="model">dingtalk.callback.list</field>
-        <field name="arch" type="xml">
-            <search string="回调类型列表">
-                <field name="name"/>
-                <field name="value"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_by_value_type" string="事件分类" domain="[]" context="{'group_by':'value_type'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <menuitem name="钉钉回调" id="dindin_callbacke_main_menu" parent="dingtalk_base.main_menu"
-              sequence="16"/>
-
-    <menuitem id="dingtalk_callback_listmenu" name="回调类型列表" parent="dindin_callbacke_main_menu" sequence="1"
-              action="dingtalk_callback_list_action"/>
+<!--    <record model="ir.ui.view" id="dingtalk_callback_list_search">-->
+<!--        <field name="model">dingtalk.callback.list</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="回调类型列表">-->
+<!--                <field name="name"/>-->
+<!--                <field name="value"/>-->
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter name="group_by_value_type" string="事件分类" domain="[]" context="{'group_by':'value_type'}"/>-->
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
 
 </odoo>
