@@ -57,14 +57,14 @@
     </record>
 
     <record id="dingtalk_callback_manage_action" model="ir.actions.act_window">
-        <field name="name">钉钉回调</field>
+        <field name="name">钉钉回调列表</field>
         <field name="res_model">dingtalk.callback.manage</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem name="钉钉回调" id="dingtalk_callback_main_menu" parent="base.menu_administration" sequence="3"/>
 
-    <menuitem name="注册回调" id="dingtalk_callback_manage_menu" parent="dingtalk_callback_main_menu" sequence="5"
+    <menuitem name="钉钉回调列表" id="dingtalk_callback_manage_menu" parent="dingtalk_callback_main_menu" sequence="1"
               action="dingtalk_callback_manage_action"/>
 
 </odoo>

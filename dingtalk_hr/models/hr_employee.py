@@ -118,7 +118,7 @@ class HrEmployee(models.Model):
             'isHide': self.din_isHide,  # 隐藏手机号
         }
         if self.din_hiredDate:
-            hiredDate = dingtalk_api.date_to_stamp(self.din_hiredDate)
+            hiredDate = dingtalk_api.datetime_to_stamp(self.din_hiredDate)
             data.update({'hiredDate': hiredDate})
         try:
             result = client.user.update(data)
