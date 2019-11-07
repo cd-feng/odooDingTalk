@@ -66,9 +66,9 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.agent_id', self.agent_id)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.corp_id', self.corp_id)
-        self.env['ir.config_parameter'].sudo().set_param('dingding_base.app_key', self.app_key)
+        self.env['ir.config_parameter'].sudo().set_param('dingding_base.agent_id', str(self.agent_id).replace(' ', ''))
+        self.env['ir.config_parameter'].sudo().set_param('dingding_base.corp_id', str(self.corp_id).replace(' ', ''))
+        self.env['ir.config_parameter'].sudo().set_param('dingding_base.app_key', str(self.app_key).replace(' ', ''))
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.app_secret', self.app_secret)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.token', self.token)
         self.env['ir.config_parameter'].sudo().set_param('dingding_base.din_delete_extcontact', self.din_delete_extcontact)
