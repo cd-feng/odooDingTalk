@@ -22,7 +22,7 @@ class WebProgress(models.TransientModel):
     _description = "Operation Progress"
     _transient_max_hours = 0.5
     # time between progress reports (in seconds)
-    _progress_period_secs = 5
+    _progress_period_secs = 2
 
     msg = fields.Char("Message")
     code = fields.Char("Code", required=True, index=True)
