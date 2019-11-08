@@ -270,3 +270,61 @@ class DingTalkHrSynchronousPartner(models.TransientModel):
             raise UserError(e)
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+
+class CreateResUser(models.TransientModel):
+    _name = 'create.res.user'
+    _description = "创建用户"
+
+    @api.model
+    def _default_domain(self):
+        return [('user_id', '=', False)]
+
+    def _default_emps(self):
+        emps = self.env['hr.employee'].search([('ding_id', '!=', False), ('user_id', '=', False)])
+        return emps.ids
+
+    employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=_default_domain, default=_default_emps)
+    groups = fields.Many2many(comodel_name='res.groups', string=u'分配权限')
+    ttype = fields.Selection(string=u'账号类型', selection=[('phone', '工作手机'), ('email', '工作Email')], default='phone')
+
+    def create_user(self):
+        """
+        根据员工创建系统用户
+        :return:
+        """
+        self.ensure_one()
+        # 权限
+        group_user = self.env.ref('base.group_user')[0]
+        group_ids = list()
+        for group in self.groups:
+            group_ids.append(group.id)
+        group_ids.append(group_user.id)
+        for employee in self.employee_ids.with_progress(msg="正在创建系统用户"):
+            values = {
+                'active': True,
+                "name": employee.name,
+                'email': employee.work_email,
+                'groups_id': [(6, 0, group_ids)],
+                'ding_user_id': employee.ding_id,
+                'ding_user_phone': employee.mobile_phone,
+            }
+            if self.ttype == 'email':
+                if not employee.work_email:
+                    raise UserError("员工{}不存在工作邮箱，无法创建用户!".format(employee.name))
+                values.update({'login': employee.work_email, "password": employee.work_email})
+            else:
+                if not employee.mobile_phone:
+                    raise UserError("员工{}办公手机为空，无法创建用户!".format(employee.name))
+                values.update({'login': employee.mobile_phone, "password": employee.mobile_phone})
+            domain = ['|', ('login', '=', employee.work_email), ('login', '=', employee.mobile_phone)]
+            user = self.env['res.users'].sudo().search(domain, limit=1)
+            if user:
+                employee.sudo().write({'user_id': user.id})
+            else:
+                name_count = self.env['res.users'].sudo().search_count([('name', 'like', employee.name)])
+                if name_count > 0:
+                    user_name = employee.name + str(name_count + 1)
+                    values['name'] = user_name
+                user = self.env['res.users'].sudo().create(values)
+                employee.sudo().write({'user_id': user.id})
+        return {'type': 'ir.actions.act_window_close'}
