@@ -127,8 +127,9 @@ class GetDingTalkSimpleGroupsUsersTran(models.TransientModel):
                 if result.get('errcode') == 0:
                     result = result.get('result')
                     if result.get('result'):
-                        emp = self.env['hr.employee'].sudo().search([('ding_id', 'in', result.get('result'))])
-                        group.write({'emp_ids': [(6, 0, emp.ids)]})
+                        emps = self.env['hr.employee'].sudo().search([('ding_id', 'in', result.get('result'))])
+                        group.write({'emp_ids': [(6, 0, emps.ids)]})
+                        self._cr.commit()
                     if result.get('has_more'):
                         cursor = result.get('cursor')
                     else:

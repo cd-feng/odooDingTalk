@@ -82,6 +82,11 @@
             <form>
                 <p>账号类型：即根据选择的类型作为该用户的登录用户名.</p>
                 <group>
+                    <group>
+                        <field name="is_all"/>
+                    </group>
+                </group>
+                <group>
                     <field name="ttype" widget="radio" options="{'horizontal': true}"/>
                     <field name="employee_ids" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>
                     <field name="groups" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>

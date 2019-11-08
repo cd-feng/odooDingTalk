@@ -57,7 +57,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                 'ding_id': res.get('id'),
             }
             if dept_repeat == 'cover':
-                h_department = self.env['hr.department'].search([('name', '=', res.get('name'))])
+                h_department = self.env['hr.department'].search([('name', '=', res.get('name')), ('ding_id', '=', '')])
             else:
                 h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id'))])
             if h_department:
@@ -174,7 +174,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                     data.update({'department_ids': [(6, 0, dep_list.ids)]})
                 # 判断使用的方式，name查找或ding_id查找
                 if emp_repeat == 'cover':
-                    employee = self.env['hr.employee'].search([('name', '=', user.get('name'))])
+                    employee = self.env['hr.employee'].search([('name', '=', user.get('name')), ('ding_id', '=', '')])
                 else:
                     employee = self.env['hr.employee'].search([('ding_id', '=', user.get('userid'))])
                 if employee:
@@ -279,13 +279,19 @@ class CreateResUser(models.TransientModel):
     def _default_domain(self):
         return [('user_id', '=', False)]
 
-    def _default_emps(self):
-        emps = self.env['hr.employee'].search([('ding_id', '!=', False), ('user_id', '=', False)])
-        return emps.ids
-
-    employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=_default_domain, default=_default_emps)
+    is_all = fields.Boolean(string=u'全部员工?')
+    employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain=_default_domain)
     groups = fields.Many2many(comodel_name='res.groups', string=u'分配权限')
     ttype = fields.Selection(string=u'账号类型', selection=[('phone', '工作手机'), ('email', '工作Email')], default='phone')
+
+    @api.onchange('is_all')
+    def _onchange_is_all(self):
+        for res in self:
+            if res.is_all:
+                emps = self.env['hr.employee'].search([('ding_id', '!=', False), ('user_id', '=', False)])
+                self.employee_ids = [(6, 0, emps.ids)]
+            else:
+                self.employee_ids = [(2, 0, self.employee_ids.ids)]
 
     def create_user(self):
         """
@@ -319,12 +325,12 @@ class CreateResUser(models.TransientModel):
             domain = ['|', ('login', '=', employee.work_email), ('login', '=', employee.mobile_phone)]
             user = self.env['res.users'].sudo().search(domain, limit=1)
             if user:
-                employee.sudo().write({'user_id': user.id})
+                employee.write({'user_id': user.id})
             else:
                 name_count = self.env['res.users'].sudo().search_count([('name', 'like', employee.name)])
                 if name_count > 0:
                     user_name = employee.name + str(name_count + 1)
                     values['name'] = user_name
                 user = self.env['res.users'].sudo().create(values)
-                employee.sudo().write({'user_id': user.id})
+                employee.write({'user_id': user.id})
         return {'type': 'ir.actions.act_window_close'}

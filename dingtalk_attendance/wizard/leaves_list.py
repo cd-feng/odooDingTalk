@@ -47,8 +47,8 @@ class HrLeavesListTran(models.TransientModel):
                                 'end_time_stamp': leave['end_time'],
                                 'duration_unit': leave['duration_unit'],
                                 'duration_percent': leave['duration_percent'] / 100,
-                                'end_time': dingtalk_api.get_time_stamp(leave['end_time']),
-                                'start_time': dingtalk_api.get_time_stamp(leave['start_time']),
+                                'end_time': dingtalk_api.timestamp_to_local_date(leave['end_time']),
+                                'start_time': dingtalk_api.timestamp_to_local_date(leave['start_time']),
                             }
                             employee = self.env['hr.employee'].search([('ding_id', '=', leave['userid'])], limit=1)
                             leave_data.update({
