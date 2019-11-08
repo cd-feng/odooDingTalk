@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Copyright (C) 2019 SuXueFeng
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	Copyright (C) 2019 SuXueFeng GNU
 -->
 <odoo>
 
@@ -73,21 +63,5 @@
         <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
         <field name="domain_force">[]</field>
     </record>
-
-    <!--  员工签到记录列表过滤规则  -->
-     <record id="dingding_signs_list_user_groups_rule" model="ir.rule">
-        <field name="name">签到记录列表:仅自己记录规则</field>
-        <field name="model_id" ref="model_dingding_signs_list"/>
-        <field name="domain_force">['|', ('emp_id.user_id', 'in', [user.id]),('emp_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('dingding_base.user_groups'))]"/>
-    </record>
-
-    <record id="dingding_signs_list_manage_groups_rule" model="ir.rule">
-        <field name="name">签到记录列表:所有记录规则</field>
-        <field name="model_id" ref="model_dingding_signs_list"/>
-        <field name="groups" eval="[(4, ref('dingding_base.manage_groups'))]"/>
-        <field name="domain_force">[]</field>
-    </record>
-
 
 </odoo>

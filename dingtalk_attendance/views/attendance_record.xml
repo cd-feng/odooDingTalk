@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record id="hr_attendance_record_tree_view" model="ir.ui.view">
+        <field name="name">员工打卡详情</field>
+        <field name="model">hr.attendance.record</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" js_class="dingtalk_hr_attendance_record_tree">
+                <field name="userId"/>
+                <field name="groupId"/>
+                <field name="ding_plan_id"/>
+                <field name="workDate"/>
+                <field name="baseCheckTime"/>
+                <field name="userCheckTime"/>
+                <field name="checkType"/>
+                <field name="sourceType"/>
+                <field name="timeResult"/>
+                <field name="locationResult"/>
+                <field name="userAddress"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_attendance_record_form_view" model="ir.ui.view">
+        <field name="name">员工打卡详情</field>
+        <field name="model">hr.attendance.record</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="userId"/>
+                        <field name="groupId"/>
+                        <field name="workDate"/>
+                    </group>
+                    <notebook>
+                        <page string="打卡详情">
+                            <group>
+                                <group>
+                                    <field name="planId"/>
+                                    <field name="corpId"/>
+                                    <field name="approveId"/>
+                                    <field name="procInstId"/>
+                                    <field name="baseCheckTime"/>
+                                    <field name="userAddress"/>
+                                    <field name="userLongitude"/>
+                                    <field name="userLatitude"/>
+                                </group>
+                                <group>
+                                    <field name="checkType"/>
+                                    <field name="sourceType"/>
+                                    <field name="timeResult"/>
+                                    <field name="locationResult"/>
+                                    <field name="userCheckTime"/>
+                                    <field name="outsideRemark"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hr_attendance_record_action">
+        <field name="name">员工打卡详情</field>
+        <field name="res_model">hr.attendance.record</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="hr_attendance_record_menu" name="员工打卡详情" parent="dingtalk_attendance" sequence="3"
+              action="hr_attendance_record_action"/>
+
+</odoo>

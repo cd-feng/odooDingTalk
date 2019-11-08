@@ -13,13 +13,13 @@
                     <p>选择需要同步的钉钉数据，同步数据量较大的话，等待时间可能会很久额~~</p>
                 </div>
                 <group>
-                    <group string="部门">
+                    <group string="部门选项">
                         <field name="department" widget="boolean_toggle"/>
                         <field name="active_dept" widget="boolean_toggle" attrs="{'invisible' : [('department', '=', False)]}"/>
                         <field name="synchronous_dept_detail" widget="boolean_toggle" attrs="{'invisible' : [('department', '=', False)]}"/>
                         <field name="dept_repeat" attrs="{'invisible' : [('department', '=', False)]}" widget="radio" options="{'horizontal': true}"/>
                     </group>
-                    <group string="员工">
+                    <group string="员工选项">
                         <field name="employee" widget="boolean_toggle"/>
                         <field name="emp_repeat" attrs="{'invisible' : [('employee', '=', False)]}" widget="radio" options="{'horizontal': true}"/>
                     </group>
@@ -39,7 +39,10 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="钉钉数据同步" id="dingtalk_hr_synchronous_menu" parent="hr.menu_hr_root" sequence="6"
+    <menuitem name="钉钉数据同步" id="dingtalk_synchronous_menu" parent="hr.menu_hr_root" sequence="6"
+              groups="dingtalk_hr.manage_group"/>
+
+    <menuitem name="部门员工同步" id="dingtalk_emp_dept_menu" parent="dingtalk_synchronous_menu" sequence="1"
               action="dingtalk_hr_synchronous_action" groups="dingtalk_hr.manage_group"/>
 
 
@@ -70,5 +73,40 @@
 
     <menuitem name="同步钉钉联系人" id="dingtalk_synchronous_partner_menu" parent="contacts.menu_contacts" sequence="2"
               action="dingtalk_synchronous_partner_action" groups="dingtalk_hr.manage_group"/>
+
+
+     <record id="create_res_user_form_view" model="ir.ui.view">
+        <field name="name">创建用户</field>
+        <field name="model">create.res.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>账号类型：即根据选择的类型作为该用户的登录用户名.</p>
+                <group>
+                    <group>
+                        <field name="is_all"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="ttype" widget="radio" options="{'horizontal': true}"/>
+                    <field name="employee_ids" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>
+                    <field name="groups" widget="many2many_tags" options='{"no_open": True, "no_create": True}' required="1"/>
+                </group>
+                <footer>
+                    <button string="立即创建" name="create_user" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_res_user_action" model="ir.actions.act_window">
+        <field name="name">创建用户</field>
+        <field name="res_model">create.res.user</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+     <menuitem name="创建系统用户" id="create_res_user_menu" parent="dingtalk_synchronous_menu" sequence="2"
+              action="create_res_user_action" groups="dingtalk_hr.manage_group"/>
 
 </odoo>
