@@ -40,7 +40,17 @@ def _get_key_and_secrect():
     """
     app_key = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
     app_secret = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
-    return app_key.replace(' ', ''), app_secret.replace(' ', '')
+    if app_key and app_secret:
+        return app_key.replace(' ', ''), app_secret.replace(' ', '')
+    return '0000', '0000'
+
+
+def get_delete_is_synchronous():
+    """
+    判读是否删除odoo员工、部门、联系人时同时删除钉钉上的数据
+    :return:
+    """
+    return request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_delete_is_sy')
 
 
 def get_login_id():
@@ -49,7 +59,9 @@ def get_login_id():
     :return: login_id
     """
     login_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_login_id')
-    return login_id.replace(' ', '')
+    if login_id:
+        return login_id.replace(' ', '')
+    return '0000'
 
 
 def get_login_id_and_key():
@@ -58,7 +70,9 @@ def get_login_id_and_key():
     """
     login_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_login_id')
     dt_login_secret = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_login_secret')
-    return login_id.replace(' ', ''), dt_login_secret.replace(' ', '')
+    if login_id and dt_login_secret:
+        return login_id.replace(' ', ''), dt_login_secret.replace(' ', '')
+    return '0000', '0000'
 
 
 def get_dt_corp_id():
@@ -66,7 +80,9 @@ def get_dt_corp_id():
     :return: dt_corp_id
     """
     dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
-    return dt_corp_id.replace(' ', '')
+    if dt_corp_id:
+        return dt_corp_id.replace(' ', '')
+    return '0000'
 
 
 def timestamp_to_local_date(time_num):

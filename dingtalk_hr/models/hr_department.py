@@ -74,7 +74,7 @@ class HrDepartment(models.Model):
 
     def unlink(self):
         for res in self:
-            if res.ding_id:
+            if res.ding_id and dingtalk_api.get_delete_is_synchronous():
                 self._delete_dingtalk_department_by_id(res.ding_id)
             super(HrDepartment, self).unlink()
 
