@@ -37,12 +37,7 @@
 | dingding_hrm                | 钉钉智能人事模块（自动安装）                      |
 | dingding_message            | 钉钉消息模块（自动安装）                         |
 | oa_base                     | 钉钉审批基础模块（无需安装）                      |
-| odoo_interface_api          | 开放第三方接口（供小程序、其他应用调用使用）         |
-| odoo_performance_manage     | 绩效管理模块（可独立使用或配合钉钉使用、免费版）     |
-| odoo_wage_manage            | 薪酬管理模块（可独立使用或配合钉钉使用、免费版）     |
-| web_datepicker              | 第三方日期组件，日期格式为（xxxx年、xxxx年xx月）    |
 | web_progress                | 第三方进度条模块（自动依赖模块）                   |
-| web_sms_manage              | 集成腾讯云、阿里云短信服务，登录、发送短信           |
 
 ## 交流
 
