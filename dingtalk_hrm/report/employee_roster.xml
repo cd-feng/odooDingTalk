@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+    <report id="dingtalk_employee_roster_report_don"
+            model="dingtalk.employee.roster"
+            string="员工花名册"
+            report_type="qweb-pdf"
+            name="dingtalk_hrm.dingtalk_employee_roster_report"
+            file="dingtalk_hrm.dingtalk_employee_roster_report"
+            print_report_name="'%s-花名册' % (object.emp_id.name)"
+    />
+
+    <template id="dingtalk_employee_roster_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3><strong>员工: </strong><span t-field="o.name"/></h3><br/>
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td><strong>姓名</strong></td>
+                                <td><span t-field="o.name"/></td>
+                                <td><strong>邮箱</strong></td>
+                                <td><span t-field="o.email"/></td>
+                                <td><strong>部门</strong></td>
+                                <td><span t-field="o.dept.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>主部门</strong></td>
+                                <td><span t-field="o.mainDept.name"/></td>
+                                <td><strong>职位</strong></td>
+                                <td><span t-field="o.position.name"/></td>
+                                <td><strong>工号</strong></td>
+                                <td><span t-field="o.jobNumber"/></td>
+                            </tr>
+                        </table>
+                        <h4>详细</h4>
+                        <table class="table table-sm table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td><span>手机号</span></td>
+                                    <td><span t-field="o.mobile"/></td>
+                                    <td><span>分机号</span></td>
+                                    <td><span t-field="o.tel"/></td>
+                                    <td><span>办公地点</span></td>
+                                    <td><span t-field="o.workPlace"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>入职时间</span></td>
+                                    <td><span t-field="o.confirmJoinTime"/></td>
+                                    <td><span>员工类型</span></td>
+                                    <td><span t-field="o.employeeType"/></td>
+                                    <td><span>员工状态</span></td>
+                                    <td><span t-field="o.employeeStatus"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>试用期</span></td>
+                                    <td><span t-field="o.probationPeriodType"/></td>
+                                    <td><span>转正日期</span></td>
+                                    <td><span t-field="o.regularTime"/></td>
+                                    <td><span>岗位职级</span></td>
+                                    <td><span t-field="o.positionLevel"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>身份证姓名</span></td>
+                                    <td><span t-field="o.realName"/></td>
+                                    <td><span>证件号码</span></td>
+                                    <td><span t-field="o.certNo"/></td>
+                                    <td><span>出生日期</span></td>
+                                    <td><span t-field="o.birthTime"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>性别</span></td>
+                                    <td><span t-field="o.sexType"/></td>
+                                    <td><span>民族</span></td>
+                                    <td><span t-field="o.nationType"/></td>
+                                    <td><span>身份证地址</span></td>
+                                    <td><span t-field="o.certAddress"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>证件有效期</span></td>
+                                    <td><span t-field="o.certEndTime"/></td>
+                                    <td><span>婚姻状况</span></td>
+                                    <td><span t-field="o.marriage"/></td>
+                                    <td><span>首次参加工作时间</span></td>
+                                    <td><span t-field="o.joinWorkingTime"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>户籍类型</span></td>
+                                    <td><span t-field="o.residenceType"/></td>
+                                    <td><span>住址</span></td>
+                                    <td><span t-field="o.address"/></td>
+                                    <td><span>政治面貌</span></td>
+                                    <td><span t-field="o.politicalStatus"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>最高学历</span></td>
+                                    <td><span t-field="o.highestEdu"/></td>
+                                    <td><span>毕业院校</span></td>
+                                    <td><span t-field="o.graduateSchool"/></td>
+                                    <td><span>毕业时间</span></td>
+                                    <td><span t-field="o.graduationTime"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>所学专业</span></td>
+                                    <td><span t-field="o.major"/></td>
+                                    <td><span>合同公司</span></td>
+                                    <td><span t-field="o.contractCompanyName"/></td>
+                                    <td><span>合同类型</span></td>
+                                    <td><span t-field="o.contractType"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>现合同到期日</span></td>
+                                    <td><span t-field="o.nowContractEndTime"/></td>
+                                    <td><span>合同期限</span></td>
+                                    <td><span t-field="o.contractPeriodType"/></td>
+                                    <td><span>现合同起始日</span></td>
+                                    <td><span t-field="o.nowContractStartTime"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span>紧急联系人姓名</span></td>
+                                    <td><span t-field="o.urgentContactsName"/></td>
+                                    <td><span>联系人电话</span></td>
+                                    <td><span t-field="o.urgentContactsPhone"/></td>
+                                    <td><span>联系人关系</span></td>
+                                    <td><span t-field="o.urgentContactsRelation"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-left">
+                            <strong>备注：<span t-esc="o.remark"/></strong>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

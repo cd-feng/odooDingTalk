@@ -38,17 +38,15 @@ class HrAttendanceRecordTransient(models.TransientModel):
         # 清除旧数据
         self.env['hr.attendance.record'].sudo().search(
             [('userId', 'in', self.emp_ids.ids), ('workDate', '>=', self.start_date), ('workDate', '<=', self.stop_date)]).unlink()
-
         logging.info(">>>开始获取用户打卡详情...")
         user_list = list()
         for emp in self.emp_ids:
             if not emp.ding_id:
                 raise UserError("员工{}的钉钉ID无效,请输入其他员工或不填！".format(emp.name))
             user_list.append(emp.ding_id)
-        user_list = self.env['hr.attendance.tran'].list_cut(user_list, 50)
-        for user in user_list:
+        for user in dingtalk_api.list_cut(user_list, 50):
             logging.info(">>>开始获取{}员工段数据".format(user))
-            date_list = self.env['hr.attendance.tran'].day_cut(self.start_date, self.stop_date, 7)
+            date_list = dingtalk_api.day_cut(self.start_date, self.stop_date, 7)
             for date_arr in date_list:
                 self.start_pull_attendance_list(date_arr[0], date_arr[1], user)
         logging.info(">>>结束用户打卡详情...")
