@@ -7,6 +7,8 @@ import hashlib
 import hmac
 import logging
 import time
+from datetime import datetime, timedelta
+
 from odoo import fields, _
 from urllib.parse import quote
 
@@ -131,3 +133,40 @@ def get_user_info_by_code(code):
         'accessKey': login_id
     })
     return result
+
+
+def list_cut(mylist, limit):
+    """
+    列表分段
+    :param mylist:列表集
+    :param limit: 子列表元素限制数量
+    :return:
+    """
+    length = len(mylist)
+    cut_list = [mylist[i:i + limit] for i in range(0, length, limit)]
+    return cut_list
+
+
+def day_cut(begin_time, end_time, days):
+    """
+    日期分段
+    :param begin_date:开始日期
+    :param end_date:结束日期
+    :param days: 最大间隔时间
+    :return:
+    """
+    cut_day = []
+    begin_time = datetime.strptime(str(begin_time), "%Y-%m-%d")
+    end_time = datetime.strptime(str(end_time), "%Y-%m-%d")
+    delta = timedelta(days=days)
+    t1 = begin_time
+    while t1 <= end_time:
+        if end_time < t1 + delta:
+            t2 = end_time
+        else:
+            t2 = t1 + delta
+        t1_str = t1.strftime("%Y-%m-%d %H:%M:%S")
+        t2_str = t2.strftime("%Y-%m-%d %H:%M:%S")
+        cut_day.append([t1_str, t2_str])
+        t1 = t2 + timedelta(seconds=1)
+    return cut_day

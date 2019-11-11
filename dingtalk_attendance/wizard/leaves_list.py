@@ -30,7 +30,7 @@ class HrLeavesListTran(models.TransientModel):
         for emp in self.user_ids:
             if emp.ding_id:
                 user_list.append(emp.ding_id)
-        user_list = self.env['hr.attendance.tran'].sudo().list_cut(user_list, 100)
+        user_list = dingtalk_api.list_cut(user_list, 100)
         for u in user_list:
             user_str = ",".join(u)
             while True:

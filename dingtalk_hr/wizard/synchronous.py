@@ -57,7 +57,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                 'ding_id': res.get('id'),
             }
             if dept_repeat == 'cover':
-                h_department = self.env['hr.department'].search([('name', '=', res.get('name')), ('ding_id', '=', '')])
+                h_department = self.env['hr.department'].search([('name', '=', res.get('name')), ('ding_id', '=', res.get('id'))])
             else:
                 h_department = self.env['hr.department'].search([('ding_id', '=', res.get('id'))])
             if h_department:
@@ -89,7 +89,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                 if result.get('parentid') == 1:
                     dept_date['is_root'] = True
                 else:
-                    partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))])
+                    partner_department = self.env['hr.department'].search([('ding_id', '=', result.get('parentid'))], limit=1)
                     if partner_department:
                         dept_date['parent_id'] = partner_department.id
             if result.get('deptManagerUseridList'):
@@ -174,7 +174,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                     data.update({'department_ids': [(6, 0, dep_list.ids)]})
                 # 判断使用的方式，name查找或ding_id查找
                 if emp_repeat == 'cover':
-                    employee = self.env['hr.employee'].search([('name', '=', user.get('name')), ('ding_id', '=', '')])
+                    employee = self.env['hr.employee'].search([('name', '=', user.get('name')), ('ding_id', '=', user.get('userid'))])
                 else:
                     employee = self.env['hr.employee'].search([('ding_id', '=', user.get('userid'))])
                 if employee:

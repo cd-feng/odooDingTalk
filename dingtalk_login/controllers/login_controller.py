@@ -181,8 +181,10 @@ class DingTalkLogin(Home, http.Controller):
                 redirect.autocorrect_location_header = False
                 return redirect
             except Exception as e:
-                _logger.exception("OAuth2: %s" % str(e))
-                url = "/web/login?oauth_error=2"
+                err_str = "OAuth2: %s" % str(e)
+                _logger.exception(err_str)
+                # url = "/web/login?oauth_error=2"
+                return self._do_error_redirect(err_str)
         # return set_cookie_and_redirect(url)
         return http.redirect_with_hash(url)
 

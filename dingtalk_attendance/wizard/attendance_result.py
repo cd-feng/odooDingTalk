@@ -48,10 +48,10 @@ class HrAttendanceResultTransient(models.TransientModel):
             if not emp.ding_id:
                 raise UserError("员工{}的钉钉ID无效,请输入其他员工或不填！".format(emp.name))
             user_list.append(emp.ding_id)
-        user_list = self.list_cut(user_list, 50)
+        user_list = dingtalk_api.list_cut(user_list, 50)
         for u in user_list:
             logging.info(">>>开始获取{}员工段数据".format(u))
-            date_list = self.day_cut(self.start_date, self.stop_date, 7)
+            date_list = dingtalk_api.day_cut(self.start_date, self.stop_date, 7)
             for d in date_list:
                 self.start_pull_attendance_list(d[0], d[1], u)
         logging.info(">>>根据日期获取员工打卡信息结束...")
@@ -155,43 +155,6 @@ class HrAttendanceResultTransient(models.TransientModel):
         to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
         to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
         return to_str_datetime
-
-    @api.model
-    def list_cut(self, mylist, limit):
-        """
-        列表分段
-        :param mylist:列表集
-        :param limit: 子列表元素限制数量
-        :return:
-        """
-        length = len(mylist)
-        cut_list = [mylist[i:i + limit] for i in range(0, length, limit)]
-        return cut_list
-
-    @api.model
-    def day_cut(self, begin_time, end_time, days):
-        """
-        日期分段
-        :param begin_date:开始日期
-        :param end_date:结束日期
-        :param days: 最大间隔时间
-        :return:
-        """
-        cut_day = []
-        begin_time = datetime.strptime(str(begin_time), "%Y-%m-%d")
-        end_time = datetime.strptime(str(end_time), "%Y-%m-%d")
-        delta = timedelta(days=days)
-        t1 = begin_time
-        while t1 <= end_time:
-            if end_time < t1 + delta:
-                t2 = end_time
-            else:
-                t2 = t1 + delta
-            t1_str = t1.strftime("%Y-%m-%d %H:%M:%S")
-            t2_str = t2.strftime("%Y-%m-%d %H:%M:%S")
-            cut_day.append([t1_str, t2_str])
-            t1 = t2 + timedelta(seconds=1)
-        return cut_day
 
     def clear_attendance(self):
         """
