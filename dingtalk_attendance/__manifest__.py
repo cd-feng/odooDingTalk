@@ -15,8 +15,23 @@
     'application': True,
     'auto_install': False,
     'data': [
-        # 'data/auth_oauth_data.xml',
-        # 'views/res_users_views.xml',
-        # 'views/login_templates.xml',
+        'security/ir.model.access.csv',
+
+        'views/assets.xml',
+        'views/user_sign_list.xml',
+        'views/simplegroups.xml',
+        'views/dingtalk_plan.xml',
+        'views/attendance_record.xml',
+        'views/attendance_result.xml',
+        'views/leaves_list.xml',
+
+        'wizard/simplegroups.xml',
+        'wizard/dingtalk_plan.xml',
+        'wizard/attendance_record.xml',
+        'wizard/attendance_result.xml',
+        'wizard/leaves_list.xml',
     ],
+    'qweb': [
+        'static/xml/*.xml'
+    ]
 }

@@ -92,6 +92,20 @@
                             </div>
                         </div>
                     </div>
+                    <h2>自动动作</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="dt_delete_is_sy"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="dt_delete_is_sy"/>
+                                <div class="text-muted">
+                                   是否删除odoo员工、部门、联系人时自动同步到钉钉
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <h2>授权许可</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">

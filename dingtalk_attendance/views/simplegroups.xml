@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+    <record id="dingtalk_simple_groups_tree_view" model="ir.ui.view">
+        <field name="name">考勤组列表</field>
+        <field name="model">dingtalk.simple.groups</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" js_class="get_dingtalk_simple_groups_class">
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="s_type"/>
+                <field name="member_count"/>
+                <field name="manager_list"/>
+                <field name="dept_name_list"/>
+                <field name="emp_ids"/>
+                <field name="classes_list"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_simple_groups_form_view" model="ir.ui.view">
+        <field name="name">考勤组</field>
+        <field name="model">dingtalk.simple.groups</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="group_id"/>
+                            <field name="s_type"/>
+                            <field name="classes_list"/>
+                        </group>
+                        <group>
+                            <field name="member_count"/>
+                            <field name="manager_list" widget="many2many_tags"/>
+                            <field name="dept_name_list" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="考勤成员">
+                            <group>
+                                <field name="emp_ids" nolabel="1" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                        </page>
+                        <page string="考勤班次">
+                            <field name="list_ids" readonly="1">
+                                <tree editable="top" create="false" edit="false">
+                                    <field name="class_name"/>
+                                    <field name="class_id"/>
+                                    <field name="check_time"/>
+                                    <field name="end_time"/>
+                                    <field name="rest_begin_time"/>
+                                    <field name="rest_end_time"/>
+                                    <field name="permit_late_minutes"/>
+                                    <field name="work_time_minutes"/>
+                                    <field name="absenteeism_late_minutes"/>
+                                    <field name="serious_late_minutes"/>
+                                    <field name="is_off_duty_free_check"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingtalk_simple_groups_action">
+        <field name="name">考勤组</field>
+        <field name="res_model">dingtalk.simple.groups</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_s_type': True}</field>
+    </record>
+
+    <record model="ir.ui.view" id="dingtalk_simple_groups_search">
+        <field name="model">dingtalk.simple.groups</field>
+        <field name="arch" type="xml">
+            <search string="考勤组">
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="s_type"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_s_type" string="考勤类型" domain="[]"
+                            context="{'group_by':'s_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="dingtalk_simple_groups_menu" name="考勤组" parent="dingtalk_attendance" sequence="1"
+              action="dingtalk_simple_groups_action"/>
+
+    <record id="dingtalk_simple_groups_list_form_view" model="ir.ui.view">
+        <field name="name">班次列表</field>
+        <field name="model">dingtalk.simple.groups.list</field>
+        <field name="arch" type="xml">
+            <form string="班次列表">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="class_name"/>
+                            <field name="class_id"/>
+                            <field name="class_setting_id"/>
+                            <field name="rest_begin_time"/>
+                            <field name="check_time"/>
+                            <field name="permit_late_minutes"/>
+                        </group>
+                        <group>
+                            <field name="work_time_minutes"/>
+                            <field name="rest_end_time"/>
+                            <field name="end_time"/>
+                            <field name="absenteeism_late_minutes"/>
+                            <field name="serious_late_minutes"/>
+                            <field name="is_off_duty_free_check"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="打卡时间段">
+                            <field name="time_ids" readonly="1">
+                                <tree editable="top" create="false" edit="false">
+                                    <field name="across"/>
+                                    <field name="check_time"/>
+                                    <field name="check_type"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -96,3 +96,9 @@ class ResPartner(models.Model):
         except Exception as e:
             raise UserError(e)
         return
+
+    def unlink(self):
+        for res in self:
+            if res.ding_id and dingtalk_api.get_delete_is_synchronous():
+                self._delete_dingtalk_partner_by_id(res.ding_id)
+            return super(ResPartner, self).unlink()
