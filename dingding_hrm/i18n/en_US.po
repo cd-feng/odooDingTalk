@@ -1,0 +1,1112 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* dingding_hrm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e-20191022\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-07 17:34+0000\n"
+"PO-Revision-Date: 2019-11-07 17:34+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>住址</span>"
+msgstr "<span>address</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>入职时间</span>"
+msgstr "<span>Inauguration time</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>出生日期</span>"
+msgstr "<span>date of birth</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>分机号</span>"
+msgstr "<span>Extension Number</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>办公地点</span>"
+msgstr "<span>Office location</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>合同公司</span>"
+msgstr "<span>Contract company</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>合同期限</span>"
+msgstr "<span>Contract term</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>合同类型</span>"
+msgstr "<span>Contract type</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>员工状态</span>"
+msgstr "<span>EmployeeStatus</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>员工类型</span>"
+msgstr "<span>Employee type</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>婚姻状况</span>"
+msgstr "<span>Marriage status</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>岗位职级</span>"
+msgstr "<span>Job title</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>性别</span>"
+msgstr "<span>Gender</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>户籍类型</span>"
+msgstr "<span>Household registration type</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>所学专业</span>"
+msgstr "<span>Learned profession</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>手机号</span>"
+msgstr "<span>Mobile Number</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>政治面貌</span>"
+msgstr "<span>Political belief</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>最高学历</span>"
+msgstr "<span>Highest education</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>毕业时间</span>"
+msgstr "<span>Graduation time</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>毕业院校</span>"
+msgstr "<span>Graduated school</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>民族</span>"
+msgstr "<span>Ethnic</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>现合同到期日</span>"
+msgstr "<span>Contract expiration date</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>现合同起始日</span>"
+msgstr "<span>Current contract start date</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>紧急联系人姓名</span>"
+msgstr "<span>Emergency Contact</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>联系人关系</span>"
+msgstr "<span>Relationship with contacts</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>联系人电话</span>"
+msgstr "<span>contact number</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>证件号码</span>"
+msgstr "<span>identification number</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>证件有效期</span>"
+msgstr "<span>ID card validity time</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>试用期</span>"
+msgstr "<span>Trial time</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>身份证地址</span>"
+msgstr "<span>ID card address</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>身份证姓名</span>"
+msgstr "<span>ID card name</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>转正日期</span>"
+msgstr "<span>Official date</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<span>首次参加工作时间</span>"
+msgstr "<span>First working time</span>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>主部门</strong>"
+msgstr "<strong>Main department</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>员工: </strong>"
+msgstr "<strong>Staff:</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>姓名</strong>"
+msgstr "<strong>full name</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>工号</strong>"
+msgstr "<strong>Job ID</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>职位</strong>"
+msgstr "<strong>Position</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>邮箱</strong>"
+msgstr "<strong>Email</strong>"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "<strong>部门</strong>"
+msgstr "<strong>department</strong>"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__active
+msgid "Active"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "Archived"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__create_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__create_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__create_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__create_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__create_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__create_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__display_name
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__display_name
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_report__display_name
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__display_name
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__id
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__id
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_report__id
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__id
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__id
+msgid "ID"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee____last_update
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster____last_update
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_report____last_update
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous____last_update
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__write_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__write_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__write_uid
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__write_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__write_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__write_date
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__image_medium
+msgid "Medium-sized photo"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__image_small
+msgid "Small-sized photo"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_kanban
+msgid "TEL:"
+msgstr ""
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_add_employee__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "严重违法违纪"
+msgstr "Serious Violation Of Law"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__personalHf
+msgid "个人公积金账号"
+msgstr "Personal Provident Fund Account"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "个人原因"
+msgstr "Personal Reasons"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__personalSi
+msgid "个人社保账号"
+msgstr "Personal Social Security System Account"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__mainDept
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "主部门"
+msgstr "Main Department"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_employee_changes_menu
+msgid "人事异动"
+msgstr "Personnel Change"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__address
+msgid "住址"
+msgstr "Address"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_employee_attendance_menu
+msgid "假勤管理"
+msgstr "Attendance Management"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__confirmJoinTime
+msgid "入职时间"
+msgstr "Entry Time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__dept_id
+msgid "入职部门"
+msgstr "Entry Department"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "全职"
+msgstr "Full Time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__company_id
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__company_id
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "公司"
+msgstr "Company"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "其他"
+msgstr "Others"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_form
+msgid "其他信息"
+msgstr "Other Info"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "兼职"
+msgstr "Part Time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__birthTime
+msgid "出生日期"
+msgstr "Date Of Birth"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__tel
+msgid "分机号"
+msgstr "Ext"
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,state:0
+msgid "创建"
+msgstr "Create"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "创建人"
+msgstr "Create By"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "创建时间"
+msgstr "Create Time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__workPlace
+msgid "办公地点"
+msgstr "Office Location"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "劳务外包"
+msgstr "Labor Outsourcing"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "劳务派遣"
+msgstr "Labor Dispatch"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "协议解除"
+msgstr "Agreement Cancellation"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "发展原因"
+msgstr "Development Reasons"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_get_hrm_list_form_view
+msgid "取消"
+msgstr "Cancel"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__contractCompanyName
+msgid "合同公司"
+msgstr "Contract Company"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "合同到期不续签"
+msgstr "Contract Expired Without Renewal"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__contractPeriodType
+msgid "合同期限"
+msgstr "Contract Period"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__contractType
+msgid "合同类型"
+msgstr "Type Of Contract"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__synchronous_onjob
+msgid "同步在职花名册"
+msgstr "Synchronous In-Service Roster"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__synchronous_dimission_info
+msgid "同步离职信息"
+msgstr "Synchronized Resignation Information"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster_synchronous__synchronous_dimission
+msgid "同步离职花名册"
+msgstr "Synchronized Resignation Roster"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_employee_census_register__name
+msgid "名称"
+msgstr "Name"
+
+#. module: dingding_hrm
+#: sql_constraint:employee.census.register:0
+msgid "名称不允许重复!"
+msgstr "The Name Is Not Allowed To Repeat!"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__emp_id
+msgid "员工"
+msgstr "Employee"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "员工名称."
+msgstr "Emoloyee Name."
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__name
+msgid "员工姓名"
+msgstr "Emoloyee Name"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "员工已入职"
+msgstr "Employees Have Joined"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__employeeStatus
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "员工状态"
+msgstr "Employee Status"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_employee_manager_menu
+msgid "员工管理"
+msgstr "Employee manage"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__employeeType
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "员工类型"
+msgstr "Employee Type"
+
+#. module: dingding_hrm
+#: model:ir.actions.act_window,name:dingding_hrm.dingding_employee_roster_action
+#: model:ir.actions.report,name:dingding_hrm.dingding_employee_roster_report_don
+#: model:ir.model,name:dingding_hrm.model_dingding_employee_roster
+#: model:ir.ui.menu,name:dingding_hrm.dingding_employee_roster_menu
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "员工花名册"
+msgstr "Employee Roster"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "在职"
+msgstr "In-service"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__remark
+msgid "备注"
+msgstr "Remarks"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "备注："
+msgstr "Remarks："
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__name
+msgid "姓名"
+msgstr "Name"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__marriage
+msgid "婚姻状况"
+msgstr "Marital status"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__childBirthDate
+msgid "子女出生日期"
+msgstr "Child's date of birth"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__childName
+msgid "子女姓名"
+msgstr "Child Name"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__childSex
+msgid "子女性别"
+msgstr "Child gender"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "实习"
+msgstr "Practice"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "家庭原因"
+msgstr "Family reason"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__positionLevel
+msgid "岗位职级"
+msgstr "Post rank"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__jobNumber
+msgid "工号"
+msgstr "Job Number"
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,state:0
+msgid "已入职"
+msgstr "Already employed"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "已离职"
+msgstr "Leaved"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_get_hrm_list_form_view
+msgid "开始同步"
+msgstr "Start syncing"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__accountBank
+msgid "开户行"
+msgstr "Bank"
+
+#. module: dingding_hrm
+#: selection:dingding.add.employee,state:0
+#: selection:dingding.employee.roster,pre_status:0
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "待入职"
+msgstr "Waiting for entry"
+
+#. module: dingding_hrm
+#: model:ir.actions.act_window,name:dingding_hrm.dingding_add_employee_action
+#: model:ir.model,name:dingding_hrm.model_dingding_add_employee
+#: model:ir.ui.menu,name:dingding_hrm.dingding_add_employee_menu
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "待入职员工"
+msgstr "Waiting staff"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "待离职"
+msgstr "Waiting to leave"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__sexType
+msgid "性别"
+msgstr "Gender"
+
+#. module: dingding_hrm
+#: model:ir.model,name:dingding_hrm.model_employee_census_register
+msgid "户籍性质"
+msgstr "Household registration"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__residenceType
+msgid "户籍类型"
+msgstr "Household registration type"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__major
+msgid "所学专业"
+msgstr "Major"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__mobile
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__mobile
+msgid "手机号"
+msgstr "Phone number"
+
+#. module: dingding_hrm
+#: model:ir.model,name:dingding_hrm.model_dingding_employee_roster_report
+msgid "打印花名册"
+msgstr "Print roster"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_add_employee_form_view
+msgid "推送到钉钉"
+msgstr "Push to Dingtalk"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__politicalStatus
+msgid "政治面貌"
+msgstr "Political status"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "无法胜任工作"
+msgstr "Unable to work"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeStatus:0
+msgid "无状态"
+msgstr "No status"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "无类型"
+msgstr "No type"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.zhineng_hrm_menu
+msgid "智能人事"
+msgstr "Intelligent personnel"
+
+#. module: dingding_hrm
+#: model:ir.model,name:dingding_hrm.model_dingding_employee_roster_synchronous
+msgid "智能人事花名册同步"
+msgstr "Smart personnel roster synchronization"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__last_work_day
+msgid "最后工作时间"
+msgstr "Last working time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__highestEdu
+msgid "最高学历"
+msgstr "Highest education"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__active
+msgid "有效"
+msgstr "Effective"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__haveChild
+msgid "有无子女"
+msgstr "With or without children"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeStatus:0
+#: selection:dingding.employee.roster,pre_status:0
+msgid "未知"
+msgstr "Unknown"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeStatus:0
+#: selection:dingding.employee.roster,pre_status:0
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "正式"
+msgstr "Formal"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__graduationTime
+msgid "毕业时间"
+msgstr "Graduation time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__graduateSchool
+msgid "毕业院校"
+msgstr "Graduated school"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__nationType
+msgid "民族"
+msgstr "Nationality"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__image
+msgid "照片"
+msgstr "Photo"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__state
+msgid "状态"
+msgstr "Status"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__nowContractEndTime
+msgid "现合同到期日"
+msgstr "Contract expiration date"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__nowContractStartTime
+msgid "现合同起始日"
+msgstr "Current contract start date"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeStatus:0
+msgid "离职"
+msgstr "Leave"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__handover_userid
+msgid "离职交接人"
+msgstr "Resignation transfer"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_form
+msgid "离职信息"
+msgstr "Resignation information"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__pre_status
+msgid "离职前工作状态"
+msgstr "Pre-service status"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__reason_memo
+msgid "离职原因"
+msgstr "Reason for leaving"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__reason_type
+msgid "离职类型"
+msgstr "Separation type"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_form
+msgid "简要信息"
+msgstr "Brief information"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__urgentContactsName
+msgid "紧急联系人姓名"
+msgstr "Emergency contact name"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,reason_type:0
+msgid "经济性裁员"
+msgstr "Economic layoffs"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_employee_analysis_menu
+msgid "统计分析"
+msgstr "Statistical Analysis"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__contractRenewCount
+msgid "续签次数"
+msgstr "Number of renewals"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_employee_attendance_analysis_menu
+msgid "考勤统计"
+msgstr "Attendance statistics"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__position
+msgid "职位"
+msgstr "Position"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__urgentContactsRelation
+msgid "联系人关系"
+msgstr "Contact relationship"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__urgentContactsPhone
+msgid "联系人电话"
+msgstr "Contact number"
+
+#. module: dingding_hrm
+#: model:ir.ui.menu,name:dingding_hrm.hrm_setting_menu
+msgid "设置"
+msgstr "Setting"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__certNo
+msgid "证件号码"
+msgstr "ID number"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__certEndTime
+msgid "证件有效期"
+msgstr "Validity of documents"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeStatus:0
+msgid "试用"
+msgstr "Probation"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,pre_status:0
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__probationPeriodType
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_search
+msgid "试用期"
+msgstr "Probation period"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_report
+msgid "详细"
+msgstr "Detailed"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_employee_roster_form
+msgid "详细信息"
+msgstr "Detailed information"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__certAddress
+msgid "身份证地址"
+msgstr "ID card address"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__realName
+msgid "身份证姓名"
+msgstr "ID card name"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__regularTime
+msgid "转正日期"
+msgstr "Positive date"
+
+#. module: dingding_hrm
+#: code:addons/dingding_hrm/models/add_employee.py:122
+#, python-format
+msgid "还没有做这个功能"
+msgstr "Have not done this function yet"
+
+#. module: dingding_hrm
+#: selection:dingding.employee.roster,employeeType:0
+msgid "退休返聘"
+msgstr "Retirement"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,help:dingding_hrm.field_dingding_employee_roster__dept
+msgid "适应钉钉多部门"
+msgstr "Adapt to Dingtalk and multiple departments"
+
+#. module: dingding_hrm
+#: model_terms:ir.ui.view,arch_db:dingding_hrm.dingding_get_hrm_list_form_view
+msgid "选择需要同步的钉钉智能人事花名册~~"
+msgstr "Choose the Dingtalk smart person roster that needs to be synchronized~~"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__email
+msgid "邮箱"
+msgstr "Mailbox"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__dept
+msgid "部门"
+msgstr "Department"
+
+#. module: dingding_hrm
+#: code:addons/dingding_hrm/models/hrm_dimission_list.py:107
+#, python-format
+msgid "钉钉仅支持批量查询小于等于50个员工!"
+msgstr "Studs only support batch queries of less than or equal to 50 employees!"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__user_id
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__ding_userid
+msgid "钉钉用户Id"
+msgstr "Dingtalk user Id"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__bankAccountNo
+msgid "银行卡号"
+msgstr "Bankcard Number"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_add_employee__pre_entry_time
+msgid "预期入职时间"
+msgstr "Expected entry time"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__joinWorkingTime
+msgid "首次参加工作时间"
+msgstr "First time to work"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__firstContractEndTime
+msgid "首次合同到期日"
+msgstr "First contract due date"
+
+#. module: dingding_hrm
+#: model:ir.model.fields,field_description:dingding_hrm.field_dingding_employee_roster__firstContractStartTime
+msgid "首次合同起始日"
+msgstr "First contract start date"
+

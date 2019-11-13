@@ -1,0 +1,274 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* dingding_attendance_ext
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e-20191022\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-07 17:31+0000\n"
+"PO-Revision-Date: 2019-11-07 17:31+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dingding_attendance_ext
+#: model:ir.model,name:dingding_attendance_ext.model_hr_attendance
+msgid "Attendance"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "IBeacon"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__id
+msgid "ID"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "Odoo系统"
+msgstr "Odoo System"
+
+#. module: dingding_attendance_ext
+#: model:ir.actions.act_window,name:dingding_attendance_ext.hr_attendance_tran_action_v2
+msgid "hr.attendance.tran.action"
+msgstr ""
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__on_approveId
+msgid "上班打卡关联的审批id"
+msgstr "Approval ID Associated With The Punch Card"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__on_procInstId
+msgid "上班打卡审批实例id"
+msgstr "Punch Card Verify Instance ID"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__on_sourceType
+msgid "上班数据来源"
+msgstr "Work Data Source"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__on_planId
+msgid "上班班次ID"
+msgstr "Work Shift ID"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__on_timeResult
+msgid "上班考勤结果"
+msgstr "Working Attendance Results"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__off_approveId
+msgid "下班打卡关联的审批id"
+msgstr "Approval ID Associated With The off Work Punch"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__off_procInstId
+msgid "下班打卡审批实例id"
+msgstr "Off Work Punch Verify Instance ID"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__off_sourceType
+msgid "下班数据来源"
+msgstr "Off Work Data Source"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__off_planId
+msgid "下班班次ID"
+msgstr "Off Work Shift ID"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__off_timeResult
+msgid "下班考勤结果"
+msgstr "Off Work Attendance Results"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "严重迟到"
+msgstr "Seriously Late"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__is_all_emp
+msgid "全部员工"
+msgstr "All Employees"
+
+#. module: dingding_attendance_ext
+#: model_terms:ir.ui.view,arch_db:dingding_attendance_ext.hr_attendance_tran_v2_form_view
+msgid "取消"
+msgstr "Cancel"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__emp_ids
+msgid "员工"
+msgstr "Employee"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "审批系统"
+msgstr "Verify system"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__workDate
+msgid "工作日"
+msgstr "Working day"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__start_date
+msgid "开始日期"
+msgstr "Start date"
+
+#. module: dingding_attendance_ext
+#: model_terms:ir.ui.view,arch_db:dingding_attendance_ext.hr_attendance_tran_v2_form_view
+msgid "开始获取"
+msgstr "Start getting"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,help:dingding_attendance_ext.field_hr_attendance__off_approveId
+#: model:ir.model.fields,help:dingding_attendance_ext.field_hr_attendance__on_approveId
+msgid "当该字段非空时，表示打卡记录与请假、加班等审批有关"
+msgstr "When the field is not empty, it means that the punch record is related to the approval of leave, overtime, etc"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,help:dingding_attendance_ext.field_hr_attendance__off_procInstId
+#: model:ir.model.fields,help:dingding_attendance_ext.field_hr_attendance__on_procInstId
+msgid "当该字段非空时，表示打卡记录与请假、加班等审批有关。可以与获取单个审批数据配合使用"
+msgstr "When the field is not empty, it indicates that the punch record is related to the approval of leave, overtime, etc. Can be used with single approval data"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "手机打卡"
+msgstr "Mobile phone punch"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "早退"
+msgstr "Leave early"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "旷工迟到"
+msgstr "Completion late"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "未打卡"
+msgstr "Has not punch"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "正常"
+msgstr "Normal"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__is_clear_data
+msgid "清空考勤记录"
+msgstr "Clear attendance record"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "管理员改签"
+msgstr "Administrator change"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__stop_date
+msgid "结束日期"
+msgstr "End date"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "考勤机"
+msgstr "Attendance machine"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "考勤系统"
+msgstr "Attendance System"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "自动打卡"
+msgstr "Automatic attendance"
+
+#. module: dingding_attendance_ext
+#: model_terms:ir.ui.view,arch_db:dingding_attendance_ext.hr_attendance_tran_v2_form_view
+msgid "获取的员工..."
+msgstr "Obtained employees..."
+
+#. module: dingding_attendance_ext
+#: model:ir.model,name:dingding_attendance_ext.model_hr_attendance_tran_v2
+msgid "获取钉钉考勤信息"
+msgstr "Get nail attendance information"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_timeResult:0
+#: selection:hr.attendance,on_timeResult:0
+msgid "迟到"
+msgstr "Be late"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance_tran_v2__is_check
+msgid "重复记录校验"
+msgstr "Repeat record check"
+
+#. module: dingding_attendance_ext
+#: selection:hr.attendance,off_sourceType:0
+#: selection:hr.attendance,on_sourceType:0
+msgid "钉钉考勤机"
+msgstr "Dingtalk attendance machine"
+
+#. module: dingding_attendance_ext
+#: model:ir.model.fields,field_description:dingding_attendance_ext.field_hr_attendance__ding_group_id
+msgid "钉钉考勤组"
+msgstr "Dingtalk attendance group"
+
