@@ -3,7 +3,6 @@
 #    Copyright (C) 2019 SuXueFeng GNU
 ###################################################################################
 import logging
-import time
 from odoo.exceptions import UserError
 from odoo import models, fields, api
 from odoo.addons.dingtalk_base.tools import dingtalk_api
@@ -70,7 +69,7 @@ class HrAttendanceRecordTransient(models.TransientModel):
                     'userId': emp_data[rec['userId']],
                     'record_id': rec.get('id'),
                     'ding_plan_id': rec.get('planId'),
-                    'workDate': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
+                    'workDate': dingtalk_api.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                     'corpId': rec.get('corpId'),  # 企业ID
                     'checkType': rec.get('checkType'),  # 考勤类型
                     'sourceType': rec.get('sourceType'),
@@ -78,8 +77,8 @@ class HrAttendanceRecordTransient(models.TransientModel):
                     'locationResult': rec.get('locationResult'),
                     'approveId': rec.get('approveId'),
                     'procInstId': rec.get('procInstId'),
-                    'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')) if "baseCheckTime" in rec else False,
-                    'userCheckTime': self.get_time_stamp(rec.get('userCheckTime')),
+                    'baseCheckTime': dingtalk_api.timestamp_to_local_date(rec.get('baseCheckTime')) if "baseCheckTime" in rec else False,
+                    'userCheckTime': dingtalk_api.timestamp_to_local_date(rec.get('userCheckTime')),
                     'userAddress': rec.get('userAddress'),
                     'userLongitude': rec.get('userLongitude'),
                     'userLatitude': rec.get('userLatitude'),
@@ -98,33 +97,6 @@ class HrAttendanceRecordTransient(models.TransientModel):
         except Exception as e:
             raise UserError(e)
         return True
-
-    @api.model
-    def get_time_stamp(self, timeNum):
-        """
-        将13位时间戳转换为时间
-        :param timeNum:
-        :return:
-        """
-        timeStamp = float(timeNum / 1000)
-        timeArray = time.gmtime(timeStamp)
-        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-        return otherStyleTime
-
-    @api.model
-    def timestamp_to_local_date(self, timeNum):
-        """
-        将13位毫秒时间戳转换为本地日期(+8h)
-        :param timeNum:
-        :return:
-        """
-        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
-        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
-        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
-        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
-        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
-        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
-        return to_str_datetime
 
     @api.model
     def get_pull_odoo_dict(self):
