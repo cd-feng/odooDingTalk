@@ -137,7 +137,7 @@
         <field name="name">员工打卡结果</field>
         <field name="res_model">hr.attendance.result</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'search_default_groupby_timeResult': True}</field>
+        <field name="context">{'search_default_domain_3month': True, 'search_default_groupby_timeResult': True}</field>
     </record>
 
     <record model="ir.ui.view" id="hr_attendance_result_search">
@@ -154,15 +154,19 @@
                 <field name="timeResult"/>
                 <field name="sourceType"/>
                 <separator/>
+                <filter string="我的考勤" name="myattendances" domain="[('emp_id.user_id.id', '=', uid)]"/>
+                <filter name="check_in_filter" string="签到日期" date="check_in"/>
+                <separator/>
+                <filter string="近三月内" name="domain_3month" domain="[('check_in','&lt;=', datetime.date.today().strftime('%Y-%m-%d')),('check_in','&gt;=', (context_today()-relativedelta(months=3)).strftime('%Y-%m-%d') )]"/>
+                <filter string="近半年内" name="domain_6month" domain="[('check_in','&lt;=', datetime.date.today().strftime('%Y-%m-%d')),('check_in','&gt;=', (context_today()-relativedelta(months=6)).strftime('%Y-%m-%d') )]"/>
+                <filter string="当前年内" name="domain_year" domain="[('check_in','&lt;=', time.strftime('%%Y-12-31')),('check_in','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <separator/>
+                <filter name="groupby_check_in" string="打卡时间" context="{'group_by': 'check_in'}"/>
                 <filter name="groupby_timeResult" string="考勤结果" context="{'group_by': 'timeResult'}"/>
                 <filter name="groupby_locationResult" string="考勤位置" context="{'group_by': 'locationResult'}"/>
                 <filter name="groupby_sourceType" string="数据来源" context="{'group_by': 'sourceType'}"/>
-                <separator/>
                 <filter name="groupby_emp_id" string="员工" context="{'group_by': 'emp_id'}"/>
                 <filter name="groupby_check_type" string="考勤类型" context="{'group_by': 'check_type'}"/>
-                <filter string="我的考勤" name="myattendances" domain="[('emp_id.user_id.id', '=', uid)]"/>
-                <separator/>
-                <filter name="check_in_filter" string="签到日期" date="check_in"/>
                 <separator/>
             </search>
         </field>

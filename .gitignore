@@ -1,12 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-dingtalk_base/tools/*.py
+dingtalk_base/tools/dingtalk_api.py
+dingtalk_base/tools/dingtalk_approval.py
+dingtalk_base/tools/test.py
 
 *$py.class
 .DS_Store
 # C extensions
-*.so
+!dingtalk_base/tools/*.so
 # Distribution / packaging
 .Python
 build/
