@@ -18,8 +18,6 @@ odoo.define('dingtalk.simple.groups.get.button', function (require) {
     let ListController = require('web.ListController');
     let ListView = require('web.ListView');
     let viewRegistry = require('web.view_registry');
-    let KanbanController = require('web.KanbanController');
-    let KanbanView = require('web.KanbanView');
 
     let DingtalkSimpleGroupsViewController = ListController.extend({
         buttons_template: 'ListView.DingTalkSimpleGroupsButtons',
@@ -70,64 +68,5 @@ odoo.define('dingtalk.simple.groups.get.button', function (require) {
     });
 
     viewRegistry.add('get_dingtalk_simple_groups_class', DingtalkSimpleGroupsListView);
-
-
-    let DingtalkSimpleGroupsKanbanController = KanbanController.extend({
-        renderButtons: function ($node) {
-            let $buttons = this._super.apply(this, arguments);
-            let tree_model = this.modelName;
-            if (tree_model == 'dingtalk.simple.groups') {
-                let but = "<button type=\"button\" class=\"btn btn-primary\">获取钉钉考勤组</button>";
-                let button2 = $(but).click(this.proxy('getDingtalkSimpleGroupsBut'));
-                this.$buttons.append(button2);
-                let but3 = "<button type=\"button\" class=\"btn btn-secondary\">获取考勤组成员</button>";
-                let button3 = $(but3).click(this.proxy('getDingtalkSimpleGroupsUsersBut'));
-                this.$buttons.append(button3);
-            }
-            return $buttons;
-        },
-        getDingtalkSimpleGroupsBut: function () {
-            var self = this;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: 'dingtalk.simple.groups.tran',
-                target: 'new',
-                views: [[false, 'form']],
-                context: [],
-            },{
-                on_reverse_breadcrumb: function () {
-                    self.reload();
-                },
-                  on_close: function () {
-                    self.reload();
-                }
-            });
-        },
-        getDingtalkSimpleGroupsUsersBut: function () {
-            var self = this;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: 'dingtalk.simple.groups.users.tran',
-                target: 'new',
-                views: [[false, 'form']],
-                context: [],
-            },{
-                on_reverse_breadcrumb: function () {
-                    self.reload();
-                },
-                  on_close: function () {
-                    self.reload();
-                }
-            });
-        },
-    });
-
-    let DingtalkSimpleGroupsKanbanView = KanbanView.extend({
-        config: _.extend({}, KanbanView.prototype.config, {
-            Controller: DingtalkSimpleGroupsKanbanController,
-        }),
-    });
-
-    viewRegistry.add('dingtalk_simple_groups_kanban_class', DingtalkSimpleGroupsKanbanView);
 });
 

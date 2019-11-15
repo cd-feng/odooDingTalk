@@ -5,8 +5,6 @@
 
 import logging
 from odoo import fields, models
-from odoo.exceptions import UserError
-from odoo.addons.dingtalk_base.tools import dingtalk_api
 
 _logger = logging.getLogger(__name__)
 
@@ -51,7 +49,5 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_serial_number', self.dt_serial_number)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_delete_is_sy', self.dt_delete_is_sy)
 
-    def check_dt_serial_number(self):
-        self.ensure_one()
-        result = dingtalk_api.check_dt_serial_number("check_model")
-        raise UserError(result)
+    def getting_token(self):
+        self.env.ref('dingtalk_base.ir_cron_data_get_token').method_direct_trigger()
