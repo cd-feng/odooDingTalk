@@ -31,8 +31,7 @@
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <field name="image" widget="image" class="oe_avatar"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="员工名称." attrs="{'readonly': [('state', '!=', 'new')]}"/>
@@ -92,7 +91,13 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                           <field name="image" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle"/>
+                            <div class="o_kanban_image_fill_left d-none d-md-block"
+                                 t-attf-style="background-image: url(#{kanban_image('dingtalk.add.employee', 'image_medium', record.id.raw_value)})"
+                                 role="img"/>
+                            <div class="o_kanban_image d-md-none rounded-circle"
+                                 t-attf-style="background-image: url(#{kanban_image('dingtalk.add.employee', 'image_small', record.id.raw_value)})"
+                                 role="img"/>
+
                             <div class="oe_kanban_details">
                                <div class="o_kanban_record_top">
                                    <div class="o_kanban_record_headings">
@@ -130,7 +135,9 @@
         <field name="model">dingtalk.add.employee</field>
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <calendar date_start="create_date" string="待入职员工" mode="month" color="name" event_limit="5" hide_time="true">
+            <calendar string="待入职员工" date_start="create_date"
+                event_open_popup="true"
+                event_limit="3">
                 <field name="jobNumber"/>
                 <field name="name"/>
                 <field name="mobile"/>

@@ -120,19 +120,6 @@
                                 </group>
                             </group>
                         </page>
-<!--                        <page string="离职信息">-->
-<!--                            <group>-->
-<!--                                <group>-->
-<!--                                    <field name="last_work_day"/>-->
-<!--                                    <field name="reason_memo"/>-->
-<!--                                </group>-->
-<!--                                <group>-->
-<!--                                    <field name="reason_type"/>-->
-<!--                                    <field name="pre_status"/>-->
-<!--                                    <field name="handover_userid"/>-->
-<!--                                </group>-->
-<!--                            </group>-->
-<!--                        </page>-->
                     </notebook>
                 </sheet>
             </form>
@@ -233,9 +220,10 @@
         <field name="model">dingtalk.employee.roster</field>
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <calendar date_start="create_date" string="员工花名册" mode="month" color="name" event_limit="5" hide_time="true">
-                <field name="emp_id" avatar_field="image_128"/>
-                <field name="create_date"/>
+            <calendar string="员工花名册" date_start="create_date"
+                event_open_popup="true"
+                event_limit="3"
+                color="emp_id">
                 <field name="name"/>
                 <field name="ding_userid" invisible="1"/>
                 <field name="jobNumber"/>
