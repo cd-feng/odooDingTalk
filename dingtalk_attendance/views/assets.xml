@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <menuitem name="钉钉考勤" id="dingtalk_attendance" parent="hr_attendance.menu_hr_attendance_root" sequence="21" groups="hr_attendance.group_hr_attendance_user"/>
+
+
+     <template id="dingtalk_attendance_assets" name="Odoo DingTalk Attendance Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/simple_groups.js"></script>
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_dingtalk_plan.js"></script>
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_attendance_record.js"></script>
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_attendance_result.js"></script>
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_leaves_list.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record model="ir.module.category" id="dingtalk_hrm_category">
+        <field name="name">钉钉智能人事</field>
+        <field name="description">用于管理钉钉智能人事模块功能</field>
+        <field name="sequence">13</field>
+    </record>
+
+    <record id="manage_group" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="dingtalk_hrm_category"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

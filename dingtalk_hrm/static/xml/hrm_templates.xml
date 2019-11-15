@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<templates>
+
+    <t t-name="ListView.DingtalkHrmDimissionList">
+        <button type="button" class="btn btn-primary get_dingtalk_hrm_dimission_class">
+            查询离职员工信息
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingtalkHrmDimissionListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <t t-call="ListView.DingtalkHrmDimissionList"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+        </t>
+    </t>
+
+    <t t-name="ListView.DingtalkHrmRosterList">
+        <button type="button" class="btn btn-secondary get_dingtalk_hrm_roster_class">
+            获取员工花名册
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingtalkHrmRosterListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="ListView.DingtalkHrmRosterList"/>
+        </t>
+    </t>
+
+    <t t-name="ListView.DingTalkAddEmployeeList">
+        <button type="button" class="btn btn-secondary get_dingtalk_query_preen_try_class">
+            查询待入职员工
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingTalkAddEmployeeListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="ListView.DingTalkAddEmployeeList"/>
+        </t>
+    </t>
+
+</templates>

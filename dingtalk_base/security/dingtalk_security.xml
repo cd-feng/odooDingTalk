@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record model="ir.module.category" id="dingtalk_module_category">
+        <field name="name">钉钉参数配置</field>
+        <field name="description">配置钉钉基础参数，比如钉钉应用key以及AppSecret</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="manage_group" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="dingtalk_module_category"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>
