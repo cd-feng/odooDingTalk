@@ -19,7 +19,7 @@ class DingTalkHrSynchronous(models.TransientModel):
     department = fields.Boolean(string=u'钉钉部门', default=True)
     active_dept = fields.Boolean(string=u'归档不存在的部门?', default=False)
     dept_repeat = fields.Selection(string=u'部门名称重复时', selection=[('cover', '覆盖'), ('new', '新建')], default='cover')
-    synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
+    synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=True)
     employee = fields.Boolean(string=u'钉钉员工', default=True)
     emp_repeat = fields.Selection(string=u'员工名称重复时', selection=[('cover', '覆盖'), ('new', '新建')], default='cover')
 
