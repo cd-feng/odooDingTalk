@@ -21,6 +21,8 @@ odoo.define('hr.attendance.record.tree.button', function (require) {
     let ListController = require('web.ListController');
     let ListView = require('web.ListView');
     let viewRegistry = require('web.view_registry');
+    let KanbanController = require('web.KanbanController');
+    let KanbanView = require('web.KanbanView');
 
     let DingDingAttendanceRecordController = ListController.extend({
         buttons_template: 'ListView.GetUserAttendanceButtons',
@@ -55,4 +57,43 @@ odoo.define('hr.attendance.record.tree.button', function (require) {
     });
 
     viewRegistry.add('dingtalk_hr_attendance_record_tree', GetDingDingAttendanceRecordView);
+
+
+    let AttendanceRecordKanbanController = KanbanController.extend({
+        renderButtons: function ($node) {
+            let $buttons = this._super.apply(this, arguments);
+            let tree_model = this.modelName;
+            if (tree_model == 'hr.attendance.record') {
+                let but = "<button type=\"button\" class=\"btn btn-secondary\">获取打卡详情</button>";
+                let button2 = $(but).click(this.proxy('getAttendanceRecordTran'));
+                this.$buttons.append(button2);
+            }
+            return $buttons;
+        },
+        getAttendanceRecordTran: function () {
+            var self = this;
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: 'hr.attendance.record.tran',
+                target: 'new',
+                views: [[false, 'form']],
+                context: [],
+            },{
+                on_reverse_breadcrumb: function () {
+                    self.reload();
+                },
+                  on_close: function () {
+                    self.reload();
+                }
+            });
+        },
+    });
+
+    let AttendanceRecordKanbanView = KanbanView.extend({
+        config: _.extend({}, KanbanView.prototype.config, {
+            Controller: AttendanceRecordKanbanController,
+        }),
+    });
+
+    viewRegistry.add('dingtalk_hr_attendance_record_kanban', AttendanceRecordKanbanView);
 });

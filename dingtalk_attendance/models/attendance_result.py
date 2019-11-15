@@ -39,8 +39,8 @@ class HrAttendanceResult(models.Model):
         ('AUTO_CHECK', '自动打卡')
     ]
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
-    ding_group_id = fields.Many2one(comodel_name='dingding.simple.groups', string=u'钉钉考勤组')
-    plan_id = fields.Many2one(comodel_name='hr.dingding.plan', string=u'排班')
+    ding_group_id = fields.Many2one(comodel_name='dingtalk.simple.groups', string=u'钉钉考勤组')
+    plan_id = fields.Many2one(comodel_name='hr.dingtalk.plan', string=u'排班')
     ding_plan_id = fields.Char(string='钉钉排班ID')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
     work_date = fields.Date(string=u'工作日')

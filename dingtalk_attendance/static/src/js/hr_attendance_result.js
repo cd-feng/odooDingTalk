@@ -21,6 +21,8 @@ odoo.define('hr.attendance.result.tree.button', function (require) {
     let ListController = require('web.ListController');
     let ListView = require('web.ListView');
     let viewRegistry = require('web.view_registry');
+    let KanbanController = require('web.KanbanController');
+    let KanbanView = require('web.KanbanView');
 
     let DingDingAttendanceRecordController = ListController.extend({
         buttons_template: 'ListView.GetUserAttendanceResultButtons',
@@ -55,4 +57,45 @@ odoo.define('hr.attendance.result.tree.button', function (require) {
     });
 
     viewRegistry.add('dingtalk_hr_attendance_result_tree', GetDingDingAttendanceRecordView);
+
+
+
+     let AttendanceResultKanbanController = KanbanController.extend({
+        renderButtons: function ($node) {
+            let $buttons = this._super.apply(this, arguments);
+            let tree_model = this.modelName;
+            if (tree_model == 'hr.attendance.result') {
+                let but = "<button type=\"button\" class=\"btn btn-secondary\">获取打卡结果</button>";
+                let button2 = $(but).click(this.proxy('getAttendanceResultTran'));
+                this.$buttons.append(button2);
+            }
+            return $buttons;
+        },
+        getAttendanceResultTran: function () {
+            var self = this;
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: 'hr.attendance.tran',
+                target: 'new',
+                views: [[false, 'form']],
+                context: [],
+            },{
+                on_reverse_breadcrumb: function () {
+                    self.reload();
+                },
+                  on_close: function () {
+                    self.reload();
+                }
+            });
+        },
+    });
+
+    let AttendanceResultKanbanView = KanbanView.extend({
+        config: _.extend({}, KanbanView.prototype.config, {
+            Controller: AttendanceResultKanbanController,
+        }),
+    });
+
+    viewRegistry.add('dingtalk_hr_attendance_result_kanban', AttendanceResultKanbanView);
+
 });

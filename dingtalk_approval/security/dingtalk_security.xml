@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record model="ir.module.category" id="dingtalk_approval_category">
+        <field name="name">钉钉审批引擎</field>
+        <field name="description">用于配置odoo至钉钉的审批功能</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="manage_group" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="dingtalk_approval_category"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

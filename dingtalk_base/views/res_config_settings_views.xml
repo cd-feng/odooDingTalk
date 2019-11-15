@@ -54,19 +54,6 @@
                                 </div>
                             </div>
                         </div>
-
-<!--                        <div class="col-12 col-lg-6 o_setting_box">-->
-<!--                            <div class="o_setting_left_pane">-->
-<!--                                <field name="dt_token"/>-->
-<!--                            </div>-->
-<!--                            <div class="o_setting_right_pane">-->
-<!--                                <label for="dt_token"/>-->
-<!--                                <div class="text-muted">-->
-<!--                                    自动获取Token，间隔为每90分钟-->
-<!--                                </div>-->
-<!--                                <button type="object" string="立即更新" icon="fa-arrow-right" name="getting_token"/>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
 
                     <h2>登录参数</h2>
@@ -93,7 +80,7 @@
                         </div>
                     </div>
                     <h2>自动动作</h2>
-                    <div class="row mt16 o_settings_container">
+                    <div class="row mt16 o_settings_container dingtalk_auto_div">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="dt_delete_is_sy"/>
@@ -114,12 +101,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="dt_serial_number"/>
-                                <div class="text-muted">当存在收费模块时自动生成，切勿修改
-                                </div>
+                                <div class="text-muted">当存在收费模块时自动生成，切勿修改</div>
+                                <button type="object" string="检查许可" icon="fa-arrow-right" name="check_dt_serial_number"/>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </xpath>
         </field>
