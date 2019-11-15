@@ -1,3 +1,0 @@
-pypinyin
-pycryptodome
-dingtalk-sdk
