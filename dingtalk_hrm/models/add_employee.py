@@ -4,7 +4,7 @@
 ###################################################################################
 import base64
 import logging
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.exceptions import UserError
 from odoo.modules import get_module_resource
 from odoo.addons.dingtalk_base.tools import dingtalk_api
@@ -49,8 +49,20 @@ class DingTalkEmployee(models.Model):
     jobNumber = fields.Char(string='员工工号', required=True)
 
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
-    image = fields.Image("Image", max_width=100, max_height=100, default=_default_image)
+    image = fields.Binary("照片", default=_default_image, attachment=True)
+    image_medium = fields.Binary("Medium-sized photo", attachment=True)
+    image_small = fields.Binary("Small-sized photo", attachment=True)
     state = fields.Selection(string='状态', selection=USERSTATE, default='new', track_visibility='onchange')
+
+    @api.model
+    def create(self, values):
+        tools.image_resize_images(values)
+        return super(DingTalkEmployee, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        tools.image_resize_images(values)
+        return super(DingTalkEmployee, self).write(values)
 
     def add_employee(self):
         """
