@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <menuitem name="日志" id="report_root_menu" web_icon="dingtalk_report,static/description/icon.png" sequence="16"/>
+
+    <menuitem name="钉钉" id="dingtalk_report_root_menu" parent="report_root_menu" sequence="20"/>
+
+    <template id="dingtalk_report_assets" name="DingTalk Report Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingtalk_report/static/src/js/report_template.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

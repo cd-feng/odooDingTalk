@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="dingtalk_report_category_days" model="dingtalk.report.category">
+            <field name="name">日报</field>
+            <field name="description">员工工作日报</field>
+            <field name="image" type="base64" file="dingtalk_report/static/src/img/days-report-img.svg"/>
+            <field name="has_today_work">required</field>
+            <field name="has_no_compute_work">required</field>
+            <field name="has_coordination_work">optional</field>
+        </record>
+
+        <record id="dingtalk_report_category_week" model="dingtalk.report.category">
+            <field name="name">周报</field>
+            <field name="description">员工工作周报</field>
+            <field name="image" type="base64" file="dingtalk_report/static/src/img/week-report-img.svg"/>
+            <field name="has_week_compute">required</field>
+            <field name="has_week_summary">required</field>
+            <field name="has_next_week_plan">required</field>
+            <field name="has_coordination_week_work">optional</field>
+        </record>
+
+        <record id="dingtalk_report_category_month" model="dingtalk.report.category">
+            <field name="name">月报</field>
+            <field name="description">员工工作月报</field>
+            <field name="image" type="base64" file="dingtalk_report/static/src/img/month-report-img.svg"/>
+            <field name="has_month_work">required</field>
+            <field name="has_month_summary">required</field>
+            <field name="has_next_month_plan">required</field>
+            <field name="has_coordination_month_work">optional</field>
+        </record>
+
+        <record id="dingtalk_report_category_visit" model="dingtalk.report.category">
+            <field name="name">拜访记录</field>
+            <field name="description">拜访记录日志</field>
+            <field name="image" type="base64" file="dingtalk_report/static/src/img/visit-report-img.svg"/>
+            <field name="has_visit_partner">required</field>
+            <field name="has_visit_type">required</field>
+            <field name="has_visit_matter">optional</field>
+            <field name="has_visit_result">optional</field>
+        </record>
+
+        <record id="dingtalk_report_category_performance" model="dingtalk.report.category">
+            <field name="name">业绩日报</field>
+            <field name="description">业绩日报</field>
+            <field name="image" type="base64" file="dingtalk_report/static/src/img/performance-report-img.svg"/>
+            <field name="has_today_urnover_performance">required</field>
+            <field name="has_today_partner_performance">required</field>
+            <field name="has_monthly_ct_performance">optional</field>
+            <field name="has_month_pt_performance">optional</field>
+            <field name="has_thinking_today_performance">optional</field>
+        </record>
+
+    </data>
+</odoo>
