@@ -120,7 +120,9 @@
         <field name="context">{'module' : 'dingtalk_base'}</field>
     </record>
 
-<!--    <menuitem id="dingtalk_base_settings_menu" name="基础设置" parent="dingtalk_base.configure_menu"-->
-<!--              sequence="1" action="dingtalk_base_settings_configuration_action"/>-->
+    <menuitem name="钉钉" id="dingtalk_root_config_menu" parent="base.menu_administration" sequence="2"/>
+
+    <menuitem id="dingtalk_base_settings_menu" name="基础设置" parent="dingtalk_root_config_menu"
+              sequence="1" action="dingtalk_base_settings_configuration_action" groups="dingtalk_base.manage_group"/>
 
 </odoo>

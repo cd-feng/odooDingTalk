@@ -36,6 +36,7 @@
 | dingtalk_callback     | 钉钉回调管理                         |
 | dingtalk_approval     | 钉钉审批模块                         |
 | dingtalk_attendance     | 钉钉考勤模块                         |
+| dingtalk_report     | 钉钉日志模块                         |
 
 ## 交流
 

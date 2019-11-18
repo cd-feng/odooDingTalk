@@ -27,7 +27,4 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="获取回调列表" id="get_dingtalk_callback_menu" parent="dingtalk_callback_main_menu" sequence="2"
-              action="get_dingtalk_callback_action" groups="dingtalk_callback.manage_group"/>
-
 </odoo>
