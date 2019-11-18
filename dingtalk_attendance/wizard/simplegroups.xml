@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_simple_groups_tran_form_view" model="ir.ui.view">
+        <field name="name">获取考勤组</field>
+        <field name="model">dingtalk.simple.groups.tran</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>
+                    将钉钉中的考勤组信息同步到系统中的考勤信息中...
+                </p>
+                <footer>
+                    <button string="确认" name="get_simple_groups" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_simple_groups_tran_action" model="ir.actions.act_window">
+        <field name="name">获取考勤组</field>
+        <field name="res_model">dingtalk.simple.groups.tran</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="dingtalk_simple_groups_users_tran_form_view" model="ir.ui.view">
+        <field name="name">获取考勤组成员</field>
+        <field name="model">dingtalk.simple.groups.users.tran</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>
+                    拉取考勤组成员信息...
+                </p>
+                <footer>
+                    <button string="确认" name="get_sim_emps" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_simple_groups_users_tran_action" model="ir.actions.act_window">
+        <field name="name">获取考勤组成员</field>
+        <field name="res_model">dingtalk.simple.groups.users.tran</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</odoo>
