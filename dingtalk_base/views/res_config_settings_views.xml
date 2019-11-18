@@ -20,8 +20,8 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="dt_agent_id"/>
-                                <div class="text-muted">
-                                </div>
+                                <div class="text-muted"></div>
+                                <a href="https://open-dev.dingtalk.com" icon="fa-arrow-right" role="button" target="_blank">--点击打开钉钉开发者后台</a>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
