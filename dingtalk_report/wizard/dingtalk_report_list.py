@@ -4,7 +4,7 @@
 ###################################################################################
 
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_base.tools import dingtalk_api
 
@@ -26,6 +26,8 @@ class DingTalkReportListTran(models.TransientModel):
         :return:
         """
         self.ensure_one()
+        if not self.report_id.category_id:
+            raise UserError(_("请先在钉钉日志模板中关联系统日志类别!"))
         user_list = list()
         for emp in self.emp_ids:
             user_list.append(emp.ding_id)
