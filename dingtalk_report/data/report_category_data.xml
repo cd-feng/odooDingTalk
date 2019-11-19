@@ -16,9 +16,9 @@
             <field name="description">员工工作周报</field>
             <field name="image" type="base64" file="dingtalk_report/static/src/img/week-report-img.svg"/>
             <field name="has_week_compute">required</field>
-            <field name="has_week_summary">required</field>
-            <field name="has_next_week_plan">required</field>
-            <field name="has_coordination_week_work">optional</field>
+            <field name="has_week_summary">optional</field>
+            <field name="has_next_week_plan">optional</field>
+            <field name="has_coordination_work">optional</field>
         </record>
 
         <record id="dingtalk_report_category_month" model="dingtalk.report.category">
@@ -27,8 +27,8 @@
             <field name="image" type="base64" file="dingtalk_report/static/src/img/month-report-img.svg"/>
             <field name="has_month_work">required</field>
             <field name="has_month_summary">required</field>
-            <field name="has_next_month_plan">required</field>
-            <field name="has_coordination_month_work">optional</field>
+            <field name="has_next_month_plan">optional</field>
+            <field name="has_coordination_work">optional</field>
         </record>
 
         <record id="dingtalk_report_category_visit" model="dingtalk.report.category">

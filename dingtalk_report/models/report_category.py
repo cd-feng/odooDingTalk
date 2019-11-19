@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.modules.module import get_module_resource
 
 
@@ -32,12 +32,10 @@ class ReportCategory(models.Model):
     has_week_compute = fields.Selection(string=u'本周完成工作', selection=CATEGORY_SELECTION, required=True, default='no')
     has_week_summary = fields.Selection(string=u'本周工作总结', selection=CATEGORY_SELECTION, required=True, default='no')
     has_next_week_plan = fields.Selection(string=u'下周工作计划', selection=CATEGORY_SELECTION, required=True, default='no')
-    has_coordination_week_work = fields.Selection(string=u'需协调或帮助', selection=CATEGORY_SELECTION, required=True, default='no')
 
     has_month_work = fields.Selection(string=u'本月工作内容', selection=CATEGORY_SELECTION, required=True, default='no')
     has_month_summary = fields.Selection(string=u'本月工作总结', selection=CATEGORY_SELECTION, required=True, default='no')
     has_next_month_plan = fields.Selection(string=u'下月工作计划', selection=CATEGORY_SELECTION, required=True, default='no')
-    has_coordination_month_work = fields.Selection(string=u'需协调或帮助', selection=CATEGORY_SELECTION, required=True, default='no')
 
     has_visit_partner = fields.Selection(string=u'拜访对象', selection=CATEGORY_SELECTION, required=True, default='no')
     has_visit_type = fields.Selection(string=u'拜访方式', selection=CATEGORY_SELECTION, required=True, default='no')
@@ -64,3 +62,7 @@ class ReportCategory(models.Model):
                 'default_category_id': self.id,
             },
         }
+
+    def get_dingtalk_report_list(self):
+        self.ensure_one()
+        return False

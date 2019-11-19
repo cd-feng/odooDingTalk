@@ -10,8 +10,8 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
-                <field name="create_uid" string="创建人"/>
-                <field name="create_date" string="创建日期"/>
+                <field name="employee_id"/>
+                <field name="report_time"/>
             </tree>
         </field>
     </record>
@@ -22,6 +22,8 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <search>
+                <field name="employee_id"/>
+                <field name="report_time"/>
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
@@ -49,11 +51,9 @@
                     <field name="has_week_compute" invisible="1"/>
                     <field name="has_week_summary" invisible="1"/>
                     <field name="has_next_week_plan" invisible="1"/>
-                    <field name="has_coordination_week_work" invisible="1"/>
                     <field name="has_month_work" invisible="1"/>
                     <field name="has_month_summary" invisible="1"/>
                     <field name="has_next_month_plan" invisible="1"/>
-                    <field name="has_coordination_month_work" invisible="1"/>
                     <field name="has_visit_partner" invisible="1"/>
                     <field name="has_visit_type" invisible="1"/>
                     <field name="has_visit_matter" invisible="1"/>
@@ -86,18 +86,16 @@
                             <group>
                             <field name="today_work" attrs="{'invisible':[('has_today_work', '==','no')], 'required': [('has_today_work','==','required')]}"/>
                             <field name="no_compute_work" attrs="{'invisible':[('has_no_compute_work', '==','no')], 'required': [('has_no_compute_work','==','required')]}"/>
-                            <field name="coordination_work" attrs="{'invisible':[('has_coordination_work', '==','no')], 'required': [('has_coordination_work','==','required')]}"/>
 
                             <field name="week_compute" attrs="{'invisible':[('has_week_compute', '==','no')], 'required': [('has_week_compute','==','required')]}"/>
                             <field name="week_summary" attrs="{'invisible':[('has_week_summary', '==','no')], 'required': [('has_week_summary','==','required')]}"/>
                             <field name="next_week_plan" attrs="{'invisible':[('has_next_week_plan', '==','no')], 'required': [('has_next_week_plan','==','required')]}"/>
-                            <field name="coordination_week_work" attrs="{'invisible':[('has_coordination_week_work', '==','no')], 'required': [('has_coordination_week_work','==','required')]}"/>
 
                             <field name="month_work" attrs="{'invisible':[('has_month_work', '==','no')], 'required': [('has_month_work','==','required')]}"/>
                             <field name="month_summary" attrs="{'invisible':[('has_month_summary', '==','no')], 'required': [('has_month_summary','==','required')]}"/>
                             <field name="next_month_plan" attrs="{'invisible':[('has_next_month_plan', '==','no')], 'required': [('has_next_month_plan','==','required')]}"/>
-                            <field name="coordination_month_work" attrs="{'invisible':[('has_coordination_month_work', '==','no')], 'required': [('has_coordination_month_work','==','required')]}"/>
 
+                            <field name="coordination_work" attrs="{'invisible':[('has_coordination_work', '==','no')], 'required': [('has_coordination_work','==','required')]}"/>
                             <field name="visit_partner" attrs="{'invisible':[('has_visit_partner', '==','no')], 'required': [('has_visit_partner','==','required')]}" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
                             <field name="visit_type" attrs="{'invisible':[('has_visit_type', '==','no')], 'required': [('has_visit_type','==','required')]}"/>
                             <field name="visit_matter" attrs="{'invisible':[('has_visit_matter', '==','no')], 'required': [('has_visit_matter','==','required')]}"/>
@@ -111,6 +109,14 @@
                             </group>
                         </page>
                     </notebook>
+                    <group>
+                        <group>
+                            <field name="employee_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="report_time" widget="datetime"/>
+                        </group>
+                    </group>
                 </sheet>
                 <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
@@ -130,8 +136,10 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
-                <field name="create_uid" string="创建人"/>
-                <field name="create_date" string="创建日期"/>
+                <field name="create_uid"/>
+                <field name="create_date"/>
+                <field name="employee_id"/>
+                <field name="report_time"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click container">
@@ -150,7 +158,7 @@
                                 </div>
 
                                 <div class="text-muted o_kanban_record_subtitle">
-                                    <field name="category_id"/>-<field name="create_uid"/>
+                                    <field name="category_id"/>-<field name="employee_id"/>
                                 </div>
 
                                 <div class="o_kanban_record_bottom">
@@ -158,7 +166,7 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.create_uid.raw_value)" t-att-title="record.create_uid.value" t-att-alt="record.create_uid.value" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('hr.employee', 'image_1920', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
