@@ -65,4 +65,12 @@ class ReportCategory(models.Model):
 
     def get_dingtalk_report_list(self):
         self.ensure_one()
-        return False
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "dingtalk.report.list.tran",
+            "target": 'new',
+            "views": [[False, "form"]],
+            "context": {
+                'form_view_initial_mode': 'edit',
+            },
+        }
