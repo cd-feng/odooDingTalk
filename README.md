@@ -34,6 +34,9 @@
 | dingtalk_hr           | 基础数据、员工、部门、联系人           |
 | dingtalk_login        | 账号、密码、扫码以及免登               |
 | dingtalk_callback     | 钉钉回调管理                         |
+| dingtalk_approval     | 钉钉审批模块                         |
+| dingtalk_attendance     | 钉钉考勤模块                         |
+| dingtalk_report     | 钉钉日志模块                         |
 
 ## 交流
 

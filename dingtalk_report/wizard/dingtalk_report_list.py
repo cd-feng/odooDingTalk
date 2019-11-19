@@ -29,12 +29,12 @@ class DingTalkReportListTran(models.TransientModel):
         user_list = list()
         for emp in self.emp_ids:
             user_list.append(emp.ding_id)
-        client = dingtalk_api.get_client()
         cursor = 0
         size = 20
+        report_dict = self._get_report_dicts()
         while True:
             try:
-                result = client.post('topapi/report/list', {
+                result = dingtalk_api.get_client().post('topapi/report/list', {
                     'start_time': dingtalk_api.datetime_to_stamp(self.start_time),
                     'end_time': dingtalk_api.datetime_to_stamp(self.end_time),
                     'template_name': self.report_id.name,
@@ -46,8 +46,23 @@ class DingTalkReportListTran(models.TransientModel):
                 raise UserError(e)
             if result.get('errcode') == 0:
                 result = result.get('result')
-                print(result)
-
+                data_list = result.get('data_list')
+                for data in data_list:
+                    # 封装字段数据
+                    report_data = dict()
+                    for contents in data.get('contents'):
+                        report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
+                    # 读取创建人
+                    employee = self.env['hr.employee'].search([('ding_id', '=', data.get('creator_id'))], limit=1)
+                    report_data.update({
+                        'name': data.get('template_name'),
+                        'category_id': self.report_id.category_id.id or False,
+                        'employee_id': employee.id or False,
+                        'report_time': dingtalk_api.timestamp_to_local_date(data.get('create_time')) or fields.datetime.now(),
+                    })
+                    reports = self.env['dingtalk.report.report'].search([('report_id', '=', data.get('report_id'))])
+                    if not reports:
+                        self.env['dingtalk.report.report'].create(report_data)
                 # 是否还有下一页
                 if result.get('has_more'):
                     cursor += result.get('next_cursor')
@@ -56,6 +71,18 @@ class DingTalkReportListTran(models.TransientModel):
             else:
                 raise UserError('获取用户日志失败，详情为:{}'.format(result.get('errmsg')))
         return {'type': 'ir.actions.act_window_close'}
+
+    def _get_report_dicts(self):
+        """
+        将日志字段转换为dict
+        :return:
+        """
+        report_model = self.env['ir.model'].sudo().search([('model', '=', 'dingtalk.report.report')])
+        data_dict = dict()
+        for field in report_model.field_id:
+            if field.name[:4] != 'has_':
+                data_dict.update({field.field_description: field.name})
+        return data_dict
 
 
 

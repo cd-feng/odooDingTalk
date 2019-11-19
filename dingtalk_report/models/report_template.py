@@ -19,6 +19,7 @@ class DingTalkReportTemplate(models.Model):
     report_code = fields.Char(string='模板唯一标识', required=True)
     url = fields.Char(string='模板跳转url')
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
+    category_id = fields.Many2one(comodel_name='dingtalk.report.category', string=u'日志类型')
 
     @api.depends('icon_avatar_url')
     def _compute_icon_url(self):
@@ -27,4 +28,5 @@ class DingTalkReportTemplate(models.Model):
                 res.icon_url = """<img src="{avatar_url}" width="60px" height="60px">""".format(avatar_url=res.icon_avatar_url)
             else:
                 res.icon_url = False
+
 
