@@ -8,7 +8,6 @@ from werkzeug.exceptions import BadRequest
 from odoo import SUPERUSER_ID, api, http, _
 from odoo import registry as registry_get
 from odoo.addons.auth_oauth.controllers.main import OAuthController as Controller
-from odoo.addons.auth_oauth.controllers.main import OAuthLogin as Home
 from odoo.addons.auth_oauth.controllers.main import fragment_to_query_string
 from odoo.addons.web.controllers.main import (login_and_redirect, ensure_db, set_cookie_and_redirect)
 from odoo.exceptions import AccessDenied
@@ -94,7 +93,7 @@ class OAuthController(Controller):
         return request.render('dingtalk_login.result_signup', err_values)
 
 
-class DingTalkLogin(Home, http.Controller):
+class DingTalkLogin(Controller):
 
     @http.route('/web/dingtalk/login', type='http', auth='public', website=True, sitemap=False)
     def web_dingtalk_login(self, *args, **kw):
