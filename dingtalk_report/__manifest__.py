@@ -2,10 +2,11 @@
 ###################################################################################
 #    Copyright (C) 2019 SuXueFeng  GNU
 ###################################################################################
+
 {
-    'name': "钉钉-回调管理",
-    'summary': """回调管理：注册钉钉业务事件回调至odoo系统""",
-    'description': """回调管理：注册钉钉业务事件回调至odoo系统，比如通讯录发生改变时，实时同步到odoo系统""",
+    'name': "钉钉-日志",
+    'summary': """员工日报、周报、月报等""",
+    'description': """员工日报、周报、月报等""",
     'author': "Su-XueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingtalk',
@@ -17,11 +18,17 @@
     'data': [
         'security/dingtalk_security.xml',
         'security/ir.model.access.csv',
-        'data/callback_list.xml',
+
+        'data/report_category_data.xml',
+        'data/ir_rule.xml',
 
         'views/assets.xml',
-        'views/callback_manage.xml',
-        'wizard/callback_get.xml',
+        'views/report_category.xml',
+        'views/report_report.xml',
+        'views/report_template.xml',
+
+        'wizard/dingtalk_report_template.xml',
+        'wizard/dingtalk_report_list.xml',
     ],
     "qweb": [
         "static/xml/*.xml"

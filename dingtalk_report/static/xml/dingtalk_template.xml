@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<templates>
+
+    <t t-name="ListView.DingtalkReportTemplate">
+        <button type="button" class="btn btn-primary get_dingtalk_report_template_class">
+            获取钉钉日志模板
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingtalkReportTemplateButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <t t-call="ListView.DingtalkReportTemplate"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+        </t>
+    </t>
+
+</templates>
+
+
+
+

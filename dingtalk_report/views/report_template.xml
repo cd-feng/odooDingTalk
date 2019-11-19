@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <record id="dingtalk_report_template_tree_view" model="ir.ui.view">
+        <field name="name">日志模板</field>
+        <field name="model">dingtalk.report.template</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" js_class="dingtalk_report_template_tree_class">
+                <field name="icon_url" width="20px" height="20px" widget="html"/>
+                <field name="name"/>
+                <field name="report_code"/>
+                <field name="url"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingtalk_report_template_kanban">
+        <field name="name">日志模板</field>
+        <field name="model">dingtalk.report.template</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" js_class="dingtalk_report_template_kanban_class">
+                <field name="company_id"/>
+                <field name="name"/>
+                <field name="icon_url"/>
+                <field name="url"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill oe_module_vignette">
+                            <div class="oe_kanban_avatar float-left mr-3">
+                                <field name="icon_url" widget="html"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <field name="company_id" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="dingtalk_report_template_action" model="ir.actions.act_window">
+        <field name="name">日志模板</field>
+        <field name="res_model">dingtalk.report.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              请拉取钉钉上已存在的日志模板，不支持自行创建的模板！！！
+          </p>
+        </field>
+    </record>
+
+    <record id="dingtalk_report_template_view_form" model="ir.ui.view">
+        <field name="name">日志模板</field>
+        <field name="model">dingtalk.report.template</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="icon_url" widget="html" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="report_code"/>
+                        <field name="url"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page string="日志关联" name="options">
+                            <group>
+                                <field name="category_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem name="日志模板" id="dingtalk_report_template_menu" parent="dingtalk_report_root_menu" sequence="1" action="dingtalk_report_template_action"/>
+
+</odoo>

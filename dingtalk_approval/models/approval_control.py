@@ -4,6 +4,7 @@
 ###################################################################################
 
 import logging
+from odoo.addons.dingtalk_base.tools import dingtalk_api
 from odoo import api, fields, models, http, _
 import inspect
 from odoo.http import request
@@ -55,6 +56,9 @@ class DingTalkApprovalControl(models.Model):
         """
         if len(self.line_ids) < 1:
             raise UserError("注意：你还没有配置单据对应的字段，请完整配置odoo单据与钉钉单据的字段对应关系，否则提交审批时会失败！")
+        result = dingtalk_api.check_dingtalk_authorization('dingtalk_approval')
+        if not result['state']:
+            raise UserError(result['msg'])
         module_name = self.oa_model_id.modules
         module_names = module_name.replace(' ', '').split(',')
         current_module = self.env['ir.module.module'].search([('name', 'in', module_names)])

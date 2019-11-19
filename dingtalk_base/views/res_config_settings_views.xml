@@ -20,8 +20,8 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="dt_agent_id"/>
-                                <div class="text-muted">
-                                </div>
+                                <div class="text-muted"></div>
+                                <a href="https://open-dev.dingtalk.com" icon="fa-arrow-right" role="button" target="_blank">--点击打开钉钉开发者后台</a>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
@@ -120,7 +120,9 @@
         <field name="context">{'module' : 'dingtalk_base'}</field>
     </record>
 
-<!--    <menuitem id="dingtalk_base_settings_menu" name="基础设置" parent="dingtalk_base.configure_menu"-->
-<!--              sequence="1" action="dingtalk_base_settings_configuration_action"/>-->
+    <menuitem name="钉钉" id="dingtalk_root_config_menu" parent="base.menu_administration" sequence="2"/>
+
+    <menuitem id="dingtalk_base_settings_menu" name="基础设置" parent="dingtalk_root_config_menu"
+              sequence="1" action="dingtalk_base_settings_configuration_action" groups="dingtalk_base.manage_group"/>
 
 </odoo>
