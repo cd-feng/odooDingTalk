@@ -111,7 +111,7 @@
                                 </p>
                                 <div class="oe_module_action" t-if="!selection_mode">
                                     <button type="object" class="btn btn-primary btn-sm" name="create_report" context="{'category_id':'active_id'}">写日志</button>
-                                    <button type="object" class="btn btn-sm btn-secondary float-right" name="get_dingtalk_report_list" groups="approvals.group_approval_user">钉钉日志</button>
+                                    <button type="object" class="btn btn-sm btn-secondary float-right" name="get_dingtalk_report_list">钉钉日志</button>
                                 </div>
                             </div>
                         </div>
