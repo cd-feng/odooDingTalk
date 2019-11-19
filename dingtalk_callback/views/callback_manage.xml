@@ -8,10 +8,10 @@
         <field name="name">钉钉回调</field>
         <field name="model">dingtalk.callback.manage</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc">
+            <tree default_order="id desc" js_class="dingtalk_callback_manage_tree_class">
                 <field name="value_type"/>
                 <field name="token"/>
-                <field name="aes_key" password="password" />
+                <field name="aes_key" password="password"/>
                 <field name="url"/>
                 <field name="state"/>
             </tree>
@@ -24,28 +24,25 @@
         <field name="arch" type="xml">
             <form string="钉钉回调">
                 <header>
-                    <button name="register_call_back" type="object" string="注册回调事件"
-                            states='00' class="oe_highlight"
+                    <button name="register_call_back" type="object" string="注册回调事件" states='00' class="oe_highlight"
                             confirm="确认注册事件到钉钉服务器吗？"/>
-                    <button name="update_call_back" type="object" string="更新回调事件"
-                            states='01' class="oe_highlight"
+                    <button name="update_call_back" type="object" string="更新回调事件" states='01' class="oe_highlight"
                             confirm="确认要更新事件到钉钉服务器吗？"/>
                     <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="value_type" attrs="{'readonly': [('state', '=', '01')]}"/>
-                            <field name="url" attrs="{'readonly': [('state', '=', '01')]}"/>
+                            <field name="value_type"/>
+                            <field name="url"/>
                         </group>
                         <group>
-                            <field name="token" attrs="{'readonly': [('state', '=', '01')]}"/>
-                            <field name="aes_key" password="password" attrs="{'readonly': [('state', '=', '01')]}"/>
+                            <field name="token"/>
+                            <field name="aes_key" password="password"/>
                         </group>
                     </group>
                     <group string="回调事件">
-                        <field name="call_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', '01')]}" nolabel="1"
-                            options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="call_ids" widget="many2many_tags" nolabel="1" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -62,9 +59,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="钉钉回调" id="dingtalk_callback_main_menu" parent="base.menu_administration" sequence="3" groups="dingtalk_callback.manage_group"/>
 
-    <menuitem name="钉钉回调列表" id="dingtalk_callback_manage_menu" parent="dingtalk_callback_main_menu" sequence="1"
-              action="dingtalk_callback_manage_action"/>
+    <menuitem name="回调列表" id="dingtalk_callback_manage_menu" parent="dingtalk_base.dingtalk_root_config_menu" sequence="2"
+              action="dingtalk_callback_manage_action" groups="dingtalk_callback.manage_group"/>
 
 </odoo>

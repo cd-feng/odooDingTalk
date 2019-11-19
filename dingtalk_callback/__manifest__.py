@@ -19,7 +19,11 @@
         'security/ir.model.access.csv',
         'data/callback_list.xml',
 
+        'views/assets.xml',
         'views/callback_manage.xml',
         'wizard/callback_get.xml',
+    ],
+    "qweb": [
+        "static/xml/*.xml"
     ],
 }

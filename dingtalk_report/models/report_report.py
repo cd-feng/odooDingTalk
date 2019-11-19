@@ -24,11 +24,9 @@ class DingTalkReport(models.Model):
     week_compute = fields.Text(string=u'本周完成工作')
     week_summary = fields.Text(string=u'本周工作总结')
     next_week_plan = fields.Text(string=u'下周工作计划')
-    coordination_week_work = fields.Text(string=u'需协调或帮助')
     month_work = fields.Text(string=u'本月工作内容')
     month_summary = fields.Text(string=u'本月工作总结')
     next_month_plan = fields.Text(string=u'下月工作计划')
-    coordination_month_work = fields.Text(string=u'需协调或帮助')
     visit_partner = fields.Many2one(comodel_name='res.partner', string=u'拜访对象')
     visit_type = fields.Selection(string=u'拜访方式', selection=VISITTYPE, default='1')
     visit_matter = fields.Text(string=u'主要事宜')
@@ -45,11 +43,9 @@ class DingTalkReport(models.Model):
     has_week_compute = fields.Selection(related="category_id.has_week_compute")
     has_week_summary = fields.Selection(related="category_id.has_week_summary")
     has_next_week_plan = fields.Selection(related="category_id.has_next_week_plan")
-    has_coordination_week_work = fields.Selection(related="category_id.has_coordination_week_work")
     has_month_work = fields.Selection(related="category_id.has_month_work")
     has_month_summary = fields.Selection(related="category_id.has_month_summary")
     has_next_month_plan = fields.Selection(related="category_id.has_next_month_plan")
-    has_coordination_month_work = fields.Selection(related="category_id.has_coordination_month_work")
     has_visit_partner = fields.Selection(related="category_id.has_visit_partner")
     has_visit_type = fields.Selection(related="category_id.has_visit_type")
     has_visit_matter = fields.Selection(related="category_id.has_visit_matter")
@@ -60,6 +56,10 @@ class DingTalkReport(models.Model):
     has_month_pt_performance = fields.Selection(related="category_id.has_month_pt_performance")
     has_thinking_today_performance = fields.Selection(related="category_id.has_thinking_today_performance")
     has_date = fields.Selection(related="category_id.has_date")
+
+    report_id = fields.Char(string='唯一ID')
+    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
+    report_time = fields.Datetime(string=u'日志时间', default=fields.datetime.now())
 
     def _compute_attachment_number(self):
         domain = [('res_model', '=', 'dingtalk.report.report'), ('res_id', 'in', self.ids)]
