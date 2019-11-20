@@ -75,4 +75,33 @@ class DingTalkReport(models.Model):
         res['context'] = {'default_res_model': 'dingtalk.report.report', 'default_res_id': self.id}
         return res
 
+    @api.model
+    def get_report_count(self):
+        """
+        分类读取日志数量
+        :return:
+        """
+        categorys = self.env['dingtalk.report.category'].search([('active', '=', True)])
+        category_list = list()
+        category_dict = list()
+        for category in categorys:
+            report_count = self.env['dingtalk.report.report'].search_count([('category_id', '=', category.id)])
+            category_list.append(category.name)
+            category_dict.append({'value': report_count, 'name': category.name})
+        return {'category_list': category_list, 'category_dict': category_dict}
 
+    @api.model
+    def get_employee_report_count(self):
+        """
+        获取每个员工的总日志数量
+        :return:
+        """
+        employees = self.env['hr.employee'].search([('active', '=', True)])
+        report_sum_count = self.env['dingtalk.report.report'].search_count([])
+        emp_list = list()
+        emp_conut = list()
+        for emp in employees:
+            report_count = self.env['dingtalk.report.report'].search_count([('employee_id', '=', emp.id)])
+            emp_list.append(emp.name)
+            emp_conut.append(report_count)
+        return {'sum_count': report_sum_count, 'emp_list': emp_list, 'emp_conut': emp_conut}

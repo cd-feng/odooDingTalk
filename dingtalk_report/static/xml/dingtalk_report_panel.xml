@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<templates id="dingtalk_report_panel_templates">
+
+    <t t-name="dingtalk_report.DingtalkReportPanelTemplate">
+        <div class="row">
+            <div class="col-xs-6 col-md-4" id="dingtalk_report_count_div" string="日志数量" style="height:700px;"></div>
+            <div class="col-xs-12 col-sm-6 col-md-8" id="dingtalk_report_emp_count_div" style="height:700px;"></div>
+        </div>
+<!--        <div class="container-fluid" id="dingtalk_report_footer_div" style="height:600px;">-->
+<!--        </div>-->
+    </t>
+
+</templates>

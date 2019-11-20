@@ -1,0 +1,11 @@
+.dingtalk_report_panel_title{
+    width: 100%;
+    font-size: 28px;
+    text-align: center;
+    padding: 25px;
+}
+#dingtalk_report_count_div{
+    width: 700px;
+    text-align: center;
+    padding: 5px;
+}
