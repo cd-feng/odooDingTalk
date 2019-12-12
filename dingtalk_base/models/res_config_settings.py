@@ -51,7 +51,3 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_serial_number', self.dt_serial_number)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_delete_is_sy', self.dt_delete_is_sy)
 
-    def check_dt_serial_number(self):
-        self.ensure_one()
-        result = dingtalk_api.check_dt_serial_number("check_model")
-        raise UserError(result)
