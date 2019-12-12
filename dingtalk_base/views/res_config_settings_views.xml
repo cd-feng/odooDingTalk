@@ -102,7 +102,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="dt_serial_number"/>
                                 <div class="text-muted">当存在收费模块时自动生成，切勿修改</div>
-                                <button type="object" string="检查许可" icon="fa-arrow-right" name="check_dt_serial_number"/>
+<!--                                <button type="object" string="检查许可" icon="fa-arrow-right" name="check_dt_serial_number"/>-->
                             </div>
                         </div>
                     </div>

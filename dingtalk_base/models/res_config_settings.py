@@ -53,5 +53,4 @@ class ResConfigSettings(models.TransientModel):
 
     def check_dt_serial_number(self):
         self.ensure_one()
-        result = dingtalk_api.check_dt_serial_number("check_model")
-        raise UserError(result)
+        pass
