@@ -114,8 +114,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="dt_serial_number"/>
-                                <div class="text-muted">当存在收费模块时自动生成，切勿修改
-                                </div>
+                                <div class="text-muted">当存在收费模块时自动生成，切勿修改</div>
                             </div>
                         </div>
                     </div>

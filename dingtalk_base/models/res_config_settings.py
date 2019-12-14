@@ -49,5 +49,3 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_serial_number', self.dt_serial_number)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_delete_is_sy', self.dt_delete_is_sy)
 
-    def getting_token(self):
-        self.env.ref('dingtalk_base.ir_cron_data_get_token').method_direct_trigger()
