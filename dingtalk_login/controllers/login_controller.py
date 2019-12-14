@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 class OAuthController(Controller):
 
-    @http.route('/web/dingtalk/auto/login', type='http', auth='none')
+    @http.route('/web/dingtalk/auto/login', type='http', auth='public', website=True)
     def web_dingtalk_auto_login(self, **kw):
         """
         免登入口
@@ -34,7 +34,7 @@ class OAuthController(Controller):
             request.session.login = False
         return request.render('dingtalk_login.auto_login_signup', data)
 
-    @http.route('/web/dingtalk/auto/login/action', type='http', auth='none')
+    @http.route('/web/dingtalk/auto/login/action', type='http', auth='public', website=True)
     @fragment_to_query_string
     def web_dingtalk_auto_signin_action(self, **kw):
         """
