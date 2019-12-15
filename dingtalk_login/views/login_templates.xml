@@ -28,7 +28,7 @@
                     <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
                 </div>
             </form>
-            <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
             <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
             <script>
                 dd.ready(function() {
