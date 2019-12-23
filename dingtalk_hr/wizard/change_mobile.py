@@ -24,6 +24,7 @@ import json
 from requests import ReadTimeout
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons.dingtalk_base.tools import dingtalk_api
 
 _logger = logging.getLogger(__name__)
 
@@ -82,7 +83,7 @@ class ChangeMobile(models.TransientModel):
             40021 该手机号码已经注册过钉钉。
             40022 企业中的手机号码与登录钉钉的手机号码不一致。
         """
-        din_client = self.env['dingding.api.tools'].get_client()
+        din_client = dingtalk_api.get_client()
 
         # 先尝试直接更新
         logging.info(">>>开始尝试直接更新手机号")

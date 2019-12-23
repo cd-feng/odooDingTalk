@@ -102,7 +102,7 @@ class DingTalkEmployee(models.Model):
         :param offset: 分页起始值，默认0开始
         :param size: 分页大小，最大50
         """
-        din_client = self.env['dingding.api.tools'].get_client()
+        din_client = dingtalk_api.get_client()
         try:
             result = din_client.employeerm.querypreentry(offset=0, size=50)
             logging.info(">>>查询待入职员工列表返回结果%s", result)
