@@ -32,12 +32,12 @@ class ChangeMobile(models.TransientModel):
     _name = 'change.mobile'
     _description = 'Change Mobile'
 
-    name = fields.Char('员工姓名', required=True, readonly= True)
-    ding_id = fields.Char('钉钉ID', required=True, readonly= True)
-    dep_ding_id = fields.Char('所属部门ID列表', required=True, readonly= True)
-    old_mobile = fields.Char('原手机号', readonly= True)
-    new_mobile = fields.Char('新手机号', required= True)
-    din_active = fields.Boolean('是否激活', required= True)
+    name = fields.Char('员工姓名', required=True, readonly=True)
+    ding_id = fields.Char('钉钉ID', required=True, readonly=True)
+    dep_ding_id = fields.Char('所属部门ID列表', required=True, readonly=True)
+    old_mobile = fields.Char('原手机号', readonly=True)
+    new_mobile = fields.Char('新手机号', required=True)
+    din_active = fields.Boolean('是否激活', required=True)
 
     def _sanitization(self, record, field_name):
         value = record[field_name]
@@ -61,11 +61,11 @@ class ChangeMobile(models.TransientModel):
         records = self._get_records(model)
         for record in records:
             result = {
-                'name': self._sanitization(record,'name'),
-                'ding_id': self._sanitization(record,'ding_id'),
-                'dep_ding_id': self._sanitization(record,'department_id').ding_id,
-                'old_mobile': self._sanitization(record,'mobile_phone'),
-                'din_active': self._sanitization(record,'din_active')
+                'name': self._sanitization(record, 'name'),
+                'ding_id': self._sanitization(record, 'ding_id'),
+                'dep_ding_id': self._sanitization(record, 'department_id').ding_id,
+                'old_mobile': self._sanitization(record, 'mobile_phone'),
+                'din_active': self._sanitization(record, 'din_active')
             }
         return result
 
@@ -83,7 +83,7 @@ class ChangeMobile(models.TransientModel):
             40022 企业中的手机号码与登录钉钉的手机号码不一致。
         """
         din_client = self.env['dingding.api.tools'].get_client()
-        
+
         # 先尝试直接更新
         logging.info(">>>开始尝试直接更新手机号")
         data = {
