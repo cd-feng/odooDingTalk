@@ -5,8 +5,6 @@
 
 import logging
 from odoo import fields, models
-from odoo.exceptions import UserError
-from odoo.addons.dingtalk_base.tools import dingtalk_api
 
 _logger = logging.getLogger(__name__)
 
