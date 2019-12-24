@@ -95,10 +95,11 @@ class DingTalkHrSynchronous(models.TransientModel):
             if result.get('deptManagerUseridList'):
                 depts = result.get('deptManagerUseridList').split("|")
                 manage_users = self.env['hr.employee'].search([('ding_id', 'in', depts)])
-                dept_date.update({
-                    'manager_user_ids': [(6, 0, manage_users.ids)],
-                    'manager_id': manage_users[0].id
-                })
+                if manage_users:
+                    dept_date.update({
+                        'manager_user_ids': [(6, 0, manage_users.ids)],
+                        'manager_id': manage_users[0].id
+                    })
             if dept_date:
                 department.write(dept_date)
         self.env.cr.commit()
