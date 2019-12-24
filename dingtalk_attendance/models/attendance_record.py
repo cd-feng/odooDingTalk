@@ -34,8 +34,8 @@ class HrAttendanceRecord(models.Model):
 
     userId = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True, index=True)
     record_id = fields.Char(string='唯一标识')
-    groupId = fields.Many2one(comodel_name='dingtalk.simple.groups', string=u'考勤组', index=True)
-    planId = fields.Many2one(comodel_name='hr.dingtalk.plan', string=u'班次', index=True)
+    groupId = fields.Many2one(comodel_name='dingding.simple.groups', string=u'考勤组', index=True)
+    planId = fields.Many2one(comodel_name='hr.dingding.plan', string=u'班次', index=True)
     ding_plan_id = fields.Char(string='钉钉排班ID')
     workDate = fields.Date(string=u'工作日', index=True)
     corpId = fields.Char(string='企业ID')

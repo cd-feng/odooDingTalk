@@ -18,7 +18,7 @@
                             <label for="mobile_phone"/>
                             <div class="o_row">
                                 <field name="mobile_phone" widget="phone"/>
-                                <button type="object" string="换手机号" icon="fa-arrow-right" name="change_mobile_action"
+                                <button type="action" string="换手机号" icon="fa-arrow-right" name="%(change_mobile_action)d"
                                     attrs="{'invisible':[('mobile_phone', '=', False)]}"/>
                             </div>
                             <field name="din_hiredDate" widget="date"/>

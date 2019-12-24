@@ -28,13 +28,13 @@ class OAuthController(Controller):
         """
         logging.info(">>>用户正在使用免登...")
         data = {'corp_id': dingtalk_api.get_dt_corp_id()}
-        if request.session.uid:
-            request.session.uid = False
-        if request.session.login:
-            request.session.login = False
+        # if request.session.uid:
+        #     request.session.uid = False
+        # if request.session.login:
+        #     request.session.login = False
         return request.render('dingtalk_login.auto_login_signup', data)
 
-    @http.route('/web/dingtalk/auto/login/action', type='http', auth='public', website=True)
+    @http.route('/web/dingtalk/auto/login/action', type='http', auth='none')
     @fragment_to_query_string
     def web_dingtalk_auto_signin_action(self, **kw):
         """

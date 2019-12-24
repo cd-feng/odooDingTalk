@@ -24,7 +24,6 @@
         'views/attendance_record.xml',
         'views/attendance_result.xml',
         'views/leaves_list.xml',
-        'views/res_config_settings_views.xml',
 
         'wizard/simplegroups.xml',
         'wizard/dingtalk_plan.xml',
