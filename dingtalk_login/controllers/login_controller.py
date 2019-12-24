@@ -34,7 +34,7 @@ class OAuthController(Controller):
         #     request.session.login = False
         return request.render('dingtalk_login.auto_login_signup', data)
 
-    @http.route('/web/dingtalk/auto/login/action', type='http', auth='public', website=True)
+    @http.route('/web/dingtalk/auto/login/action', type='http', auth='none')
     @fragment_to_query_string
     def web_dingtalk_auto_signin_action(self, **kw):
         """
