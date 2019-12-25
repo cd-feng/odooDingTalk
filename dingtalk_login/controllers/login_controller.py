@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class OAuthController(Controller):
 
-    @http.route('/web/dingtalk/auto/login', type='http', auth='none')
+    @http.route('/web/dingtalk/auto/login', type='http', auth='public', website=True)
     def web_dingtalk_auto_login(self, **kw):
         """
         免登入口
