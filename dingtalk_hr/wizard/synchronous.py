@@ -114,7 +114,8 @@ class DingTalkHrSynchronous(models.TransientModel):
         """
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '!=', False)])
         client = dingtalk_api.get_client()
-        for department in departments.with_progress(msg="同步部门员工"):
+        # for department in departments.with_progress(msg="同步部门员工"):
+        for department in departments:
             emp_offset = 0
             emp_size = 100
             while True:

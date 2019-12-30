@@ -100,6 +100,18 @@ def get_serial_number():
     return False
 
 
+def timestamp_to_utc_date(timeNum):
+    """
+    将13位时间戳转换为时间utc=0
+    :param timeNum:
+    :return:
+    """
+    timeStamp = float(timeNum / 1000)
+    timeArray = time.gmtime(timeStamp)
+    otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+    return otherStyleTime
+
+
 def timestamp_to_local_date(time_num):
     """
     将13位毫秒时间戳转换为本地日期(+8h)
@@ -122,6 +134,19 @@ def datetime_to_stamp(time_num):
     :return: date_stamp
     """
     date_str = fields.Datetime.to_string(time_num)
+    date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
+    date_stamp = date_stamp * 1000
+    return int(date_stamp)
+
+
+def datetime_to_local_stamp(date_time):
+    """
+    将utc=0的时间转成13位时间戳(本地时间戳：+8H)
+    :param time_num:
+    :return: date_stamp
+    """
+    to_local_datetime = fields.Datetime.context_timestamp(request, date_time)
+    date_str = fields.Datetime.to_string(to_local_datetime)
     date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
     date_stamp = date_stamp * 1000
     return int(date_stamp)
