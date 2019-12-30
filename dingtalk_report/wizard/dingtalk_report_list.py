@@ -18,7 +18,8 @@ class DingTalkReportListTran(models.TransientModel):
     report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'日志类型', required=True)
     start_time = fields.Datetime(string=u'开始时间', required=True)
     end_time = fields.Datetime(string=u'结束时间', required=True, default=fields.datetime.now())
-    emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', required=True, domain="[('ding_id', '!=', False)]")
+    emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工',
+                               required=True, domain="[('ding_id', '!=', False)]")
 
     def get_user_report_list(self):
         """
@@ -37,8 +38,8 @@ class DingTalkReportListTran(models.TransientModel):
         while True:
             try:
                 result = dingtalk_api.get_client().post('topapi/report/list', {
-                    'start_time': dingtalk_api.datetime_to_stamp(self.start_time),
-                    'end_time': dingtalk_api.datetime_to_stamp(self.end_time),
+                    'start_time': dingtalk_api.datetime_to_local_stamp(self.start_time),
+                    'end_time': dingtalk_api.datetime_to_local_stamp(self.end_time),
                     'template_name': self.report_id.name,
                     'userid': user_list,
                     'cursor': cursor,
@@ -60,14 +61,14 @@ class DingTalkReportListTran(models.TransientModel):
                         'name': data.get('template_name'),
                         'category_id': self.report_id.category_id.id or False,
                         'employee_id': employee.id or False,
-                        'report_time': dingtalk_api.timestamp_to_local_date(data.get('create_time')) or fields.datetime.now(),
+                        'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')) or fields.datetime.now(),
                     })
                     reports = self.env['dingtalk.report.report'].search([('report_id', '=', data.get('report_id'))])
                     if not reports:
                         self.env['dingtalk.report.report'].create(report_data)
                 # 是否还有下一页
                 if result.get('has_more'):
-                    cursor += result.get('next_cursor')
+                    cursor = result.get('next_cursor')
                 else:
                     break
             else:
@@ -85,7 +86,3 @@ class DingTalkReportListTran(models.TransientModel):
             if field.name[:4] != 'has_':
                 data_dict.update({field.field_description: field.name})
         return data_dict
-
-
-
-
