@@ -55,7 +55,6 @@ class DingTalkReportListTran(models.TransientModel):
                     if result.get('errcode') == 0:
                         result = result.get('result')
                         data_list = result.get('data_list')
-                        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',data_list)
                         for data in data_list:
                             # 封装字段数据
                             report_data = dict()
