@@ -10,6 +10,7 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
+                <field name="report_id"/>
                 <field name="employee_id"/>
                 <field name="report_time"/>
             </tree>

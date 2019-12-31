@@ -145,7 +145,8 @@ def datetime_to_local_stamp(date_time):
     :param time_num:
     :return: date_stamp
     """
-    to_local_datetime = fields.Datetime.context_timestamp(request, date_time)
+    to_datetime = fields.Datetime.from_string(date_time)
+    to_local_datetime = fields.Datetime.context_timestamp(request, to_datetime)
     date_str = fields.Datetime.to_string(to_local_datetime)
     date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
     date_stamp = date_stamp * 1000

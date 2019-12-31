@@ -12,8 +12,8 @@
                 <sheet>
                     <group>
                         <field name="report_id" placeholder="请选择日志类型" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
-                        <field name="start_time" widget="datetime"/>
-                        <field name="end_time" widget="datetime"/>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
                         <field name="emp_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
                     </group>
                 </sheet>

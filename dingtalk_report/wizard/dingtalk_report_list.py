@@ -16,10 +16,9 @@ class DingTalkReportListTran(models.TransientModel):
     _description = "获取用户日志"
 
     report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'日志类型', required=True)
-    start_time = fields.Datetime(string=u'开始时间', required=True)
-    end_time = fields.Datetime(string=u'结束时间', required=True, default=fields.datetime.now())
-    emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工',
-                               required=True, domain="[('ding_id', '!=', False)]")
+    start_time = fields.Date(string=u'开始时间', required=True)
+    end_time = fields.Date(string=u'结束时间', required=True, default=fields.datetime.now())
+    emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain="[('ding_id', '!=', False)]")
 
     def get_user_report_list(self):
         """
@@ -30,49 +29,57 @@ class DingTalkReportListTran(models.TransientModel):
         if not self.report_id.category_id:
             raise UserError(_("请先在钉钉日志模板中关联系统日志类别!"))
         user_list = list()
-        for emp in self.emp_ids:
-            user_list.append(emp.ding_id)
-        cursor = 0
-        size = 20
-        report_dict = self._get_report_dicts()
-        while True:
-            try:
-                result = dingtalk_api.get_client().post('topapi/report/list', {
-                    'start_time': dingtalk_api.datetime_to_local_stamp(self.start_time),
-                    'end_time': dingtalk_api.datetime_to_local_stamp(self.end_time),
-                    'template_name': self.report_id.name,
-                    'userid': user_list,
-                    'cursor': cursor,
-                    'size': size
-                })
-            except Exception as e:
-                raise UserError(e)
-            if result.get('errcode') == 0:
-                result = result.get('result')
-                data_list = result.get('data_list')
-                for data in data_list:
-                    # 封装字段数据
-                    report_data = dict()
-                    for contents in data.get('contents'):
-                        report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
-                    # 读取创建人
-                    employee = self.env['hr.employee'].search([('ding_id', '=', data.get('creator_id'))], limit=1)
-                    report_data.update({
-                        'name': data.get('template_name'),
-                        'category_id': self.report_id.category_id.id or False,
-                        'employee_id': employee.id or False,
-                        'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')) or fields.datetime.now(),
-                    })
-                    reports = self.env['dingtalk.report.report'].search([('report_id', '=', data.get('report_id'))])
-                    if not reports:
-                        self.env['dingtalk.report.report'].create(report_data)
-                # 是否还有下一页
-                if result.get('has_more'):
-                    cursor = result.get('next_cursor')
-                else:
-                    break
-            else:
-                raise UserError('获取用户日志失败，详情为:{}'.format(result.get('errmsg')))
+        if self.emp_ids:
+            for emp in self.emp_ids:
+                user_list.append(emp.ding_id)
+        else:
+            user_list.append('')
+        date_list = dingtalk_api.day_cut(self.start_time, self.end_time, 180)
+        for u in user_list:
+            for date_arr in date_list:
+                cursor = 0
+                size = 20
+                report_dict = self._get_report_dicts()
+                while True:
+                    try:
+                        result = dingtalk_api.get_client().post('topapi/report/list', {
+                            'start_time': dingtalk_api.datetime_to_local_stamp(date_arr[0]),
+                            'end_time': dingtalk_api.datetime_to_local_stamp(date_arr[1]),
+                            'template_name': self.report_id.name,
+                            'userid': u,
+                            'cursor': cursor,
+                            'size': size
+                        })
+                    except Exception as e:
+                        raise UserError(e)
+                    if result.get('errcode') == 0:
+                        result = result.get('result')
+                        data_list = result.get('data_list')
+                        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',data_list)
+                        for data in data_list:
+                            # 封装字段数据
+                            report_data = dict()
+                            for contents in data.get('contents'):
+                                report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
+                            # 读取创建人
+                            employee = self.env['hr.employee'].search([('ding_id', '=', data.get('creator_id'))], limit=1)
+                            report_data.update({
+                                'name': data.get('template_name'),
+                                'category_id': self.report_id.category_id.id or False,
+                                'employee_id': employee.id or False,
+                                'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')) or fields.datetime.now(),
+                                'report_id': data.get('report_id'),
+                            })
+                            reports = self.env['dingtalk.report.report'].search([('report_id', '=', data.get('report_id'))])
+                            if not reports:
+                                self.env['dingtalk.report.report'].create(report_data)
+                        # 是否还有下一页
+                        if result.get('has_more'):
+                            cursor = result.get('next_cursor')
+                        else:
+                            break
+                    else:
+                        raise UserError('获取用户日志失败，详情为:{}'.format(result.get('errmsg')))
         return {'type': 'ir.actions.act_window_close'}
 
     def _get_report_dicts(self):
