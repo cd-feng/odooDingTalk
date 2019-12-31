@@ -152,6 +152,17 @@ def datetime_to_local_stamp(date_time):
     return int(date_stamp)
 
 
+def datetime_to_local_date(date_time):
+    """
+    将utc=0时间格式转换为本地时间格式(+8h)
+    :param time_num:
+    :return: string datetime
+    """
+    to_datetime = fields.Datetime.from_string(date_time)
+    to_local_datetime = fields.Datetime.context_timestamp(request, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+    return to_local_datetime
+
+
 def get_user_info_by_code(code):
     """
     根据扫码或账号密码登录返回的code获取用户信息
