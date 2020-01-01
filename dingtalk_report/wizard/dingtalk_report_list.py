@@ -15,7 +15,8 @@ class DingTalkReportListTran(models.TransientModel):
     _name = 'dingtalk.report.list.tran'
     _description = "获取用户日志"
 
-    report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'日志类型', required=True)
+    category_id = fields.Many2one(comodel_name='dingtalk.report.category', string=u'系统日志类型')
+    report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'钉钉日志模板', required=True)
     start_time = fields.Date(string=u'开始时间', required=True)
     end_time = fields.Date(string=u'结束时间', required=True, default=fields.datetime.now())
     emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain="[('ding_id', '!=', False)]")
@@ -27,7 +28,7 @@ class DingTalkReportListTran(models.TransientModel):
         """
         self.ensure_one()
         if not self.report_id.category_id:
-            raise UserError(_("请先在钉钉日志模板中关联系统日志类别!"))
+            raise UserError(_("请先在钉钉日志模板中关联系统日志类型!"))
         user_list = list()
         if self.emp_ids:
             for emp in self.emp_ids:
@@ -61,7 +62,8 @@ class DingTalkReportListTran(models.TransientModel):
                             for contents in data.get('contents'):
                                 report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
                             # 读取创建人
-                            employee = self.env['hr.employee'].search([('ding_id', '=', data.get('creator_id'))], limit=1)
+                            employee = self.env['hr.employee'].search(
+                                [('ding_id', '=', data.get('creator_id'))], limit=1)
                             report_data.update({
                                 'name': data.get('template_name'),
                                 'category_id': self.report_id.category_id.id or False,
@@ -69,7 +71,8 @@ class DingTalkReportListTran(models.TransientModel):
                                 'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')) or fields.datetime.now(),
                                 'report_id': data.get('report_id'),
                             })
-                            reports = self.env['dingtalk.report.report'].search([('report_id', '=', data.get('report_id'))])
+                            reports = self.env['dingtalk.report.report'].search(
+                                [('report_id', '=', data.get('report_id'))])
                             if not reports:
                                 self.env['dingtalk.report.report'].create(report_data)
                         # 是否还有下一页
@@ -92,3 +95,14 @@ class DingTalkReportListTran(models.TransientModel):
             if field.name[:4] != 'has_':
                 data_dict.update({field.field_description: field.name})
         return data_dict
+
+    @api.onchange('category_id')
+    def onchange_category_id(self):
+        '''选择系统日志类型自动填入已关联的钉钉日志模板（默认载入第一个）'''
+        if self.category_id:
+            tmp = self.env['dingtalk.report.template'].sudo().search(
+                [('category_id', '=', self.category_id.id)], limit=1).id
+            if tmp:
+                self.report_id = tmp
+            else:
+                self.report_id = False
