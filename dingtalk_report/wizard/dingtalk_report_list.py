@@ -18,7 +18,7 @@ class DingTalkReportListTran(models.TransientModel):
     category_id = fields.Many2one(comodel_name='dingtalk.report.category', string=u'系统日志类型')
     report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'钉钉日志模板', required=True)
     start_time = fields.Date(string=u'开始时间', required=True)
-    end_time = fields.Date(string=u'结束时间', required=True, default=fields.datetime.now())
+    end_time = fields.Date(string=u'结束时间', required=True, default=fields.Datetime.now())
     emp_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工', domain="[('ding_id', '!=', False)]")
 
     def get_user_report_list(self):
@@ -58,8 +58,6 @@ class DingTalkReportListTran(models.TransientModel):
                         data_list = result.get('data_list')
                         for data in data_list:
                             # 封装字段数据
-                            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>fields.datetime.now()',fields.datetime.now())
-                            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>fields.date.today()',fields.date.today())
                             report_data = dict()
                             for contents in data.get('contents'):
                                 report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
