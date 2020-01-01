@@ -115,7 +115,7 @@
                             <field name="employee_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
                         </group>
                         <group>
-                            <field name="report_time" widget="datetime"/>
+                            <field name="report_time"/>
                         </group>
                     </group>
                 </sheet>

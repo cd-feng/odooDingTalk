@@ -58,7 +58,8 @@ class DingTalkReportListTran(models.TransientModel):
                         data_list = result.get('data_list')
                         for data in data_list:
                             # 封装字段数据
-                            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',data)
+                            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>fields.datetime.now()',fields.datetime.now())
+                            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>fields.date.today()',fields.date.today())
                             report_data = dict()
                             for contents in data.get('contents'):
                                 report_data.update({report_dict.get(contents.get('key')): contents.get('value')})

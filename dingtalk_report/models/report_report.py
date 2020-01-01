@@ -16,7 +16,7 @@ class DingTalkReport(models.Model):
 
     name = fields.Char(string='主题')
     category_id = fields.Many2one('dingtalk.report.category', string="日志类型", required=True)
-    date = fields.Datetime(string="日期", default=fields.date.today())
+    date = fields.Date(string="日期", default=fields.Date.today())
     attachment_number = fields.Integer('附件数', compute='_compute_attachment_number')
     today_work = fields.Text(string=u'今日完成工作')
     no_compute_work = fields.Text(string=u'未完成工作')
@@ -59,7 +59,7 @@ class DingTalkReport(models.Model):
 
     report_id = fields.Char(string='日志ID')
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'填报人', default=lambda self: self.env.user.employee_id)
-    report_time = fields.Datetime(string=u'日志时间', default=fields.datetime.now())
+    report_time = fields.Datetime(string=u'填报时间', default=fields.Datetime.now())
 
     def _compute_attachment_number(self):
         domain = [('res_model', '=', 'dingtalk.report.report'), ('res_id', 'in', self.ids)]
