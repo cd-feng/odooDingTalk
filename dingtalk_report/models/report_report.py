@@ -57,8 +57,8 @@ class DingTalkReport(models.Model):
     has_thinking_today_performance = fields.Selection(related="category_id.has_thinking_today_performance")
     has_date = fields.Selection(related="category_id.has_date")
 
-    report_id = fields.Char(string='唯一ID')
-    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
+    report_id = fields.Char(string='日志ID')
+    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'填报人', default=lambda self: self.env.user.employee_id)
     report_time = fields.Datetime(string=u'日志时间', default=fields.datetime.now())
 
     def _compute_attachment_number(self):
