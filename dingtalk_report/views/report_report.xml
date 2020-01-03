@@ -35,6 +35,8 @@
                 <separator/>
                 <group expand="0" string="分组">
                     <filter name="group_by_category_id" string="类型" context="{'group_by':'category_id'}"/>
+                    <filter name="group_by_employee_id" string="填报人" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_by_report_time" string="填报时间" context="{'group_by':'report_time'}"/>
                 </group>
             </search>
         </field>
