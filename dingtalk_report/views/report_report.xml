@@ -114,7 +114,7 @@
                         <page string="日志照片" name="info_pic">
                             <field name="image_ids" options="{'no_open': True}">
                                 <tree editable="top">
-                                    <field name="report_image_url" widget="image_url"/>
+                                    <field name="report_image_url" widget="image_url" width="200px" height="200px"/>
                                 </tree>
                             </field>
                         </page>
