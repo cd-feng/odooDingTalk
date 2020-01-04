@@ -111,6 +111,13 @@
                             <field name="thinking_today_performance" attrs="{'invisible':[('has_thinking_today_performance', '==','no')], 'required': [('has_thinking_today_performance','==','required')]}"/>
                             </group>
                         </page>
+                        <page string="日志照片" name="info_pic">
+                            <field name="image_ids" options="{'no_open': True}">
+                                <tree editable="top">
+                                    <field name="report_image_url"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                     <group>
                         <group>

@@ -60,6 +60,7 @@ class DingTalkReport(models.Model):
     report_id = fields.Char(string='钉钉日志ID')
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'填报人', default=lambda self: self.env.user.employee_id)
     report_time = fields.Datetime(string=u'填报时间', default=fields.Datetime.now())
+    image_ids = fields.One2many(comodel_name='dingtalk.report.image', inverse_name='rep_id', string=u'照片列表')
 
     def _compute_attachment_number(self):
         domain = [('res_model', '=', 'dingtalk.report.report'), ('res_id', 'in', self.ids)]
@@ -105,3 +106,14 @@ class DingTalkReport(models.Model):
             emp_list.append(emp.name)
             emp_conut.append(report_count)
         return {'sum_count': report_sum_count, 'emp_list': emp_list, 'emp_conut': emp_conut}
+
+
+class DingTalkReportImages(models.Model):
+    _name = 'dingtalk.report.image'
+    _description = "日志照片列表"
+    _rec_name = 'report_id'
+
+    category_id = fields.Many2one('dingtalk.report.category', string="日志类型")
+    report_id = fields.Char(string='钉钉日志ID')
+    report_image_url = fields.Text(string='照片链接')
+    rep_id = fields.Many2one('dingtalk.report.report', string='日志ID')
