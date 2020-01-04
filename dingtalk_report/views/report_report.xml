@@ -199,6 +199,18 @@
         </field>
     </record>
 
+    <record id="dingtalk_report_image_view_form" model="ir.ui.view">
+        <field name="name">dingtalk.report.iamge.view.form</field>
+        <field name="model">dingtalk.report.image</field>
+        <field name="arch" type="xml">
+            <form string="日志照片" create="0">
+                <sheet>
+                    <field name="report_image_url" widget="image_url"/>
+                </sheet>  
+            </form>
+        </field>
+    </record>
+
     <menuitem id="dingtalk_report_report_menu" parent="report_root_menu" name="所有日志" action="dingtalk_report_report_action" sequence="5"/>
 
 </odoo>
