@@ -109,14 +109,12 @@
                             <field name="monthly_ct_performance" attrs="{'invisible':[('has_monthly_ct_performance', '==','no')], 'required': [('has_monthly_ct_performance','==','required')]}"/>
                             <field name="month_pt_performance" attrs="{'invisible':[('has_month_pt_performance', '==','no')], 'required': [('has_month_pt_performance','==','required')]}"/>
                             <field name="thinking_today_performance" attrs="{'invisible':[('has_thinking_today_performance', '==','no')], 'required': [('has_thinking_today_performance','==','required')]}"/>
-                            </group>
-                        </page>
-                        <page string="日志图片" name="info_pic">
                             <field name="image_ids" options="{'no_open': True}">
                                 <tree editable="top">
                                     <field name="report_image_url" widget="image_url" width="200px" height="200px"/>
                                 </tree>
                             </field>
+                            </group>
                         </page>
                     </notebook>
                     <group>

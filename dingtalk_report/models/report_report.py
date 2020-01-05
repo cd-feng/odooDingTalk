@@ -113,6 +113,7 @@ class DingTalkReportImages(models.Model):
     _name = 'dingtalk.report.image'
     _description = "日志图片"
     _rec_name = 'report_time'
+    _order = 'report_time'
 
     category_id = fields.Many2one('dingtalk.report.category', string="日志类型")
     report_image_url = fields.Text(string='图片链接')
