@@ -31,7 +31,7 @@
                 <field name="create_uid" string="创建人"/>
                 <field name="create_date" string="创建日期"/>
                 <separator/>
-                    <filter string="我的日志" name="filter_my_report" domain="[('create_uid', '=', uid)]"/>
+                <filter string="我的日志" name="filter_my_report" domain="[('create_uid', '=', uid)]"/>
                 <separator/>
                 <group expand="0" string="分组">
                     <filter name="group_by_category_id" string="类型" context="{'group_by':'category_id'}"/>
@@ -87,33 +87,40 @@
                     <notebook>
                         <page string="日志详情" name="info">
                             <group>
-                            <field name="today_work" attrs="{'invisible':[('has_today_work', '==','no')], 'required': [('has_today_work','==','required')]}"/>
-                            <field name="no_compute_work" attrs="{'invisible':[('has_no_compute_work', '==','no')], 'required': [('has_no_compute_work','==','required')]}"/>
+                                <field name="today_work" attrs="{'invisible':[('has_today_work', '==','no')], 'required': [('has_today_work','==','required')]}"/>
+                                <field name="no_compute_work" attrs="{'invisible':[('has_no_compute_work', '==','no')], 'required': [('has_no_compute_work','==','required')]}"/>
 
-                            <field name="week_compute" attrs="{'invisible':[('has_week_compute', '==','no')], 'required': [('has_week_compute','==','required')]}"/>
-                            <field name="week_summary" attrs="{'invisible':[('has_week_summary', '==','no')], 'required': [('has_week_summary','==','required')]}"/>
-                            <field name="next_week_plan" attrs="{'invisible':[('has_next_week_plan', '==','no')], 'required': [('has_next_week_plan','==','required')]}"/>
+                                <field name="week_compute" attrs="{'invisible':[('has_week_compute', '==','no')], 'required': [('has_week_compute','==','required')]}"/>
+                                <field name="week_summary" attrs="{'invisible':[('has_week_summary', '==','no')], 'required': [('has_week_summary','==','required')]}"/>
+                                <field name="next_week_plan" attrs="{'invisible':[('has_next_week_plan', '==','no')], 'required': [('has_next_week_plan','==','required')]}"/>
 
-                            <field name="month_work" attrs="{'invisible':[('has_month_work', '==','no')], 'required': [('has_month_work','==','required')]}"/>
-                            <field name="month_summary" attrs="{'invisible':[('has_month_summary', '==','no')], 'required': [('has_month_summary','==','required')]}"/>
-                            <field name="next_month_plan" attrs="{'invisible':[('has_next_month_plan', '==','no')], 'required': [('has_next_month_plan','==','required')]}"/>
+                                <field name="month_work" attrs="{'invisible':[('has_month_work', '==','no')], 'required': [('has_month_work','==','required')]}"/>
+                                <field name="month_summary" attrs="{'invisible':[('has_month_summary', '==','no')], 'required': [('has_month_summary','==','required')]}"/>
+                                <field name="next_month_plan" attrs="{'invisible':[('has_next_month_plan', '==','no')], 'required': [('has_next_month_plan','==','required')]}"/>
 
-                            <field name="coordination_work" attrs="{'invisible':[('has_coordination_work', '==','no')], 'required': [('has_coordination_work','==','required')]}"/>
-                            <field name="visit_partner" attrs="{'invisible':[('has_visit_partner', '==','no')], 'required': [('has_visit_partner','==','required')]}" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
-                            <field name="visit_type" attrs="{'invisible':[('has_visit_type', '==','no')], 'required': [('has_visit_type','==','required')]}"/>
-                            <field name="visit_matter" attrs="{'invisible':[('has_visit_matter', '==','no')], 'required': [('has_visit_matter','==','required')]}"/>
-                            <field name="visit_result" attrs="{'invisible':[('has_visit_result', '==','no')], 'required': [('has_visit_result','==','required')]}"/>
+                                <field name="coordination_work" attrs="{'invisible':[('has_coordination_work', '==','no')], 'required': [('has_coordination_work','==','required')]}"/>
+                                <field name="visit_partner" attrs="{'invisible':[('has_visit_partner', '==','no')], 'required': [('has_visit_partner','==','required')]}" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                <field name="visit_type" attrs="{'invisible':[('has_visit_type', '==','no')], 'required': [('has_visit_type','==','required')]}"/>
+                                <field name="visit_matter" attrs="{'invisible':[('has_visit_matter', '==','no')], 'required': [('has_visit_matter','==','required')]}"/>
+                                <field name="visit_result" attrs="{'invisible':[('has_visit_result', '==','no')], 'required': [('has_visit_result','==','required')]}"/>
 
-                            <field name="today_urnover_performance" attrs="{'invisible':[('has_today_urnover_performance', '==','no')], 'required': [('has_today_urnover_performance','==','required')]}"/>
-                            <field name="today_partner_performance" attrs="{'invisible':[('has_today_partner_performance', '==','no')], 'required': [('has_today_partner_performance','==','required')]}"/>
-                            <field name="monthly_ct_performance" attrs="{'invisible':[('has_monthly_ct_performance', '==','no')], 'required': [('has_monthly_ct_performance','==','required')]}"/>
-                            <field name="month_pt_performance" attrs="{'invisible':[('has_month_pt_performance', '==','no')], 'required': [('has_month_pt_performance','==','required')]}"/>
-                            <field name="thinking_today_performance" attrs="{'invisible':[('has_thinking_today_performance', '==','no')], 'required': [('has_thinking_today_performance','==','required')]}"/>
-                            <field name="image_ids" options="{'no_open': True}">
-                                <tree editable="top">
-                                    <field name="report_image_url" widget="image_url" width="200px" height="200px"/>
-                                </tree>
-                            </field>
+                                <field name="today_urnover_performance" attrs="{'invisible':[('has_today_urnover_performance', '==','no')], 'required': [('has_today_urnover_performance','==','required')]}"/>
+                                <field name="today_partner_performance" attrs="{'invisible':[('has_today_partner_performance', '==','no')], 'required': [('has_today_partner_performance','==','required')]}"/>
+                                <field name="monthly_ct_performance" attrs="{'invisible':[('has_monthly_ct_performance', '==','no')], 'required': [('has_monthly_ct_performance','==','required')]}"/>
+                                <field name="month_pt_performance" attrs="{'invisible':[('has_month_pt_performance', '==','no')], 'required': [('has_month_pt_performance','==','required')]}"/>
+                                <field name="thinking_today_performance" attrs="{'invisible':[('has_thinking_today_performance', '==','no')], 'required': [('has_thinking_today_performance','==','required')]}"/>
+                                <field name="image_ids" options="{'no_open': True}">
+                                    <kanban quick_create="false" create="true" class="o_modules_kanban">
+                                        <field name="report_image_url"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click">
+                                                    <field name="report_image_url" widget="image_url" width="100px" height="100px"/>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
                             </group>
                         </page>
                     </notebook>
@@ -140,7 +147,7 @@
         <field name="name">dingtalk.report.report.view.kanban</field>
         <field name="model">dingtalk.report.report</field>
         <field name="arch" type="xml">
-            <kanban create="false" class="o_modules_kanban" >
+            <kanban create="false" class="o_modules_kanban">
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
@@ -153,7 +160,9 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                             <div class="o_kanban_image_fill_left d-none d-md-block">
-                                <t t-if="record.image1_url.raw_value"><field name="image1_url" widget="image_url" width="100px" height="100px"/></t>
+                                <t t-if="record.image1_url.raw_value">
+                                    <field name="image1_url" widget="image_url" width="100px" height="100px"/>
+                                </t>
                             </div>
                             <div class="oe_kanban_details">
                                 <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
@@ -167,13 +176,20 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
                                     </div>
 
                                     <div class="text-muted o_kanban_record_subtitle">
                                         <ul>
-                                            <li><field name="category_id"/>-<field name="employee_id"/></li>
-                                            <li><field name="report_time"/></li>
+                                            <li>
+                                                <field name="category_id"/>
+-                                                <field name="employee_id"/>
+                                            </li>
+                                            <li>
+                                                <field name="report_time"/>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="o_kanban_record_bottom">
@@ -185,7 +201,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>   
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -193,15 +209,15 @@
         </field>
     </record>
 
-     <record id="dingtalk_report_report_action" model="ir.actions.act_window">
+    <record id="dingtalk_report_report_action" model="ir.actions.act_window">
         <field name="name">日志列表</field>
         <field name="res_model">dingtalk.report.report</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_group_by_category_id': True}</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_smiling_face">
             日志列表
-          </p>
+            </p>
         </field>
     </record>
 
@@ -233,8 +249,6 @@
                 <field name="category_id"/>
                 <field name="dingtalk_report_id"/>
                 <field name="report_time"/>
-                <field name="create_uid" string="创建人"/>
-                <field name="create_date" string="创建日期"/>
                 <group expand="0" string="分组">
                     <filter name="group_by_category_id" string="类型" context="{'group_by':'category_id'}"/>
                     <filter name="group_by_dingtalk_report_id" string="日志" context="{'group_by':'dingtalk_report_id'}"/>
@@ -251,7 +265,7 @@
             <form string="日志图片">
                 <sheet>
                     <field name="report_image_url" widget="image_url"/>
-                </sheet>  
+                </sheet>
             </form>
         </field>
     </record>
@@ -261,9 +275,9 @@
         <field name="res_model">dingtalk.report.image</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_smiling_face">
             没有图片~
-          </p>
+            </p>
         </field>
     </record>
 
@@ -288,14 +302,20 @@
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
-                                            <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
+                                            <span t-if="record.category_id.raw_value">
+                                                <field name="category_id"/>
+                                            </span>
                                         </strong>
                                     </div>
                                 </div>
                                 <ul>
-                                   <li><field name="report_id"/></li>
-                                   <li><field name="report_time"/></li>
-                               </ul>
+                                    <li>
+                                        <field name="report_id"/>
+                                    </li>
+                                    <li>
+                                        <field name="report_time"/>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </t>
