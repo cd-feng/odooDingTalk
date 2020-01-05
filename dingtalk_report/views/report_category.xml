@@ -75,7 +75,7 @@
     </record>
 
     <record id="dingtalk_report_category_action" model="ir.actions.act_window">
-        <field name="name">日志</field>
+        <field name="name">日志类型</field>
         <field name="res_model">dingtalk.report.category</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
@@ -85,7 +85,7 @@
         </field>
     </record>
 
-    <menuitem id="dingtalk_report_category_menu" name="日志" parent="report_root_menu" sequence="2" action="dingtalk_report_category_action"/>
+    <menuitem id="dingtalk_report_category_menu" name="日志类型" parent="report_root_menu" sequence="2" action="dingtalk_report_category_action"/>
 
     <record id="dingtalk_report_category_view_kanban" model="ir.ui.view">
         <field name="name">dingtalk.report.category.views.kanban</field>

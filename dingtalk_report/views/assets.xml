@@ -17,13 +17,13 @@
 
     <menuitem name="日志" id="report_root_menu" web_icon="dingtalk_report,static/description/icon.png" sequence="16"/>
 
-    <menuitem name="钉钉" id="dingtalk_report_root_menu" parent="report_root_menu" sequence="20"/>
+    <menuitem name="钉钉日志" id="dingtalk_report_root_menu" parent="report_root_menu" sequence="20"/>
 
     <record id="dingtalk_report_panel_action" model="ir.actions.client">
         <field name="name">日志统计</field>
         <field name="tag">dingtalk_report_panel</field>
     </record>
 
-    <menuitem name="日志统计" id="dingtalk_report_panel_menu" parent="report_root_menu" sequence="25" action="dingtalk_report_panel_action"/>
+    <menuitem name="日志统计" id="dingtalk_report_panel_menu" parent="report_root_menu" sequence="5" action="dingtalk_report_panel_action"/>
 
 </odoo>

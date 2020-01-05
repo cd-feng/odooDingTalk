@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class DingTalkReportListTran(models.TransientModel):
     _name = 'dingtalk.report.list.tran'
-    _description = "获取用户日志"
+    _description = "获取钉钉日志"
 
     category_id = fields.Many2one(comodel_name='dingtalk.report.category', string=u'系统日志类型')
     report_id = fields.Many2one(comodel_name='dingtalk.report.template', string=u'钉钉日志模板', required=True)
@@ -61,7 +61,7 @@ class DingTalkReportListTran(models.TransientModel):
                             # 封装字段数据
                             report_data = dict()
                             for contents in data.get('contents'):
-                                report_data.update({report_dict.get(contents.get('key')): contents.get('value')}) 
+                                report_data.update({report_dict.get(contents.get('key')): contents.get('value')})
                             # 读取创建人
                             employee = self.env['hr.employee'].search(
                                 [('ding_id', '=', data.get('creator_id'))], limit=1)
@@ -72,25 +72,25 @@ class DingTalkReportListTran(models.TransientModel):
                                 'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')) or fields.datetime.now(),
                                 'report_id': data.get('report_id'),
                             })
-
-                            # 获取日志照片
+                            # 存储日志图片链接
                             if data.get('images'):
+                                report_data.update({
+                                    'image1_url': literal_eval(data['images'][0]).get('image'),
+                                })
                                 image_data = list()
                                 for image in data.get('images'):
                                     image = literal_eval(image)
                                     image_data.append((0, 0, {
                                         'category_id': self.report_id.category_id.id,
                                         'report_image_url': image.get('image'),
-                                        'report_id': data.get('report_id'),
+                                        'dingtalk_report_id': data.get('report_id'),
+                                        'report_time': dingtalk_api.timestamp_to_utc_date(data.get('create_time')),
                                     }))
-
                                 report_data.update({'image_ids': image_data})
-
                             reports = self.env['dingtalk.report.report'].search(
                                 [('report_id', '=', data.get('report_id'))])
                             if not reports:
                                 self.env['dingtalk.report.report'].create(report_data)
-                                    
                         # 是否还有下一页
                         if result.get('has_more'):
                             cursor = result.get('next_cursor')
