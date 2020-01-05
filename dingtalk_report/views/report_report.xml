@@ -248,7 +248,7 @@
         <field name="name">dingtalk.report.iamge.view.form</field>
         <field name="model">dingtalk.report.image</field>
         <field name="arch" type="xml">
-            <form string="日志图片" create="0">
+            <form string="日志图片">
                 <sheet>
                     <field name="report_image_url" widget="image_url"/>
                 </sheet>  
