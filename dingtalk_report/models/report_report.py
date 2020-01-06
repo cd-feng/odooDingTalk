@@ -16,7 +16,7 @@ class DingTalkReport(models.Model):
 
     name = fields.Char(string='主题')
     category_id = fields.Many2one('dingtalk.report.category', string="日志类型", required=True)
-    date = fields.Datetime(string="日期", default=fields.date.today())
+    date = fields.Date(string="日期", default=fields.Date.today())
     attachment_number = fields.Integer('附件数', compute='_compute_attachment_number')
     today_work = fields.Text(string=u'今日完成工作')
     no_compute_work = fields.Text(string=u'未完成工作')
@@ -57,9 +57,11 @@ class DingTalkReport(models.Model):
     has_thinking_today_performance = fields.Selection(related="category_id.has_thinking_today_performance")
     has_date = fields.Selection(related="category_id.has_date")
 
-    report_id = fields.Char(string='唯一ID')
-    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工')
-    report_time = fields.Datetime(string=u'日志时间', default=fields.datetime.now())
+    report_id = fields.Char(string='钉钉日志ID')
+    employee_id = fields.Many2one(comodel_name='hr.employee', string=u'填报人', default=lambda self: self.env.user.employee_id)
+    report_time = fields.Datetime(string=u'填报时间', default=fields.Datetime.now())
+    image_ids = fields.One2many(comodel_name='dingtalk.report.image', inverse_name='report_id', string=u'图片列表', ondelete='cascade')
+    image1_url = fields.Char(string='图片1链接')
 
     def _compute_attachment_number(self):
         domain = [('res_model', '=', 'dingtalk.report.report'), ('res_id', 'in', self.ids)]
@@ -105,3 +107,17 @@ class DingTalkReport(models.Model):
             emp_list.append(emp.name)
             emp_conut.append(report_count)
         return {'sum_count': report_sum_count, 'emp_list': emp_list, 'emp_conut': emp_conut}
+
+
+class DingTalkReportImages(models.Model):
+    _name = 'dingtalk.report.image'
+    _description = "日志图片"
+    _rec_name = 'report_time'
+    _order = 'report_time'
+
+    category_id = fields.Many2one('dingtalk.report.category', string="日志类型")
+    report_image_url = fields.Text(string='图片链接')
+    dingtalk_report_id = fields.Text(string='钉钉日志ID')
+    report_time = fields.Datetime(string=u'填报时间', default=fields.Datetime.now())
+    report_id = fields.Many2one('dingtalk.report.report', string='日志ID', ondelete='cascade')
+
