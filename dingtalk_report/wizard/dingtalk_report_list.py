@@ -45,8 +45,8 @@ class DingTalkReportListTran(models.TransientModel):
                 while True:
                     try:
                         result = dingtalk_api.get_client(self).post('topapi/report/list', {
-                            'start_time': dingtalk_api.datetime_to_local_stamp(date_arr[0]),
-                            'end_time': dingtalk_api.datetime_to_local_stamp(date_arr[1]),
+                            'start_time': dingtalk_api.datetime_to_local_stamp(self, date_arr[0]),
+                            'end_time': dingtalk_api.datetime_to_local_stamp(self, date_arr[1]),
                             'template_name': self.report_id.name,
                             'userid': u,
                             'cursor': cursor,
