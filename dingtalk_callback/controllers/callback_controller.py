@@ -172,7 +172,7 @@ class DingTalkCallBackManage(http.Controller):
 
     def get_employee_info(self, user_id, event_type):
         try:
-            result = dingtalk_api.get_client().user.get(user_id)
+            result = dingtalk_api.get_client(self).user.get(user_id)
         except Exception as e:
             _logger.info("获取用户详情失败：{}".format(e))
             return
@@ -203,7 +203,7 @@ class DingTalkCallBackManage(http.Controller):
                     'mobile_phone': '+{}-{}'.format(result.get('stateCode'), result.get('mobile')),
                 })
             if result.get('hiredDate'):
-                date_str = dingtalk_api.timestamp_to_local_date(result.get('hiredDate'))
+                date_str = dingtalk_api.timestamp_to_local_date(self, result.get('hiredDate'))
                 data.update({'din_hiredDate': date_str})
             if result.get('department'):
                 dep_ding_ids = result.get('department')
@@ -227,7 +227,7 @@ class DingTalkCallBackManage(http.Controller):
         :return:
         """
         try:
-            result = dingtalk_api.get_client().department.get(dept_id)
+            result = dingtalk_api.get_client(self).department.get(dept_id)
         except Exception as e:
             _logger.info("获取用户详情失败：{}".format(e))
             return

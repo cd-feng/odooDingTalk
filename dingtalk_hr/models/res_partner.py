@@ -30,7 +30,7 @@ class ResPartner(models.Model):
 
     def create_ding_partner(self):
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         # 获取标签
         label_list = list()
         if self.category_id:
@@ -57,7 +57,7 @@ class ResPartner(models.Model):
         :return:
         """
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         # 获取标签
         label_list = list()
         if self.category_id:
@@ -89,7 +89,7 @@ class ResPartner(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def _delete_dingtalk_partner_by_id(self, ding_id):
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         try:
             result = client.extcontact.delete(ding_id)
             _logger.info(_("已在钉钉上删除Id:{}的联系人".format(result)))

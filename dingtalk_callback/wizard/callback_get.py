@@ -19,7 +19,7 @@ class GetCallbackList(models.TransientModel):
     def get_callback_list(self):
         self.ensure_one()
         try:
-            result = dingtalk_api.get_client().callback.get_call_back()
+            result = dingtalk_api.get_client(self).callback.get_call_back()
             _logger.info(result)
             if result.get('errcode') != 0:
                 raise UserError(result.get('errmsg'))

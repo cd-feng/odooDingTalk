@@ -21,7 +21,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
         """
         self.ensure_one()
         _logger.info(">>>获取钉钉在职员工花名册...")
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         emp_data = self._get_employee_to_dict()
         userid_list = self._get_onjob_userid_list(client)
         self._create_employee_roster(client, dingtalk_api.list_cut(userid_list, 20), emp_data)

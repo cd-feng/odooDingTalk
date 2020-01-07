@@ -22,7 +22,7 @@ class HrDepartment(models.Model):
 
     def create_ding_department(self):
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         for res in self:
             if res.ding_id:
                 raise UserError("该部门已在钉钉ID已存在，不能在进行上传。  *_*！")
@@ -45,7 +45,7 @@ class HrDepartment(models.Model):
 
     def update_ding_department(self):
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         for res in self:
             data = {
                 'id': res.ding_id,  # id
@@ -79,7 +79,7 @@ class HrDepartment(models.Model):
             super(HrDepartment, self).unlink()
 
     def _delete_dingtalk_department_by_id(self, ding_id):
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         try:
             result = client.department.delete(ding_id)
             _logger.info(_("已在钉钉上删除Id:{}的部门".format(result)))

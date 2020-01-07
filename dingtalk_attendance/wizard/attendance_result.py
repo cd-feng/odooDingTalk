@@ -85,7 +85,7 @@ class HrAttendanceResultTransient(models.TransientModel):
 
     @api.model
     def send_post_dindin(self, data):
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
         try:
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
                                                 user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))

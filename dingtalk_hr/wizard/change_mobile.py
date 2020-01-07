@@ -83,7 +83,7 @@ class ChangeMobile(models.TransientModel):
             40021 该手机号码已经注册过钉钉。
             40022 企业中的手机号码与登录钉钉的手机号码不一致。
         """
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
 
         # 先尝试直接更新
         logging.info(">>>开始尝试直接更新手机号")
