@@ -31,7 +31,7 @@ class GetDingTalkHrmDimissionList(models.TransientModel):
         """
         批量获取员工离职信息
         """
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         dimission_list = self._get_dimission_userid_list(client)
         user_list = dingtalk_api.list_cut(dimission_list, 20)
         for user in user_list:
@@ -49,7 +49,7 @@ class GetDingTalkHrmDimissionList(models.TransientModel):
                                     dept_list.append(hr_dept.id)
                         data = {
                             'ding_id': res.get('userid'),
-                            'last_work_day': dingtalk_api.timestamp_to_local_date(res.get('last_work_day')),
+                            'last_work_day': dingtalk_api.timestamp_to_local_date(self, res.get('last_work_day')),
                             'department_ids': [(6, 0, dept_list)] if dept_list else '',
                             'reason_memo': res.get('reason_memo'),
                             'reason_type': str(res.get('reason_type')) if res.get('reason_type') else '9',

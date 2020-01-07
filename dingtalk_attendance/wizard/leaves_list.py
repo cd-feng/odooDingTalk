@@ -23,7 +23,7 @@ class HrLeavesListTran(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
         user_list = list()
         for emp in self.user_ids:
             if emp.ding_id:

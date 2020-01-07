@@ -56,7 +56,7 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         for res in self:
-            client = dingtalk_api.get_client()
+            client = dingtalk_api.get_client(self)
             # 获取部门ding_id
             department_list = list()
             if not res.department_id:
@@ -92,7 +92,7 @@ class HrEmployee(models.Model):
         :return:
         """
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         # 获取部门ding_id
         department_list = list()
         if not self.department_id:
@@ -139,7 +139,7 @@ class HrEmployee(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def _delete_dingtalk_employee_by_id(self, ding_id):
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         try:
             result = client.user.delete(ding_id)
             _logger.info(_("已在钉钉上删除Id:{}的员工".format(result)))

@@ -35,7 +35,7 @@ class HrDingDingPlanTran(models.TransientModel):
         """
         # 删除已存在的排班信息
         self.env['hr.dingtalk.plan'].sudo().search([('plan_check_time', '>=', start_date), ('plan_check_time', '<=', stop_date)]).unlink()
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
         _logger.info(">>>------开始获取排班信息-----------")
         work_date = start_date
         while work_date <= stop_date:
