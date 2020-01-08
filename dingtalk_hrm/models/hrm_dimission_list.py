@@ -42,4 +42,4 @@ class DingTalkHrmDimissionList(models.Model):
     pre_status = fields.Selection(string='离职前工作状态', selection=PRESTATUS)
     handover_userid = fields.Many2one(comodel_name='hr.employee', string='离职交接人')
     mainDeptId = fields.Many2one(comodel_name='hr.department', string=u'离职前部门')
-    state = fields.Selection(string=u'离职状态', selection=[('1', '待离职'), ('2', '已离职')])
+    status = fields.Selection(string=u'离职状态', selection=[('1', '待离职'), ('2', '已离职')])
