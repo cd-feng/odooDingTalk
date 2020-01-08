@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <template id="dingtalk_report_assets" name="DingTalk Report Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingtalk_report/static/src/js/report_template.js"></script>
+
+            <script type="text/javascript" src="/dingtalk_report/static/src/js/echarts.min.js"></script>
+            <link rel="stylesheet" href="/dingtalk_report/static/src/css/dingtalk_report_panel.css" />
+            <script type="text/javascript" src="/dingtalk_report/static/src/js/dingtalk_report_panel.js"></script>
+
+        </xpath>
+    </template>
+
+    <menuitem name="日志" id="report_root_menu" web_icon="dingtalk_report,static/description/icon.png" sequence="16"/>
+
+    <menuitem name="钉钉" id="dingtalk_report_root_menu" parent="report_root_menu" sequence="20"/>
+
+    <record id="dingtalk_report_panel_action" model="ir.actions.client">
+        <field name="name">日志统计</field>
+        <field name="tag">dingtalk_report_panel</field>
+    </record>
+
+    <menuitem name="日志统计" id="dingtalk_report_panel_menu" parent="report_root_menu" sequence="25" action="dingtalk_report_panel_action"/>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<data>
+
+        <record id="dingtalk_report_report_ir_rule" model="ir.rule">
+            <field name="name">钉钉日志-员工过滤规则</field>
+            <field name="model_id" ref="dingtalk_report.model_dingtalk_report_report"/>
+            <field name="domain_force">[('employee_id.user_id', 'in', [False, user.id])]</field>
+            <field name="groups" eval="[(4, ref('dingtalk_report.user_group'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="dingtalk_report_report_manage_ir_rule" model="ir.rule">
+            <field name="name">钉钉日志-管理员过滤规则</field>
+            <field name="model_id" ref="dingtalk_report.model_dingtalk_report_report"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('dingtalk_report.manage_group'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+	</data>
+</odoo>
