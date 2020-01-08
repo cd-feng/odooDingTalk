@@ -29,10 +29,13 @@ class DingTalkHrmDimissionList(models.Model):
         ('1', '待入职'),
         ('2', '试用期'),
         ('3', '正式'),
+        ('4', '未知'),
+        ('5', '其他'),
+
     ]
     active = fields.Boolean(string=u'Active', default=True)
     ding_id = fields.Char(string='员工用户id')
-    emp_id = fields.Many2one(comodel_name='dingtalk.employee.roster', string='员工', required=True)
+    emp_id = fields.Many2one(comodel_name='dingtalk.employee.roster', string='员工')
     last_work_day = fields.Datetime(string='最后工作时间')
     reason_memo = fields.Text(string="离职原因")
     reason_type = fields.Selection(string='离职类型', selection=REASONTYPE)
