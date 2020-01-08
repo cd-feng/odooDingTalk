@@ -94,9 +94,8 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                     hr_job = self.env['hr.job'].sudo().create({'name': fie['label']})
                                 roster_data.update({'position': hr_job.id or False})
                             else:
-                                roster_data.update({
-                                    fie['field_code'][6:]: fie['label'] if "label" in fie else False
-                                })
+                                if fie['field_code'][0:3] == 'sys' and 'label' in fie:
+                                    roster_data.update({fie['field_code'][6:]: fie['label']})
                         roster = self.env['dingtalk.employee.roster'].sudo().search([('ding_userid', '=', rec['userid'])])
                         if roster:
                             roster.sudo().write(roster_data)
