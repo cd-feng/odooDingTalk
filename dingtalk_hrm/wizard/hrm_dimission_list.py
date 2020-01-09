@@ -49,13 +49,13 @@ class GetDingTalkHrmDimissionList(models.TransientModel):
                                     dept_list.append(hr_dept.id)
                         data = {
                             'ding_id': res.get('userid'),
-                            'last_work_day': dingtalk_api.timestamp_to_local_date(self, res.get('last_work_day')),
-                            'department_ids': [(6, 0, dept_list)] if dept_list else '',
+                            'last_work_day': dingtalk_api.timestamp_to_utc_date(res.get('last_work_day')) if res.get('last_work_day') else False,
+                            # 'department_ids': [(6, 0, dept_list)] if dept_list else '',
                             'reason_memo': res.get('reason_memo'),
                             'reason_type': str(res.get('reason_type')) if res.get('reason_type') else '9',
                             'pre_status': str(res.get('pre_status')),
                             'status': str(res.get('status')),
-                            'main_dept_name': main_dept.id or False,
+                            'mainDeptId': main_dept.id or False,
                         }
                         if res.get('handover_userid'):
                             handover_userid = self.env['hr.employee'].search([('ding_id', '=', res.get('handover_userid'))])
