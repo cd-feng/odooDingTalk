@@ -93,19 +93,6 @@
                             </div>
                         </div>
                     </div>
-                    <h2>授权许可</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <field name="dt_serial_number" placeholder="自动生成，切勿修改"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="dt_serial_number"/>
-                                <div class="text-muted">当存在收费模块时自动生成，切勿修改</div>
-<!--                                <button type="object" string="检查许可" icon="fa-arrow-right" name="check_dt_serial_number"/>-->
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </xpath>
         </field>

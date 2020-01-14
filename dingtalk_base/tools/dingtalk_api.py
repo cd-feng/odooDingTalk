@@ -185,28 +185,6 @@ def day_cut(begin_time, end_time, days):
     return cut_day
 
 
-def check_dingtalk_authorization(model_name):
-    serial_number = get_serial_number()
-    if not serial_number:
-        return False
-    try:
-        result = requests.get(url="http://111.231.208.155:8099",
-                              params={'code': serial_number, 'domain': request.httprequest.host_url, 'model': model_name}, timeout=5)
-        result = json.loads(result.text)
-        if result['model_state']:
-            return {'state': True, 'msg': result['msg']}
-        else:
-            return {'state': False, 'msg': result['msg']}
-    except Exception as e:
-        return {'state': False, 'msg': str(e)}
-
-
-def check_dt_serial_number(check_model):
-    if check_model == 'check_model':
-        result = check_dingtalk_authorization("check_model")
-        return result['msg']
-
-
 def setup_approval_state_fields(self):
     """
     安装钉钉审批字段
