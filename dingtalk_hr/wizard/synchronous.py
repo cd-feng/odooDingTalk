@@ -47,7 +47,7 @@ class DingTalkHrSynchronous(models.TransientModel):
         同步钉钉部门
         :return:
         """
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         result = client.department.list(fetch_child=True)
         dept_ding_ids = list()
         for res in result:
@@ -81,7 +81,7 @@ class DingTalkHrSynchronous(models.TransientModel):
         :return:
         """
         departments = self.env['hr.department'].sudo().search([('active', '=', True), ('ding_id', '!=', '')])
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         for department in departments:
             result = client.department.get(department.ding_id)
             dept_date = dict()
@@ -113,7 +113,7 @@ class DingTalkHrSynchronous(models.TransientModel):
         :return:
         """
         departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('active', '!=', False)])
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         # for department in departments.with_progress(msg="同步部门员工"):
         for department in departments:
             emp_offset = 0
@@ -168,7 +168,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                 if user.get('stateCode') != '86':
                     data.update({'mobile_phone': '+{}-{}'.format(user.get('stateCode'), user.get('mobile'))})
                 if user.get('hiredDate'):
-                    time_stamp = dingtalk_api.timestamp_to_local_date(user.get('hiredDate'))
+                    time_stamp = dingtalk_api.timestamp_to_local_date(self, user.get('hiredDate'))
                     data.update({'din_hiredDate': time_stamp})
                 if user.get('department'):
                     dep_din_ids = user.get('department')
@@ -208,7 +208,7 @@ class DingTalkHrSynchronousPartner(models.TransientModel):
         同步标签
         :return:
         """
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         try:
             results = client.ext.listlabelgroups()
             category_list = list()
@@ -234,7 +234,7 @@ class DingTalkHrSynchronousPartner(models.TransientModel):
         同步联系人
         :return:
         """
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         try:
             results = client.ext.list(offset=0, size=100)
             for res in results:

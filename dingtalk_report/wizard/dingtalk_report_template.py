@@ -21,7 +21,7 @@ class DingTalkReportTemplateTran(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         offset = 0
         size = 100
         while True:

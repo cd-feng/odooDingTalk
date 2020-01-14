@@ -58,7 +58,7 @@ class DingTalkEmployee(models.Model):
         :param param: 添加待入职入参
         """
         for res in self:
-            din_client = dingtalk_api.get_client()
+            din_client = dingtalk_api.get_client(self)
             logging.info(">>>添加待入职员工start")
             name = res.name
             mobile = res.mobile
@@ -102,7 +102,7 @@ class DingTalkEmployee(models.Model):
         :param offset: 分页起始值，默认0开始
         :param size: 分页大小，最大50
         """
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
         try:
             result = din_client.employeerm.querypreentry(offset=0, size=50)
             logging.info(">>>查询待入职员工列表返回结果%s", result)

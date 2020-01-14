@@ -60,7 +60,7 @@ class HrAttendanceRecordTransient(models.TransientModel):
         """
         logging.info(">>>开始获取{}-{}时间段数据".format(from_date, to_date))
         emp_data = self.get_pull_odoo_dict()
-        din_client = dingtalk_api.get_client()
+        din_client = dingtalk_api.get_client(self)
         try:
             result = din_client.attendance.list_record(user_list, from_date, to_date)
             # logging.info(">>>数据返回结果%s", result)

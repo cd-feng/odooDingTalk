@@ -11,9 +11,10 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="report_id" placeholder="请选择日志类型" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
-                        <field name="start_time" widget="datetime"/>
-                        <field name="end_time" widget="datetime"/>
+                        <field name="category_id" placeholder="请选择系统日志类型" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                        <field name="report_id" placeholder="请选择钉钉日志模板" domain="[('category_id', '=', category_id)]" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
                         <field name="emp_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
                     </group>
                 </sheet>
@@ -26,12 +27,12 @@
     </record>
 
     <record id="dingtalk_report_list_tran_action" model="ir.actions.act_window">
-        <field name="name">获取钉钉日志模板</field>
+        <field name="name">获取钉钉日志</field>
         <field name="res_model">dingtalk.report.list.tran</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <menuitem name="获取用户日志" id="dingtalk_report_list_tran_menu" parent="dingtalk_report_root_menu" sequence="2" action="dingtalk_report_list_tran_action"/>
+    <menuitem name="获取日志" id="dingtalk_report_list_tran_menu" parent="dingtalk_report_root_menu" sequence="2" action="dingtalk_report_list_tran_action"/>
 
 </odoo>

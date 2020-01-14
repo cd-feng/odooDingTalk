@@ -74,7 +74,7 @@ class DingTalkCallback(models.Model):
         for call in self.call_ids:
             call_list.append(call.value)
         try:
-            result = dingtalk_api.get_client().callback.register_call_back(call_list, self.token, self.aes_key, self.url)
+            result = dingtalk_api.get_client(self).callback.register_call_back(call_list, self.token, self.aes_key, self.url)
         except Exception as e:
             raise UserError("注册失败！原因:{}".format(e))
         if result.get('errcode') == 0:
@@ -94,7 +94,7 @@ class DingTalkCallback(models.Model):
         for call in self.call_ids:
             call_list.append(call.value)
         try:
-            result = dingtalk_api.get_client().callback.update_call_back(call_list, self.token, self.aes_key, self.url)
+            result = dingtalk_api.get_client(self).callback.update_call_back(call_list, self.token, self.aes_key, self.url)
         except Exception as e:
             raise UserError("更新失败！原因:{}".format(e))
         if result.get('errcode') == 0:
@@ -113,7 +113,7 @@ class DingTalkCallback(models.Model):
             if res.state == '01':
                 _logger.info(">>>删除事件...")
                 try:
-                    result = dingtalk_api.get_client().callback.delete_call_back()
+                    result = dingtalk_api.get_client(self).callback.delete_call_back()
                     _logger.info("删除回调事件：{}".format(result))
                 except Exception as e:
                     _logger.info(e)

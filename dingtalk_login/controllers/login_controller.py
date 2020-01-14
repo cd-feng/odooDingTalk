@@ -44,7 +44,7 @@ class OAuthController(Controller):
         """
         auth_code = kw.get('authCode')
         logging.info(">>>免登授权码: %s", auth_code)
-        result = dingtalk_api.get_client().user.getuserinfo(auth_code)
+        result = dingtalk_api.get_client(request).user.getuserinfo(auth_code)
         employee = request.env['hr.employee'].sudo().search([('ding_id', '=', result.userid)], limit=1)
         if not employee:
             _logger.info(_("系统对应员工不存在!"))

@@ -26,7 +26,7 @@ def approval_result(self):
     form_values = get_form_values(self, approval)
     _logger.info(form_values)
     # ----提交至钉钉---
-    client = dingtalk_api.get_client()
+    client = dingtalk_api.get_client(self)
     try:
         url = 'topapi/processinstance/create'
         result = client.post(url, {

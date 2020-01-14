@@ -28,23 +28,23 @@ mem_storage = MemoryStorage()
 _logger = logging.getLogger(__name__)
 
 
-def get_client():
+def get_client(obj):
     """
     得到客户端
     :return: client
     """
-    dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
-    app_key, app_secret = _get_key_and_secrect()
+    dt_corp_id = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
+    app_key, app_secret = _get_key_and_secrect(obj)
     return AppKeyClient(dt_corp_id, app_key, app_secret, storage=mem_storage)
 
 
-def _get_key_and_secrect():
+def _get_key_and_secrect(self):
     """
     获取配置项中钉钉key和app_secret
     :return:
     """
-    app_key = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
-    app_secret = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
+    app_key = self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
+    app_secret = self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
     if app_key and app_secret:
         return app_key.replace(' ', ''), app_secret.replace(' ', '')
     return '0000', '0000'
@@ -112,7 +112,7 @@ def timestamp_to_utc_date(timeNum):
     return otherStyleTime
 
 
-def timestamp_to_local_date(time_num):
+def timestamp_to_local_date(self, time_num):
     """
     将13位毫秒时间戳转换为本地日期(+8h)
     :param time_num:
@@ -122,7 +122,7 @@ def timestamp_to_local_date(time_num):
     to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
     to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
     to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
-    to_local_datetime = fields.Datetime.context_timestamp(request, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+    to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
     to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
     return to_str_datetime
 
@@ -139,27 +139,28 @@ def datetime_to_stamp(time_num):
     return int(date_stamp)
 
 
-def datetime_to_local_stamp(date_time):
+def datetime_to_local_stamp(self, date_time):
     """
     将utc=0的时间转成13位时间戳(本地时间戳：+8H)
     :param time_num:
     :return: date_stamp
     """
-    to_local_datetime = fields.Datetime.context_timestamp(request, date_time)
+    to_datetime = fields.Datetime.from_string(date_time)
+    to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)
     date_str = fields.Datetime.to_string(to_local_datetime)
     date_stamp = time.mktime(time.strptime(date_str, "%Y-%m-%d %H:%M:%S"))
     date_stamp = date_stamp * 1000
     return int(date_stamp)
 
 
-def datetime_to_local_date(date_time):
+def datetime_to_local_date(self, date_time):
     """
     将utc=0时间格式转换为本地时间格式(+8h)
     :param time_num:
     :return: string datetime
     """
     to_datetime = fields.Datetime.from_string(date_time)
-    to_local_datetime = fields.Datetime.context_timestamp(request, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+    to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
     return to_local_datetime
 
 
@@ -175,7 +176,7 @@ def get_user_info_by_code(code):
     signature = hmac.new(login_secret.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256).digest()
     signature = quote(base64.b64encode(signature), 'utf-8')
     url = "sns/getuserinfo_bycode?signature={}&timestamp={}&accessKey={}".format(signature, timestamp, login_id)
-    result = get_client().post(url, {
+    result = get_client(request).post(url, {
         'tmp_auth_code': code,
         'signature': signature,
         'timestamp': timestamp,
