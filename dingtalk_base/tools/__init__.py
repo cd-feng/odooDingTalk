@@ -4,4 +4,3 @@
 ###################################################################################
 
 from . import dingtalk_api
-from . import dingtalk_approval
