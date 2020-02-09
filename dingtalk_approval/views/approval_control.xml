@@ -59,9 +59,10 @@
                             </page>
                             <page string="禁用功能" attrs="{'invisible':[('ftype', '=', 'oa')]}">
                                 <group>
-                                    <field name="model_start_button_ids" widget="many2many_tags" string="审批前禁用功能" options="{'no_create': True}"/>
-                                    <field name="model_button_ids" widget="many2many_tags" string="审批中禁用功能" options="{'no_create': True}"/>
-                                    <field name="model_end_button_ids" widget="many2many_tags" string="审批结束禁用功能" options="{'no_create': True}"/>
+                                    <field name="model_start_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_pass_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_end_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                 </group>
                             </page>
                             <page string="可执行函数" name="code">
