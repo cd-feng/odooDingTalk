@@ -48,31 +48,52 @@ class DingTalkCallBackManageExt(DingTalkCallBackManage):
         :param msg:
         :return:
         """
-        temp = request.env['dingtalk.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
+        temp = request.env['dingtalk.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))], limit=1)
         if temp:
-            approval = request.env['dingtalk.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+            approval = request.env['dingtalk.approval.control'].sudo().search([('template_id', '=', temp.id)])
             if approval:
-                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))])
+                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))], limit=1)
                 if oa_model:
+                    approval_result = msg.get('result')
                     model_name = oa_model._name.replace('.', '_')
+                    # 审批实例开始
                     if msg.get('type') == 'start':
-                        oa_model.sudo().message_post(body="流程审批开始", message_type='notification')
+                        oa_model.message_post(body="流程审批开始", message_type='notification')
+                    # 审批实例结束
                     else:
-                        request.env.cr.execute("""
-                                    UPDATE {} SET 
-                                        dd_approval_state='stop', 
-                                        dd_doc_state='审批结束',
-                                        dd_approval_result='{}' 
-                                    WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
-                        dobys = "流程审批结束"
-                        oa_model.sudo().message_post(body=dobys, message_type='notification')
-                        # -----执行自定义结束函数-----
-                        if approval.approval_end_function:
-                            for method in approval.approval_end_function.split(','):
+                        sql = """UPDATE {} 
+                            SET 
+                                dd_approval_state='stop', 
+                                dd_doc_state='审批结束', 
+                                dd_approval_result='{}' 
+                            WHERE 
+                                id={}
+                        """.format(model_name, approval_result, oa_model.id)
+                        request.env.cr.execute(sql)
+                        oa_model.message_post(body="流程审批结束", message_type='notification')
+                        # -----检查审批结果，并执行审批通过或拒绝的自定义函数------
+                        # 审批结果：同意
+                        if approval_result == 'agree' and approval.approval_pass_function:
+                            for method in approval.approval_pass_function.split(','):
                                 try:
                                     getattr(oa_model, method)()
                                 except Exception as e:
-                                    _logger.info("----执行模型{}自定义结束函数失败-----".format(oa_model._name))
-                                    _logger.info(e)
-                                    _logger.info("---------------------------------")
+                                    self.print_getattr_exception(oa_model._name, e)
+                        # 审批结果：拒绝
+                        if approval_result == 'refuse' and approval.approval_refuse_function:
+                            for method in approval.approval_refuse_function.split(','):
+                                try:
+                                    getattr(oa_model, method)()
+                                except Exception as e:
+                                    self.print_getattr_exception(oa_model._name, e)
         return True
+
+    def print_getattr_exception(self, model_name, e):
+        """
+        :param model_name:
+        :param e:
+        :return:
+        """
+        _logger.info("----执行模型{}自定义结束函数失败-----".format(model_name))
+        _logger.info(e)
+        _logger.info("---------------------------------")

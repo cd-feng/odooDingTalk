@@ -36,12 +36,17 @@ class DingTalkApprovalControl(models.Model):
 
     line_ids = fields.One2many(comodel_name='dingtalk.approval.control.line', inverse_name='control_id', string=u'字段详情')
     model_start_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_start_rel',
-                                              string=u'审批前禁用功能列表')
-    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能列表')
+                                              string=u'审批前禁用功能列表', domain="[('model_id', '=', oa_model_id)]")
+    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能列表',
+                                        domain="[('model_id', '=', oa_model_id)]")
     model_end_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_end_rel',
-                                            string=u'审批结束禁用功能列表')
-    approval_start_function = fields.Char(string=u'提交审批时执行函数')
-    approval_end_function = fields.Char(string=u'审批结束执行函数')
+                                            string=u'审批结束禁用功能列表', domain="[('model_id', '=', oa_model_id)]")
+
+    approval_start_function = fields.Char(string=u'提交审批-执行函数')
+    approval_restart_function = fields.Char(string=u'重新提交-执行函数')
+    approval_pass_function = fields.Char(string=u'审批通过-执行函数')
+    approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
+    approval_end_function = fields.Char(string=u'审批结束-执行函数')
     remarks = fields.Text(string=u'备注')
 
     _sql_constraints = [
@@ -80,6 +85,19 @@ class DingTalkApprovalControl(models.Model):
             },
         }
 
+    def action_approval_tree(self):
+        """
+        跳转至审批列表
+        :return:
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self.oa_model_id.model,
+            "views": [[False, "tree"], [False, "form"]],
+            "name": self.oa_model_id.name,
+        }
+
     @api.onchange('oa_model_id')
     def onchange_model_id(self):
         """
@@ -87,7 +105,6 @@ class DingTalkApprovalControl(models.Model):
         :return:
         """
         for rec in self:
-            model_domain = [('model_id', '=', False)]
             if rec.oa_model_id:
                 model_id = rec.oa_model_id
                 result = self.env[model_id.model].fields_view_get()
@@ -102,27 +119,30 @@ class DingTalkApprovalControl(models.Model):
                             'function': item.get('name'),
                             'modifiers': item.get('modifiers'),
                         })
-                model_domain = [('model_id', '=', model_id.id)]
-            return {'domain': {
-                'model_button_ids': model_domain,
-                'model_end_button_ids': model_domain,
-                'model_start_button_ids': model_domain
-            }}
 
     @api.model
     def create(self, vals):
         # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).create(vals)
 
     def write(self, vals):
+        # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).write(vals)
 
 
@@ -133,7 +153,7 @@ class DingTalkApprovalControlLine(models.Model):
 
     sequence = fields.Integer(string=u'序号')
     control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string=u'审批配置', ondelete="set null")
-    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型')
+    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', related="control_id.oa_model_id")
     field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段', required=True,
                                domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
     ttype = fields.Selection(selection='_get_field_types', string=u'字段类型')

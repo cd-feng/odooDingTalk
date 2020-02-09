@@ -79,6 +79,7 @@ def modify_form_view(self, result):
     # 审批结果
     dd_approval_result_field = etree.Element('field')
     dd_approval_result_field.set('name', 'dd_approval_result')
+    # dd_approval_result_field.set('widget', 'statusbar')
     dd_approval_result_field.set('modifiers', '{"invisible": true}')
     header.insert(len(header.xpath('button')), dd_approval_result_field)
     # 钉钉审批

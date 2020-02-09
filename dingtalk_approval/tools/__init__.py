@@ -5,3 +5,4 @@
 
 from . import odoo_model
 from . import ir_ui_view
+from . import dingtalk_approval
