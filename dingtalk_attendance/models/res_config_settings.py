@@ -32,7 +32,7 @@ class ResConfigSettings(models.TransientModel):
             cron = self.env['ir.cron'].sudo().search(domain)
             if not cron:
                 self.env['ir.cron'].create({
-                    'name': "定时获取钉钉员工考勤打卡结果",
+                    'name': "钉钉-定时拉取员工考勤打卡结果",
                     'model_id': self.env['ir.model'].sudo().search([('model', '=', 'dingtalk.attendance.cron.task')], limit=1).id,
                     'user_id': 1,
                     'interval_number': 1,

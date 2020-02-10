@@ -11,37 +11,36 @@ import time
 from datetime import datetime, timedelta
 from odoo import fields, _
 from urllib.parse import quote
-
-try:
-    from dingtalk.client import AppKeyClient
-    from dingtalk.storage.memorystorage import MemoryStorage
-    from odoo.http import request
-except ImportError as e:
-    logging.info(_("-------Import Error-----------------------"))
-    logging.info(_("引入钉钉三方SDK出错！请检查是否正确安装SDK！！！"))
-    logging.info(_("-------Import Error-----------------------"))
+from dingtalk.client import AppKeyClient
+from dingtalk.storage.memorystorage import MemoryStorage
+from odoo.http import request
 
 mem_storage = MemoryStorage()
 _logger = logging.getLogger(__name__)
 
 
-def get_client():
+def get_client(obj=None):
     """
     得到客户端
+    :param obj: 当自动任务时获取客户端时需传入一个对象，否则会报对象无绑定的错误
     :return: client
     """
-    dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
-    app_key, app_secret = _get_key_and_secrect()
+    try:
+        dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
+        app_key, app_secret = get_key_and_secrect(request)
+    except Exception:
+        dt_corp_id = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
+        app_key, app_secret = get_key_and_secrect(obj)
     return AppKeyClient(dt_corp_id, app_key, app_secret, storage=mem_storage)
 
 
-def _get_key_and_secrect():
+def get_key_and_secrect(obj):
     """
     获取配置项中钉钉key和app_secret
     :return:
     """
-    app_key = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
-    app_secret = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
+    app_key = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
+    app_secret = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
     if app_key and app_secret:
         return app_key.replace(' ', ''), app_secret.replace(' ', '')
     return '0000', '0000'
@@ -180,4 +179,3 @@ def day_cut(begin_time, end_time, days):
         cut_day.append([t1_str, t2_str])
         t1 = t2 + timedelta(seconds=1)
     return cut_day
-
