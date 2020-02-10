@@ -202,3 +202,26 @@ def _restart_commit_approval(self):
 setattr(Model, 'restart_commit_approval', _restart_commit_approval)
 
 
+def _action_dingtalk_approval_record(self):
+    """
+    跳转到钉钉审批记录tree
+    :param self:
+    :return:
+    """
+    self.ensure_one()
+    return {
+        "type": "ir.actions.act_window",
+        "res_model": "dingtalk.approval.record",
+        "views": [[False, "tree"]],
+        "name": "审批记录",
+        "domain": [["process_instance", "=", self.dd_process_instance]],
+        "context": {
+            'search_default_group_by_model': 0,
+            'search_default_group_by_process_instance': 0
+        },
+    }
+
+
+setattr(Model, 'action_dingtalk_approval_record', _action_dingtalk_approval_record)
+
+
