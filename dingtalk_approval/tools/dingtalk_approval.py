@@ -3,7 +3,7 @@
 import logging
 from odoo import models, api
 from odoo.exceptions import UserError
-from . import dingtalk_api
+from odoo.addons.dingtalk_base.tools import dingtalk_api
 
 _logger = logging.getLogger(__name__)
 
@@ -53,14 +53,14 @@ def _commit_dingtalk_approval(self):
         raise UserError('提交审批实例失败，失败原因:{}'.format(result.get('errmsg')))
     model_name = self._name.replace('.', '_')
     sql = """UPDATE {} 
-                SET 
-                    dd_approval_state='{}', 
-                    dd_doc_state='{}', 
-                    dd_process_instance='{}' 
-                WHERE 
-                    id={}""".format(model_name, 'approval', '等待审批', result.get('process_instance_id'), self.id)
+             SET 
+                dd_approval_state='{}', 
+                dd_doc_state='{}', 
+                dd_process_instance='{}' 
+             WHERE 
+                id={}""".format(model_name, 'approval', '等待审批', result.get('process_instance_id'), self.id)
     self._cr.execute(sql)
-    # 执行审批运行函数代码
+    # ------执行提交审批运行函数代码-------
     if approval.approval_start_function:
         for method in approval.approval_start_function.split(','):
             try:
@@ -188,10 +188,40 @@ def _restart_commit_approval(self):
              WHERE 
                  id={}""".format(model_name, 'approval', '重新提交审批', result.get('process_instance_id'), self.id)
     self._cr.execute(sql)
+    # ------执行重新提交后的函数代码-------
+    if approval.approval_restart_function:
+        for method in approval.approval_restart_function.split(','):
+            try:
+                getattr(self, method)()
+            except Exception as e:
+                _logger.info(e)
     self.message_post(body=u"已重新提交，请等待审批人审批！", message_type='notification')
     return True
 
 
 setattr(Model, 'restart_commit_approval', _restart_commit_approval)
+
+
+def _action_dingtalk_approval_record(self):
+    """
+    跳转到钉钉审批记录tree
+    :param self:
+    :return:
+    """
+    self.ensure_one()
+    return {
+        "type": "ir.actions.act_window",
+        "res_model": "dingtalk.approval.record",
+        "views": [[False, "tree"]],
+        "name": "审批记录",
+        "domain": [["process_instance", "=", self.dd_process_instance]],
+        "context": {
+            'search_default_group_by_model': 0,
+            'search_default_group_by_process_instance': 0
+        },
+    }
+
+
+setattr(Model, 'action_dingtalk_approval_record', _action_dingtalk_approval_record)
 
 

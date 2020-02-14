@@ -6,45 +6,41 @@
 import base64
 import hashlib
 import hmac
-import json
 import logging
 import time
 from datetime import datetime, timedelta
-import requests
 from odoo import fields, _
 from urllib.parse import quote
-from odoo.exceptions import ValidationError
-
-try:
-    from dingtalk.client import AppKeyClient
-    from dingtalk.storage.memorystorage import MemoryStorage
-    from odoo.http import request
-except ImportError as e:
-    logging.info(_("-------Import Error-----------------------"))
-    logging.info(_("引入钉钉三方SDK出错！请检查是否正确安装SDK！！！"))
-    logging.info(_("-------Import Error-----------------------"))
+from dingtalk.client import AppKeyClient
+from dingtalk.storage.memorystorage import MemoryStorage
+from odoo.http import request
 
 mem_storage = MemoryStorage()
 _logger = logging.getLogger(__name__)
 
 
-def get_client():
+def get_client(obj=None):
     """
     得到客户端
+    :param obj: 当自动任务时获取客户端时需传入一个对象，否则会报对象无绑定的错误
     :return: client
     """
-    dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
-    app_key, app_secret = _get_key_and_secrect()
+    try:
+        dt_corp_id = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
+        app_key, app_secret = get_key_and_secrect(request)
+    except Exception:
+        dt_corp_id = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_corp_id')
+        app_key, app_secret = get_key_and_secrect(obj)
     return AppKeyClient(dt_corp_id, app_key, app_secret, storage=mem_storage)
 
 
-def _get_key_and_secrect():
+def get_key_and_secrect(obj):
     """
     获取配置项中钉钉key和app_secret
     :return:
     """
-    app_key = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
-    app_secret = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
+    app_key = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_key')
+    app_secret = obj.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_app_secret')
     if app_key and app_secret:
         return app_key.replace(' ', ''), app_secret.replace(' ', '')
     return '0000', '0000'
@@ -183,92 +179,3 @@ def day_cut(begin_time, end_time, days):
         cut_day.append([t1_str, t2_str])
         t1 = t2 + timedelta(seconds=1)
     return cut_day
-
-
-def check_dingtalk_authorization(model_name):
-    serial_number = get_serial_number()
-    if not serial_number:
-        return False
-    try:
-        result = requests.get(url="http://111.231.208.155:8099",
-                              params={'code': serial_number, 'domain': request.httprequest.host_url, 'model': model_name}, timeout=5)
-        result = json.loads(result.text)
-        if result['model_state']:
-            return {'state': True, 'msg': result['msg']}
-        else:
-            return {'state': False, 'msg': result['msg']}
-    except Exception as e:
-        return {'state': False, 'msg': str(e)}
-
-
-def check_dt_serial_number(check_model):
-    if check_model == 'check_model':
-        result = check_dingtalk_authorization("check_model")
-        return result['msg']
-
-
-def setup_approval_state_fields(self):
-    """
-    安装钉钉审批字段
-    :param self:
-    :return:
-    """
-    def add(name, field):
-        if name not in self._fields:
-            self._add_field(name, field)
-    self._cr.execute("SELECT COUNT(*) FROM pg_class WHERE relname = 'dingtalk_approval_control'")
-    table = self._cr.fetchall()
-    if table[0][0] > 0:
-        self._cr.execute(
-            """SELECT im.model 
-                FROM dingtalk_approval_control dac 
-                JOIN ir_model im 
-                     ON dac.oa_model_id = im.id 
-                WHERE im.model = '%s'
-                """ % self._name)
-        res = self._cr.fetchall()
-        if len(res) != 0:
-            add('dd_doc_state', fields.Char(string=u'审批描述'))
-            add('dd_approval_state', fields.Selection(string=u'审批状态', selection=[('draft', '草稿'), ('approval', '审批中'), ('stop', '审批结束')], default='draft'))
-            add('dd_approval_result', fields.Selection(string=u'审批结果', selection=[('load', '等待'), ('agree', '同意'), ('refuse', '拒绝'), ('redirect', '转交')],
-                                                       default='load'))
-            add('dd_process_instance', fields.Char(string='钉钉审批实例id'))
-    return True
-
-
-def dingtalk_approval_write(self, vals):
-    """不允许单据修改"""
-    res_state_obj = self.env.get('dingtalk.approval.control')
-    if res_state_obj is None:
-        return
-    # 关注与取消关注处理
-    if len(vals.keys()) == 1 and list(vals.keys())[0] == 'message_follower_ids':
-        return
-    for res in self:
-        model_id = self.env['ir.model'].sudo().search([('model', '=', res._name)]).id
-        flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id)])
-        if not flows:
-            continue
-        if res.dd_approval_state == 'approval':
-            # 审批中
-            raise ValidationError(u'注意：单据审批中，不允许进行修改。 *_*!!')
-        elif res.dd_approval_state == 'stop':
-            # 审批完成
-            if flows[0].ftype == 'oa':
-                raise ValidationError(u'注意：单据已审批完成，不允许进行修改。 *_*!!')
-    return True
-
-
-def dingtalk_approval_unlink(self):
-    """非草稿单据不允许删除"""
-    res_state_obj = self.env.get('dingtalk.approval.control')
-    if res_state_obj is None:
-        return
-    for res in self:
-        model_id = self.env['ir.model'].sudo().search([('model', '=', res._name)]).id
-        flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id)])
-        if not flows:
-            continue
-        if res.dd_approval_state != 'draft':
-            raise ValidationError(u'注意：非草稿单据不允许删除。 *_*!!')
-    return True

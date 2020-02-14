@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng GNU
+-->
+<template id="template" xml:space="preserve">
+
+    <t t-name="ListView.DingtalkCallBackList">
+        <button type="button" class="btn btn-secondary dingtalk_callback_get_class" groups="dingtalk_callback.manage_group">
+            获取回调列表
+        </button>
+    </t>
+    <t t-extend="ListView.buttons" t-name="ListView.DingtalkCallBackListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="ListView.DingtalkCallBackList"/>
+        </t>
+    </t>
+
+</template>
+
+

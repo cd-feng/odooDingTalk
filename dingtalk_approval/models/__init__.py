@@ -5,3 +5,4 @@
 
 from . import dingtalk_template
 from . import approval_control
+from . import approval_record

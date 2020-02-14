@@ -18,7 +18,7 @@
                     <div class="o_setting_right_pane">
                         <label for="dt_attendance_interval"/>
                         <div class="text-muted">
-                           是否定时从钉钉中获取员工的考勤数据（考勤打卡结果、打开详情）
+                           是否定时从钉钉中获取员工的考勤数据（考勤打卡结果、打卡详情）
                         </div>
                          <div class="content-group" attrs="{'invisible': [('dt_attendance_interval','=',False)]}">
                              <div class="mt16 row">

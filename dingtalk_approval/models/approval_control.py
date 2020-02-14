@@ -36,12 +36,19 @@ class DingTalkApprovalControl(models.Model):
 
     line_ids = fields.One2many(comodel_name='dingtalk.approval.control.line', inverse_name='control_id', string=u'字段详情')
     model_start_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_start_rel',
-                                              string=u'审批前禁用功能列表')
-    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能列表')
+                                              string=u'审批前禁用功能', domain="[('model_id', '=', oa_model_id)]")
+    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能',
+                                        domain="[('model_id', '=', oa_model_id)]")
+    model_pass_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_pass_rel',
+                                            string=u'审批通过禁用功能', domain="[('model_id', '=', oa_model_id)]")
     model_end_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_end_rel',
-                                            string=u'审批结束禁用功能列表')
-    approval_start_function = fields.Char(string=u'提交审批时执行函数')
-    approval_end_function = fields.Char(string=u'审批结束执行函数')
+                                            string=u'审批拒绝禁用功能', domain="[('model_id', '=', oa_model_id)]")
+
+    approval_start_function = fields.Char(string=u'提交审批-执行函数')
+    approval_restart_function = fields.Char(string=u'重新提交-执行函数')
+    approval_pass_function = fields.Char(string=u'审批通过-执行函数')
+    approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
+    approval_end_function = fields.Char(string=u'审批结束-执行函数')
     remarks = fields.Text(string=u'备注')
 
     _sql_constraints = [
@@ -80,6 +87,19 @@ class DingTalkApprovalControl(models.Model):
             },
         }
 
+    def action_approval_tree(self):
+        """
+        跳转至审批列表
+        :return:
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self.oa_model_id.model,
+            "views": [[False, "tree"], [False, "form"]],
+            "name": self.oa_model_id.name,
+        }
+
     @api.onchange('oa_model_id')
     def onchange_model_id(self):
         """
@@ -87,7 +107,6 @@ class DingTalkApprovalControl(models.Model):
         :return:
         """
         for rec in self:
-            model_domain = [('model_id', '=', False)]
             if rec.oa_model_id:
                 model_id = rec.oa_model_id
                 result = self.env[model_id.model].fields_view_get()
@@ -102,27 +121,30 @@ class DingTalkApprovalControl(models.Model):
                             'function': item.get('name'),
                             'modifiers': item.get('modifiers'),
                         })
-                model_domain = [('model_id', '=', model_id.id)]
-            return {'domain': {
-                'model_button_ids': model_domain,
-                'model_end_button_ids': model_domain,
-                'model_start_button_ids': model_domain
-            }}
 
     @api.model
     def create(self, vals):
         # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).create(vals)
 
     def write(self, vals):
+        # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).write(vals)
 
 
@@ -133,7 +155,7 @@ class DingTalkApprovalControlLine(models.Model):
 
     sequence = fields.Integer(string=u'序号')
     control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string=u'审批配置', ondelete="set null")
-    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型')
+    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', related="control_id.oa_model_id")
     field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段', required=True,
                                domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
     ttype = fields.Selection(selection='_get_field_types', string=u'字段类型')
@@ -200,11 +222,11 @@ class DingDingDataSet(DataSet):
         approval = request.env['dingtalk.approval.control'].sudo().search([('oa_model_id', '=', ir_model.id)], limit=1)
         if approval:
             # 获取当前单据的id
-            params = args[1].get('params')
-            if params:
-                res_id = params.get('id')
+            if args[0]:
+                res_id = args[0][0]
             else:
-                res_id = args[0][0] if args[0] else 0
+                params = args[1].get('params')
+                res_id = params.get('id')
             # 获取当前单据
             now_model = request.env[model].sudo().search([('id', '=', res_id)])
             if now_model and now_model.dd_approval_state == 'draft':
@@ -212,17 +234,23 @@ class DingDingDataSet(DataSet):
                 for button in approval.model_start_button_ids:
                     start_but_functions.append(button.function)
                 if method in start_but_functions:
-                    raise UserError(_('此单据未审批前不允许使用此功能，请审批后再进行操作。 *_*!!'))
+                    raise UserError(_("本功能暂无法使用，因为单据还没有'提交至钉钉'进行审批，请先提交至钉钉进行审批后再试！"))
             elif now_model and now_model.dd_approval_state == 'approval':
                 but_functions = list()
                 for button in approval.model_button_ids:
                     but_functions.append(button.function)
                 if method in but_functions:
-                    raise UserError(_('此单据还未通过钉钉审批，该功能无法使用。 *_*!!'))
-            elif now_model and now_model.dd_approval_state == 'stop':
-                ent_but_functions = list()
+                    raise UserError(_("本功能暂无法使用，因为单据还是'钉钉审批中'状态。请在单据审批后再试！"))
+            elif now_model and now_model.dd_approval_result == 'agree':
+                pass_but_functions = list()
+                for button in approval.model_pass_button_ids:
+                    pass_but_functions.append(button.function)
+                if method in pass_but_functions:
+                    raise UserError(_("本功能暂无法使用，因为单据已经配置了'审批通过后'不允许使用本功能。"))
+            elif now_model and now_model.dd_approval_result == 'refuse':
+                end_but_functions = list()
                 for button in approval.model_end_button_ids:
-                    ent_but_functions.append(button.function)
-                if method in ent_but_functions:
-                    raise UserError(_('此单据审批结束后不允许执行此功能。 *_*!!'))
+                    end_but_functions.append(button.function)
+                if method in end_but_functions:
+                    raise UserError(_("本功能暂无法使用，因为单据已经配置了'审批拒绝后'不允许使用本功能。"))
         return super(DingDingDataSet, self).call_button(model, method, args, domain_id, context_id)

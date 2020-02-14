@@ -25,21 +25,29 @@ class DingTalkCallBackManageExt(DingTalkCallBackManage):
         if temp:
             approval = request.env['dingtalk.approval.control'].sudo().search([('template_id', '=', temp.id)])
             if approval:
-                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))])
+                pi = msg.get('processInstanceId')  # 审批实例ID
+                msg_type = msg.get('type')         # 类型
+                msg_result = msg.get('result')     # 审批结果
+                ac = ''                            # 审批消息内容
+                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', pi)])
                 emp = request.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('staffId'))])
                 model_name = oa_model._name.replace('.', '_')
-                if msg.get('type') == 'start' and oa_model:
-                    doc_text = "等待({})审批".format(emp.name if emp else '')
+                if msg_type == 'start' and oa_model:
+                    ac = "等待({})审批".format(emp.name if emp else '')
                     if oa_model.sudo().dd_approval_state != 'stop':
                         request.env.cr.execute(
-                            "UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, doc_text, oa_model[0].id))
-                    oa_model.message_post(body=doc_text, message_type='notification')
-                elif msg.get('type') == 'comment' and oa_model:
+                            "UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, ac, oa_model[0].id))
+                    oa_model.message_post(body=ac, message_type='notification')
+                elif msg_type == 'comment' and oa_model:
                     dobys = "{}评论了单据：{}".format(emp.name, msg.get('content'))
                     oa_model.message_post(body=dobys, message_type='notification')
-                elif msg.get('type') == 'finish' and oa_model:
-                    dobys = "{}：审批结果：{}，审批意见:{}".format(emp.name, OARESULT.get(msg.get('result')), msg.get('remark'))
+                    ac = msg.get('content')
+                elif msg_type == 'finish' and oa_model:
+                    ac = msg.get('remark')
+                    dobys = "{}：审批结果：{}，审批意见:{}".format(emp.name, OARESULT.get(msg_result), ac)
                     oa_model.message_post(body=dobys, message_type='notification')
+                # 创建审批记录
+                self.create_approval_record(approval.oa_model_id.id, oa_model.id, pi, emp.id, msg_type, msg_result, ac)
         return True
 
     def bpms_instance_change(self, msg):
@@ -48,31 +56,68 @@ class DingTalkCallBackManageExt(DingTalkCallBackManage):
         :param msg:
         :return:
         """
-        temp = request.env['dingtalk.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))])
+        temp = request.env['dingtalk.approval.template'].sudo().search([('process_code', '=', msg.get('processCode'))], limit=1)
         if temp:
-            approval = request.env['dingtalk.approval.control'].sudo().search([('template_id', '=', temp[0].id)])
+            approval = request.env['dingtalk.approval.control'].sudo().search([('template_id', '=', temp.id)])
             if approval:
-                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))])
+                oa_model = request.env[approval.oa_model_id.model].sudo().search([('dd_process_instance', '=', msg.get('processInstanceId'))], limit=1)
                 if oa_model:
+                    approval_result = msg.get('result')
                     model_name = oa_model._name.replace('.', '_')
+                    # 审批实例开始
                     if msg.get('type') == 'start':
-                        oa_model.sudo().message_post(body="流程审批开始", message_type='notification')
+                        oa_model.message_post(body="流程审批开始", message_type='notification')
+                    # 审批实例结束
                     else:
-                        request.env.cr.execute("""
-                                    UPDATE {} SET 
-                                        dd_approval_state='stop', 
-                                        dd_doc_state='审批结束',
-                                        dd_approval_result='{}' 
-                                    WHERE id={}""".format(model_name, msg.get('result'), oa_model[0].id))
-                        dobys = "流程审批结束"
-                        oa_model.sudo().message_post(body=dobys, message_type='notification')
-                        # -----执行自定义结束函数-----
-                        if approval.approval_end_function:
-                            for method in approval.approval_end_function.split(','):
+                        sql = """UPDATE {} 
+                            SET 
+                                dd_approval_state='stop', 
+                                dd_doc_state='审批结束', 
+                                dd_approval_result='{}' 
+                            WHERE 
+                                id={}
+                        """.format(model_name, approval_result, oa_model.id)
+                        request.env.cr.execute(sql)
+                        oa_model.message_post(body="流程审批结束", message_type='notification')
+                        # -----检查审批结果，并执行审批通过或拒绝的自定义函数------
+                        # 审批结果：同意
+                        if approval_result == 'agree' and approval.approval_pass_function:
+                            for method in approval.approval_pass_function.split(','):
                                 try:
                                     getattr(oa_model, method)()
                                 except Exception as e:
-                                    _logger.info("----执行模型{}自定义结束函数失败-----".format(oa_model._name))
-                                    _logger.info(e)
-                                    _logger.info("---------------------------------")
+                                    self.print_getattr_exception(oa_model._name, e)
+                        # 审批结果：拒绝
+                        if approval_result == 'refuse' and approval.approval_refuse_function:
+                            for method in approval.approval_refuse_function.split(','):
+                                try:
+                                    getattr(oa_model, method)()
+                                except Exception as e:
+                                    self.print_getattr_exception(oa_model._name, e)
         return True
+
+    def print_getattr_exception(self, model_name, e):
+        """
+        :param model_name:
+        :param e:
+        :return:
+        """
+        _logger.info("----执行模型{}自定义结束函数失败-----".format(model_name))
+        _logger.info(e)
+        _logger.info("---------------------------------")
+
+    def create_approval_record(self, model_id, rec_id, pi, emp_id, at, ar, ac):
+        """
+        创建审批记录
+        :return:
+        """
+        request.env['dingtalk.approval.record'].sudo().create({
+            'model_id': model_id,   # 模型
+            'rec_id': rec_id,   # 记录ID
+            'process_instance': pi,   # 审批实例ID
+            'emp_id': emp_id,   # 操作人
+            'approval_type': at,   # 类型
+            'approval_result': ar,   # 审批结果
+            'approval_content': ac,   # 内容
+        })
+

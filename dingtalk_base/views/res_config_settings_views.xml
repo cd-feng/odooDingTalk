@@ -12,6 +12,19 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block dingtalk_settings_block" string="钉钉" data-string="钉钉" data-key="dingtalk_base" groups="dingtalk_base.manage_group">
+                    <h2>钉钉后台地址</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12">
+                            <ul>
+                                <li>
+                                    <a href="https://oa.dingtalk.com/" icon="fa-arrow-right" role="button" target="_blank">钉钉企业后台管理</a>
+                                </li>
+                                <li>
+                                    <a href="https://open-dev.dingtalk.com" icon="fa-arrow-right" role="button" target="_blank">钉钉开发者后台管理</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <h2>API参数</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
@@ -90,19 +103,6 @@
                                 <div class="text-muted">
                                    是否删除odoo员工、部门、联系人时自动同步到钉钉
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h2>授权许可</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <field name="dt_serial_number" placeholder="自动生成，切勿修改"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="dt_serial_number"/>
-                                <div class="text-muted">当存在收费模块时自动生成，切勿修改</div>
-<!--                                <button type="object" string="检查许可" icon="fa-arrow-right" name="check_dt_serial_number"/>-->
                             </div>
                         </div>
                     </div>

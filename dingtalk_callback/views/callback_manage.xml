@@ -8,7 +8,7 @@
         <field name="name">钉钉回调</field>
         <field name="model">dingtalk.callback.manage</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc">
+            <tree default_order="id desc" js_class="dingtalk_callback_manage_tree_class">
                 <field name="value_type"/>
                 <field name="token"/>
                 <field name="aes_key" password="password" />
