@@ -307,7 +307,7 @@ class CreateResUser(models.TransientModel):
         for group in self.groups:
             group_ids.append(group.id)
         group_ids.append(group_user.id)
-        for employee in self.employee_ids.with_progress(msg="正在创建系统用户"):
+        for employee in self.employee_ids:
             values = {
                 'active': True,
                 "name": employee.name,

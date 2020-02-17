@@ -90,16 +90,6 @@ def get_dt_corp_id():
     return '0000'
 
 
-def get_serial_number():
-    """
-    :return: dt_serial_number
-    """
-    dt_serial_number = request.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_serial_number')
-    if dt_serial_number:
-        return dt_serial_number.replace(' ', '')
-    return False
-
-
 def timestamp_to_utc_date(timeNum):
     """
     将13位时间戳转换为时间utc=0

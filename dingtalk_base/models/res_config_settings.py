@@ -20,7 +20,6 @@ class ResConfigSettings(models.TransientModel):
     dt_login_secret = fields.Char(string=u'用于登录AppSecret')
     dt_token = fields.Boolean(string="自动获取应用Token")
     dt_delete_is_sy = fields.Boolean(string=u'删除基础数据自动同步?')
-    dt_serial_number = fields.Char(string='授权许可号')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -32,7 +31,6 @@ class ResConfigSettings(models.TransientModel):
             dt_login_id=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_login_id') or '000',
             dt_login_secret=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_login_secret') or '000',
             dt_token=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_token') or '000',
-            dt_serial_number=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_serial_number'),
             dt_delete_is_sy=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_delete_is_sy') or False,
         )
         return res
@@ -46,6 +44,5 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_login_id', self.dt_login_id)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_login_secret', self.dt_login_secret)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_token', self.dt_token)
-        self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_serial_number', self.dt_serial_number)
         self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_delete_is_sy', self.dt_delete_is_sy)
 

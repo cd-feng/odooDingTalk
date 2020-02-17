@@ -15,17 +15,15 @@ class HrEmployee(models.Model):
     @api.constrains('user_id')
     def _constrains_dingtalk_user_id(self):
         """
-        当选择了相关用户时，需要检查系统用户是否只对应一个员工
+        当修改关联用户时，将员工的钉钉ID写入到系统用户中
         :return:
         """
-        if self.user_id:
+        if self.user_id and self.ding_id:
             # 把员工的钉钉id和手机号写入到系统用户oauth
-            if self.ding_id:
-                users = self.env['res.users'].sudo().search([('ding_user_id', '=', self.ding_id)])
-                if users:
-                    users.sudo().write({'ding_user_id': False, 'ding_user_phone': False})
-                self._cr.execute("""UPDATE res_users SET ding_user_id='{}',ding_user_phone='{}' WHERE id={}""".format(
-                    self.ding_id, self.mobile_phone, self.user_id.id))
-                self._cr.commit()
-
-
+            users = self.env['res.users'].sudo().search([('ding_user_id', '=', self.ding_id)])
+            if users:
+                users.sudo().write({'ding_user_id': False, 'ding_user_phone': False})
+            self.user_id.sudo().write({
+                'ding_user_id': self.ding_id,
+                'ding_user_phone': self.mobile_phone,
+            })
