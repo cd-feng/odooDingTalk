@@ -49,6 +49,8 @@ class DingTalkApprovalControl(models.Model):
     approval_pass_function = fields.Char(string=u'审批通过-执行函数')
     approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
     approval_end_function = fields.Char(string=u'审批结束-执行函数')
+    is_ing_write = fields.Boolean(string="审批中允许编辑？", default=False)
+    is_end_write = fields.Boolean(string="审批结束允许编辑？", default=False)
     remarks = fields.Text(string=u'备注')
 
     _sql_constraints = [

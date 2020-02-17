@@ -38,6 +38,8 @@
                             <group>
                                 <field name="oa_model_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
                                 <field name="template_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                                <field name="is_ing_write"/>
+                                <field name="is_end_write"/>
                             </group>
                             <group>
                                 <field name="company_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
