@@ -3,8 +3,8 @@
 import logging
 from odoo import models, api, fields, _
 from odoo.exceptions import ValidationError
-_logger = logging.getLogger(__name__)
 
+_logger = logging.getLogger(__name__)
 
 Model = models.Model
 original_setup_base = Model._setup_base
@@ -22,9 +22,11 @@ def setup_dingtalk_approval_state_fields(self):
     :param self:
     :return:
     """
+
     def add(name, field):
         if name not in self._fields:
             self._add_field(name, field)
+
     self._cr.execute("SELECT COUNT(*) FROM pg_class WHERE relname = 'dingtalk_approval_control'")
     table = self._cr.fetchall()
     if table[0][0] > 0:
@@ -36,15 +38,16 @@ def setup_dingtalk_approval_state_fields(self):
         if len(res) != 0:
             APPROVALSTATE = [('draft', '草稿'), ('approval', '审批中'), ('stop', '审批结束')]
             APPROVALRESULT = [('load', '等待'), ('agree', '同意'), ('refuse', '拒绝'), ('redirect', '转交')]
-            add('dd_doc_state', fields.Char(string=u'审批描述'))
-            add('dd_approval_state', fields.Selection(string=u'审批状态', selection=APPROVALSTATE, default='draft'))
-            add('dd_approval_result', fields.Selection(string=u'审批结果', selection=APPROVALRESULT, default='load'))
-            add('dd_process_instance', fields.Char(string='钉钉审批实例id'))
+            add('dd_doc_state', fields.Char(string=u'审批描述', copy=False))
+            add('dd_approval_state',
+                fields.Selection(string=u'审批状态', selection=APPROVALSTATE, default='draft', copy=False))
+            add('dd_approval_result',
+                fields.Selection(string=u'审批结果', selection=APPROVALRESULT, default='load', copy=False))
+            add('dd_process_instance', fields.Char(string='钉钉审批实例id', copy=False))
     return True
 
 
 Model._setup_base = _setup_base
-
 
 # ---修改函数---
 write_origin = models.BaseModel.write
@@ -68,18 +71,17 @@ def dingtalk_approval_write(self, vals):
         flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id)])
         if not flows:
             continue
-        if res.dd_approval_state == 'approval':
+        if not flows[0].is_ing_write and res.dd_approval_state == 'approval':
             # 审批中
             raise ValidationError(u'当前单据处于钉钉审批阶段，在审批没有结束前不允许进行修改！')
         elif res.dd_approval_state == 'stop':
             # 审批完成
-            if flows[0].ftype == 'oa':
+            if not flows[0].is_end_write and flows[0].ftype == 'oa':
                 raise ValidationError(u'当前单据属于OA类型并且钉钉审批已结束，系统不允许对其进行修改！')
     return True
 
 
 models.BaseModel.write = write
-
 
 # ---删除函数----
 unlink_origin = models.BaseModel.unlink

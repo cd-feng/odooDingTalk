@@ -49,7 +49,14 @@ class DingTalkApprovalControl(models.Model):
     approval_pass_function = fields.Char(string=u'审批通过-执行函数')
     approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
     approval_end_function = fields.Char(string=u'审批结束-执行函数')
+    is_ing_write = fields.Boolean(string="审批中允许编辑？", default=False)
+    is_end_write = fields.Boolean(string="审批结束允许编辑？", default=False)
     remarks = fields.Text(string=u'备注')
+    approval_type = fields.Selection(string="审批类型", selection=[('turn', '依次审批'), ('huo', '会签/或签')])
+    approval_user_ids = fields.Many2many('hr.employee', 'dingtalk_approval_employee_approval_rel', string="审批人列表", domain="[('ding_id', '!=', '')]")
+    huo_approval_user_ids = fields.One2many(comodel_name="dingtalk.approval.huo.user.line", inverse_name="control_id", string="审批列表")
+    cc_user_ids = fields.Many2many('hr.employee', 'dingtalk_approval_employee_cc_rel', string="抄送人列表", domain="[('ding_id', '!=', '')]")
+    cc_type = fields.Selection(string="抄送时间", selection=[('START', '开始'), ('FINISH', '结束'), ('START_FINISH', '开始和结束')], default='START')
 
     _sql_constraints = [
         ('oa_model_id_uniq', 'unique(oa_model_id)', u'已存在Odoo模型对应的审批模板!'),
@@ -147,6 +154,56 @@ class DingTalkApprovalControl(models.Model):
             vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).write(vals)
 
+    def get_approvers_users(self):
+        """
+        返回审批人列表
+        :return:
+        """
+        for res in self:
+            if not res.approval_type:
+                return False
+            if res.approval_type == 'turn':
+                approval_users = ""
+                for approval in res.approval_user_ids:
+                    if not approval_users:
+                        approval_users = approval.ding_id
+                    else:
+                        approval_users = "{},{}".format(approval_users, approval.ding_id)
+                return approval_users
+            if res.approval_type == 'huo':
+                approval_users = list()
+                for approval in res.huo_approval_user_ids:
+                    user_str = ""
+                    for user in approval.employee_ids:
+                        if not user_str:
+                            user_str = user.ding_id
+                        else:
+                            user_str = "{},{}".format(user_str, user.ding_id)
+                    approval_users.append({
+                        'user_ids': user_str,
+                        'task_action_type': approval.approval_type
+                    })
+                return approval_users
+
+    def get_cc_users(self):
+        """
+        返回抄送人列表
+        :return:
+        """
+        for res in self:
+            if len(res.cc_user_ids) > 1:
+                if not res.cc_type:
+                    raise UserError("抄送人和抄送时间均为必填，否则无法传递该参数！")
+                cc_user_str = ""
+                for cc_user in res.cc_user_ids:
+                    if not cc_user_str:
+                        cc_user_str = cc_user.ding_id
+                    else:
+                        cc_user_str = "{},{}".format(cc_user_str, cc_user.ding_id)
+                return cc_user_str, res.cc_type
+            else:
+                return False, False
+
 
 class DingTalkApprovalControlLine(models.Model):
     _description = "审批配置详情"
@@ -212,6 +269,29 @@ class DingDingApprovalButton(models.Model):
 
     def name_get(self):
         return [(rec.id, "%s:%s" % (rec.model_id.name, rec.name)) for rec in self]
+
+
+class DingTalkApprovalUserLine(models.Model):
+    _name = 'dingtalk.approval.huo.user.line'
+    _description = "会签/或签用户列表"
+    _rec_name = 'control_id'
+
+    control_id = fields.Many2one(comodel_name="dingtalk.approval.control", string="审批配置", ondelete='set null')
+    employee_ids = fields.Many2many('hr.employee', 'dingtalk_approval_huo_user_list_rel', string="审批人", domain="[('ding_id', '!=', '')]")
+    approval_type = fields.Selection(string="审批类型", selection=[('AND', '会签'), ('OR', '或签'), ('NONE', '单人')], required=True, default='NONE')
+
+    @api.constrains('approval_type', 'employee_ids')
+    def _constrains_approval_type(self):
+        """
+        检查是否配置正确
+        会签/或签列表长度必须大于1，非会签/或签列表长度只能为1
+        :return:
+        """
+        for res in self:
+            if res.approval_type == 'NONE' and len(res.employee_ids) > 1:
+                raise UserError("非会签/或签时，审批人的长度只能为1")
+            if res.approval_type != 'NONE' and len(res.employee_ids) <= 1:
+                raise UserError("会签/或签时，审批人的长度必须大于1")
 
 
 class DingDingDataSet(DataSet):

@@ -24,17 +24,30 @@ def approval_result(self):
     user_id, dept_id = get_originator_user_id(self)
     # 获取表单参数
     form_values = get_form_values(self, approval)
-    _logger.info(form_values)
+    # 获取审批人和抄送人列表
+    approvers_users = approval.get_approvers_users()
+    cc_users, cc_type = approval.get_cc_users()
+    data = {
+        'process_code': process_code,  # 审批模型编号
+        'originator_user_id': user_id,  # 发起人
+        'dept_id': dept_id,             # 发起部门
+        'form_component_values': form_values  # 表单参数
+    }
+    if approvers_users:
+        if approval.approval_type == 'turn':
+            data.update({'approvers': approvers_users})   # 依次审批人列表
+        else:
+            data.update({'approvers_v2': approvers_users})  # 会签、或签审批人列表
+    if cc_users and cc_type:
+        data.update({
+            'cc_list': cc_users,     # 抄送列表
+            'cc_position': cc_type     # 抄送时间
+        })
     # ----提交至钉钉---
     client = dingtalk_api.get_client()
     try:
         url = 'topapi/processinstance/create'
-        result = client.post(url, {
-            'process_code': process_code,
-            'originator_user_id': user_id,
-            'dept_id': dept_id,
-            'form_component_values': form_values  # 表单参数
-        })
+        result = client.post(url, data)
     except Exception as e:
         raise UserError(e)
     _logger.info(result)

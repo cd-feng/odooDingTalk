@@ -38,6 +38,8 @@
                             <group>
                                 <field name="oa_model_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
                                 <field name="template_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                                <field name="is_ing_write"/>
+                                <field name="is_end_write"/>
                             </group>
                             <group>
                                 <field name="company_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
@@ -56,6 +58,26 @@
                                         <field name="is_dd_id"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="审批/抄送">
+                                <div class="alert alert-success oe_edit_only" role="alert">
+                                    <p>若已在钉钉服务端配置了审批流程和审批、抄送人，此处可不设置，提交后会自动按照服务端的流程进行节点审批。</p>
+                                    <p>注意：这里设置的审批人和抄送人优先级会高于钉钉服务端的设置。</p>
+                                </div>
+                                <group>
+                                    <field name="approval_type"/>
+                                    <field name="approval_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" attrs="{'invisible':[('approval_type', '!=', 'turn')]}"/>
+                                    <field name="huo_approval_user_ids" attrs="{'invisible':[('approval_type', '!=', 'huo')]}">
+                                        <tree editable="bottom">
+                                            <field name="employee_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" />
+                                            <field name="approval_type"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="cc_type"/>
+                                    <field name="cc_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                </group>
                             </page>
                             <page string="禁用功能" attrs="{'invisible':[('ftype', '=', 'oa')]}">
                                 <group>
