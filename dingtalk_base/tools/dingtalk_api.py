@@ -8,7 +8,7 @@ import hashlib
 import hmac
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from odoo import fields, _
 from urllib.parse import quote
 from dingtalk.client import AppKeyClient
@@ -142,6 +142,17 @@ def get_user_info_by_code(code):
         'accessKey': login_id
     })
     return result
+
+
+def datetime_local_data(date_time, is_date=None):
+    """
+    将时间戳转为+8小时的日期
+    :param date_time: 毫秒级时间戳(int)
+    :param is_date:  是否返回日期格式（%Y-%m-%d）
+    :return: data_str 默认返回格式（%Y-%m-%d %H:%M:%S） 当re_type为真时返回格式（%Y-%m-%d）
+    """
+    dt = datetime.fromtimestamp(float(date_time) / 10 ** (len(str(date_time)) - 10), timezone(timedelta(hours=8)))
+    return dt.strftime('%Y-%m-%d') if is_date else dt.strftime('%Y-%m-%d %H:%M:%S')
 
 
 def list_cut(mylist, limit):

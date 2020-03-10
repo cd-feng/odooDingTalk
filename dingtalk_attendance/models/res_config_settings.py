@@ -12,21 +12,13 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    dt_attendance_interval = fields.Boolean(string=u'定时获取考勤信息')
-    dt_attendance_interval_type = fields.Selection(string=u'执行间隔', selection=[('days', '天'), ('weeks', '周'), ('months', '月')])
+    INTERVALTYPE = [('days', '天'), ('weeks', '周'), ('months', '月')]
 
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        res.update(
-            dt_attendance_interval=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_attendance_interval'),
-            dt_attendance_interval_type=self.env['ir.config_parameter'].sudo().get_param('dingtalk_base.dt_attendance_interval_type') or 'days',
-        )
-        return res
+    dt_attendance_interval = fields.Boolean(string="定时获取考勤信息", config_parameter='dingtalk_base.dt_attendance_interval')
+    dt_attendance_interval_type = fields.Selection(string=u'执行间隔', selection=INTERVALTYPE, config_parameter='dingtalk_base.dt_attendance_interval_type')
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_attendance_interval', self.dt_attendance_interval)
-        self.env['ir.config_parameter'].sudo().set_param('dingtalk_base.dt_attendance_interval_type', self.dt_attendance_interval_type)
         if self.dt_attendance_interval:
             domain = [('state', '=', 'code'), ('code', '=', "env['dingtalk.attendance.cron.task'].start_task()")]
             cron = self.env['ir.cron'].sudo().search(domain)
@@ -46,4 +38,6 @@ class ResConfigSettings(models.TransientModel):
                 cron.write({
                     'interval_type': self.dt_attendance_interval_type or 'days',
                 })
-
+        else:
+            domain = [('state', '=', 'code'), ('code', '=', "env['dingtalk.attendance.cron.task'].start_task()")]
+            self.env['ir.cron'].sudo().search(domain).unlink()

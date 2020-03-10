@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Copyright (C) 2020 SuXueFeng GNU
+-->
+<odoo>
+
+    <record id="get_hr_attendance_result_form_view" model="ir.ui.view">
+        <field name="name">get.hr.attendance.result.form</field>
+        <field name="model">get.hr.attendance.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="start_date"/>
+                    </group>
+                    <group>
+                        <field name="stop_date"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="is_all_emp"/>
+                    <field name="emp_ids" widget="many2many_tags" placeholder="员工..."/>
+                </group>
+                <footer>
+                    <button string="开始获取" name="get_attendance_result" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="get_hr_attendance_result_action" model="ir.actions.act_window">
+        <field name="name">get.hr.attendance.result.action</field>
+        <field name="res_model">get.hr.attendance.result</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

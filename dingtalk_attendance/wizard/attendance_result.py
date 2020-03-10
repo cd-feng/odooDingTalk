@@ -3,6 +3,8 @@
 #    Copyright (C) 2019 SuXueFeng GNU
 ###################################################################################
 import logging
+import time
+from datetime import datetime, timedelta
 from odoo.exceptions import UserError
 from odoo import models, fields, api
 from odoo.addons.dingtalk_base.tools import dingtalk_api
@@ -83,7 +85,7 @@ class HrAttendanceResultTransient(models.TransientModel):
 
     @api.model
     def send_post_dindin(self, data):
-        din_client = dingtalk_api.get_client(obj=self)
+        din_client = dingtalk_api.get_client(self)
         try:
             result = din_client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
                                                 user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
@@ -92,13 +94,13 @@ class HrAttendanceResultTransient(models.TransientModel):
                 for rec in result.get('recordresult'):
                     data = {
                         'record_id': rec.get('id'),
-                        'work_date': dingtalk_api.timestamp_to_local_date(rec.get('workDate')),  # 工作日
+                        'work_date': self.timestamp_to_local_date(rec.get('workDate')),  # 工作日
                         'timeResult': rec.get('timeResult'),  # 时间结果
                         'locationResult': rec.get('locationResult'),  # 考勤结果
-                        'baseCheckTime': dingtalk_api.timestamp_to_local_date(rec.get('baseCheckTime')),  # 基准时间
+                        'baseCheckTime': self.get_time_stamp(rec.get('baseCheckTime')),  # 基准时间
                         'sourceType': rec.get('sourceType'),  # 数据来源
                         'check_type': rec.get('checkType'),
-                        'check_in': dingtalk_api.timestamp_to_local_date(rec.get('userCheckTime')),
+                        'check_in': self.get_time_stamp(rec.get('userCheckTime')),
                         'approveId': rec.get('approveId'),
                         'procInstId': rec.get('procInstId'),
                         'ding_plan_id': rec.get('planId'),
@@ -126,6 +128,33 @@ class HrAttendanceResultTransient(models.TransientModel):
                 raise UserError('请求失败,原因为:{}'.format(result.get('errmsg')))
         except Exception as e:
             raise UserError(e)
+
+    @api.model
+    def get_time_stamp(self, timeNum):
+        """
+        将13位时间戳转换为时间utc=0
+        :param timeNum:
+        :return:
+        """
+        timeStamp = float(timeNum / 1000)
+        timeArray = time.gmtime(timeStamp)
+        otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+        return otherStyleTime
+
+    @api.model
+    def timestamp_to_local_date(self, timeNum):
+        """
+        将13位毫秒时间戳转换为本地日期(+8h)
+        :param timeNum:
+        :return:
+        """
+        to_second_timestamp = float(timeNum / 1000)  # 毫秒转秒
+        to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
+        to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
+        to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+        to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
+        to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
+        return to_str_datetime
 
     def clear_attendance(self):
         """

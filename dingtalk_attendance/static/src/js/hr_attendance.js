@@ -1,5 +1,5 @@
 /**
- *    Copyright (C) 2019 SuXueFeng
+ *    Copyright (C) 2020 SuXueFeng
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as
@@ -15,23 +15,23 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-odoo.define('hr.attendance.record.tree.button', function (require) {
+odoo.define('hr.attendance.tree.button', function (require) {
     "use strict";
 
     let ListController = require('web.ListController');
     let ListView = require('web.ListView');
     let viewRegistry = require('web.view_registry');
 
-    let DingDingAttendanceRecordController = ListController.extend({
-        buttons_template: 'ListView.GetUserAttendanceButtons',
+    let DingDingAttendanceController = ListController.extend({
+        buttons_template: 'ListView.DingTalkAttendanceResultButtons',
         renderButtons: function () {
             this._super.apply(this, arguments);
             if (this.$buttons) {
                 var self = this;
-                this.$buttons.on('click', '.dingtalk_user_attendance_record_tree', function () {
+                this.$buttons.on('click', '.dingtalk_users_attendance_result_tree', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
-                        res_model: 'hr.attendance.record.tran',
+                        res_model: 'get.hr.attendance.result',
                         target: 'new',
                         views: [[false, 'form']],
                         context: [],
@@ -48,11 +48,11 @@ odoo.define('hr.attendance.record.tree.button', function (require) {
         }
     });
 
-    let GetDingDingAttendanceRecordView = ListView.extend({
+    let DingDingAttendanceView = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
-            Controller: DingDingAttendanceRecordController,
+            Controller: DingDingAttendanceController,
         }),
     });
 
-    viewRegistry.add('dingtalk_hr_attendance_record_tree', GetDingDingAttendanceRecordView);
+    viewRegistry.add('dingtalk_users_attendance_result_but', DingDingAttendanceView);
 });

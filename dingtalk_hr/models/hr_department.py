@@ -21,7 +21,6 @@ class HrDepartment(models.Model):
     is_root = fields.Boolean(string=u'根部门?', default=False)
 
     def create_ding_department(self):
-        self.ensure_one()
         client = dingtalk_api.get_client()
         for res in self:
             if res.ding_id:
@@ -44,7 +43,6 @@ class HrDepartment(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def update_ding_department(self):
-        self.ensure_one()
         client = dingtalk_api.get_client()
         for res in self:
             data = {
@@ -63,7 +61,6 @@ class HrDepartment(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def delete_ding_department(self):
-        self.ensure_one()
         for res in self:
             if not res.ding_id:
                 continue
