@@ -14,6 +14,8 @@
             <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_attendance_record.js"></script>
             <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_attendance_result.js"></script>
             <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_leaves_list.js"></script>
+
+            <script type="text/javascript" src="/dingtalk_attendance/static/src/js/hr_attendance.js"></script>
         </xpath>
     </template>
 

@@ -63,7 +63,6 @@ class HrDepartment(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def delete_ding_department(self):
-        self.ensure_one()
         for res in self:
             if not res.ding_id:
                 continue

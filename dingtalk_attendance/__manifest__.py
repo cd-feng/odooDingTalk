@@ -9,7 +9,7 @@
     'author': "Su-XueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingtalk',
-    'version': '13.0',
+    'version': '13.0.5',
     'depends': ['base', 'dingtalk_hr', 'hr_attendance'],
     'installable': True,
     'application': True,
@@ -25,11 +25,16 @@
         'views/attendance_result.xml',
         'views/leaves_list.xml',
 
+        'views/hr_attendance.xml',
+        'views/res_config_settings_views.xml',
+
         'wizard/simplegroups.xml',
         'wizard/dingtalk_plan.xml',
         'wizard/attendance_record.xml',
         'wizard/attendance_result.xml',
         'wizard/leaves_list.xml',
+
+        'wizard/hr_attendance.xml',
     ],
     'qweb': [
         'static/xml/*.xml'

@@ -54,7 +54,6 @@ class HrEmployee(models.Model):
         上传员工到钉钉
         :return:
         """
-        self.ensure_one()
         for res in self:
             client = dingtalk_api.get_client(self)
             # 获取部门ding_id
@@ -129,7 +128,6 @@ class HrEmployee(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def delete_ding_employee(self):
-        self.ensure_one()
         for res in self:
             if not res.ding_id:
                 continue

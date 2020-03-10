@@ -56,6 +56,10 @@ class DingTalkHrSynchronous(models.TransientModel):
                 'name': res.get('name'),
                 'ding_id': res.get('id'),
             }
+            # 获取上级部门
+            partner_department = self.env['hr.department'].search([('ding_id', '=', res.get('parentid'))], limit=1)
+            if partner_department:
+                data.update({'parent_id': partner_department.id})
             if dept_repeat == 'cover':
                 h_department = self.env['hr.department'].search([('name', '=', res.get('name')), ('ding_id', '=', res.get('id'))])
             else:
@@ -185,7 +189,7 @@ class DingTalkHrSynchronous(models.TransientModel):
                     self.env['hr.employee'].sudo().create(data)
             return result.get('hasMore')
         except Exception as e:
-            raise UserError(e)
+            raise UserError("获取{}部门失败，原因:{}".format(department.name, e))
 
 
 class DingTalkHrSynchronousPartner(models.TransientModel):
