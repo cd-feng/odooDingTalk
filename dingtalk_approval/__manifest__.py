@@ -9,7 +9,7 @@
     'author': "Su-XueFeng",
     'website': "https://www.sxfblog.com",
     'category': 'dingtalk',
-    'version': '13.0',
+    'version': '13.0.5',
     'depends': ['base', 'dingtalk_callback'],
     'installable': True,
     'application': True,
@@ -17,12 +17,11 @@
     'data': [
         'security/dingtalk_security.xml',
         'security/ir.model.access.csv',
-
         'wizard/dingtalk_template.xml',
-
         'views/assets.xml',
         'views/dingtalk_template.xml',
         'views/approval_control.xml',
+        'views/approval_record.xml',
     ],
     "qweb": [
         "static/xml/*.xml"

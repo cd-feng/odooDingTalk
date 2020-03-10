@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="审批配置">
                     <header>
-                        <button name="action_reload_current_page" string="立即生效" type="object" class="oe_highlight oe_read_only"
+                        <button name="action_reload_current_page" string="点击生效" type="object" class="oe_highlight oe_read_only"
                                 confirm="确认配置该表单允许钉钉审批吗?"/>
                     </header>
                     <sheet>
@@ -38,6 +38,8 @@
                             <group>
                                 <field name="oa_model_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
                                 <field name="template_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                                <field name="is_ing_write"/>
+                                <field name="is_end_write"/>
                             </group>
                             <group>
                                 <field name="company_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
@@ -57,22 +59,44 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="审批/抄送">
+                                <div class="alert alert-success oe_edit_only" role="alert">
+                                    <p>若已在钉钉服务端配置了审批流程和审批、抄送人，此处可不设置，提交后会自动按照服务端的流程进行节点审批。</p>
+                                    <p>注意：这里设置的审批人和抄送人优先级会高于钉钉服务端的设置。</p>
+                                </div>
+                                <group>
+                                    <field name="approval_type"/>
+                                    <field name="approval_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" attrs="{'invisible':[('approval_type', '!=', 'turn')]}"/>
+                                    <field name="huo_approval_user_ids" attrs="{'invisible':[('approval_type', '!=', 'huo')]}">
+                                        <tree editable="bottom">
+                                            <field name="employee_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" />
+                                            <field name="approval_type"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="cc_type"/>
+                                    <field name="cc_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                </group>
+                            </page>
                             <page string="禁用功能" attrs="{'invisible':[('ftype', '=', 'oa')]}">
                                 <group>
-                                    <field name="model_start_button_ids" widget="many2many_tags"
-                                           string="审批前禁用功能" options="{'no_create': True}"/>
-                                    <field name="model_button_ids" widget="many2many_tags"
-                                           string="审批中禁用功能" options="{'no_create': True}"/>
-                                    <field name="model_end_button_ids" widget="many2many_tags"
-                                           string="审批结束禁用功能" options="{'no_create': True}"/>
+                                    <field name="model_start_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_pass_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_end_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                 </group>
                             </page>
                             <page string="可执行函数" name="code">
-                                <group string="提交审批时执行模型函数">
-                                    <field name="approval_start_function" nolabel="1" placeholder="多个函数时用英文,号隔开"/>
-                                </group>
-                                 <group string="审批结束时执行模型函数">
-                                    <field name="approval_end_function" nolabel="1" placeholder="多个函数时用英文,号隔开"/>
+                                <group col="2">
+                                    <group>
+                                        <field name="approval_start_function" placeholder="多个函数时用英文,号隔开"/>
+                                        <field name="approval_restart_function" placeholder="多个函数时用英文,号隔开"/>
+                                    </group>
+                                    <group>
+                                        <field name="approval_pass_function" placeholder="多个函数时用英文,号隔开"/>
+                                        <field name="approval_refuse_function" placeholder="多个函数时用英文,号隔开"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="帮助">
@@ -145,7 +169,7 @@
                                 </p>
                                 <div class="oe_module_action" t-if="!selection_mode">
                                     <button type="object" class="btn btn-primary btn-sm" name="create_approval" context="{'category_id':'active_id'}">新建审批</button>
-                                    <button type="object" class="btn btn-sm btn-secondary float-right" name="create_approval">待审查: 0</button>
+                                    <button type="object" class="btn btn-sm btn-secondary float-right" name="action_approval_tree">审批列表</button>
                                 </div>
                             </div>
                         </div>
@@ -193,16 +217,26 @@
         </record>
 
     <record id="dingtalk_approval_model_button_tree_view" model="ir.ui.view">
-            <field name="name">模型按钮</field>
-            <field name="model">dingtalk.approval.model.button</field>
-            <field name="arch" type="xml">
-                <tree default_order="id desc">
-                    <field name="model_id"/>
-                    <field name="model_model"/>
-                    <field name="name"/>
-                    <field name="function"/>
-                </tree>
-            </field>
-        </record>
+        <field name="name">模型按钮列表</field>
+        <field name="model">dingtalk.approval.model.button</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" create="0" edit="0" delete="0">
+                <field name="model_id"/>
+                <field name="model_model"/>
+                <field name="name"/>
+                <field name="function"/>
+                <field name="modifiers"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingtalk_approval_model_button_action">
+        <field name="name">模型按钮列表</field>
+        <field name="res_model">dingtalk.approval.model.button</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem name="模型按钮列表" id="dingtalk_approval_model_button_menu" parent="dingtalk_approval_config"
+              sequence="1" action="dingtalk_approval_model_button_action"/>
 
 </odoo>

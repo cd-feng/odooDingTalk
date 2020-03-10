@@ -4,7 +4,6 @@
 ###################################################################################
 
 import logging
-from odoo.addons.dingtalk_base.tools import dingtalk_api
 from odoo import api, fields, models, http, _
 import inspect
 from odoo.http import request
@@ -37,13 +36,27 @@ class DingTalkApprovalControl(models.Model):
 
     line_ids = fields.One2many(comodel_name='dingtalk.approval.control.line', inverse_name='control_id', string=u'字段详情')
     model_start_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_start_rel',
-                                              string=u'审批前禁用功能列表')
-    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能列表')
+                                              string=u'审批前禁用功能', domain="[('model_id', '=', oa_model_id)]")
+    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用功能',
+                                        domain="[('model_id', '=', oa_model_id)]")
+    model_pass_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_pass_rel',
+                                            string=u'审批通过禁用功能', domain="[('model_id', '=', oa_model_id)]")
     model_end_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_end_rel',
-                                            string=u'审批结束禁用功能列表')
-    approval_start_function = fields.Char(string=u'提交审批时执行函数')
-    approval_end_function = fields.Char(string=u'审批结束执行函数')
+                                            string=u'审批拒绝禁用功能', domain="[('model_id', '=', oa_model_id)]")
+
+    approval_start_function = fields.Char(string=u'提交审批-执行函数')
+    approval_restart_function = fields.Char(string=u'重新提交-执行函数')
+    approval_pass_function = fields.Char(string=u'审批通过-执行函数')
+    approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
+    approval_end_function = fields.Char(string=u'审批结束-执行函数')
+    is_ing_write = fields.Boolean(string="审批中允许编辑？", default=False)
+    is_end_write = fields.Boolean(string="审批结束允许编辑？", default=False)
     remarks = fields.Text(string=u'备注')
+    approval_type = fields.Selection(string="审批类型", selection=[('turn', '依次审批'), ('huo', '会签/或签')])
+    approval_user_ids = fields.Many2many('hr.employee', 'dingtalk_approval_employee_approval_rel', string="审批人列表", domain="[('ding_id', '!=', '')]")
+    huo_approval_user_ids = fields.One2many(comodel_name="dingtalk.approval.huo.user.line", inverse_name="control_id", string="审批列表")
+    cc_user_ids = fields.Many2many('hr.employee', 'dingtalk_approval_employee_cc_rel', string="抄送人列表", domain="[('ding_id', '!=', '')]")
+    cc_type = fields.Selection(string="抄送时间", selection=[('START', '开始'), ('FINISH', '结束'), ('START_FINISH', '开始和结束')], default='START')
 
     _sql_constraints = [
         ('oa_model_id_uniq', 'unique(oa_model_id)', u'已存在Odoo模型对应的审批模板!'),
@@ -81,6 +94,19 @@ class DingTalkApprovalControl(models.Model):
             },
         }
 
+    def action_approval_tree(self):
+        """
+        跳转至审批列表
+        :return:
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self.oa_model_id.model,
+            "views": [[False, "tree"], [False, "form"]],
+            "name": self.oa_model_id.name,
+        }
+
     @api.onchange('oa_model_id')
     def onchange_model_id(self):
         """
@@ -88,7 +114,6 @@ class DingTalkApprovalControl(models.Model):
         :return:
         """
         for rec in self:
-            model_domain = [('model_id', '=', False)]
             if rec.oa_model_id:
                 model_id = rec.oa_model_id
                 result = self.env[model_id.model].fields_view_get()
@@ -103,28 +128,81 @@ class DingTalkApprovalControl(models.Model):
                             'function': item.get('name'),
                             'modifiers': item.get('modifiers'),
                         })
-                model_domain = [('model_id', '=', model_id.id)]
-            return {'domain': {
-                'model_button_ids': model_domain,
-                'model_end_button_ids': model_domain,
-                'model_start_button_ids': model_domain
-            }}
 
     @api.model
     def create(self, vals):
         # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).create(vals)
 
     def write(self, vals):
+        # 清除运行函数中的空格
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
-        if vals.get('approval_end_function'):
-            vals['approval_end_function'] = vals['approval_end_function'].replace(' ', '')
+        if vals.get('approval_pass_function'):
+            vals['approval_pass_function'] = vals['approval_pass_function'].replace(' ', '')
+        if vals.get('approval_refuse_function'):
+            vals['approval_refuse_function'] = vals['approval_refuse_function'].replace(' ', '')
+        if vals.get('approval_restart_function'):
+            vals['approval_restart_function'] = vals['approval_restart_function'].replace(' ', '')
         return super(DingTalkApprovalControl, self).write(vals)
+
+    def get_approvers_users(self):
+        """
+        返回审批人列表
+        :return:
+        """
+        for res in self:
+            if not res.approval_type:
+                return False
+            if res.approval_type == 'turn':
+                approval_users = ""
+                for approval in res.approval_user_ids:
+                    if not approval_users:
+                        approval_users = approval.ding_id
+                    else:
+                        approval_users = "{},{}".format(approval_users, approval.ding_id)
+                return approval_users
+            if res.approval_type == 'huo':
+                approval_users = list()
+                for approval in res.huo_approval_user_ids:
+                    user_str = ""
+                    for user in approval.employee_ids:
+                        if not user_str:
+                            user_str = user.ding_id
+                        else:
+                            user_str = "{},{}".format(user_str, user.ding_id)
+                    approval_users.append({
+                        'user_ids': user_str,
+                        'task_action_type': approval.approval_type
+                    })
+                return approval_users
+
+    def get_cc_users(self):
+        """
+        返回抄送人列表
+        :return:
+        """
+        for res in self:
+            if len(res.cc_user_ids) > 1:
+                if not res.cc_type:
+                    raise UserError("抄送人和抄送时间均为必填，否则无法传递该参数！")
+                cc_user_str = ""
+                for cc_user in res.cc_user_ids:
+                    if not cc_user_str:
+                        cc_user_str = cc_user.ding_id
+                    else:
+                        cc_user_str = "{},{}".format(cc_user_str, cc_user.ding_id)
+                return cc_user_str, res.cc_type
+            else:
+                return False, False
 
 
 class DingTalkApprovalControlLine(models.Model):
@@ -134,7 +212,7 @@ class DingTalkApprovalControlLine(models.Model):
 
     sequence = fields.Integer(string=u'序号')
     control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string=u'审批配置', ondelete="set null")
-    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型')
+    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', related="control_id.oa_model_id")
     field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段', required=True,
                                domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
     ttype = fields.Selection(selection='_get_field_types', string=u'字段类型')
@@ -193,6 +271,29 @@ class DingDingApprovalButton(models.Model):
         return [(rec.id, "%s:%s" % (rec.model_id.name, rec.name)) for rec in self]
 
 
+class DingTalkApprovalUserLine(models.Model):
+    _name = 'dingtalk.approval.huo.user.line'
+    _description = "会签/或签用户列表"
+    _rec_name = 'control_id'
+
+    control_id = fields.Many2one(comodel_name="dingtalk.approval.control", string="审批配置", ondelete='set null')
+    employee_ids = fields.Many2many('hr.employee', 'dingtalk_approval_huo_user_list_rel', string="审批人", domain="[('ding_id', '!=', '')]")
+    approval_type = fields.Selection(string="审批类型", selection=[('AND', '会签'), ('OR', '或签'), ('NONE', '单人')], required=True, default='NONE')
+
+    @api.constrains('approval_type', 'employee_ids')
+    def _constrains_approval_type(self):
+        """
+        检查是否配置正确
+        会签/或签列表长度必须大于1，非会签/或签列表长度只能为1
+        :return:
+        """
+        for res in self:
+            if res.approval_type == 'NONE' and len(res.employee_ids) > 1:
+                raise UserError("非会签/或签时，审批人的长度只能为1")
+            if res.approval_type != 'NONE' and len(res.employee_ids) <= 1:
+                raise UserError("会签/或签时，审批人的长度必须大于1")
+
+
 class DingTalkDataSet(DataSet):
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
@@ -201,7 +302,11 @@ class DingTalkDataSet(DataSet):
         approval = request.env['dingtalk.approval.control'].sudo().search([('oa_model_id', '=', ir_model.id)], limit=1)
         if approval:
             # 获取当前单据的id
-            res_id = args[0][0] if args[0] else 0
+            if args[0]:
+                res_id = args[0][0]
+            else:
+                params = args[1].get('params')
+                res_id = params.get('id')
             # 获取当前单据
             now_model = request.env[model].sudo().search([('id', '=', res_id)])
             if now_model and now_model.dd_approval_state == 'draft':
@@ -209,17 +314,23 @@ class DingTalkDataSet(DataSet):
                 for button in approval.model_start_button_ids:
                     start_but_functions.append(button.function)
                 if method in start_but_functions:
-                    raise UserError(_('此单据未审批前不允许使用此功能，请审批后再进行操作。 *_*!!'))
+                    raise UserError(_("本功能暂无法使用，因为单据还没有'提交至钉钉'进行审批，请先提交至钉钉进行审批后再试！"))
             elif now_model and now_model.dd_approval_state == 'approval':
                 but_functions = list()
                 for button in approval.model_button_ids:
                     but_functions.append(button.function)
                 if method in but_functions:
-                    raise UserError(_('此单据还未通过钉钉审批，该功能无法使用。 *_*!!'))
-            elif now_model and now_model.dd_approval_state == 'stop':
-                ent_but_functions = list()
+                    raise UserError(_("本功能暂无法使用，因为单据还是'钉钉审批中'状态。请在单据审批后再试！"))
+            elif now_model and now_model.dd_approval_result == 'agree':
+                pass_but_functions = list()
+                for button in approval.model_pass_button_ids:
+                    pass_but_functions.append(button.function)
+                if method in pass_but_functions:
+                    raise UserError(_("本功能暂无法使用，因为单据已经配置了'审批通过后'不允许使用本功能。"))
+            elif now_model and now_model.dd_approval_result == 'refuse':
+                end_but_functions = list()
                 for button in approval.model_end_button_ids:
-                    ent_but_functions.append(button.function)
-                if method in ent_but_functions:
-                    raise UserError(_('此单据审批结束后不允许执行此功能。 *_*!!'))
+                    end_but_functions.append(button.function)
+                if method in end_but_functions:
+                    raise UserError(_("本功能暂无法使用，因为单据已经配置了'审批拒绝后'不允许使用本功能。"))
         return super(DingTalkDataSet, self).call_button(model, method, args, kwargs)

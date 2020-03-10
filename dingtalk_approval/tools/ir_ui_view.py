@@ -81,6 +81,24 @@ def modify_form_view(self, result):
     dd_approval_result_field.set('name', 'dd_approval_result')
     dd_approval_result_field.set('modifiers', '{"invisible": true}')
     header.insert(len(header.xpath('button')), dd_approval_result_field)
+    # 审批记录按钮
+    button_boxs = root.xpath('//div[@class="oe_button_box"]')
+    if not button_boxs:
+        sheet = root.xpath('//sheet')[0]
+        button_box = etree.SubElement(sheet, 'div')
+        button_box.set('class', 'oe_button_box')
+        button_box.set('name', 'button_box')
+    else:
+        button_box = button_boxs[0]
+    # ----button----
+    record_button = etree.Element('button')
+    record_button.set('name', 'action_dingtalk_approval_record')
+    record_button.set('string', '审批记录')
+    record_button.set('type', 'object')
+    record_button.set('class', 'oe_stat_button')
+    record_button.set('icon', 'fa-list-alt')
+    button_box.insert(1, record_button)
+
     # 钉钉审批
     dd_submit_button = etree.Element('button')
     dd_submit_button.set('string', u'钉钉审批')

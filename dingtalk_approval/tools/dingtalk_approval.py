@@ -3,7 +3,7 @@
 import logging
 from odoo import models, api
 from odoo.exceptions import UserError
-from . import dingtalk_api
+from odoo.addons.dingtalk_base.tools import dingtalk_api
 
 _logger = logging.getLogger(__name__)
 
@@ -24,17 +24,30 @@ def approval_result(self):
     user_id, dept_id = get_originator_user_id(self)
     # 获取表单参数
     form_values = get_form_values(self, approval)
-    _logger.info(form_values)
+    # 获取审批人和抄送人列表
+    approvers_users = approval.get_approvers_users()
+    cc_users, cc_type = approval.get_cc_users()
+    data = {
+        'process_code': process_code,  # 审批模型编号
+        'originator_user_id': user_id,  # 发起人
+        'dept_id': dept_id,             # 发起部门
+        'form_component_values': form_values  # 表单参数
+    }
+    if approvers_users:
+        if approval.approval_type == 'turn':
+            data.update({'approvers': approvers_users})   # 依次审批人列表
+        else:
+            data.update({'approvers_v2': approvers_users})  # 会签、或签审批人列表
+    if cc_users and cc_type:
+        data.update({
+            'cc_list': cc_users,     # 抄送列表
+            'cc_position': cc_type     # 抄送时间
+        })
     # ----提交至钉钉---
-    client = dingtalk_api.get_client(self)
+    client = dingtalk_api.get_client()
     try:
         url = 'topapi/processinstance/create'
-        result = client.post(url, {
-            'process_code': process_code,
-            'originator_user_id': user_id,
-            'dept_id': dept_id,
-            'form_component_values': form_values  # 表单参数
-        })
+        result = client.post(url, data)
     except Exception as e:
         raise UserError(e)
     _logger.info(result)
@@ -53,14 +66,14 @@ def _commit_dingtalk_approval(self):
         raise UserError('提交审批实例失败，失败原因:{}'.format(result.get('errmsg')))
     model_name = self._name.replace('.', '_')
     sql = """UPDATE {} 
-                SET 
-                    dd_approval_state='{}', 
-                    dd_doc_state='{}', 
-                    dd_process_instance='{}' 
-                WHERE 
-                    id={}""".format(model_name, 'approval', '等待审批', result.get('process_instance_id'), self.id)
+             SET 
+                dd_approval_state='{}', 
+                dd_doc_state='{}', 
+                dd_process_instance='{}' 
+             WHERE 
+                id={}""".format(model_name, 'approval', '等待审批', result.get('process_instance_id'), self.id)
     self._cr.execute(sql)
-    # 执行审批运行函数代码
+    # ------执行提交审批运行函数代码-------
     if approval.approval_start_function:
         for method in approval.approval_start_function.split(','):
             try:
@@ -188,10 +201,40 @@ def _restart_commit_approval(self):
              WHERE 
                  id={}""".format(model_name, 'approval', '重新提交审批', result.get('process_instance_id'), self.id)
     self._cr.execute(sql)
+    # ------执行重新提交后的函数代码-------
+    if approval.approval_restart_function:
+        for method in approval.approval_restart_function.split(','):
+            try:
+                getattr(self, method)()
+            except Exception as e:
+                _logger.info(e)
     self.message_post(body=u"已重新提交，请等待审批人审批！", message_type='notification')
     return True
 
 
 setattr(Model, 'restart_commit_approval', _restart_commit_approval)
+
+
+def _action_dingtalk_approval_record(self):
+    """
+    跳转到钉钉审批记录tree
+    :param self:
+    :return:
+    """
+    self.ensure_one()
+    return {
+        "type": "ir.actions.act_window",
+        "res_model": "dingtalk.approval.record",
+        "views": [[False, "tree"]],
+        "name": "审批记录",
+        "domain": [["process_instance", "=", self.dd_process_instance]],
+        "context": {
+            'search_default_group_by_model': 0,
+            'search_default_group_by_process_instance': 0
+        },
+    }
+
+
+setattr(Model, 'action_dingtalk_approval_record', _action_dingtalk_approval_record)
 
 
