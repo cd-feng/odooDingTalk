@@ -102,6 +102,8 @@ def timestamp_to_local_date(time_num):
     :param time_num:
     :return: string datetime
     """
+    if not time_num:
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     to_second_timestamp = float(time_num / 1000)  # 毫秒转秒
     to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
     to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
@@ -151,6 +153,8 @@ def datetime_local_data(date_time, is_date=None):
     :param is_date:  是否返回日期格式（%Y-%m-%d）
     :return: data_str 默认返回格式（%Y-%m-%d %H:%M:%S） 当re_type为真时返回格式（%Y-%m-%d）
     """
+    if not date_time:
+        return datetime.now().strftime('%Y-%m-%d') if is_date else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     dt = datetime.fromtimestamp(float(date_time) / 10 ** (len(str(date_time)) - 10), timezone(timedelta(hours=8)))
     return dt.strftime('%Y-%m-%d') if is_date else dt.strftime('%Y-%m-%d %H:%M:%S')
 
