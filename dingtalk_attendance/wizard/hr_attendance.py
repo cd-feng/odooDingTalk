@@ -84,7 +84,7 @@ class GetHrAttendanceResult(models.TransientModel):
                     emp_id = self.env['hr.employee'].sudo().search([('ding_id', '=', rec.get('userId'))], limit=1)
                     groups = self.env['dingtalk.simple.groups'].search([('group_id', '=', rec.get('groupId'))], limit=1)
                     work_date = dingtalk_api.datetime_local_data(rec.get('workDate'), is_date=True)
-                    check_in = dingtalk_api.timestamp_to_local_date(self, rec.get('userCheckTime'))
+                    check_in = dingtalk_api.timestamp_to_local_date(rec.get('userCheckTime'))
                     # 上班卡
                     if rec.get('checkType') == 'OnDuty':
                         attendance_data = {
