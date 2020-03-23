@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="ding_group_id"/>
+                <field name="ding_plan_id"/>
+                <field name="work_date"/>
+                <field name="source_type"/>
+                <field name="time_result"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">dingtalk_users_attendance_result_but</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter_inherit" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter string="打卡结果" name="time_result" context="{'group_by': 'time_result'}"/>
+                <filter string="工作日" name="work_date" context="{'group_by': 'work_date'}"/>
+                <filter string="钉钉考勤组" name="ding_group_id" context="{'group_by': 'ding_group_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

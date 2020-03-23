@@ -68,37 +68,11 @@
         </field>
     </record>
 
-     <record model="ir.ui.view" id="dingtalk_simple_groups_kanban_view">
-        <field name="name">考勤组</field>
-        <field name="model">dingtalk.simple.groups</field>
-        <field name="arch" type="xml">
-            <kanban class="o_modules_kanban" js_class="dingtalk_simple_groups_kanban_class">
-                <field name="name"/>
-                <field name="group_id"/>
-                <field name="s_type"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_module_vignette oe_kanban_global_click">
-                            <div class="oe_module_desc">
-                                <h4 class="o_kanban_record_title">
-                                    <field name="name"/>- <field name="group_id"/>
-                                </h4>
-                                <p class="oe_module_name">
-                                    <field name="s_type"/>
-                                </p>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-     </record>
-
     <record model="ir.actions.act_window" id="dingtalk_simple_groups_action">
         <field name="name">考勤组</field>
         <field name="res_model">dingtalk.simple.groups</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_group_by_s_type': False}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_s_type': True}</field>
     </record>
 
     <record model="ir.ui.view" id="dingtalk_simple_groups_search">

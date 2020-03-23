@@ -92,6 +92,26 @@
         </t>
     </t>
 
+
+
+
+    <t t-name="ListView.DingTalkAttendanceResult">
+        <button type="button" class="btn btn-secondary dingtalk_users_attendance_result_tree">
+            钉钉打卡结果
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingTalkAttendanceResultButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="ListView.DingTalkAttendanceResult"/>
+        </t>
+    </t>
+
 </template>
 
 

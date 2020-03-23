@@ -17,7 +17,7 @@ class GetDingTalkSimpleGroupsTran(models.TransientModel):
         获取考勤组
         :return:
         """
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         offset = 0
         size = 10
         while True:
@@ -111,7 +111,7 @@ class GetDingTalkSimpleGroupsUsersTran(models.TransientModel):
         emp = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.user.id)], limit=1)
         if not emp or not emp.ding_id:
             raise UserError("请使用钉钉员工登录系统后进行操作，或则将当前登录用户关联一个钉钉员工!")
-        client = dingtalk_api.get_client()
+        client = dingtalk_api.get_client(self)
         url = "topapi/attendance/group/memberusers/list"
         for group in groups:
             while True:
