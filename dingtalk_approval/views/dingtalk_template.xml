@@ -5,7 +5,7 @@
 <odoo>
 
     <record id="dingtalk_approval_template_tree_view" model="ir.ui.view">
-        <field name="name">审批模板</field>
+        <field name="name">钉钉模板</field>
         <field name="model">dingtalk.approval.template</field>
         <field name="arch" type="xml">
             <tree default_order="id desc" js_class="dingtalk_approval_tem_tree_class">
@@ -19,7 +19,7 @@
     </record>
 
     <record model="ir.ui.view" id="dingtalk_approval_template_kanban">
-        <field name="name">审批模板</field>
+        <field name="name">钉钉模板</field>
         <field name="model">dingtalk.approval.template</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" js_class="dingtalk_approval_tem_kanban_class">
@@ -51,7 +51,7 @@
     </record>
 
     <record id="dingtalk_approval_template_action" model="ir.actions.act_window">
-        <field name="name">审批模板</field>
+        <field name="name">钉钉模板</field>
         <field name="res_model">dingtalk.approval.template</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
@@ -61,6 +61,6 @@
         </field>
     </record>
 
-    <menuitem name="审批模板" id="dingtalk_approval_template_menu" parent="dingtalk_approval_main" sequence="2" action="dingtalk_approval_template_action"/>
+    <menuitem name="钉钉模板" id="dingtalk_approval_template_menu" parent="dingtalk_approval_main" sequence="2" action="dingtalk_approval_template_action"/>
 
 </odoo>

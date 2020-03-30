@@ -15,7 +15,6 @@
     'application': True,
     'auto_install': False,
     'data': [
-        'security/dingtalk_security.xml',
         'security/ir.model.access.csv',
         'data/callback_list.xml',
 

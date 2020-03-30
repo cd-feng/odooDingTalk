@@ -4,7 +4,7 @@
 -->
 <odoo>
 
-    <menuitem name="智能人事" id="dingtalk_hrm_menu" web_icon="dingtalk_hrm,static/description/icon.png" sequence="15"/>
+    <menuitem name="智能人事" id="dingtalk_hrm_menu" parent="dingtalk_base.root_menu" sequence="8"/>
 
     <menuitem name="员工管理" id="hrm_employee_manager_menu" parent="dingtalk_hrm_menu"/>
 

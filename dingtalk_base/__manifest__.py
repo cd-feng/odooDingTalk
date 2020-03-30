@@ -16,6 +16,7 @@
     'auto_install': False,
     'data': [
         'security/dingtalk_security.xml',
+        'views/assets.xml',
         'views/res_config_settings_views.xml',
     ],
 }

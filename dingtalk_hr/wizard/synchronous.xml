@@ -5,7 +5,7 @@
 <odoo>
 
     <record id="dingtalk_hr_synchronous_form_view" model="ir.ui.view">
-        <field name="name">dingtalk.hr.synchronous.form</field>
+        <field name="name">组织结构同步</field>
         <field name="model">dingtalk.hr.synchronous</field>
         <field name="arch" type="xml">
             <form>
@@ -33,21 +33,18 @@
     </record>
 
     <record id="dingtalk_hr_synchronous_action" model="ir.actions.act_window">
-        <field name="name">钉钉基础数据同步</field>
+        <field name="name">组织结构同步</field>
         <field name="res_model">dingtalk.hr.synchronous</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <menuitem name="钉钉数据同步" id="dingtalk_synchronous_menu" parent="hr.menu_hr_root" sequence="6"
-              groups="dingtalk_hr.manage_group"/>
-
-    <menuitem name="部门员工同步" id="dingtalk_emp_dept_menu" parent="dingtalk_synchronous_menu" sequence="1"
-              action="dingtalk_hr_synchronous_action" groups="dingtalk_hr.manage_group"/>
+    <menuitem name="组织结构同步" id="dingtalk_emp_dept_menu" parent="dingtalk_base.user_menu" sequence="3"
+              action="dingtalk_hr_synchronous_action"/>
 
 
     <record id="dingtalk_synchronous_partner_form_view" model="ir.ui.view">
-        <field name="name">同步钉钉联系人</field>
+        <field name="name">联系人同步</field>
         <field name="model">dingtalk.hr.synchronous.partner</field>
         <field name="arch" type="xml">
             <form>
@@ -65,14 +62,14 @@
     </record>
 
     <record id="dingtalk_synchronous_partner_action" model="ir.actions.act_window">
-        <field name="name">同步钉钉联系人</field>
+        <field name="name">联系人同步</field>
         <field name="res_model">dingtalk.hr.synchronous.partner</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <menuitem name="同步钉钉联系人" id="dingtalk_synchronous_partner_menu" parent="contacts.menu_contacts" sequence="2"
-              action="dingtalk_synchronous_partner_action" groups="dingtalk_hr.manage_group"/>
+    <menuitem name="联系人同步" id="dingtalk_synchronous_partner_menu" parent="dingtalk_base.partner_menu" sequence="2"
+              action="dingtalk_synchronous_partner_action"/>
 
 
      <record id="create_res_user_form_view" model="ir.ui.view">
@@ -106,7 +103,7 @@
         <field name="target">new</field>
     </record>
 
-     <menuitem name="创建系统用户" id="create_res_user_menu" parent="dingtalk_synchronous_menu" sequence="2"
-              action="create_res_user_action" groups="dingtalk_hr.manage_group"/>
+     <menuitem name="创建系统用户" id="create_res_user_menu" parent="dingtalk_base.user_menu" sequence="5"
+              action="create_res_user_action"/>
 
 </odoo>

@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_dingtalk_callback_list,dingtalk.callback.list,model_dingtalk_callback_list,base.group_user,1,1,1,1
-access_dingtalk_callback_manage,dingtalk.callback.manage,model_dingtalk_callback_manage,dingtalk_callback.manage_group,1,1,1,1
+access_dingtalk_callback_manage,dingtalk.callback.manage,model_dingtalk_callback_manage,dingtalk_base.manage_group,1,1,1,1
