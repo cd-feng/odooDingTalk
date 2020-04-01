@@ -50,6 +50,6 @@
     </record>
 
     <menuitem name="审批记录" id="dingtalk_approval_record_menu" parent="dingtalk_approval_main" sequence="5"
-              action="dingtalk_approval_record_action" groups="dingtalk_approval.manage_group"/>
+              action="dingtalk_approval_record_action"/>
 
 </odoo>

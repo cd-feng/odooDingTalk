@@ -15,7 +15,7 @@
     'application': True,
     'auto_install': False,
     'data': [
-        'security/dingtalk_security.xml',
+        # 'security/dingtalk_security.xml',
         'security/ir.model.access.csv',
         'views/assets.xml',
         'views/employee_roster.xml',

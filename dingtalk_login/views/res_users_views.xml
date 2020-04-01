@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='oauth_access_token']" position="after">
-                    <field name="ding_user_phone" readonly="1" groups="dingtalk_hr.manage_group"/>
-                    <field name="ding_user_id" readonly="1" groups="dingtalk_hr.manage_group"/>
+                    <field name="ding_user_phone" readonly="1" groups="dingtalk_base.manage_group"/>
+                    <field name="ding_user_id" readonly="1" groups="dingtalk_base.manage_group"/>
                 </xpath>
             </field>
         </record>

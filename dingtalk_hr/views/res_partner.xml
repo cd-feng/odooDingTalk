@@ -36,18 +36,18 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
                 <newline/>
-                <field name="ding_id" readonly="1" groups="dingtalk_hr.manage_group"/>
+                <field name="ding_id" readonly="1" groups="dingtalk_base.manage_group"/>
                 <field name="ding_company_name"/>
                 <field name="ding_employee_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="create_ding_partner" string="上传至钉钉" type="object" class="oe_stat_button"
-                    icon="fa-creative-commons" attrs="{'invisible':[('ding_id','!=', False)]}" groups="dingtalk_hr.manage_group" />
+                    icon="fa-creative-commons" attrs="{'invisible':[('ding_id','!=', False)]}" groups="dingtalk_base.manage_group" />
                 <button name="update_ding_partner" string="更新至钉钉" type="object" class="oe_stat_button"
-                        icon="fa-pencil-square-o" groups="dingtalk_hr.manage_group" attrs="{'invisible':[('ding_id','=', False)]}"
+                        icon="fa-pencil-square-o" groups="dingtalk_base.manage_group" attrs="{'invisible':[('ding_id','=', False)]}"
                         confirm="系统将新的信息上传至钉钉,确认?"/>
                 <button name="delete_ding_partner" string="删除钉钉联系人" type="object" class="oe_stat_button"
-                        icon="fa-trash-o" groups="dingtalk_hr.manage_group" attrs="{'invisible':[('ding_id','=', False)]}"
+                        icon="fa-trash-o" groups="dingtalk_base.manage_group" attrs="{'invisible':[('ding_id','=', False)]}"
                         confirm="确认删除钉钉联系人？"/>
             </xpath>
         </field>

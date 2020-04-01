@@ -4,8 +4,7 @@
 -->
 <odoo>
 
-    <menuitem name="钉钉考勤" id="dingtalk_attendance" parent="hr_attendance.menu_hr_attendance_root" sequence="21"/>
-
+    <menuitem name="钉钉考勤" id="dingtalk_attendance" parent="dingtalk_base.root_menu" sequence="10"/>
 
      <template id="dingtalk_attendance_assets" name="Odoo DingTalk Attendance Assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">

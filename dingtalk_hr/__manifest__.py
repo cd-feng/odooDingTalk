@@ -15,8 +15,6 @@
     'application': True,
     'auto_install': False,
     'data': [
-        'security/dingtalk_security.xml',
-
         'wizard/change_mobile.xml',
         'wizard/synchronous.xml',
 
