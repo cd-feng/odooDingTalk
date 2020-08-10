@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_mc_config_inherit_tree" model="ir.ui.view">
+        <field name="name">参数配置</field>
+        <field name="model">dingtalk.mc.config</field>
+        <field name="inherit_id" ref="dingtalk_mc.dingtalk_mc_config_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='m_login']" position='after'>
+                <field name="is_auto_create_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="dingtalk_mc_config_inherit_form" model="ir.ui.view">
+        <field name="name">参数配置</field>
+        <field name="model">dingtalk.mc.config</field>
+        <field name="inherit_id" ref="dingtalk_mc.dingtalk_mc_config_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position='inside'>
+                <button name="set_default_user_groups" string="设置默认用户权限" class="oe_highlight" type="object"
+                        attrs="{'invisible': [('is_auto_create_user', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='delete_is_sy']" position="after">
+                <field name="is_auto_create_user"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

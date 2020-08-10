@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingtalk_mc_login_result_signup" name="DingTalk MC Login Result Signup">
+        <t t-call="web.html_container">
+            <form class="oe_signup_form">
+                <p t-if="ding_error" class="alert alert-danger text-center">
+                    <t t-raw="ding_error"/>
+                </p>
+                <div class="text-center oe_login_buttons pt-3">
+                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="dingtalk_mc_login_signup" name="Dingtalk MC Login Signup">
+        <t t-call="web.login_layout">
+            <form class="oe_signup_form" role="form" method="post" t-if="not message">
+                <select name="env_company" id="env_company" class="form-control">
+                </select>
+                <hr/>
+                <div id="login_container" class="login_container">
+                </div>
+                <hr/>
+                <p class="alert alert-danger" t-if="error">
+                    <t t-raw="error"/>
+                </p>
+                <t t-call="web.layout">
+                    <script src="https://g.alicdn.com/dingding/dinglogin/0.0.5/ddLogin.js"></script>
+                    <script type="text/javascript" src="/dingtalk_mc/static/src/js/dingtalk_login.js"></script>
+                </t>
+                <div class="text-center oe_login_buttons pt-3">
+                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">返回账号登录?</a>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="auto_login_signup" name="DingTalk MC Auto Login View">
+        <t t-call="web.login_layout">
+            <form class="oe_signup_form">
+                <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...<br/> 若页面长时间无反应（一般不超过15秒），请尝试刷新页面.</p>
+                <p id="corp-id" style="display:none;">
+                    <t t-esc="corp_id"/>
+                </p>
+                <div class="text-center oe_login_buttons pt-3">
+                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
+                </div>
+            </form>
+            <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
+            <script>
+                dd.ready(function() {
+                    // 获取CorpId
+                    var corpId = document.querySelector("#corp-id").innerHTML.trim();
+                    dd.runtime.permission.requestAuthCode({
+                        corpId: corpId, // 企业id
+                        onSuccess: function (result) {
+                            $("#message-result").html("身份已确认! 正在执行登陆...");
+                            window.location.replace("/web/dingtalk/mc/auto/login/action?authCode=" + result.code);
+                        },
+                        onFail: function(err) {
+                            $("#message-result").attr("class", "alert alert-danger");
+                            $("#message-result").html("身份校验失败！请使用账号密码登陆。");
+                        }
+                    });
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

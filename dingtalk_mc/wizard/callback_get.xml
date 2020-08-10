@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="get_dingtalk_callback_form_view" model="ir.ui.view">
+        <field name="name">get.dingtalk.callback.form</field>
+        <field name="model">get.dingtalk.callback</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>选择要获取哪些公司下的回调列表。</p>
+                </div>
+                <group>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <footer>
+                    <button string="确认" name="get_callback_list" type="object" class="oe_highlight"/>
+                    <button string="告辞" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="get_dingtalk_callback_action" model="ir.actions.act_window">
+        <field name="name">获取回调列表</field>
+        <field name="res_model">get.dingtalk.callback</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

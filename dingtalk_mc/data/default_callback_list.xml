@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--通讯录事件-->
+        <record id="dingtalk_callback_list_user_add_org" model="dingtalk.callback.list">
+            <field name="name">通讯录用户增加</field>
+            <field name="value">user_add_org</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_user_modify_org" model="dingtalk.callback.list">
+            <field name="name">通讯录用户更改</field>
+            <field name="value">user_modify_org</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_listuser_leave_org" model="dingtalk.callback.list">
+            <field name="name">通讯录用户离职</field>
+            <field name="value">user_leave_org</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_admin_add" model="dingtalk.callback.list">
+            <field name="name">通讯录用户被设为管理员</field>
+            <field name="value">org_admin_add</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_admin_remove" model="dingtalk.callback.list">
+            <field name="name">通讯录用户被取消设置管理员</field>
+            <field name="value">org_admin_remove</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_dept_create" model="dingtalk.callback.list">
+            <field name="name">通讯录企业部门创建</field>
+            <field name="value">org_dept_create</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_dept_modify" model="dingtalk.callback.list">
+            <field name="name">通讯录企业部门修改</field>
+            <field name="value">org_dept_modify</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_dept_remove" model="dingtalk.callback.list">
+            <field name="name">通讯录企业部门删除</field>
+            <field name="value">org_dept_remove</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_org_remove" model="dingtalk.callback.list">
+            <field name="name">企业被解散</field>
+            <field name="value">org_remove</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_user_org_change" model="dingtalk.callback.list">
+            <field name="name">企业信息发生变更</field>
+            <field name="value">org_change</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_label_user_change" model="dingtalk.callback.list">
+            <field name="name">员工角色信息发生变更</field>
+            <field name="value">label_user_change</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_label_conf_add" model="dingtalk.callback.list">
+            <field name="name">增加角色或者角色组</field>
+            <field name="value">label_conf_add</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_label_conf_del" model="dingtalk.callback.list">
+            <field name="name">删除角色或者角色组</field>
+            <field name="value">label_conf_del</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_label_conf_modify" model="dingtalk.callback.list">
+            <field name="name">修改角色或者角色组</field>
+            <field name="value">label_conf_modify</field>
+            <field name="value_type">00</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+
+         <!--群会话事件-->
+        <record id="dingtalk_callback_list_chat_add_member" model="dingtalk.callback.list">
+            <field name="name">群会话添加人员</field>
+            <field name="value">chat_add_member</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_remove_member" model="dingtalk.callback.list">
+            <field name="name">群会话删除人员</field>
+            <field name="value">chat_remove_member</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_quit" model="dingtalk.callback.list">
+            <field name="name">群会话用户主动退群</field>
+            <field name="value">chat_quit</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_update_owner" model="dingtalk.callback.list">
+            <field name="name">群会话更换群主</field>
+            <field name="value">chat_update_owner</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_update_title" model="dingtalk.callback.list">
+            <field name="name">群会话更换群名称</field>
+            <field name="value">chat_update_title</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_disband" model="dingtalk.callback.list">
+            <field name="name">群会话解散群</field>
+            <field name="value">chat_disband</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_callback_list_chat_disband_microapp" model="dingtalk.callback.list">
+            <field name="name">绑定了微应用的群会话，在解散时回调</field>
+            <field name="value">chat_disband_microapp</field>
+            <field name="value_type">01</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+
+        <!--签到事件-->
+        <record id="dingtalk_callback_list_check_in" model="dingtalk.callback.list">
+            <field name="name">用户签到</field>
+            <field name="value">check_in</field>
+            <field name="value_type">02</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+
+        <!--审批事件-->
+        <record id="dingtalk_users_callback_bpms_task_change" model="dingtalk.callback.list">
+            <field name="name">审批任务开始，结束，转交</field>
+            <field name="value">bpms_task_change</field>
+            <field name="value_type">03</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_users_callback_bpms_instance_change" model="dingtalk.callback.list">
+            <field name="name">审批实例开始，结束</field>
+            <field name="value">bpms_instance_change</field>
+            <field name="value_type">03</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+
+        <!--考勤事件  2020-06-01新增-->
+        <record id="dingtalk_attendance_check_record_change" model="dingtalk.callback.list">
+            <field name="name">员工打卡事件</field>
+            <field name="value">attendance_check_record</field>
+            <field name="value_type">04</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_attendance_schedule_change_change" model="dingtalk.callback.list">
+            <field name="name">员工排班变更事件</field>
+            <field name="value">attendance_schedule_change</field>
+            <field name="value_type">04</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+        <record id="dingtalk_attendance_overtime_duration_change" model="dingtalk.callback.list">
+            <field name="name">员工加班事件</field>
+            <field name="value">attendance_overtime_duration</field>
+            <field name="value_type">04</field>
+            <field name="call_back_url">web/dingtalk/callback/do</field>
+        </record>
+
+    </data>
+</odoo>
