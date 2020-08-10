@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dingtalk_report_category,dingtalk.report.category,model_dingtalk_report_category,dingtalk_report.user_group,1,0,0,0
-access_dingtalk_report_category_manage_group,dingtalk.report.category.manage,model_dingtalk_report_category,dingtalk_report.manage_group,1,1,1,1
-access_dingtalk_report_report,dingtalk.report.report,model_dingtalk_report_report,dingtalk_report.user_group,1,1,1,1
-access_dingtalk_report_template,dingtalk.report.template,model_dingtalk_report_template,dingtalk_report.user_group,1,0,0,0
-access_dingtalk_report_template_manage_group,dingtalk.report.template.manage,model_dingtalk_report_template,dingtalk_report.manage_group,1,1,1,1
-
