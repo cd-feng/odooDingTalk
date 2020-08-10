@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2020 SuXueFeng GNU
+-->
+<odoo>
+
+    <record id="dingtalk_miroapp_wizard_form_view" model="ir.ui.view">
+        <field name="name">dingtalk.miroapp.list.wizard.form</field>
+        <field name="model">dingtalk.miroapp.list.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>选择要拉取哪些公司下的应用列表...</p>
+                <group>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <footer>
+                    <button string="确认" name="get_miroapp_list" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_miroapp_wizard_action" model="ir.actions.act_window">
+        <field name="name">dingtalk.miroapp.list.wizard.action</field>
+        <field name="res_model">dingtalk.miroapp.list.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="dingtalk_miroapp_set_visible_form_view" model="ir.ui.view">
+        <field name="name">设置应用可见范围</field>
+        <field name="model">dingtalk.miroapp.set.visible.scopes</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="2">
+                    <field name="is_hidden"/>
+                </group>
+                <group string="可见部门">
+                    <field name="miroapp_id" invisible="1"/>
+                    <field name="department_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <group string="可见员工">
+                    <field name="employee_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <footer>
+                    <button string="确认设置" name="set_visible_scopes" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_miroapp_set_visible_form_action" model="ir.actions.act_window">
+        <field name="name">设置应用可见范围</field>
+        <field name="res_model">dingtalk.miroapp.set.visible.scopes</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
