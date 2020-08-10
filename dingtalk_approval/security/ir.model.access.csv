@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dingtalk_approval_template,dingtalk.approval.template,model_dingtalk_approval_template,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_control,dingtalk.approval.control,model_dingtalk_approval_control,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_control_line,dingtalk.approval.control.line,model_dingtalk_approval_control_line,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_control_list,dingtalk.approval.control.list,model_dingtalk_approval_control_list,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_model_button,dingtalk.approval.model.button,model_dingtalk_approval_model_button,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_huo_user_line,dingtalk.approval.huo.user.line,model_dingtalk_approval_huo_user_line,dingtalk_approval.manage_group,1,1,1,1
-access_dingtalk_approval_record,dingtalk.approval.record,model_dingtalk_approval_record,base.group_user,1,1,1,1
-
