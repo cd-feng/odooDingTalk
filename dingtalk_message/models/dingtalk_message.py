@@ -264,9 +264,8 @@ class MessageDataSet(DataSet):
         user = request.env['res.users'].search([('id', '=', uid)])
         domain = [('model_id', '=', ir_model.id), ('company_id', '=', user.company_id.id),
                   ('state', '=', 'open'), ('msg_opportunity', '=', 'button')]
-        msg_config = request.env['dingtalk.message.config'].sudo().search(domain, limit=1)
-        if msg_config and len(msg_config.button_ids) > 0:
-            # 获取配置按钮
+        msg_configs = request.env['dingtalk.message.config'].sudo().search(domain)
+        for msg_config in msg_configs:
             buttons_list = list()
             for button in msg_config.button_ids:
                 buttons_list.append(button.function)

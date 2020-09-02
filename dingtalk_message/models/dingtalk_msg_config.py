@@ -65,6 +65,8 @@ class DingtalkMsgConfig(models.Model):
             result = self.search_count([('msg_opportunity', '=', 'new_user'), ('state', '=', 'open')])
             if result > 1:
                 raise ValidationError("您已配置了新用户通知的模板，不允许开启多个！")
+        elif self.msg_opportunity == 'normal':
+            raise ValidationError("暂未实现常规消息推送方式！")
         self.write({'state': 'open'})
 
     def close_state(self):
