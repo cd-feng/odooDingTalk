@@ -1,0 +1,3564 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* dingtalk_mc
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-08 03:00+0000\n"
+"PO-Revision-Date: 2020-06-08 03:00+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "<code style=\"white-space: pre-wrap\">\n"
+"                                            name_get,create,write\n"
+"                                            </code>"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_kanban
+msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "<span>钉钉企业后台管理</span>"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "<span>钉钉开发者后台管理</span>"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "<strong>温馨提示：</strong>您可以前往钉钉<strong>开发者管理后台</strong>得到这些信息！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__mention_all_authority
+msgid "@all 权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__isAtAll
+msgid "@所有人时"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_needaction
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_needaction
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__active
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__active
+msgid "Active"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_state
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.open_dingtalk_employee_action
+msgid "Add a new employee"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__agent_id
+msgid "AgentId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__app_key
+msgid "AppKey"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__app_secret
+msgid "AppSecret"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "Archived"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_attachment_count
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_attachment_count
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_hr_attendance
+msgid "Attendance"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__corp_id
+msgid "CorpId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.open_dingtalk_department_action
+msgid "Create a new department"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__create_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__create_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__display_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.module.category,description:dingtalk_mc.dingtalk_other_groups
+msgid "False"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_follower_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_follower_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_channel_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_channel_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_partner_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_partner_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_hr_department
+msgid "HR Department"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__webhook
+msgid "Hook地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "IBeacon"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__id
+msgid "ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_unread
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_unread
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_needaction
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_needaction
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_has_error
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_has_error
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_is_follower
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_is_follower
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran____last_update
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__write_uid
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_tool__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__write_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_main_attachment_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_main_attachment_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "Markdown"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__markdown_message
+msgid "Markdown消息内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_has_error
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_has_error
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_date_deadline
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_summary
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_type_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_needaction_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_needaction_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_has_error_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_has_error_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_needaction_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_needaction_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_has_error_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_has_error_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__message_unread_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__message_unread_counter
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,ftype:0
+msgid "OA单据"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "OA单据审批完成后不可修改，业务单据可视情况修改"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.open_dingtalk_department_action
+msgid "Odoo's department structure is used to manage all documents\n"
+"            related to employees by departments: expenses, timesheets,\n"
+"            leaves, recruitments, etc."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__oa_model_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__model_id
+msgid "Odoo模型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,activity_state:0
+#: selection:dingtalk.mc.chat,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_res_partner_category
+msgid "Partner Tags"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,activity_state:0
+#: selection:dingtalk.mc.chat,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__activity_user_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__activity_state
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,activity_state:0
+#: selection:dingtalk.mc.chat,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__token
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__token
+msgid "Token"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_unionid
+msgid "Union标识"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_unread
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_unread
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__message_unread_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__message_unread_counter
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat_robot.py:173
+#, python-format
+msgid "Webhook地址有误！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__website_message_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__website_message_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control__website_message_ids
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_callback_manage__website_message_ids
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_chat__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.open_dingtalk_employee_action
+msgid "With just a quick glance on the Odoo employee screen, you\n"
+"            can easily find all the information you need for each person;\n"
+"            contact data, job position, availability, etc."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.calculate_month_attendance_action
+msgid "calculate.month.attendance.action"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__color
+msgid "color"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_message_tool
+msgid "dingtalk.message.tool"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "feed_card"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.hr_attendance_tran_action
+msgid "hr.attendance.tran.action"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/controllers/login_controller.py:82
+#, python-format
+msgid "{}在当前ERP系统中不存在"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_control_list
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__list_ids
+msgid "一对多列表字段"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.create_dingtalk_department_action
+#: model:ir.actions.server,name:dingtalk_mc.create_dingtalk_employee_action
+msgid "上传至钉钉"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,check_type:0
+msgid "上班"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,check_type:0
+msgid "下班"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,chat_banned_type:0
+msgid "不禁言"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,ftype:0
+msgid "业务单据"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "严重违法违纪"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,timeResult:0
+msgid "严重迟到"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__personalHf
+msgid "个人公积金账号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "个人原因"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__personalSi
+msgid "个人社保账号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__is_dd_id
+msgid "为关联组件?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_hr_attendance_result__work_month
+msgid "为方便其他模块按照月份获取数据时使用"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.main_menu
+msgid "主数据"
+msgstr "Main Data"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__mainDept
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "主部门"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__value_type
+msgid "事件分类"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__value_type
+msgid "事件类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "产生的消息可推送到的频道"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,mention_all_authority:0
+msgid "仅群主"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,management_ype:0
+msgid "仅群主可管理"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.synchronous,repeat_type:0
+msgid "以名称判断"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.synchronous,repeat_type:0
+msgid "以钉钉ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.huo.user.line,approval_type:0
+msgid "会签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,approval_type:0
+msgid "会签/或签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_huo_user_line
+msgid "会签/或签用户列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__locationResult
+msgid "位置结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__address
+msgid "住址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_send_chat_message_form_view
+msgid "你想要发送的消息内容...默认的消息格式为文本格式!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/controllers/login_controller.py:178
+#, python-format
+msgid "你还没有关联系统用户，请联系管理员处理！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.auto_login_signup
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.login_result_signup
+msgid "使用账号登录"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_return_approval_state_form_view
+msgid "例如：sale_order"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,approval_type:0
+msgid "依次审批"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__validation_type
+msgid "入群验证"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__confirmJoinTime
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_hiredDate
+msgid "入职时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__work_status
+msgid "入职状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,chat_banned_type:0
+msgid "全员禁言"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "全职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__is_all
+msgid "全部员工?"
+msgstr "All Employees?"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__company_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__company_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__company_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__company_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_message_log_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_month_attendance_search
+msgid "公司"
+msgstr "Company"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__channel_ids
+msgid "关注频道"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__company_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner_category__company_id
+msgid "关联公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__model_ids
+msgid "关联模型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__is_dd_id
+msgid "关联组件?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__chat_id
+msgid "关联群组"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "其他"
+msgstr "Others"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_form
+msgid "其他信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "兼职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__approval_content
+msgid "内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__is_travel
+msgid "出差"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__travel_days
+msgid "出差天数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__birthTime
+msgid "出生日期"
+msgstr "Date Of Birth"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__tel
+msgid "分机号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_record_search
+msgid "分组"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "创建人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "创建时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.create_res_user_action
+#: model:ir.model,name:dingtalk_mc.model_create_mc_res_user
+msgid "创建用户"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.create_res_user_menu
+msgid "创建系统用户"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "创建钉钉群"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__delete_is_sy
+msgid "删除基础数据自动同步?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.del_dingtalk_chat_users_action
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__user_ids
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "删除群成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.delete_dingtalk_employee_action
+msgid "删除钉钉员工"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.delete_dingtalk_department_action
+msgid "删除钉钉部门"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__repeat_type
+msgid "判断唯一"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__workPlace
+msgid "办公地点"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__aes_key
+msgid "加密密钥"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__is_overtime
+msgid "加班"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__overtime_days
+msgid "加班天数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "劳务外包"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "劳务派遣"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "协议解除"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.huo.user.line,approval_type:0
+msgid "单人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__ftype
+msgid "单据类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__name
+msgid "单据表名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "卡片消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__card_message
+msgid "卡片消息内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_robot_send_card_message_list
+msgid "卡片消息列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_template_tran_form_view
+msgid "即将从钉钉中获取已存在的审批模板..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "即将创建钉钉群会话,确认?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_mc_config_act_window
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_mc_config
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_mc_config_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_search
+msgid "参数配置"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "发展原因"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "发送"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "发送消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_robot_send_message_action
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_send_chat_message_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_send_chat_message
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "发送群消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.add_dingtalk_chat_users_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.calculate_month_attendance_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.create_res_user_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.del_dingtalk_chat_users_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_template_tran_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_emp_related_users_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_synchronous_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_return_approval_state_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_send_chat_message_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_synchronous_partner_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_users_duration_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_tran_form_view
+msgid "取消"
+msgstr "Cancel"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "只需要填写函数名即可。比如你定义了一个<code>def _test_print(self):...</code>函数，那么你只需要填写<code>_test_print</code>"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "可执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "可执行函数帮助"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__contractCompanyName
+msgid "合同公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "合同到期不续签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__contractPeriodType
+msgid "合同期限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__contractType
+msgid "合同类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.record,approval_result:0
+#: selection:dingtalk.return.approval.state,dd_approval_result:0
+msgid "同意"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_synchronous_form_view
+msgid "同步内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster_synchronous__company_ids
+msgid "同步的公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_synchronous_form_view
+msgid "同步选项"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_synchronous_partner_action
+msgid "同步钉钉联系人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__name
+msgid "名称"
+msgstr "Name"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "名称,如XX群..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_synchronous_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.get_dingtalk_callback_form_view
+msgid "告辞"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.open_dingtalk_employee_action
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__employee_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__emp_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__emp_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__employee_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__employee_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "员工"
+msgstr "Employee"
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:239
+#, python-format
+msgid "员工{}: 在钉钉中不存在，请选择其他人员!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:125
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:302
+#, python-format
+msgid "员工{}:在钉钉中不存在，请选择其他人员!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/controllers/login_controller.py:175
+#: code:addons/dingtalk_mc/controllers/login_controller.py:176
+#, python-format
+msgid "员工不存在钉钉ID，请维护后再试!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.hr_employees_kanban_menu
+msgid "员工列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_jobnumber
+msgid "员工工号"
+msgstr "Employee Number"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "员工打卡结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_graph
+msgid "员工打卡结果列表报表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__employeeStatus
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "员工状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__employeeType
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "员工类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_employee_roster_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_employee_roster
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_employee_roster_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_graph
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_tree_pivot
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_view_calendar
+msgid "员工花名册"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_users_duration_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_users_duration
+msgid "员工预计算时长"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:121
+#, python-format
+msgid "员工（群主）在钉钉中不存在，请选择其他人员!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "哪些模型单据产生的消息可推送到本群会话"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__record_id
+msgid "唯一标识ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__url
+msgid "回调URL"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "回调事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_callback_manage_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_callback_manage
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "回调列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__call_back_url
+msgid "回调地址函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_callback_log_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_callback_log
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_callback_log_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_log_search
+msgid "回调日志"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_callback_manage_menu
+msgid "回调管理"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__type_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_log_search
+msgid "回调类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_callback_list
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__call_ids
+msgid "回调类型列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_kanban
+msgid "图像"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__template_icon
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__icon_url
+msgid "图标"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__icon_avatar_url
+msgid "图标url"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "图片消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__pic_url
+msgid "图片链接地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "在某些情况下，需要在提交审批时、审批结束后执行一些自定义功能，那么你可以在<code>可执行函数</code>中设置你已经定义好的Function"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.employee,work_status:0
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "在职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__office_status
+msgid "在职子状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__baseCheckTime
+msgid "基准时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__remarks
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__remark
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "备注"
+msgstr "Remarks"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "备注信息..."
+msgstr "Remarks..."
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "多个函数时用英文,号隔开"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__ding_avatar_url
+msgid "头像url"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__name
+msgid "姓名"
+msgstr "Name"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__marriage
+msgid "婚姻状况"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__childBirthDate
+msgid "子女出生日期"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__childName
+msgid "子女姓名"
+msgstr "Child Name"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__childSex
+msgid "子女性别"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__line_field_id
+msgid "字段列表字段"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__ttype
+msgid "字段类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__line_ids
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "字段详情"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "定义的函数要存在于你选择的模型中，比如<code>员工</code>模型的<code>name_get()</code>函数。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__cron_attendance
+msgid "定时获取考勤数据?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "实习"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_record_search
+msgid "实例ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__check_in
+msgid "实际打卡时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_hr_attendance_result__check_in
+msgid "实际打卡时间,  用户打卡时间的毫秒数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.approval_menu
+msgid "审批"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "审批/抄送"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.return.approval.state,dd_approval_state:0
+msgid "审批中"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__is_ing_write
+msgid "审批中允许编辑？"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__model_button_ids
+msgid "审批中禁用功能"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.list,value_type:0
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "审批事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__employee_ids
+msgid "审批人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_user_ids
+msgid "审批人列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__huo_approval_user_ids
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_kanban
+msgid "审批列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__model_start_button_ids
+msgid "审批前禁用功能"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__process_instance
+msgid "审批实例ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_refuse_function
+msgid "审批拒绝-执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__model_end_button_ids
+msgid "审批拒绝禁用功能"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_approval_record_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_record
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_approval_record_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_record_search
+msgid "审批日志"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_approval_control_action
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_approval_control_menu
+msgid "审批模型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_approval_template_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_template
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__template_id
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_approval_template_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_template_form_view
+msgid "审批模板"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__dd_approval_state
+msgid "审批状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_type
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__approval_type
+msgid "审批类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "审批系统"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.return.approval.state,dd_approval_state:0
+msgid "审批结束"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_end_function
+msgid "审批结束-执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__is_end_write
+msgid "审批结束允许编辑？"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__approval_result
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__dd_approval_result
+msgid "审批结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_pass_function
+msgid "审批通过-执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__model_pass_button_ids
+msgid "审批通过禁用功能"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_control
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__control_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_huo_user_line__control_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "审批配置"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_control_line
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__line_id
+msgid "审批配置详情"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_res_partner
+msgid "客户管理"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "家庭原因"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.attrs_menu
+msgid "属性"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__positionLevel
+msgid "岗位职级"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:create.mc.res.user,ttype:0
+msgid "工作Email"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:create.mc.res.user,ttype:0
+msgid "工作手机"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__work_date
+msgid "工作日"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.message.log,msg_type:0
+msgid "工作通知"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.tool_menu
+msgid "工具"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__jobNumber
+msgid "工号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/hr_employee.py:165
+#, python-format
+msgid "已在钉钉上删除Id:{}的员工"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,state:0
+msgid "已建立"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__on_user_ids
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.add_dingtalk_chat_users_form_view
+msgid "已有成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.manage,state:0
+msgid "已注册"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "已离职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "帮助"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__work_month
+msgid "年月字符串"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__sequence
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__sequence
+msgid "序号"
+msgstr "No"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_mc_config__m_login
+msgid "开启后允许从钉钉工作台免密码登录到odoo系统。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,cc_type:0
+#: selection:dingtalk.approval.record,approval_type:0
+msgid "开始"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_synchronous_form_view
+msgid "开始同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,cc_type:0
+msgid "开始和结束"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__start_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__start_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__start_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__start_date
+msgid "开始日期"
+msgstr "Start date"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_tran_form_view
+msgid "开始获取"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__accountBank
+msgid "开户行"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,pre_status:0
+#: selection:hr.employee,work_status:0
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "待入职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+#: selection:hr.employee,office_status:0
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "待离职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__sexType
+msgid "性别"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_return_approval_state_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_return_approval_state
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_return_approval_state_menu
+msgid "恢复单据状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "成员信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_search
+msgid "我创建的"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_record_search
+msgid "我审批的"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_month_attendance_search
+msgid "我的考勤"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.huo.user.line,approval_type:0
+msgid "或签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__residenceType
+msgid "户籍类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_orderInDepts
+msgid "所在部门序位"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__major
+msgid "所学专业"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__company_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_tree_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "所属公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__department_ids
+msgid "所属部门"
+msgstr "Department"
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "所有事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,mention_all_authority:0
+msgid "所有人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,management_ype:0
+msgid "所有人可管理"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__mobile
+msgid "手机号"
+msgstr "Phone number"
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.hr_attendance_result_action
+#: model:ir.model,name:dingtalk_mc.model_hr_attendance_result
+#: model:ir.ui.menu,name:dingtalk_mc.hr_attendance_result_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_form_view
+msgid "打卡结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_emp_related_users_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_emp_related_users
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_emp_related_users_menu
+msgid "批量关联用户"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__cc_user_ids
+msgid "抄送人列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__cc_type
+msgid "抄送时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.record,approval_result:0
+#: selection:dingtalk.return.approval.state,dd_approval_result:0
+msgid "拒绝"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__visit_user
+msgid "拜访对象"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.users.duration,duration_type:0
+msgid "按工作日计算"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.users.duration,duration_type:0
+msgid "按自然日计算"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__btns
+msgid "按钮列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__name
+msgid "按钮名称"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__modifiers
+msgid "按钮属性值"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__function
+msgid "按钮方法"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "描述说明..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_start_function
+msgid "提交审批-执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__at_user_ids
+msgid "提醒人员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__emp_id
+msgid "操作人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__card_message
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__link_message
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__markdown_message
+msgid "支持markdown语法"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__politicalStatus
+msgid "政治面貌"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__sourceType
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "数据来源"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__msg_title
+msgid "文本格式"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "文本消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__text_message
+msgid "文本消息内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,state:0
+msgid "新建"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.dingtalk_mc_config_act_window
+msgid "新建一个参数配置~"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_kanban
+msgid "新建审批"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_add__user_ids
+msgid "新群成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "无法胜任工作"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+#: selection:hr.employee,office_status:0
+msgid "无状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "无类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.log_menu
+msgid "日志"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,timeResult:0
+msgid "早退"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__early_count
+msgid "早退次数"
+msgstr "Leave early time"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__timeResult
+msgid "时间结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__absenteeism_count
+msgid "旷工次数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,timeResult:0
+msgid "旷工迟到"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isLeaderInDepts
+msgid "是否为部门主管"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_active
+msgid "是否激活"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isAdmin
+msgid "是管理员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isBoss
+msgid "是老板"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isLeader
+msgid "是部门主管"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.message.log,msg_type:0
+msgid "普通消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.hrm_menu
+msgid "智能人事"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:res.groups,name:dingtalk_mc.dingtalk_mc_roster_group
+msgid "智能人事操作权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_employee_roster_synchronous
+msgid "智能人事花名册同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "更新回调事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.update_dingtalk_department_action
+#: model:ir.actions.server,name:dingtalk_mc.update_dingtalk_employee_action
+msgid "更新至钉钉"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "更新钉钉群"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.using_dingtalk_avatar_action
+msgid "替换为钉钉头像"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__last_work_day
+msgid "最后工作时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__highestEdu
+msgid "最高学历"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.view_hr_month_attendance_action
+#: model:ir.model,name:dingtalk_mc.model_hr_month_attendance
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_month_attendance_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.view_hr_month_attendance_calendar
+msgid "月考勤统计"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.view_hr_month_attendance_graph
+msgid "月考勤统计报表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__active
+msgid "有效"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__haveChild
+msgid "有无子女"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,locationResult:0
+#: selection:hr.attendance.result,timeResult:0
+msgid "未打卡"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__signed_count
+msgid "未打卡次数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.manage,state:0
+msgid "未注册"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+#: selection:dingtalk.employee.roster,pre_status:0
+msgid "未知"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/approval_control.py:373
+#, python-format
+msgid "本功能暂无法使用，因为单据已经配置了'审批拒绝后'不允许使用本功能。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/approval_control.py:367
+#, python-format
+msgid "本功能暂无法使用，因为单据已经配置了'审批通过后'不允许使用本功能。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/approval_control.py:361
+#, python-format
+msgid "本功能暂无法使用，因为单据还是'钉钉审批中'状态。请在单据审批后再试！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/approval_control.py:355
+#, python-format
+msgid "本功能暂无法使用，因为单据还没有'提交至钉钉'进行审批，请先提交至钉钉进行审批后再试！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__name
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "机器人名称"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner_category__ding_category_type
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.view_partner_category_form_inherit
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.view_partner_category_tree_inherit
+msgid "标签分类名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__title
+msgid "标题"
+msgstr "Title"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "标题..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__actionURL
+msgid "标题链接地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_department__is_root
+msgid "根部门?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__model_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__model_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_model_button_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_record_search
+msgid "模型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_model_button__model_model
+msgid "模型名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__field_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__field_id
+msgid "模型字段"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_approval_model_button_action
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_approval_model_button_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_model_button_search
+msgid "模型按钮列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__name
+msgid "模板名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__process_code
+msgid "模板唯一标识"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template__url
+msgid "模板跳转url"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,timeResult:0
+msgid "正常"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__normal_count
+msgid "正常打卡"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+#: selection:dingtalk.employee.roster,pre_status:0
+#: selection:hr.employee,office_status:0
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "正式"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_emp_related_users_form_view
+msgid "此功能可以将系统中的员工和用户通过名称自动进行关联"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__graduationTime
+msgid "毕业时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__graduateSchool
+msgid "毕业院校"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__nationType
+msgid "民族"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "注册回调事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "注意：函数不允许传递参数！否则会报<code>AttributeError</code>异常"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_emp_related_users_form_view
+msgid "注意：此工具仅支持员工名和用户名完全一致方可匹配成功。反之会关联失败！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "注意：这里设置的审批人和抄送人优先级会高于钉钉服务端的设置。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_synchronous_form_view
+msgid "注：需要企业在钉钉开发者后台先申请开启智能人事权限!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "测试连接"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_card_message_list__message_id
+#: model:ir.ui.menu,name:dingtalk_mc.message_menu
+msgid "消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__body
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__body
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_send_chat_message__message
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "消息内容"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__link_message
+msgid "消息描述"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_message_log_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_message_log
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_message_log_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_message_log_search
+msgid "消息日志"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__msg_title
+msgid "消息标题"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "消息标题..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__msg_type
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__msg_type
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_message_log_search
+msgid "消息类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.add_dingtalk_chat_users_action
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "添加群成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__link_url
+msgid "点击消息时链接URL"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "点击生效"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_emp_related_users_form_view
+msgid "点击确认后，系统会在后台自动进行处理。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__image
+msgid "照片"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_manage__state
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__state
+msgid "状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__nowContractEndTime
+msgid "现合同到期日"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__nowContractStartTime
+msgid "现合同起始日"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_res_partner__ding_id
+#: model:ir.model.fields,help:dingtalk_mc.field_res_users__ding_id
+msgid "用于存储在钉钉系统中返回的联系人id"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__login_id
+msgid "用于登录AppId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__login_secret
+msgid "用于登录AppSecret"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "用于的群会话"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "用户打卡"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "登录参数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/controllers/login_controller.py:86
+#, python-format
+msgid "登录员工{}未关联系统用户，请维护后再试。 *_*!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_create_mc_res_user__ttype
+msgid "登陆账号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.create_res_user_form_view
+msgid "登陆账号：即根据选择的类型作为该用户的登录用户名."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_template_tran_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_return_approval_state_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.get_dingtalk_callback_form_view
+msgid "确认"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_emp_related_users_form_view
+msgid "确认关联"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.del_dingtalk_chat_users_form_view
+msgid "确认删除"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "确认注册事件到钉钉服务器吗？"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.add_dingtalk_chat_users_form_view
+msgid "确认添加"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_manage_form_view
+msgid "确认要更新事件到钉钉服务器吗？"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "确认配置该表单允许钉钉审批吗?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "示例"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "禁用功能"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+#: selection:hr.employee,work_status:0
+msgid "离职"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__handover_userid
+msgid "离职交接人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__pre_status
+msgid "离职前工作状态"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__reason_memo
+msgid "离职原因"
+msgstr "Reason for leaving"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__reason_type
+msgid "离职类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.create_res_user_form_view
+msgid "立即创建"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_send_chat_message_form_view
+msgid "立即发送"
+msgstr "Send immediately"
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_synchronous_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_synchronous_partner_form_view
+msgid "立即同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.calculate_month_attendance_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_users_duration_form_view
+msgid "立即计算"
+msgstr "Calculate immediately"
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.dingtalk_approval_control_action
+msgid "立即配置一个需要审批的模型吧！在此之前需要先钉钉上的审批模板~"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.record,approval_result:0
+#: selection:dingtalk.return.approval.state,dd_approval_result:0
+msgid "等待"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.list,value_type:0
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "签到事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__place
+msgid "签到地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__remark
+msgid "签到备注"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "签到日期"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__checkin_time
+msgid "签到时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_signs_list_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_signs_list
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_signs_list_menu
+msgid "签到记录"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__detail_place
+msgid "签到详细地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_form
+msgid "简要信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:res.groups,name:dingtalk_mc.manage_groups
+msgid "管理员"
+msgstr "Administrator"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__management_ype
+msgid "管理类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__approval_type
+msgid "类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__value
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_log__event_type
+msgid "类型代码"
+msgstr ""
+
+#. module: dingtalk_mc
+#: sql_constraint:dingtalk.callback.list:0
+msgid "类型代码重复!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_callback_list__name
+msgid "类型名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: sql_constraint:dingtalk.callback.list:0
+msgid "类型名重复!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/controllers/login_controller.py:171
+#: code:addons/dingtalk_mc/controllers/login_controller.py:172
+#, python-format
+msgid "系统对应员工不存在!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.auto_login_signup
+msgid "系统正在鉴定您的身份，请稍后...<br/> 若页面长时间无反应（一般不超过15秒），请尝试刷新页面."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__urgentContactsName
+msgid "紧急联系人姓名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__longitude
+msgid "纬度信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_mc_menu
+msgid "组织架构同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_mc_synchronous_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_mc_synchronous
+msgid "组织结构同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_signs_list__latitude
+msgid "经度信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,reason_type:0
+msgid "经济性裁员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.control,cc_type:0
+#: selection:dingtalk.approval.record,approval_type:0
+msgid "结束"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_calculate_month_attendance__end_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__end_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_tran__stop_date
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__end_date
+msgid "结束日期"
+msgstr "End date"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__contractRenewCount
+msgid "续签次数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__employee_id
+msgid "群主"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_mc_chat_action
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_mc_chat_menu
+msgid "群会话"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__chat_id
+msgid "群会话Id"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.list,value_type:0
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "群会话事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_chat_user_model_del
+msgid "群会话删除成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:88
+#, python-format
+msgid "群会话已创建!群会话的ID:{}"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:185
+#, python-format
+msgid "群会话已被解散，操作人: {}!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_chat_user_model_add
+msgid "群会话添加成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__searchable
+msgid "群可搜索"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__name
+msgid "群名称"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__chat_icon
+msgid "群头像mediaId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_user_model_del__old_user_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__useridlist
+msgid "群成员"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:313
+#, python-format
+msgid "群成员已删除!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:255
+#, python-format
+msgid "群成员已增加!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:257
+#: code:addons/dingtalk_mc/models/dingtalk_chat.py:316
+#, python-format
+msgid "群成员更新失败，详情为:{}"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_chat_robot_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_chat_robot
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__robot_id
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_chat_robot_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "群机器人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__robot_count
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "群机器人数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.message.log,msg_type:0
+msgid "群消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__chat_banned_type
+msgid "群禁言"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "老板改签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.attendance_menu
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_calendar
+msgid "考勤"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.list,value_type:0
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "考勤事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "考勤位置"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__month_code
+msgid "考勤年月"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "考勤机"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_attendance_result__check_type
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "考勤类型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "考勤系统"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_search
+msgid "考勤结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.hr_month_attendance_menu
+msgid "考勤统计"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.hr_attendance_result_pivot
+msgid "考勤透视图"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_chat__show_history_type
+msgid "聊天历史消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__position
+msgid "职位"
+msgstr "Position"
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.res_partner_menu
+msgid "联系人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.dingtalk_synchronous_partner_menu
+msgid "联系人-同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__urgentContactsRelation
+msgid "联系人关系"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_mc_synchronous_partner
+msgid "联系人同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.view_partner_category_act_window
+#: model:ir.ui.menu,name:dingtalk_mc.partner_category_menu
+msgid "联系人标签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__urgentContactsPhone
+msgid "联系人电话"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "自动打卡"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_employee_roster_synchronous_action
+msgid "花名册同步"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_form_view
+msgid "若已在钉钉服务端配置了审批流程和审批、抄送人，此处可不设置，提交后会自动按照服务端的流程进行节点审批。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_approval_control_line_form_view
+msgid "若钉钉字段为关联组件时，请勾选\"为关联组件\"框，比如部门关联组件，传递时就不是名称而是部门ID; <br/>\n"
+"                            特别注意：关联组件至odoo中选择的对象必须具有ding_id并且不为空值，否则会提交报错或则钉钉返回\"系统错误\"！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,locationResult:0
+msgid "范围内"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,locationResult:0
+msgid "范围外"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.return.approval.state,dd_approval_state:0
+msgid "草稿"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.get_dingtalk_callback_action
+#: model:ir.model,name:dingtalk_mc.model_get_dingtalk_callback
+msgid "获取回调列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.dingtalk_approval_template_tran_action
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_template_tran
+msgid "获取审批模板"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_get_dingtalk_callback__company_ids
+msgid "获取的公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_get_hr_attendance_result
+#: model:ir.model,name:dingtalk_mc.model_hr_attendance_tran
+msgid "获取钉钉考勤结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__company_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous_partner__company_ids
+msgid "要同步的公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.mc.chat,state:0
+msgid "解散"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_log_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_callback_log_tree_view
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_message_log_search
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_message_log_tree_view
+msgid "触发时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__duration_type
+msgid "计算方法"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_calculate_month_attendance
+msgid "计算考勤统计"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_hr_attendance_result__baseCheckTime
+msgid "计算迟到和早退，基准时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__rec_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_return_approval_state__res_id
+msgid "记录ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_record__approval_time
+msgid "记录时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__certNo
+msgid "证件号码"
+msgstr "ID number"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__certEndTime
+msgid "证件有效期"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.record,approval_type:0
+msgid "评论"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeStatus:0
+msgid "试用"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,pre_status:0
+#: selection:hr.employee,office_status:0
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__probationPeriodType
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_search
+msgid "试用期"
+msgstr ""
+
+#. module: dingtalk_mc
+#: sql_constraint:dingtalk.mc.config:0
+msgid "该企业对应的公司存在，请更换！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: sql_constraint:dingtalk.callback.manage:0
+msgid "该公司已经有一个回调事件了!"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_synchronous_form_view
+msgid "该操作只会同步钉钉中所有在职人员的花名册信息。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_employee_roster_form
+msgid "详细信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__remarks
+msgid "说明备注"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_users_duration__is_leave
+msgid "请假"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__leave_days
+msgid "请假天数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.actions.act_window,help:dingtalk_mc.dingtalk_approval_template_action
+msgid "请拉取钉钉上已存在的审批模板，不支持自行创建的模板！！！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_return_approval_state_form_view
+msgid "请注意：您正在进行高级功能操作<br/>本操作可强制清除通过钉钉审批的单据状态、描述、审批结果信息，不到万不得已的时候请不要进行此项操作！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "请输入AgentId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "请输入AppKey"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "请输入AppSecret"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_return_approval_state_form_view
+msgid "请输入单据ID..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "请输入消息图片url地址..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "请输入消息描述"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "请输入点击消息时跳转的url地址..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_chat_robot_form_view
+msgid "请输入群webhook~"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "请输入要发送的消息内容, 支持markdown语法..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "请输入要发送的消息内容..."
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "请输入钉钉CorpId"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.del_dingtalk_chat_users_form_view
+msgid "请选择要删除的用户，单次最大为40人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.add_dingtalk_chat_users_form_view
+msgid "请选择要添加的用户,单次最大添加40人！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__certAddress
+msgid "身份证地址"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__realName
+msgid "身份证姓名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.approval.record,approval_result:0
+#: selection:dingtalk.return.approval.state,dd_approval_result:0
+msgid "转交"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__regularTime
+msgid "转正日期"
+msgstr "Positive date"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_message_log__result
+msgid "返回结果"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_login_signup
+msgid "返回账号登录?"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,timeResult:0
+msgid "迟到"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_month_attendance__late_count
+msgid "迟到次数"
+msgstr "Late arrivals"
+
+#. module: dingtalk_mc
+#: selection:dingtalk.employee.roster,employeeType:0
+msgid "退休返聘"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_employee_roster__dept
+msgid "适应钉钉多部门"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_template_tran__company_ids
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_emp_related_users__company_id
+msgid "选择公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_robot_send_message_form_view
+msgid "选择群机器人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.get_dingtalk_callback_form_view
+msgid "选择要获取哪些公司下的回调列表。"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_synchronous_form_view
+msgid "选择需要同步的钉钉企业数据，同步数据量较大的话，等待时间取决于数据大小~"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_approval_control_line__is_dd_id
+msgid "通常用于钉钉表单上选择的是钉钉提供的组件，比如部门,就需要传递部门id而不是名称"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.callback.list,value_type:0
+#: selection:dingtalk.callback.manage,value_type:0
+msgid "通讯录事件"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_robot_send_message
+msgid "通过群机器人发送消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__email
+msgid "邮箱"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.open_dingtalk_department_action
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__dept
+msgid "部门"
+msgstr "Department"
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_department__manager_user_ids
+msgid "部门主管"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.hr_department_menu
+msgid "部门列表"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__synchronous_dept_detail
+msgid "部门详情"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.config_menu
+msgid "配置"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control__approval_restart_function
+msgid "重新提交-执行函数"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.root_menu
+msgid "钉钉"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:auth.oauth.provider,body:dingtalk_mc.provider_dingtalk_mc_qrcode
+msgid "钉钉-扫码登陆"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.module.category,name:dingtalk_mc.dingtalk_other_groups
+msgid "钉钉-额外的权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner__ding_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_users__ding_id
+msgid "钉钉ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_department__ding_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__ding_id
+msgid "钉钉Id"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__name
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_config_form
+msgid "钉钉企业名称"
+msgstr ""
+
+#. module: dingtalk_mc
+#: sql_constraint:dingtalk.mc.config:0
+msgid "钉钉企业名称已存在，请更换！"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.partner_form_inherit
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.view_employee_form_inherit
+msgid "钉钉信息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_config__m_login
+msgid "钉钉免登？"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_line__dd_field
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_approval_control_list__dd_field
+msgid "钉钉单据字段名"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__employee
+msgid "钉钉员工"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__ding_avatar
+msgid "钉钉头像"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_approval_model_button
+msgid "钉钉审批模型按钮"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:res.groups,name:dingtalk_mc.dingtalk_mc_approval_group
+msgid "钉钉审批配置权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.module.category,name:dingtalk_mc.main_groups
+msgid "钉钉权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner_category__ding_id
+msgid "钉钉标签ID"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:res.groups,name:dingtalk_mc.dingtalk_mc_message_group
+msgid "钉钉消息管理权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__ding_userid
+msgid "钉钉用户Id"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_users__ding_user_phone
+msgid "钉钉登录手机"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model,name:dingtalk_mc.model_dingtalk_mc_chat
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_chat_robot__chat_id
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "钉钉群会话"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.server,name:dingtalk_mc.ir_cron_tcms_vehicle_data_ir_actions_server
+#: model:ir.cron,cron_name:dingtalk_mc.ir_cron_tcms_vehicle_data
+#: model:ir.cron,name:dingtalk_mc.ir_cron_tcms_vehicle_data
+msgid "钉钉考勤-定时获取员工考勤数据"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:res.groups,name:dingtalk_mc.dingtalk_mc_attendance_group
+msgid "钉钉考勤操作权限"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:hr.attendance.result,sourceType:0
+msgid "钉钉考勤机"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.actions.act_window,name:dingtalk_mc.res_partner_act_window
+msgid "钉钉联系人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner__ding_company_name
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_users__ding_company_name
+msgid "钉钉联系人公司"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,help:dingtalk_mc.field_hr_attendance_result__record_id
+msgid "钉钉设置的值为id，odoo中为record_id"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_users__ding_user_id
+msgid "钉钉访问令牌"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_partner__ding_employee_id
+#: model:ir.model.fields,field_description:dingtalk_mc.field_res_users__ding_employee_id
+msgid "钉钉负责人"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_mc_synchronous__department
+msgid "钉钉部门"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__bankAccountNo
+msgid "银行卡号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__link_url
+msgid "链接URL"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_robot_send_message__link_image_url
+#: model:ir.model.fields,help:dingtalk_mc.field_dingtalk_robot_send_message__link_image_url
+msgid "链接图片URL"
+msgstr ""
+
+#. module: dingtalk_mc
+#: selection:dingtalk.robot.send.message,msg_type:0
+msgid "链接消息"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isHide
+msgid "隐藏手机号"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model_terms:ir.ui.view,arch_db:dingtalk_mc.dingtalk_mc_chat_form_view
+msgid "频道及模型"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__color
+msgid "颜色标签"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__joinWorkingTime
+msgid "首次参加工作时间"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__firstContractEndTime
+msgid "首次合同到期日"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_dingtalk_employee_roster__firstContractStartTime
+msgid "首次合同起始日"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.model.fields,field_description:dingtalk_mc.field_hr_employee__din_isSenior
+msgid "高管模式"
+msgstr ""
+
+#. module: dingtalk_mc
+#: model:ir.ui.menu,name:dingtalk_mc.menu_approval_config
+msgid "高级管理"
+msgstr ""
+

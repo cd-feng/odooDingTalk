@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--联系人标签from-->
+    <record id="view_partner_category_form_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="before">
+                <field name="ding_category_type" string="标签分类名"/>
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--联系人标签tree-->
+    <record id="view_partner_category_tree_inherit" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="ding_category_type" string="标签分类名"/>
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_category_act_window" model="ir.actions.act_window">
+        <field name="name">联系人标签</field>
+        <field name="res_model">res.partner.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="partner_category_menu" name="联系人标签" parent="attrs_menu" sequence="1"
+              groups="dingtalk_mc.manage_groups" action="view_partner_category_act_window"/>
+
+
+    <!--联系人-->
+    <record id="partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="钉钉信息" groups="dingtalk_mc.manage_groups">
+                    <group col="2">
+                        <group>
+                            <field name="ding_id" readonly="1" groups="dingtalk_mc.manage_groups"/>
+                            <field name="ding_company_name"/>
+                            <field name="ding_employee_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

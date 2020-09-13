@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+	<record id="dingtalk_mc_config_company_rule" model="ir.rule">
+		<field name="name">参数配置公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_mc_config"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_callback_manage_company_rule" model="ir.rule">
+		<field name="name">钉钉回调管理公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_callback_manage"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_employee_roster_company_rule" model="ir.rule">
+		<field name="name">员工花名册-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_employee_roster"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_approval_template_company_rule" model="ir.rule">
+		<field name="name">审批模板-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_approval_template"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_approval_record_company_rule" model="ir.rule">
+		<field name="name">审批记录-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_approval_record"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_approval_control_company_rule" model="ir.rule">
+		<field name="name">审批配置-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_approval_control"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="dingtalk_approval_model_button_company_rule" model="ir.rule">
+		<field name="name">模型按钮列表-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_approval_model_button"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+	<record id="hr_attendance_result_company_rule" model="ir.rule">
+		<field name="name">员工打卡结果-公司过滤</field>
+		<field name="model_id" ref="model_hr_attendance_result"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="hr_month_attendance_company_rule" model="ir.rule">
+		<field name="name">月考勤统计-公司过滤</field>
+		<field name="model_id" ref="model_hr_month_attendance"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_signs_list_company_rule" model="ir.rule">
+		<field name="name">用户签到-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_signs_list"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_callback_log_company_rule" model="ir.rule">
+		<field name="name">回调日志-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_callback_log"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_mc_chat_company_rule" model="ir.rule">
+		<field name="name">群会话-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_mc_chat"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_chat_robot_company_rule" model="ir.rule">
+		<field name="name">群机器人-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_chat_robot"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_message_log_company_rule" model="ir.rule">
+		<field name="name">消息日志-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_message_log"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+	<record id="dingtalk_miroapp_list_company_rule" model="ir.rule">
+		<field name="name">应用列表-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_miroapp_list"/>
+		<field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
+</odoo>

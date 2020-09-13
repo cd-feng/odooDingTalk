@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_mc_config_tree" model="ir.ui.view">
+        <field name="name">参数配置</field>
+        <field name="model">dingtalk.mc.config</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="corp_id"/>
+                <field name="app_key"/>
+                <field name="delete_is_sy" widget="boolean_toggle"/>
+                <field name="m_login" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_mc_config_form" model="ir.ui.view">
+        <field name="name">参数配置</field>
+        <field name="model">dingtalk.mc.config</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header>
+                </header>
+                <sheet>
+                    <div class="alert alert-success oe_edit_only" role="alert">
+                        <p><strong>温馨提示：</strong>您可以前往钉钉<strong>开发者管理后台</strong>得到这些信息！</p>
+                        <a href='https://open-dev.dingtalk.com' target='_blank'>
+                            <span>钉钉开发者后台管理</span>
+                        </a> - 或 -
+                        <a href='https://oa.dingtalk.com/' target='_blank'>
+                            <span>钉钉企业后台管理</span>
+                        </a>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="钉钉企业名称" required="1"/>
+                        </h1>
+                        <h3>
+                            <field name="company_id" placeholder="公司" required="1"/>
+                        </h3>
+                    </div>
+                    <group col="1">
+                        <group>
+                            <field name="corp_id" required="1" placeholder="请输入钉钉CorpId"/>
+                            <field name="agent_id" required="1" placeholder="请输入AgentId"/>
+                            <field name="app_key" required="1" placeholder="请输入AppKey"/>
+                            <field name="app_secret" password="password" required="1" placeholder="请输入AppSecret"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="登录参数">
+                            <group col="1">
+                                <group>
+                                    <field name="login_id"/>
+                                    <field name="login_secret" password="password"/>
+                                    <field name="m_login"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="其他">
+                            <group col="2">
+                                <group>
+                                    <field name="delete_is_sy"/>
+                                </group>
+                                <group>
+                                    <field name="cron_attendance"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingtalk_mc_config_search">
+        <field name="model">dingtalk.mc.config</field>
+        <field name="arch" type="xml">
+            <search string="参数配置">
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="corp_id"/>
+                <field name="app_key"/>
+                <field name="delete_is_sy"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="我创建的" name="my" domain="[('create_uid', '=', uid)]"/>
+                <separator/>
+                <filter name="group_by_company_id" string="公司" context="{'group_by':'company_id'}"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
+    <record id="dingtalk_mc_config_act_window" model="ir.actions.act_window">
+        <field name="name">参数配置</field>
+        <field name="res_model">dingtalk.mc.config</field>
+        <field name="view_mode">tree,form,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                新建一个参数配置~
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="dingtalk_mc_config_menu" name="参数配置" parent="config_menu" sequence="1" action="dingtalk_mc_config_act_window"/>
+
+</odoo>
