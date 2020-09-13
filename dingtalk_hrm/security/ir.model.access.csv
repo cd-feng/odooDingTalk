@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_employee_census_register,employee.census.register,model_employee_census_register,dingtalk_base.manage_group,1,1,1,1
-access_dingtalk_employee_roster,dingtalk.employee.roster,model_dingtalk_employee_roster,dingtalk_base.manage_group,1,1,1,1
-access_dingtalk_add_employee,dingtalk.add.employee,model_dingtalk_add_employee,dingtalk_base.manage_group,1,1,1,1
-access_dingtalk_hrm_dimission_list,dingtalk.hrm.dimission.list,model_dingtalk_hrm_dimission_list,dingtalk_base.manage_group,1,1,1,1
-
