@@ -111,7 +111,7 @@ class DingTalkMcSynchronous(models.TransientModel):
                     _logger.info(">>>开始获取%s部门的员工", dept.name)
                     result_state = self.get_dingtalk_employees(client, dept, emp_offset, emp_size, company, repeat_type)
                     if result_state:
-                        emp_offset = emp_offset + 1
+                        emp_offset += emp_size + 1
                     else:
                         break
             self.env.cr.commit()
