@@ -183,7 +183,8 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
     _description = "联系人同步"
     _rec_name = 'id'
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_mc_partner_companys_rel', string="要同步的公司", required=True)
+    company_ids = fields.Many2many('res.company', 'dingtalk_mc_partner_companys_rel', string="要同步的公司",
+                                   required=True, default=lambda self: self.env.ref('base.main_company'))
 
     def start_synchronous_partner(self):
         self.ensure_one()
