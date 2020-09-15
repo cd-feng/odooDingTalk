@@ -11,7 +11,7 @@ class DingtalkMicroappWizard(models.TransientModel):
     _name = 'dingtalk.miroapp.list.wizard'
     _description = "获取应用列表向导"
 
-    company_ids = fields.Many2many("res.company", string="选择公司", required=True)
+    company_ids = fields.Many2many("res.company", string="选择公司", required=True, default=lambda self: self.env.ref('base.main_company'))
 
     def get_miroapp_list(self):
         """
