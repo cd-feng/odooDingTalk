@@ -15,7 +15,8 @@ class DingTalkMcSynchronous(models.TransientModel):
 
     RepeatType = [('name', '以名称判断'), ('id', '以钉钉ID')]
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", required=True)
+    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", 
+                                   required=True, default=lambda self: self.env.ref('base.main_company'))
     department = fields.Boolean(string=u'钉钉部门', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
     repeat_type = fields.Selection(string=u'判断唯一', selection=RepeatType, default='name')

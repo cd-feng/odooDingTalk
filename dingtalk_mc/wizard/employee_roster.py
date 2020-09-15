@@ -11,7 +11,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
     _name = 'dingtalk.employee.roster.synchronous'
     _description = "智能人事花名册同步"
 
-    company_ids = fields.Many2many("res.company", string="同步的公司", required=True)
+    company_ids = fields.Many2many("res.company", string="同步的公司", required=True, default=lambda self: self.env.ref('base.main_company'))
 
     def start_synchronous_data(self):
         """

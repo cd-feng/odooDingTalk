@@ -15,7 +15,7 @@ class HrAttendanceResultTransient(models.TransientModel):
     _name = 'hr.attendance.tran'
     _description = '获取钉钉考勤结果'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.ref('base.main_company'))
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     stop_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)
 
