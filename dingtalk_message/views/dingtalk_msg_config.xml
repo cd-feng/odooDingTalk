@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_message_config_tree_view" model="ir.ui.view">
+        <field name="name">消息模板</field>
+        <field name="model">dingtalk.message.config</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="name"/>
+                <field name="ttype"/>
+                <field name="model_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_message_config_form_view" model="ir.ui.view">
+        <field name="name">消息模板</field>
+        <field name="model">dingtalk.message.config</field>
+        <field name="arch" type="xml">
+            <form string="消息模板">
+                <header>
+                    <field name="state" widget="statusbar" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_state" string="开启通知" type="object" class="oe_stat_button" icon="fa-bullhorn"
+                                attrs="{'invisible': [('state', '=', 'open')]}" confirm="确认打开消息通道？"/>
+                        <button name="close_state" string="关闭通知" type="object" class="oe_stat_button" icon="fa-ban"
+                                attrs="{'invisible': [('state', '=', 'close')]}" confirm="确认关闭消息通道？"/>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="消息模板名称..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}" groups="base.group_multi_company"/>
+                            <field name="model_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                            <field name="msg_opportunity" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="消息推送" attrs="{'invisible': [('msg_opportunity', '=', 'new_user')]}">
+                            <group>
+                                <field name="button_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_open': True}"
+                                   attrs="{'invisible': [('msg_opportunity', '!=', 'button')], 'required': [('msg_opportunity', '=', 'button')]}"/>
+                                <field name="message_timing" widget="radio" options="{'horizontal': true}"
+                                       attrs="{'invisible': [('msg_opportunity', 'in', ['new_user','button'])]}"/>
+                            </group>
+                            <group>
+                                <field name="ttype" attrs="{'required': [('msg_opportunity', 'in', ['normal','button'])]}"/>
+                                <field name="user_ids" widget="many2many_tags" attrs="{'invisible': [('ttype', '!=', 'notice')]}"
+                                       options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                <field name="department_ids" widget="many2many_tags" attrs="{'invisible': [('ttype', '!=', 'notice')]}"
+                                       options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                <field name="to_all_user" attrs="{'invisible': [('ttype', '!=', 'notice')]}"/>
+                                <field name="chat_id" attrs="{'invisible': [('ttype', '!=', 'chat')], 'required': [('ttype', '=', 'chat')]}"
+                                       options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                <field name="robot_id" attrs="{'invisible': [('ttype', '!=', 'robot')], 'required': [('ttype', '=', 'robot')]}"
+                                       options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            </group>
+                        </page>
+                        <page string="内容模板">
+                            <group>
+                                <field name="msg_title" required="1"/>
+                                <field name="msg_body"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_message_config_kanban" model="ir.ui.view">
+        <field name="name">消息模板</field>
+        <field name="model">dingtalk.message.config</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="name"/>
+                <field name="ttype"/>
+                <field name="model_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right badge badge-secondary">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="model_id"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="msg_opportunity"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+           </kanban>
+        </field>
+    </record>
+
+    <record id="dingtalk_message_config_action" model="ir.actions.act_window">
+        <field name="name">消息模板</field>
+        <field name="res_model">dingtalk.message.config</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem name="消息模板" id="dingtalk_message_config_menu" parent="dingtalk_mc.message_menu" sequence="5"
+              action="dingtalk_message_config_action" groups="dingtalk_mc.dingtalk_mc_message_group"/>
+
+</odoo>
