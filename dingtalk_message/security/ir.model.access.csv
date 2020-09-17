@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk_message_config,dingtalk.message.config,model_dingtalk_message_config,,1,1,1,1
+access_dingtalk_message_config_but,dingtalk.message.config.but,model_dingtalk_message_config_but,,1,1,1,1
