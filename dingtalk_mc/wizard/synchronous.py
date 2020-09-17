@@ -15,7 +15,7 @@ class DingTalkMcSynchronous(models.TransientModel):
 
     RepeatType = [('name', '以名称判断'), ('id', '以钉钉ID')]
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", 
+    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司",
                                    required=True, default=lambda self: self.env.ref('base.main_company'))
     department = fields.Boolean(string=u'钉钉部门', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
@@ -72,7 +72,8 @@ class DingTalkMcSynchronous(models.TransientModel):
         """
         for company in self.company_ids:
             client = dt.get_client(self, dt.get_dingtalk_config(self, company))
-            departments = self.env['hr.department'].sudo().search([('company_id', '=', company.id), ('ding_id', '!=', '')])
+            departments = self.env['hr.department'].sudo().search(
+                [('company_id', '=', company.id), ('ding_id', '!=', '')])
             for dept in departments:
                 result = client.department.get(dept.ding_id)
                 dept_date = dict()
@@ -86,7 +87,8 @@ class DingTalkMcSynchronous(models.TransientModel):
                             dept_date['parent_id'] = partner_dept.id
                 if result.get('deptManagerUseridList'):
                     depts = result.get('deptManagerUseridList').split("|")
-                    manage_users = self.env['hr.employee'].sudo().search([('ding_id', 'in', depts), ('company_id', '=', company.id)])
+                    manage_users = self.env['hr.employee'].sudo().search(
+                        [('ding_id', 'in', depts), ('company_id', '=', company.id)])
                     dept_date.update({
                         'manager_user_ids': [(6, 0, manage_users.ids)],
                         'manager_id': manage_users[0].id
@@ -102,7 +104,8 @@ class DingTalkMcSynchronous(models.TransientModel):
         :return:
         """
         for company in self.company_ids:
-            departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('company_id', '=', company.id)])
+            departments = self.env['hr.department'].sudo().search(
+                [('ding_id', '!=', ''), ('company_id', '=', company.id)])
             client = dt.get_client(self, dt.get_dingtalk_config(self, company))
             for dept in departments:
                 emp_offset = 0
@@ -162,7 +165,8 @@ class DingTalkMcSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if user.get('department'):
                     dep_din_ids = user.get('department')
-                    dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids), ('company_id', '=', company.id)])
+                    dep_list = self.env['hr.department'].sudo().search(
+                        [('ding_id', 'in', dep_din_ids), ('company_id', '=', company.id)])
                     data.update({'department_ids': [(6, 0, dep_list.ids)]})
                 if repeat_type == 'name':
                     domain = [('name', '=', user.get('name')), ('company_id', '=', company.id)]
@@ -230,37 +234,49 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
         """
         client = dt.get_client(self, dt.get_dingtalk_config(self, company))
         try:
-            results = client.ext.list(offset=0, size=100)
-            _logger.info(results)
-            for res in results:
-                # 获取标签
-                label_list = list()
-                for label in res.get('labelIds'):
-                    category = self.env['res.partner.category'].sudo().search([('ding_id', '=', label), ('company_id', '=', company.id)], limit=1)
-                    if category:
-                        label_list.append(category.id)
-                data = {
-                    'name': res.get('name'),
-                    'function': res.get('title'),
-                    'category_id': [(6, 0, label_list)],  # 标签
-                    'ding_id': res.get('userId'),  # 钉钉用户id
-                    'comment': res.get('remark'),  # 备注
-                    'street': res.get('address'),  # 地址
-                    'mobile': res.get('mobile'),  # 手机
-                    'phone': res.get('mobile'),  # 电话
-                    'ding_company_name': res.get('company_name'),  # 钉钉公司名称
-                    'company_id': company.id
-                }
-                # 获取负责人
-                if res.get('followerUserId'):
-                    follower_user = self.env['hr.employee'].sudo().search([('ding_id', '=', res.get('followerUserId')), ('company_id', '=', company.id)], limit=1)
-                    if follower_user:
-                        data.update({'ding_employee_id': follower_user.id})
-                partner = self.env['res.partner'].sudo().search([('ding_id', '=', res.get('userId')), ('company_id', '=', company.id)])
-                if partner:
-                    partner.sudo().write(data)
+            offset = 0
+            size = 50
+            while True:
+                results = client.ext.list(offset=offset, size=size)
+                # _logger.info(results)
+                for res in results:
+                    # 获取标签
+                    label_list = list()
+                    for label in res.get('labelIds'):
+                        category = self.env['res.partner.category'].sudo().search(
+                            [('ding_id', '=', label), ('company_id', '=', company.id)], limit=1)
+                        if category:
+                            label_list.append(category.id)
+                    data = {
+                        'name': res.get('name'),
+                        'function': res.get('title'),
+                        'category_id': [(6, 0, label_list)],  # 标签
+                        'ding_id': res.get('userId'),  # 钉钉用户id
+                        'comment': res.get('remark'),  # 备注
+                        'street': res.get('address'),  # 地址
+                        'mobile': res.get('mobile'),  # 手机
+                        'phone': res.get('mobile'),  # 电话
+                        'ding_company_name': res.get('company_name'),  # 钉钉公司名称
+                        'company_id': company.id
+                    }
+                    # 获取负责人
+                    if res.get('followerUserId'):
+                        follower_user = self.env['hr.employee'].sudo().search(
+                            [('ding_id', '=', res.get('followerUserId')), ('company_id', '=', company.id)], limit=1)
+                        if follower_user:
+                            data.update({'ding_employee_id': follower_user.id})
+                    partner = self.env['res.partner'].sudo().search(
+                        [('ding_id', '=', res.get('userId')), ('company_id', '=', company.id)])
+                    if partner:
+                        partner.sudo().write(data)
+                    else:
+                        self.env['res.partner'].sudo().create(data)
+                    self.env.cr.commit()
+                if results:
+                    offset += size + 1
                 else:
-                    self.env['res.partner'].sudo().create(data)
+                    break
+
         except Exception as e:
             raise UserError(e)
         return
