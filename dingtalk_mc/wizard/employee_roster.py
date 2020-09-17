@@ -67,6 +67,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
             try:
                 result = client.employeerm.list(user, field_filter_list=())
                 if result.get('emp_field_info_v_o'):
+                    print('>>>>>>>>>>>>>>>>>result',result)
                     for rec in result.get('emp_field_info_v_o'):
                         roster_data = {
                             'emp_id': emp_data[rec['userid']] if rec['userid'] in emp_data else False,
@@ -96,10 +97,9 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                 if not hr_job and fie['label']:
                                     hr_job = self.env['hr.job'].sudo().create({'name': fie['label'], 'company_id': company_id})
                                 roster_data.update({'position': hr_job.id or False})
-                            else:
-                                roster_data.update({
-                                    fie['field_code'][6:]: fie['label'] if "label" in fie else False
-                                })
+                            elif fie['field_code'][0:3] == 'sys' and 'label' in fie:
+                                    roster_data.update({fie['field_code'][6:]: fie['label']})
+
                         domain = [('company_id', '=', company_id), ('ding_userid', '=', rec['userid'])]
                         roster = self.env['dingtalk.employee.roster'].search(domain)
                         if roster:
