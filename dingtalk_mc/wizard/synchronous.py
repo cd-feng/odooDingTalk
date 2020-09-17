@@ -235,7 +235,7 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
         client = dt.get_client(self, dt.get_dingtalk_config(self, company))
         try:
             offset = 0
-            size = 50
+            size = 100
             while True:
                 results = client.ext.list(offset=offset, size=size)
                 # _logger.info(results)
@@ -271,7 +271,6 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
                         partner.sudo().write(data)
                     else:
                         self.env['res.partner'].sudo().create(data)
-                    self.env.cr.commit()
                 if results:
                     offset += size + 1
                 else:
