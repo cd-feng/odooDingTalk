@@ -219,8 +219,9 @@ class DingTalkApprovalControlLine(models.Model):
     sequence = fields.Integer(string=u'序号')
     control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string=u'审批配置', ondelete="set null")
     model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', related="control_id.oa_model_id")
-    field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段',
-                               domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
+    # field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段',
+    #                            domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
+    field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段', domain="[('model_id', '=', model_id)]")
     ttype = fields.Selection(selection='_get_field_types', string=u'字段类型')
     dd_field = fields.Char(string='钉钉单据字段名')
     is_dd_id = fields.Boolean(string=u'为关联组件?', help="通常用于钉钉表单上选择的是钉钉提供的组件，比如部门,就需要传递部门id而不是名称")
@@ -234,7 +235,11 @@ class DingTalkApprovalControlLine(models.Model):
 
     @api.model
     def _get_field_types(self):
-        return sorted((key, key) for key in fields.MetaField.by_type)
+        ttype = sorted((key, key) for key in fields.MetaField.by_type)
+        image_ttype = [('image', 'image'), ('image_url', 'image_url')]
+        ttype.extend(image_ttype)
+        return ttype
+        # return sorted((key, key) for key in fields.MetaField.by_type)
 
 
 class DingTalkApprovalControlList(models.Model):
