@@ -39,6 +39,11 @@ def modify_tree_view(obj, result):
         root = etree.fromstring(result['arch'])
         field = etree.Element('field')
         field.set('name', 'dd_approval_state')
+        field.set('widget', 'badge')
+        field.set('optional', 'show')
+        field.set('decoration-info', "dd_approval_state=='approval'")
+        field.set('decoration-success', "dd_approval_state=='stop'")
+        field.set('decoration-warning', "dd_approval_state=='draft'")
         root.append(field)
         result['arch'] = etree.tostring(root)
 
@@ -50,14 +55,15 @@ def modify_tree_view(obj, result):
         root = etree.fromstring(result['arch'])
         field = etree.Element('field')
         field.set('name', 'dd_approval_result')
+        field.set('decoration-info', "dd_approval_result=='load'")
+        field.set('decoration-success', "dd_approval_result=='agree'")
+        field.set('decoration-warning', "dd_approval_result=='redirect'")
+        field.set('decoration-danger', "dd_approval_result=='refuse'")
+        field.set('widget', 'badge')
+        field.set('optional', 'show')
         root.append(field)
         result['arch'] = etree.tostring(root)
-    # 添加tree颜色区分
     root = etree.fromstring(result['arch'])
-    root.set('decoration-info', "dd_approval_result == 'load'")
-    root.set('decoration-warning', "dd_approval_result == 'redirect'")
-    root.set('decoration-success', "dd_approval_result == 'agree'")
-    root.set('decoration-danger', "dd_approval_result == 'refuse'")
     result['arch'] = etree.tostring(root)
 
 
