@@ -8,6 +8,9 @@
     'category': 'dingtalk',
     'version': '12.1.2',
     'depends': ['base', 'hr', 'mail', 'auth_oauth', 'hr_attendance'],
+    'external_dependencies': {
+        'python': ['pypinyin', 'pycryptodome', 'dingtalk-sdk'],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,

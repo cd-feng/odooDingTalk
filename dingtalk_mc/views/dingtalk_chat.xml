@@ -28,7 +28,6 @@
         <field name="name">添加群成员</field>
         <field name="res_model">dingtalk.chat.user.model.add</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingtalk_mc.add_dingtalk_chat_users_form_view"/>
         <field name="target">new</field>
@@ -60,12 +59,10 @@
         <field name="name">删除群成员</field>
         <field name="res_model">dingtalk.chat.user.model.del</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingtalk_mc.del_dingtalk_chat_users_form_view"/>
         <field name="target">new</field>
     </record>
-
 
     <!-- 群会话  -->
     <record id="dingtalk_mc_chat_tree_view" model="ir.ui.view">

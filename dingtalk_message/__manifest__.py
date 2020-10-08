@@ -8,6 +8,7 @@
     'category': 'dingtalk',
     'version': '1.0',
     'depends': ['dingtalk_mc'],
+    'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',

@@ -57,7 +57,7 @@ class DingtalkMicroappWizard(models.TransientModel):
 class DingtalkSetMicroappVisibleWizard(models.TransientModel):
     _name = 'dingtalk.miroapp.set.visible.scopes'
     _description = '设置可见范围'
-    
+
     miroapp_id = fields.Many2one(comodel_name="dingtalk.miroapp.list", string="应用")
 
     department_ids = fields.Many2many(comodel_name="hr.department", relation="miroapp_wizard_and_department_rel",

@@ -37,7 +37,7 @@
                                         </strong>
                                     </div>
                                 </div>
-                                <field name="company_id" options="{'color_field': 'color'}" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </div>
                         </div>
                     </t>

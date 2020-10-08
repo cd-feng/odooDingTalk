@@ -55,7 +55,6 @@
         <field name="name">发送群消息</field>
         <field name="res_model">dingtalk.robot.send.message</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingtalk_robot_send_message_form_view"/>
         <field name="target">new</field>

@@ -1,11 +1,8 @@
 let prot = window.location.protocol;
 let host = window.location.host;
 
-/**
-    网页加载完成后获取所有公司信息
- */
-window.onload = function(){
-    $("#env_company").append("<option value='no'>请选择您的公司</option>")
+$(function(){
+    $("#env_company").append("<option value='no'>请选择您的公司</option>");
     $.ajax({
         async: false,
         url: "/web/dingtalk/mc/get/companys",
@@ -18,7 +15,6 @@ window.onload = function(){
         },
         dataType:'json'
     });
-
     $('#env_company').change(function(){
         let company_val = $(this).children('option:selected').val();
         if(company_val === 'no'){
@@ -32,7 +28,7 @@ window.onload = function(){
         }
         return false;
     });
-}
+});
 
 function addDDLogin(url_target){
     let obj = DDLogin({

@@ -128,9 +128,9 @@ def get_form_values(self, approval):
             fcv_list.append({'name': line.dd_field, 'value': line_list})
         # date类型
         elif line.ttype == 'date':
-            # old_date = self[line.field_id.name]
-            # bj_datetime = old_date.astimezone(timezone(timedelta(hours=8)))
-            fcv_list.append({'name': line.dd_field, 'value': self[line.field_id.name].strftime('%Y-%m-%d')})
+            old_date = self[line.field_id.name]
+            bj_datetime = old_date.astimezone(timezone(timedelta(hours=8)))
+            fcv_list.append({'name': line.dd_field, 'value': bj_datetime.strftime('%Y-%m-%d')})
         # datetime类型
         elif line.ttype == 'datetime':
             old_date = self[line.field_id.name]
@@ -178,9 +178,9 @@ def get_form_values(self, approval):
                         fcv_line_list.append({'name': list_id.dd_field, 'value': field_list})
                     # date类型
                     elif list_id.field_id.ttype == 'date':
-                        # old_date = model_line[list_id.field_id.name]
-                        # line_bj_datetime = old_date.astimezone(timezone(timedelta(hours=8)))
-                        fcv_line_list.append({'name': list_id.dd_field, 'value': model_line[list_id.field_id.name].strftime('%Y-%m-%d')})
+                        old_date = model_line[list_id.field_id.name]
+                        line_bj_datetime = old_date.astimezone(timezone(timedelta(hours=8)))
+                        fcv_line_list.append({'name': list_id.dd_field, 'value': line_bj_datetime.strftime('%Y-%m-%d')})
                     # datetime类型
                     elif list_id.field_id.ttype == 'datetime':
                         old_date = model_line[list_id.field_id.name]

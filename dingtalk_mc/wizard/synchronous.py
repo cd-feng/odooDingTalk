@@ -15,7 +15,8 @@ class DingTalkMcSynchronous(models.TransientModel):
 
     RepeatType = [('name', '以名称判断'), ('id', '以钉钉ID')]
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", required=True)
+    company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", required=True,
+                                   default=lambda self: [(6, 0, [self.env.user.company_id.id])])
     department = fields.Boolean(string=u'钉钉部门', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
     repeat_type = fields.Selection(string=u'判断唯一', selection=RepeatType, default='name')
@@ -110,7 +111,7 @@ class DingTalkMcSynchronous(models.TransientModel):
                     _logger.info(">>>开始获取%s部门的员工", dept.name)
                     result_state = self.get_dingtalk_employees(client, dept, emp_offset, emp_size, company, repeat_type)
                     if result_state:
-                        emp_offset += emp_size + 1
+                        emp_offset = emp_offset + 1
                     else:
                         break
             self.env.cr.commit()
@@ -182,7 +183,8 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
     _description = "联系人同步"
     _rec_name = 'id'
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_mc_partner_companys_rel', string="要同步的公司", required=True)
+    company_ids = fields.Many2many('res.company', 'dingtalk_mc_partner_companys_rel', string="要同步的公司", required=True,
+                                   default=lambda self: [(6, 0, [self.env.user.company_id.id])])
 
     def start_synchronous_partner(self):
         self.ensure_one()

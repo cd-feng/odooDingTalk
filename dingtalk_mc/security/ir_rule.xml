@@ -124,7 +124,7 @@
 		<field name="perm_write" eval="True"/>
 		<field name="perm_create" eval="True"/>
 		<field name="perm_unlink" eval="True"/>
-	</record>
+	 </record>
 	<record id="dingtalk_message_log_company_rule" model="ir.rule">
 		<field name="name">消息日志-公司过滤</field>
 		<field name="model_id" ref="model_dingtalk_message_log"/>
@@ -133,7 +133,7 @@
 		<field name="perm_write" eval="True"/>
 		<field name="perm_create" eval="True"/>
 		<field name="perm_unlink" eval="True"/>
-	</record>
+	 </record>
 	<record id="dingtalk_miroapp_list_company_rule" model="ir.rule">
 		<field name="name">应用列表-公司过滤</field>
 		<field name="model_id" ref="model_dingtalk_miroapp_list"/>

@@ -332,9 +332,9 @@ class ReturnApprovalState(models.TransientModel):
 class DingDingDataSet(DataSet):
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
-    def call_button(self, model, method, args, domain_id=None, context_id=None):
+    def call_button(self, model, method, args, kwargs):
         ir_model = request.env['ir.model'].sudo().search([('model', '=', model)], limit=1)
-        uid = args[1].get('uid')
+        uid = kwargs.get('context').get('uid')
         user = request.env['res.users'].search([('id', '=', uid)])
         domain = [('oa_model_id', '=', ir_model.id), ('company_id', '=', user.company_id.id)]
         approval = request.env['dingtalk.approval.control'].sudo().search(domain, limit=1)
@@ -371,4 +371,4 @@ class DingDingDataSet(DataSet):
                     end_but_functions.append(button.function)
                 if method in end_but_functions:
                     raise UserError(_("本功能暂无法使用，因为单据已经配置了'审批拒绝后'不允许使用本功能。"))
-        return super(DingDingDataSet, self).call_button(model, method, args, domain_id, context_id)
+        return super(DingDingDataSet, self).call_button(model, method, args, kwargs)

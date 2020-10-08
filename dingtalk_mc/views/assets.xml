@@ -34,7 +34,6 @@
     <record id="open_dingtalk_department_action" model="ir.actions.act_window">
         <field name="name">部门</field>
         <field name="res_model">hr.department</field>
-        <field name="view_type">form</field>
         <field name="domain">[('ding_id', '!=', '')]</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="hr.view_department_filter"/>
@@ -55,7 +54,6 @@
     <record id="open_dingtalk_employee_action" model="ir.actions.act_window">
         <field name="name">员工</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="domain">[('ding_id', '!=', '')]</field>
         <field name="context">{}</field>

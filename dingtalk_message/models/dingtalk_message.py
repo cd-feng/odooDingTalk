@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import babel
 import logging
 import requests
 from odoo import api, models, tools, http, _
@@ -11,11 +12,11 @@ import copy
 import functools
 import time
 import dateutil.relativedelta as relativedelta
-from odoo.addons.mail.models.mail_template import format_date
-from odoo.addons.mail.models.mail_template import format_tz
-from odoo.addons.mail.models.mail_template import format_amount
+from babel.dates import format_date
 from odoo.addons.web.controllers.main import DataSet
 from odoo.http import request
+
+from source.odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 try:
@@ -52,6 +53,13 @@ try:
     mako_safe_template_env.autoescape = False
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
+
+
+def format_datetime(env, dt, tz=False, dt_format='medium', lang_code=False):
+    try:
+        return tools.format_datetime(env, dt, tz=tz, dt_format=dt_format, lang_code=lang_code)
+    except babel.core.UnknownLocaleError:
+        return dt
 
 
 class DingTalkMessageTool(models.TransientModel):
@@ -114,10 +122,19 @@ class DingTalkMessageTool(models.TransientModel):
         mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
         template = mako_env.from_string(tools.ustr(template_txt))
         record = self.env[model].browse(res_id)
+        # variables = {
+        #     'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
+        #     'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
+        #     'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
+        #     'user': self.env.user,
+        #     'ctx': self._context,
+        #     'object': record
+        # }
         variables = {
-            'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
-            'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
+            'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
+            'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
+            'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
+            'format_duration': lambda value: tools.format_duration(value),
             'user': self.env.user,
             'ctx': self._context,
             'object': record
@@ -257,10 +274,9 @@ class MessageDataSet(DataSet):
     """ 处理单据按钮消息 """
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
-    def call_button(self, model, method, args, domain_id=None, context_id=None):
-        call_result = super(MessageDataSet, self).call_button(model, method, args, domain_id, context_id)
+    def call_button(self, model, method, args, kwargs):
         ir_model = request.env['ir.model'].sudo().search([('model', '=', model)], limit=1)
-        uid = args[1].get('uid')
+        uid = kwargs.get('context').get('uid')
         user = request.env['res.users'].search([('id', '=', uid)])
         domain = [('model_id', '=', ir_model.id), ('company_id', '=', user.company_id.id),
                   ('state', '=', 'open'), ('msg_opportunity', '=', 'button')]
@@ -281,4 +297,4 @@ class MessageDataSet(DataSet):
                 message_tool = request.env['dingtalk.message.tool']
                 threading.Thread(target=message_tool.send_notice_message,
                                  args=(msg_config.id, model, now_model.id, user.company_id)).start()
-        return call_result
+        return super(MessageDataSet, self).call_button(model, method, args, kwargs)

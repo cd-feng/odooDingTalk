@@ -11,7 +11,7 @@
             <form>
                 <p>即将从钉钉中获取已存在的审批模板...</p>
                 <group>
-                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1, 'color_field': 'color'}"/>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
                 </group>
                 <footer>
                     <button string="确认" name="get_template" type="object" class="oe_highlight"/>

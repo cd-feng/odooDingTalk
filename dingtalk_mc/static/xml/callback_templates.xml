@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="ListView.DingtalkMcCallbackList">
-        <button type="button" class="btn btn-secondary get_dingtalk_callback_class">
-            获取回调列表
-        </button>
-    </t>
-
     <t t-extend="ListView.buttons" t-name="ListView.DingtalkMcCallbackListButtons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
-            <t t-js="ctx">
-                if (window.odoo._modules.indexOf("base_import") >= 0) {
-                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
-                };
-            </t>
-            <t t-call="ListView.DingtalkMcCallbackList"/>
+            <button type="button" class="btn btn-secondary get_dingtalk_callback_class">
+                获取回调列表
+            </button>
         </t>
     </t>
 

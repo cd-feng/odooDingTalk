@@ -5,7 +5,7 @@
         <field name="model">dingtalk.message.log</field>
         <field name="arch" type="xml">
             <tree default_order="id desc" create="0" edit="0" import="0" delete="0">
-                <field name="create_date" string="触发时间" widget="datetime"/>
+                <field name="create_date" string="触发时间"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="msg_type"/>
                 <field name="name"/>
@@ -14,27 +14,32 @@
             </tree>
         </field>
     </record>
-     <record id="dingtalk_message_log_action" model="ir.actions.act_window">
+
+    <record id="dingtalk_message_log_action" model="ir.actions.act_window">
         <field name="name">消息日志</field>
         <field name="res_model">dingtalk.message.log</field>
         <field name="view_mode">tree</field>
         <field name="context">{'search_default_msg_type': True}</field>
     </record>
-    <record model="ir.ui.view" id="dingtalk_message_log_search">
+
+    <record id="dingtalk_message_log_search" model="ir.ui.view">
+        <field name="name">消息日志</field>
         <field name="model">dingtalk.message.log</field>
         <field name="arch" type="xml">
             <search string="消息日志">
-                <field name="create_date" string="触发时间" widget="datetime"/>
+                <field name="create_date" string="触发时间"/>
                 <field name="company_id"/>
-                <field name="msg_type"/>
                 <field name="name"/>
                 <separator/>
-                <filter name="create_date" string="触发时间" context="{'group_by': 'create_date'}"/>
-                <filter name="company_id" string="公司" context="{'group_by': 'company_id'}"/>
-                <filter name="msg_type" string="消息类型" context="{'group_by': 'msg_type'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="触发时间" name="create_date" domain="[]" context="{'group_by': 'create_date'}"/>
+                    <filter string="公司" name="company_id" domain="[]" context="{'group_by': 'company_id'}"/>
+                    <filter string="消息类型" name="msg_type" domain="[]" context="{'group_by': 'msg_type'}"/>
+                </group>
             </search>
         </field>
     </record>
+
     <menuitem name="消息日志" id="dingtalk_message_log_menu" parent="log_menu" sequence="3" action="dingtalk_message_log_action"/>
 
 
@@ -58,11 +63,9 @@
         <field name="name">发送群消息</field>
         <field name="res_model">dingtalk.send.chat.message</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="dingtalk_mc.dingtalk_send_chat_message_form_view"/>
         <field name="target">new</field>
     </record>
-
 
 </odoo>

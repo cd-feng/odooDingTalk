@@ -25,9 +25,9 @@ class ResUsers(models.Model):
             return super(ResUsers, self).auth_oauth(provider, params)
 
     @api.model
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         try:
-            return super(ResUsers, self)._check_credentials(password)
+            return super(ResUsers, self)._check_credentials(password, env)
         except AccessDenied:
             res = self.sudo().search([('id', '=', self.env.uid), ('ding_user_id', '=', password)])
             if not res:

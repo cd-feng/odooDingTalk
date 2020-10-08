@@ -30,7 +30,6 @@ class DingTalkRobot(models.Model):
     remarks = fields.Text(string='说明备注')
     chat_id = fields.Many2one(comodel_name='dingtalk.mc.chat', string='钉钉群会话', index=True, domain="[('state', '!=', 'close')]")
 
-    @api.multi
     def test_robot_connection(self):
         for res in self:
             logging.info(">>>机器人测试连接")
@@ -110,7 +109,6 @@ class DingTalkRobotSendMessage(models.TransientModel):
                 'domain': {'at_user_ids': domain}
             }
 
-    @api.multi
     def dingtalk_robot_send_message(self):
         """
         点击通过群机器人发送消息按钮

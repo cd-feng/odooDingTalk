@@ -11,7 +11,7 @@
                     <p>该操作只会同步钉钉中所有在职人员的花名册信息。</p>
                 </div>
                 <group>
-                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1, 'color_field': 'color'}"/>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
                 </group>
                 <footer>
                     <button string="开始同步" name="start_synchronous_data" type="object" class="oe_highlight"/>

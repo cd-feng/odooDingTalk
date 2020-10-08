@@ -186,7 +186,7 @@ class HrEmployee(models.Model):
             self._check_user_identity(emp)
             if emp.ding_avatar_url:
                 binary_data = base64.b64encode(requests.get(emp.ding_avatar_url).content)
-                emp.sudo().write({'image': binary_data})
+                emp.sudo().write({'image_1920': binary_data})
 
     @api.model
     def _check_user_identity(self, employee):

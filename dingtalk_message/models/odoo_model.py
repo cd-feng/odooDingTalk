@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# # -*- coding: utf-8 -*-
 # import logging
 # import threading
 # from odoo import models, _, api
@@ -45,7 +45,13 @@
 #     try:
 #         msg_config = request.env['dingtalk.message.config'].sudo().search(domain, limit=1)
 #     except Exception:
-#         msg_config = self.env['dingtalk.message.config'].sudo().search(domain, limit=1)
+#         return origin_write(self, vals)
+#         # msg_config = self.env['dingtalk.message.config'].sudo().search(domain, limit=1)
+#         # self._cr.execute('''SELECT id FROM dingtalk_message_config
+#         #             WHERE model_id={} and company_id={} and state='open' and msg_opportunity='normal' and message_timing='write';
+#         # '''.format(ir_model.id, company_id.id))
+#         # reverse_map = dict(self._cr.fetchall())
+#         # print(reverse_map)
 #     if msg_config:
 #         message_tool = self.env['dingtalk.message.tool']
 #         if isinstance(vals, dict):
@@ -65,7 +71,6 @@
 # origin_unlink = models.BaseModel.unlink
 #
 #
-# @api.multi
 # def unlink(self):
 #     ir_model = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
 #     company_id = self.env.user.company_id
