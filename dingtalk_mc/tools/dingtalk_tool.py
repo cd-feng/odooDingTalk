@@ -3,7 +3,7 @@
 import logging
 import time
 from datetime import datetime, timedelta
-from odoo import fields
+from odoo import fields, SUPERUSER_ID
 from dingtalk.client import AppKeyClient
 from dingtalk.storage.memorystorage import MemoryStorage
 from odoo.exceptions import UserError
@@ -35,7 +35,7 @@ def get_dingtalk_config(self, company):
     获取配置项
     :return:
     """
-    config = self.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company.id)])
+    config = self.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id)])
     if not config:
         raise UserError("没有为:(%s)配置钉钉参数！" % company.name)
     return config
@@ -46,7 +46,7 @@ def get_config_is_delete(self, company):
     返回对应公司钉钉配置项中是否"删除基础数据自动同步"字段
     :return:
     """
-    config = self.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company.id)])
+    config = self.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id)])
     if not config:
         raise UserError("没有为:(%s)配置钉钉参数！" % company.name)
     return config.delete_is_sy
@@ -162,7 +162,7 @@ def user_info_by_dingtalk_code(self, code, company):
     :return:
     """
     client = get_client(self, get_dingtalk_config(self, company))
-    config = request.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company.id)], limit=1)
+    config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id)], limit=1)
     login_id = config.login_id
     login_secret = config.login_secret
     milli_time = lambda: int(round(time.time() * 1000))

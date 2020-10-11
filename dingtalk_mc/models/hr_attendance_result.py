@@ -2,7 +2,7 @@
 ###################################################################################
 #    Copyright (C) 2020 SuXueFeng GNU
 ###################################################################################
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 import logging
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -88,8 +88,8 @@ class HrAttendanceResult(models.Model):
         """
         for data in date_list:
             domain = [('ding_id', '=', data.get('userId')), ('company_id', '=', company.id)]
-            employee = self.env['hr.employee'].sudo().search(domain, limit=1)
-            self.env['dingtalk.signs.list'].sudo().create({
+            employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
+            self.env['dingtalk.signs.list'].with_user(SUPERUSER_ID).create({
                 'company_id': company.id,
                 'emp_id': employee.id if employee else False,
                 'checkin_time': dt.timestamp_to_local_date(data.get('checkTime'), self),

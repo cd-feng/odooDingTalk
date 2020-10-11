@@ -3,7 +3,7 @@ import json
 import babel
 import logging
 import requests
-from odoo import api, models, tools, http, _
+from odoo import api, models, tools, http, _, SUPERUSER_ID
 import threading
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool
 from werkzeug import urls
@@ -80,7 +80,7 @@ class DingTalkMessageTool(models.TransientModel):
                 client = dingtalk_tool.get_client(self, dingtalk_config)
                 msg_body = self.render_msg_body(msg_body, 'res.users', user_id)
                 if msg_body:
-                    single_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                    single_url = self.env['ir.config_parameter'].with_user(SUPERUSER_ID).get_param('web.base.url')
                     msg = {
                         "msgtype": "action_card",
                         "action_card": {
@@ -162,7 +162,7 @@ class DingTalkMessageTool(models.TransientModel):
                 self = self.with_env(self.env(cr=new_cr))
                 # 获取源模型
                 msg_config = self.env['dingtalk.message.config'].search([('id', '=', config_id)])
-                res_model = self.env[res_model].sudo().search([('id', '=', res_id)])
+                res_model = self.env[res_model].with_user(SUPERUSER_ID).search([('id', '=', res_id)])
                 msg_body = self.render_msg_body(msg_config.msg_body, res_model._name, res_id)
                 dingtalk_config = dingtalk_tool.get_dingtalk_config(self, company)
                 msg_data = {'agent_id': dingtalk_config.agent_id}
@@ -181,7 +181,7 @@ class DingTalkMessageTool(models.TransientModel):
                                 "title": msg_config.msg_title or _('单据变更通知'),
                                 "markdown": msg_body,
                                 "single_title": "详情",
-                                "single_url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+                                "single_url": self.env['ir.config_parameter'].with_user(SUPERUSER_ID).get_param('web.base.url'),
                             }
                         }
                     }
@@ -201,7 +201,7 @@ class DingTalkMessageTool(models.TransientModel):
                             "title": msg_config.msg_title or _('单据变更通知'),
                             "text": msg_body,
                             "singleTitle": "详情",
-                            "singleURL": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+                            "singleURL": self.env['ir.config_parameter'].with_user(SUPERUSER_ID).get_param('web.base.url'),
                         }
                     }
                     try:
@@ -236,7 +236,7 @@ class DingTalkMessageTool(models.TransientModel):
                 "title": msg_config.msg_title or _('单据变更通知'),
                 "markdown": msg_body,
                 "single_title": _("详情"),
-                "single_url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+                "single_url": self.env['ir.config_parameter'].with_user(SUPERUSER_ID).get_param('web.base.url'),
             }
         }
         if msg_config.to_all_user:
@@ -275,12 +275,12 @@ class MessageDataSet(DataSet):
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
     def call_button(self, model, method, args, kwargs):
-        ir_model = request.env['ir.model'].sudo().search([('model', '=', model)], limit=1)
+        ir_model = request.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', model)], limit=1)
         uid = kwargs.get('context').get('uid')
         user = request.env['res.users'].search([('id', '=', uid)])
         domain = [('model_id', '=', ir_model.id), ('company_id', '=', user.company_id.id),
                   ('state', '=', 'open'), ('msg_opportunity', '=', 'button')]
-        msg_configs = request.env['dingtalk.message.config'].sudo().search(domain)
+        msg_configs = request.env['dingtalk.message.config'].with_user(SUPERUSER_ID).search(domain)
         for msg_config in msg_configs:
             buttons_list = list()
             for button in msg_config.button_ids:
@@ -293,7 +293,7 @@ class MessageDataSet(DataSet):
                     params = args[1].get('params')
                     res_id = params.get('id')
                 # 获取当前单据
-                now_model = request.env[model].sudo().search([('id', '=', res_id)])
+                now_model = request.env[model].with_user(SUPERUSER_ID).search([('id', '=', res_id)])
                 message_tool = request.env['dingtalk.message.tool']
                 threading.Thread(target=message_tool.send_notice_message,
                                  args=(msg_config.id, model, now_model.id, user.company_id)).start()

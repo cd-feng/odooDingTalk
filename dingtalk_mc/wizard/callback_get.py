@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import models, fields
+from odoo import models, fields, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -22,11 +22,11 @@ class GetCallbackList(models.TransientModel):
                 _logger.info(result)
                 tag_list = list()
                 for tag in result.get('call_back_tag'):
-                    callback_list = self.env['dingtalk.callback.list'].sudo().search([('value', '=', tag)])
+                    callback_list = self.env['dingtalk.callback.list'].with_user(SUPERUSER_ID).search([('value', '=', tag)])
                     if callback_list:
                         tag_list.append(callback_list[0].id)
                 domain = [('url', '=', result.get('url')), ('company_id', '=', company.id)]
-                callbacks = self.env['dingtalk.callback.manage'].sudo().search(domain)
+                callbacks = self.env['dingtalk.callback.manage'].with_user(SUPERUSER_ID).search(domain)
                 data = {
                     'call_ids': [(6, 0, tag_list)],
                     'url': result.get('url'),
@@ -36,9 +36,9 @@ class GetCallbackList(models.TransientModel):
                     'company_id': company.id,
                 }
                 if callbacks:
-                    callbacks.sudo().write(data)
+                    callbacks.with_user(SUPERUSER_ID).write(data)
                 else:
-                    self.env['dingtalk.callback.manage'].sudo().create(data)
+                    self.env['dingtalk.callback.manage'].with_user(SUPERUSER_ID).create(data)
             except Exception as e:
                 raise UserError(e)
         return {'type': 'ir.actions.act_window_close'}

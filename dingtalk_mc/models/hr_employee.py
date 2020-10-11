@@ -4,7 +4,7 @@ import json
 import logging
 import requests
 from requests import ReadTimeout
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -53,10 +53,10 @@ class HrEmployee(models.Model):
         """
         if self.user_id and self.ding_id:
             # 把员工的钉钉id和手机号写入到系统用户oauth
-            users = self.env['res.users'].sudo().search([('ding_user_id', '=', self.ding_id), ('company_id', '=', self.company_id.id)])
+            users = self.env['res.users'].with_user(SUPERUSER_ID).search([('ding_user_id', '=', self.ding_id), ('company_id', '=', self.company_id.id)])
             if users:
-                users.sudo().write({'ding_user_id': False, 'ding_user_phone': False})
-            self.user_id.sudo().write({
+                users.with_user(SUPERUSER_ID).write({'ding_user_id': False, 'ding_user_phone': False})
+            self.user_id.with_user(SUPERUSER_ID).write({
                 'ding_user_id': self.ding_id,
                 'ding_user_phone': self.mobile_phone,
             })
@@ -186,7 +186,7 @@ class HrEmployee(models.Model):
             self._check_user_identity(emp)
             if emp.ding_avatar_url:
                 binary_data = base64.b64encode(requests.get(emp.ding_avatar_url).content)
-                emp.sudo().write({'image_1920': binary_data})
+                emp.with_user(SUPERUSER_ID).write({'image_1920': binary_data})
 
     @api.model
     def _check_user_identity(self, employee):
@@ -216,9 +216,9 @@ class HrEmployee(models.Model):
                 if event_type == 'user_leave_org':
                     # 用户离职
                     domain = [('ding_id', 'in', user_ids), ('company_id', '=', company.id)]
-                    employees = self.env['hr.employee'].sudo().search(domain)
+                    employees = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain)
                     if employees:
-                        employees.sudo().write({'active': False})
+                        employees.with_user(SUPERUSER_ID).write({'active': False})
                 else:
                     # 用户增加和变更时获取该用户详情
                     for user_id in user_ids:
@@ -272,19 +272,19 @@ class HrEmployee(models.Model):
                 data.update({'din_hiredDate': date_str})
             if result.get('department'):
                 dep_ding_ids = result.get('department')
-                dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_ding_ids), ('company_id', '=', company.id)])
+                dep_list = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', 'in', dep_ding_ids), ('company_id', '=', company.id)])
                 data.update({'department_ids': [(6, 0, dep_list.ids)], 'department_id': dep_list[0].id if dep_list else False})
             # 当为新建时以名称进行搜索
             if event_type == 'user_add_org':
-                employee = self.env['hr.employee'].sudo().search([('name', '=', result.get('name')), ('company_id', '=', company.id)], limit=1)
+                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('name', '=', result.get('name')), ('company_id', '=', company.id)], limit=1)
                 if not employee:
-                    self.env['hr.employee'].sudo().create(data)
+                    self.env['hr.employee'].with_user(SUPERUSER_ID).create(data)
                 else:
-                    employee.sudo().write(data)
+                    employee.with_user(SUPERUSER_ID).write(data)
             else:
-                employee = self.env['hr.employee'].sudo().search([('ding_id', '=', user_id), ('company_id', '=', company.id)], limit=1)
+                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', user_id), ('company_id', '=', company.id)], limit=1)
                 if employee:
-                    employee.sudo().write(data)
+                    employee.with_user(SUPERUSER_ID).write(data)
         else:
             _logger.info("从钉钉同步员工时发生意外，原因为:{}".format(result.get('errmsg')))
         return True

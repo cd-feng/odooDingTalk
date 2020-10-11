@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from odoo import models, api
+from odoo import models, api, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 from datetime import datetime, timedelta, timezone
@@ -16,9 +16,9 @@ def approval_result(self):
     :return:
     """
     # 获取钉钉审批配置
-    model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)]).id
+    model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', self._name)]).id
     domain = [('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)]
-    approval = self.env['dingtalk.approval.control'].sudo().search(domain, limit=1)
+    approval = self.env['dingtalk.approval.control'].with_user(SUPERUSER_ID).search(domain, limit=1)
     _logger.info("提交'%s'单据至钉钉进行审批..." % approval.name)
     # 钉钉审批模型编码
     process_code = approval.template_id.process_code
@@ -111,7 +111,7 @@ def get_form_values(self, approval):
                 try:
                     fcv_list.append({'name': line.dd_field, 'value': ding_field.name})
                 except Exception:
-                    fcv_list.append({'name': line.dd_field, 'value': ding_field.sudo().name_get()[0][1]})
+                    fcv_list.append({'name': line.dd_field, 'value': ding_field.with_user(SUPERUSER_ID).name_get()[0][1]})
         # many2many类型
         elif line.ttype == 'many2many':
             many_models = self[line.field_id.name]
@@ -124,7 +124,7 @@ def get_form_values(self, approval):
                     try:
                         line_list.append(many_model.name)
                     except Exception:
-                        line_list.append(many_model.sudo().name_get()[0][1])
+                        line_list.append(many_model.with_user(SUPERUSER_ID).name_get()[0][1])
             fcv_list.append({'name': line.dd_field, 'value': line_list})
         # date类型
         elif line.ttype == 'date':
@@ -161,7 +161,7 @@ def get_form_values(self, approval):
                             try:
                                 fcv_line_list.append({'name': list_id.dd_field, 'value': list_ding_field.name})
                             except Exception:
-                                fcv_line_list.append({'name': list_id.dd_field, 'value': list_ding_field.sudo().name_get()[0][1]})
+                                fcv_line_list.append({'name': list_id.dd_field, 'value': list_ding_field.with_user(SUPERUSER_ID).name_get()[0][1]})
                     # many2many类型
                     elif list_id.field_id.ttype == 'many2many':
                         list_id_models = model_line[list_id.field_id.name]
@@ -174,7 +174,7 @@ def get_form_values(self, approval):
                                 try:
                                     field_list.append(list_id_model.name)
                                 except Exception:
-                                    field_list.append(list_id_model.sudo().name_get()[0][1])
+                                    field_list.append(list_id_model.with_user(SUPERUSER_ID).name_get()[0][1])
                         fcv_line_list.append({'name': list_id.dd_field, 'value': field_list})
                     # date类型
                     elif list_id.field_id.ttype == 'date':

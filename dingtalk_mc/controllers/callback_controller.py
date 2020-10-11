@@ -2,7 +2,7 @@
 import json
 import threading
 import time
-from odoo import http, api
+from odoo import http, api, SUPERUSER_ID
 from odoo.http import request
 from .crypto import DingTalkCrypto as dtc
 import logging
@@ -26,14 +26,14 @@ class DingTalkCallBackManage(http.Controller):
         """
         json_str = request.jsonrequest
         _logger.info(json_str)
-        callbacks = request.env['dingtalk.callback.manage'].sudo().search([])
+        callbacks = request.env['dingtalk.callback.manage'].with_user(SUPERUSER_ID).search([])
         encrypt_result = False      # 解密后类型
         corp_id = False             # 钉钉企业的corp_id
         callback = False            # callback
         now_company = False         # 正在回调的公司
         for call in callbacks:
             # 遍历所有配置了多公司参数的公司配置
-            config = request.env['dingtalk.mc.config'].sudo().search([('company_id', '=', call.company_id.id)], limit=1)
+            config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', call.company_id.id)], limit=1)
             if not config:
                 continue
             try:
@@ -132,13 +132,13 @@ class DingTalkCallBackManage(http.Controller):
         """
         company_id = company.id
         domain = [('process_code', '=', msg.get('processCode')), ('company_id', '=', company_id)]
-        temp = request.env['dingtalk.approval.template'].sudo().search(domain, limit=1)
+        temp = request.env['dingtalk.approval.template'].with_user(SUPERUSER_ID).search(domain, limit=1)
         if temp:
             contract_domain = [('template_id', '=', temp.id), ('company_id', '=', company_id)]
-            approval = request.env['dingtalk.approval.control'].sudo().search(contract_domain)
+            approval = request.env['dingtalk.approval.control'].with_user(SUPERUSER_ID).search(contract_domain)
             if approval:
                 oa_domain = [('dd_process_instance', '=', msg.get('processInstanceId')), ('company_id', '=', company_id)]
-                oa_model = request.env[approval.oa_model_id.model].sudo().search(oa_domain, limit=1)
+                oa_model = request.env[approval.oa_model_id.model].with_user(SUPERUSER_ID).search(oa_domain, limit=1)
                 if oa_model:
                     approval_result = msg.get('result')
                     model_name = oa_model._name.replace('.', '_')
@@ -183,22 +183,22 @@ class DingTalkCallBackManage(http.Controller):
         """
         company_id = company.id
         domain = [('process_code', '=', msg.get('processCode')), ('company_id', '=', company_id)]
-        temp = request.env['dingtalk.approval.template'].sudo().search(domain, limit=1)
+        temp = request.env['dingtalk.approval.template'].with_user(SUPERUSER_ID).search(domain, limit=1)
         if temp:
             contract_domain = [('template_id', '=', temp.id), ('company_id', '=', company_id)]
-            approval = request.env['dingtalk.approval.control'].sudo().search(contract_domain)
+            approval = request.env['dingtalk.approval.control'].with_user(SUPERUSER_ID).search(contract_domain)
             if approval:
                 pi = msg.get('processInstanceId')  # 审批实例ID
                 msg_type = msg.get('type')  # 类型
                 msg_result = msg.get('result')  # 审批结果
                 ac = ''  # 审批消息内容
                 oa_domain = [('dd_process_instance', '=', pi), ('company_id', '=', company_id)]
-                oa_model = request.env[approval.oa_model_id.model].sudo().search(oa_domain)
-                emp = request.env['hr.employee'].sudo().search([('ding_id', '=', msg.get('staffId')), ('company_id', '=', company_id)])
+                oa_model = request.env[approval.oa_model_id.model].with_user(SUPERUSER_ID).search(oa_domain)
+                emp = request.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', msg.get('staffId')), ('company_id', '=', company_id)])
                 model_name = oa_model._name.replace('.', '_')
                 if msg_type == 'start' and oa_model:
                     ac = "等待({})审批".format(emp.name if emp else '')
-                    if oa_model.sudo().dd_approval_state != 'stop':
+                    if oa_model.with_user(SUPERUSER_ID).dd_approval_state != 'stop':
                         request.env.cr.execute("UPDATE {} SET dd_doc_state='{}' WHERE id={}".format(model_name, ac, oa_model[0].id))
                     oa_model.message_post(body=ac, message_type='notification')
                 elif msg_type == 'comment' and oa_model:

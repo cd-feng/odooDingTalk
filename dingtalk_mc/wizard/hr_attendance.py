@@ -6,7 +6,7 @@
 import logging
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 _logger = logging.getLogger()
 
@@ -78,7 +78,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                 data_list = list()
                 for rec in result.get('recordresult'):
                     # 员工
-                    emp_id = self.env['hr.employee'].sudo().search([('ding_id', '=', rec.get('userId')), ('company_id', '=', company.id)], limit=1)
+                    emp_id = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', rec.get('userId')), ('company_id', '=', company.id)], limit=1)
                     data_list.append({
                         'company_id': company.id,
                         'employee_id': emp_id.id if emp_id else False,
@@ -91,7 +91,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'check_in': dt.get_time_stamp(rec.get('userCheckTime')),
                         'sourceType': rec.get('sourceType'),  # 数据来源
                     })
-                self.env['hr.attendance.result'].sudo().create(data_list)
+                self.env['hr.attendance.result'].with_user(SUPERUSER_ID).create(data_list)
                 if result.get('hasMore'):
                     return True
                 else:

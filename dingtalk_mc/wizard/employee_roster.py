@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -78,13 +78,13 @@ class EmployeeRosterSynchronous(models.TransientModel):
                             if fie['field_code'][6:] == 'deptIds' and 'value' in fie:
                                 dept_ding_ids = fie['value'].split('|')
                                 domain = [('company_id', '=', company_id), ('ding_id', 'in', dept_ding_ids)]
-                                departments = self.env['hr.department'].sudo().search(domain)
+                                departments = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
                                 if departments:
                                     roster_data.update({'dept': [(6, 0, departments.ids)]})
                             # 获取主部门
                             elif fie['field_code'][6:] == 'mainDeptId' and 'value' in fie:
                                 domain = [('company_id', '=', company_id), ('ding_id', '=', fie['value'])]
-                                dept = self.env['hr.department'].sudo().search(domain, limit=1)
+                                dept = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain, limit=1)
                                 if dept:
                                     roster_data.update({'mainDept': dept.id})
                             elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept':
@@ -92,9 +92,9 @@ class EmployeeRosterSynchronous(models.TransientModel):
                             # 同步工作岗位
                             elif fie['field_code'][6:] == 'position' and 'label' in fie:
                                 domain = [('company_id', '=', company_id), ('name', '=', fie['label'])]
-                                hr_job = self.env['hr.job'].sudo().search(domain, limit=1)
+                                hr_job = self.env['hr.job'].with_user(SUPERUSER_ID).search(domain, limit=1)
                                 if not hr_job and fie['label']:
-                                    hr_job = self.env['hr.job'].sudo().create({'name': fie['label'], 'company_id': company_id})
+                                    hr_job = self.env['hr.job'].with_user(SUPERUSER_ID).create({'name': fie['label'], 'company_id': company_id})
                                 roster_data.update({'position': hr_job.id or False})
                             else:
                                 roster_data.update({
@@ -119,7 +119,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
         :param: company_id 公司id
         :return:
         """
-        employees = self.env['hr.employee'].sudo().search([('ding_id', '!=', ''), ('company_id', '=', company_id)])
+        employees = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '!=', ''), ('company_id', '=', company_id)])
         # result = self.env['hr.employee'].sudo().search_read([('ding_id', '!=', ''), ('company_id', '=', company_id)], ['ding_id', 'id'])
         emp_data = dict()
         for emp in employees:

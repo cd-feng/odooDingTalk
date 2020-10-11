@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import threading
-from odoo import api, models
+from odoo import api, models, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class HrEmployee(models.Model):
         :return:
         """
         res = super(HrEmployee, self).get_employee_info(user_id, event_type, company)
-        config = self.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company.id)], limit=1)
+        config = self.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id)], limit=1)
         if config.is_auto_create_user:
             synchronous = self.env['dingtalk.mc.synchronous']
             threading.Thread(target=synchronous.create_employee_user, args=company).start()

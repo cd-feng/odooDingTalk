@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import threading
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -57,11 +57,11 @@ class DingTalkMcSynchronous(models.TransientModel):
                     domain = [('name', '=', res.get('name')), ('company_id', '=', company.id)]
                 else:
                     domain = [('ding_id', '=', res.get('id')), ('company_id', '=', company.id)]
-                h_department = self.env['hr.department'].sudo().search(domain)
+                h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
                 if h_department:
-                    h_department.sudo().write(data)
+                    h_department.with_user(SUPERUSER_ID).write(data)
                 else:
-                    self.env['hr.department'].sudo().create(data)
+                    self.env['hr.department'].with_user(SUPERUSER_ID).create(data)
             self.env.cr.commit()
         return True
 
@@ -72,7 +72,7 @@ class DingTalkMcSynchronous(models.TransientModel):
         """
         for company in self.company_ids:
             client = dt.get_client(self, dt.get_dingtalk_config(self, company))
-            departments = self.env['hr.department'].sudo().search([('company_id', '=', company.id), ('ding_id', '!=', '')])
+            departments = self.env['hr.department'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id), ('ding_id', '!=', '')])
             for dept in departments:
                 result = client.department.get(dept.ding_id)
                 dept_date = dict()
@@ -81,18 +81,18 @@ class DingTalkMcSynchronous(models.TransientModel):
                         dept_date['is_root'] = True
                     else:
                         doamin = [('ding_id', '=', result.get('parentid')), ('company_id', '=', company.id)]
-                        partner_dept = self.env['hr.department'].sudo().search(doamin, limit=1)
+                        partner_dept = self.env['hr.department'].with_user(SUPERUSER_ID).search(doamin, limit=1)
                         if partner_dept:
                             dept_date['parent_id'] = partner_dept.id
                 if result.get('deptManagerUseridList'):
                     depts = result.get('deptManagerUseridList').split("|")
-                    manage_users = self.env['hr.employee'].sudo().search([('ding_id', 'in', depts), ('company_id', '=', company.id)])
+                    manage_users = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', 'in', depts), ('company_id', '=', company.id)])
                     dept_date.update({
                         'manager_user_ids': [(6, 0, manage_users.ids)],
                         'manager_id': manage_users[0].id
                     })
                 if dept_date:
-                    dept.sudo().write(dept_date)
+                    dept.with_user(SUPERUSER_ID).write(dept_date)
             self.env.cr.commit()
         return True
 
@@ -102,7 +102,7 @@ class DingTalkMcSynchronous(models.TransientModel):
         :return:
         """
         for company in self.company_ids:
-            departments = self.env['hr.department'].sudo().search([('ding_id', '!=', ''), ('company_id', '=', company.id)])
+            departments = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', '!=', ''), ('company_id', '=', company.id)])
             client = dt.get_client(self, dt.get_dingtalk_config(self, company))
             for dept in departments:
                 emp_offset = 0
@@ -162,17 +162,17 @@ class DingTalkMcSynchronous(models.TransientModel):
                     data.update({'din_hiredDate': time_stamp})
                 if user.get('department'):
                     dep_din_ids = user.get('department')
-                    dep_list = self.env['hr.department'].sudo().search([('ding_id', 'in', dep_din_ids), ('company_id', '=', company.id)])
+                    dep_list = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', 'in', dep_din_ids), ('company_id', '=', company.id)])
                     data.update({'department_ids': [(6, 0, dep_list.ids)]})
                 if repeat_type == 'name':
                     domain = [('name', '=', user.get('name')), ('company_id', '=', company.id)]
                 else:
                     domain = [('ding_id', '=', user.get('userid')), ('company_id', '=', company.id)]
-                employee = self.env['hr.employee'].sudo().search(domain)
+                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain)
                 if employee:
-                    employee.sudo().write(data)
+                    employee.with_user(SUPERUSER_ID).write(data)
                 else:
-                    self.env['hr.employee'].sudo().create(data)
+                    self.env['hr.employee'].with_user(SUPERUSER_ID).create(data)
             return result.get('hasMore')
         except Exception as e:
             raise UserError(e)
@@ -213,12 +213,12 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
                         'company_id': company.id,
                     })
             for category in category_list:
-                res_category = self.env['res.partner.category'].sudo().search(
+                res_category = self.env['res.partner.category'].with_user(SUPERUSER_ID).search(
                     [('ding_id', '=', category.get('ding_id')), ('company_id', '=', company.id)])
                 if res_category:
-                    res_category.sudo().write(category)
+                    res_category.with_user(SUPERUSER_ID).write(category)
                 else:
-                    self.env['res.partner.category'].sudo().create(category)
+                    self.env['res.partner.category'].with_user(SUPERUSER_ID).create(category)
         except Exception as e:
             raise UserError(e)
 
@@ -236,7 +236,7 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
                 # 获取标签
                 label_list = list()
                 for label in res.get('labelIds'):
-                    category = self.env['res.partner.category'].sudo().search([('ding_id', '=', label), ('company_id', '=', company.id)], limit=1)
+                    category = self.env['res.partner.category'].with_user(SUPERUSER_ID).search([('ding_id', '=', label), ('company_id', '=', company.id)], limit=1)
                     if category:
                         label_list.append(category.id)
                 data = {
@@ -253,14 +253,14 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
                 }
                 # 获取负责人
                 if res.get('followerUserId'):
-                    follower_user = self.env['hr.employee'].sudo().search([('ding_id', '=', res.get('followerUserId')), ('company_id', '=', company.id)], limit=1)
+                    follower_user = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', res.get('followerUserId')), ('company_id', '=', company.id)], limit=1)
                     if follower_user:
                         data.update({'ding_employee_id': follower_user.id})
-                partner = self.env['res.partner'].sudo().search([('ding_id', '=', res.get('userId')), ('company_id', '=', company.id)])
+                partner = self.env['res.partner'].with_user(SUPERUSER_ID).search([('ding_id', '=', res.get('userId')), ('company_id', '=', company.id)])
                 if partner:
-                    partner.sudo().write(data)
+                    partner.with_user(SUPERUSER_ID).write(data)
                 else:
-                    self.env['res.partner'].sudo().create(data)
+                    self.env['res.partner'].with_user(SUPERUSER_ID).create(data)
         except Exception as e:
             raise UserError(e)
         return
@@ -320,15 +320,15 @@ class CreateResUser(models.TransientModel):
                     raise UserError("员工{}办公手机为空，无法创建用户!".format(employee.name))
                 values.update({'login': employee.mobile_phone, "password": employee.mobile_phone})
             domain = ['|', ('login', '=', employee.work_email), ('login', '=', employee.mobile_phone)]
-            user = self.env['res.users'].sudo().search(domain, limit=1)
+            user = self.env['res.users'].with_user(SUPERUSER_ID).search(domain, limit=1)
             if user:
                 employee.write({'user_id': user.id})
             else:
-                name_count = self.env['res.users'].sudo().search_count([('name', 'like', employee.name)])
+                name_count = self.env['res.users'].with_user(SUPERUSER_ID).search_count([('name', 'like', employee.name)])
                 if name_count > 0:
                     user_name = employee.name + str(name_count + 1)
                     values['name'] = user_name
-                user = self.env['res.users'].sudo().create(values)
+                user = self.env['res.users'].with_user(SUPERUSER_ID).create(values)
                 employee.write({'user_id': user.id})
             message_list.append({'ding_id': employee.ding_id, 'values': values})
         return {'type': 'ir.actions.act_window_close'}
@@ -366,6 +366,6 @@ class EmployeeToUser(models.TransientModel):
                 self = self.with_env(self.env(cr=new_cr))
                 employees = self.env['hr.employee'].search([('user_id', '=', False), ('company_id', '=', company.id)])
                 for emp in employees:
-                    user = self.env['res.users'].sudo().search([('name', '=', emp.name)], limit=1)
+                    user = self.env['res.users'].with_user(SUPERUSER_ID).search([('name', '=', emp.name)], limit=1)
                     if user:
                         emp.write({'user_id': user.id})

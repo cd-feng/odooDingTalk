@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 
 
 class DingDingApprovalRecord(models.Model):
@@ -30,7 +30,7 @@ class DingDingApprovalRecord(models.Model):
             with self.pool.cursor() as new_cr:
                 new_cr.autocommit(True)
                 self = self.with_env(self.env(cr=new_cr))
-                self.env['dingtalk.approval.record'].sudo().create({
+                self.env['dingtalk.approval.record'].with_user(SUPERUSER_ID).create({
                     'model_id': model_id,  # 模型
                     'rec_id': rec_id,  # 记录ID
                     'process_instance': pi,  # 审批实例ID

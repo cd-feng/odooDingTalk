@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import fields, models, api
+from odoo import fields, models, api, SUPERUSER_ID
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
 _logger = logging.getLogger(__name__)
@@ -49,8 +49,8 @@ class DingTalkSignList(models.Model):
                     r_result = result.get('result')
                     for data in r_result.get('page_list'):
                         domain = [('ding_id', '=', data.get('userid')), ('company_id', '=', company.id)]
-                        emp = self.env['hr.employee'].sudo().search(domain, limit=1)
-                        self.env['dingtalk.signs.list'].sudo().create({
+                        emp = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
+                        self.env['dingtalk.signs.list'].with_user(SUPERUSER_ID).create({
                             'company_id': company.id,
                             'emp_id': emp.id if emp else False,
                             'checkin_time': dt.timestamp_to_local_date(data.get('checkin_time'), self),

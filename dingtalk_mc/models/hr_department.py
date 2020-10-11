@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import fields, models, api
+from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -100,9 +100,9 @@ class HrDepartment(models.Model):
                 event_type = result_msg.get('EventType')  # 消息类型
                 dept_ids = result_msg.get('DeptId')
                 if event_type == 'org_dept_remove':
-                    departments = self.env['hr.department'].sudo().search([('ding_id', 'in', dept_ids), ('company_id', '=', company.id)])
+                    departments = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', 'in', dept_ids), ('company_id', '=', company.id)])
                     if departments:
-                        departments.sudo().write({'active': False})
+                        departments.with_user(SUPERUSER_ID).write({'active': False})
                 else:
                     # 部门增加和变更时获取该部门详情
                     for dept_id in dept_ids:
@@ -132,13 +132,13 @@ class HrDepartment(models.Model):
             }
             if result.get('parentid') != 1:
                 domain = [('ding_id', '=', result.get('parentid')), ('company_id', '=', company.id)]
-                partner_department = self.env['hr.department'].sudo().search(domain, limit=1)
+                partner_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain, limit=1)
                 if partner_department:
                     data.update({'parent_id': partner_department.id})
             else:
                 data['is_root'] = True
             depts = result.get('deptManagerUseridList').split("|")
-            manage_users = self.env['hr.employee'].sudo().search([('ding_id', 'in', depts), ('company_id', '=', company.id)])
+            manage_users = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', 'in', depts), ('company_id', '=', company.id)])
             if manage_users:
                 data.update({
                     'manager_user_ids': [(6, 0, manage_users.ids)],
@@ -146,11 +146,11 @@ class HrDepartment(models.Model):
                 })
             domain = [('ding_id', '=', result.get('id')), ('company_id', '=', company.id)]
             if event_type == 'org_dept_create':
-                h_department = self.env['hr.department'].sudo().search(domain)
+                h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
                 if not h_department:
-                    self.env['hr.department'].sudo().create(data)
+                    self.env['hr.department'].with_user(SUPERUSER_ID).create(data)
             elif event_type == 'org_dept_modify':
-                h_department = self.env['hr.department'].sudo().search(domain)
+                h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
                 if h_department:
-                    h_department.sudo().write(data)
+                    h_department.with_user(SUPERUSER_ID).write(data)
         return True

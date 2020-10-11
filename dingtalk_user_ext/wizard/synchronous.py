@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import threading
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class DingTalkMcSynchronous(models.TransientModel):
         """
         super(DingTalkMcSynchronous, self).synchronous_dingtalk_employee(repeat_type)
         for company in self.company_ids:
-            config = self.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company.id)], limit=1)
+            config = self.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company.id)], limit=1)
             if config.is_auto_create_user:
                 threading.Thread(target=self.create_employee_user, args=company).start()
         return True
@@ -33,7 +33,7 @@ class DingTalkMcSynchronous(models.TransientModel):
                 new_cr.autocommit(True)
                 self = self.with_env(self.env(cr=new_cr))
                 domain = [('user_id', '=', False), ('ding_id', '!=', ''), ('company_id', '=', company.id)]
-                employees = self.env['hr.employee'].sudo().search(domain)
+                employees = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain)
                 # 封装消息
                 message_list = list()
                 for employee in employees:
@@ -54,14 +54,14 @@ class DingTalkMcSynchronous(models.TransientModel):
                     else:
                         continue
                     domain = ['|', ('login', '=', employee.work_email), ('login', '=', employee.mobile_phone)]
-                    user = self.env['res.users'].sudo().search(domain, limit=1)
+                    user = self.env['res.users'].with_user(SUPERUSER_ID).search(domain, limit=1)
                     if user:
                         employee.write({'user_id': user.id})
                     else:
-                        name_count = self.env['res.users'].sudo().search_count([('name', 'like', employee.name)])
+                        name_count = self.env['res.users'].with_user(SUPERUSER_ID).search_count([('name', 'like', employee.name)])
                         if name_count > 0:
                             user_name = employee.name + str(name_count + 1)
                             values['name'] = user_name
-                        user = self.env['res.users'].sudo().create(values)
+                        user = self.env['res.users'].with_user(SUPERUSER_ID).create(values)
                         employee.write({'user_id': user.id})
                     message_list.append({'ding_id': employee.ding_id, 'values': values})

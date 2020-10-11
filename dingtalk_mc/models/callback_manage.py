@@ -2,7 +2,7 @@
 import logging
 import random
 import string
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
@@ -54,10 +54,10 @@ class DingTalkCallback(models.Model):
         if self.value_type:
             call_ids = list()
             if self.value_type == 'all':
-                for li in self.env['dingtalk.callback.list'].sudo().search([]):
+                for li in self.env['dingtalk.callback.list'].with_user(SUPERUSER_ID).search([]):
                     call_ids.append(li.id)
             else:
-                for li in self.env['dingtalk.callback.list'].sudo().search([('value_type', '=', self.value_type)]):
+                for li in self.env['dingtalk.callback.list'].with_user(SUPERUSER_ID).search([('value_type', '=', self.value_type)]):
                     call_ids.append(li.id)
             self.call_ids = [(6, 0, call_ids)]
 
@@ -151,8 +151,8 @@ class DingTalkCallbackLog(models.Model):
             with self.pool.cursor() as new_cr:
                 new_cr.autocommit(True)
                 self = self.with_env(self.env(cr=new_cr))
-                type_id = self.env['dingtalk.callback.list'].sudo().search([('value', '=', event_type)], limit=1)
-                self.env['dingtalk.callback.log'].sudo().create({
+                type_id = self.env['dingtalk.callback.list'].with_user(SUPERUSER_ID).search([('value', '=', event_type)], limit=1)
+                self.env['dingtalk.callback.log'].with_user(SUPERUSER_ID).create({
                     'company_id': company.id,
                     'event_type': event_type,
                     'body': result_msg,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
 
@@ -50,12 +50,12 @@ class DingtalkMicroapp(models.Model):
             if result.get('errcode') == 0:
                 # 获取当前公司下的所有本部门列表
                 dept_dict = dict()
-                departments = self.env['hr.department'].sudo().search([('company_id', '=', res.company_id.id), ('ding_id', '!=', '')])
+                departments = self.env['hr.department'].with_user(SUPERUSER_ID).search([('company_id', '=', res.company_id.id), ('ding_id', '!=', '')])
                 for dept in departments:
                     dept_dict[dept.ding_id] = dept.id
                 # 获取所有员工
                 emp_dict = dict()
-                emps = self.env['hr.employee'].sudo().search([('company_id', '=', res.company_id.id), ('ding_id', '!=', '')])
+                emps = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('company_id', '=', res.company_id.id), ('ding_id', '!=', '')])
                 for emp in emps:
                     emp_dict[emp.ding_id] = emp.id
                 is_hidden = result.get('isHidden')

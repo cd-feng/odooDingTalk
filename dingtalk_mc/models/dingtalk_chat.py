@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
 import logging
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.modules import get_module_resource
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
@@ -139,18 +139,18 @@ class DingTalkMcChat(models.Model):
                 new_cr.autocommit(True)
                 self = self.with_env(self.env(cr=new_cr))
                 domain = [('chat_id', '=', msg.get('ChatId')), ('company_id', '=', company.id)]
-                chat = self.env['dingtalk.mc.chat'].sudo().search(domain, limit=1)
+                chat = self.env['dingtalk.mc.chat'].with_user(SUPERUSER_ID).search(domain, limit=1)
                 if not chat:
                     return
                 # 群会话更换群主
                 if msg.get('EventType') == 'chat_update_owner':
                     domain = [('ding_id', '=', msg.get('Owner')), ('company_id', '=', company.id)]
-                    employee = self.env['hr.employee'].sudo().search(domain, limit=1)
+                    employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
                     if employee:
-                        chat.sudo().write({'employee_id': employee.id})
+                        chat.with_user(SUPERUSER_ID).write({'employee_id': employee.id})
                 # 群会话更换群名称
                 elif msg.get('EventType') == 'chat_update_title':
-                    chat.sudo().write({'name': msg.get('Title')})
+                    chat.with_user(SUPERUSER_ID).write({'name': msg.get('Title')})
                 # 群会话添加人员
                 elif msg.get('EventType') == 'chat_add_member':
                     new_users = list()
@@ -158,31 +158,31 @@ class DingTalkMcChat(models.Model):
                         new_users.append(user.id)
                     for user in msg.get('UserId'):
                         domain = [('ding_id', '=', user), ('company_id', '=', company.id)]
-                        employee = self.env['hr.employee'].sudo().search(domain, limit=1)
+                        employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
                         if employee:
                             new_users.append(employee.id)
-                    chat.sudo().write({'useridlist': [(6, 0, new_users)]})
+                    chat.with_user(SUPERUSER_ID).write({'useridlist': [(6, 0, new_users)]})
                 # 群会话删除人员
                 elif msg.get('EventType') == 'chat_remove_member':
                     for user in msg.get('UserId'):
                         domain = [('ding_id', '=', user), ('company_id', '=', company.id)]
-                        employee = self.env['hr.employee'].sudo().search(domain, limit=1)
+                        employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
                         if employee:
-                            chat.sudo().write({'useridlist': [(3, employee[0].id)]})
+                            chat.with_user(SUPERUSER_ID).write({'useridlist': [(3, employee[0].id)]})
                 # 群会话用户主动退群
                 elif msg.get('EventType') == 'chat_quit':
                     domain = [('ding_id', '=', msg.get('Operator')), ('company_id', '=', company.id)]
-                    employee = self.env['hr.employee'].sudo().search(domain, limit=1)
+                    employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
                     if employee:
-                        chat.sudo().write({'useridlist': [(3, employee[0].id)]})
+                        chat.with_user(SUPERUSER_ID).write({'useridlist': [(3, employee[0].id)]})
                 # 群会话解散群
                 elif msg.get('EventType') == 'chat_disband':
                     if chat:
                         domain = [('ding_id', '=', msg.get('Operator')), ('company_id', '=', company.id)]
-                        emp = self.env['hr.employee'].sudo().search(domain, limit=1)
-                        chat.sudo().write({'state': 'close'})
+                        emp = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
+                        chat.with_user(SUPERUSER_ID).write({'state': 'close'})
                         if emp:
-                            chat.sudo().message_post(body=_("群会话已被解散，操作人: {}!").format(emp[0].name), message_type='notification')
+                            chat.with_user(SUPERUSER_ID).message_post(body=_("群会话已被解散，操作人: {}!").format(emp[0].name), message_type='notification')
                 return True
 
     def unlink(self):

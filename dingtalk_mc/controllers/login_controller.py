@@ -44,7 +44,7 @@ class DingTalkMcLogin(Controller):
     @http.route('/web/dingtalk/mc/get/companys', type='http', auth='public', website=True, sitemap=False)
     def dingtalk_mc_get_companys(self):
         result = {
-            "company_list": request.env['res.company'].sudo().search_read([], ['name', 'id'])
+            "company_list": request.env['res.company'].with_user(SUPERUSER_ID).search_read([], ['name', 'id'])
         }
         return json.dumps(result)
 
@@ -58,7 +58,7 @@ class DingTalkMcLogin(Controller):
         params_data = request.params.copy()
         local_url = params_data.get('local_url')
         company_id = int(params_data.get('company_id'))
-        config = request.env['dingtalk.mc.config'].sudo().search([('company_id', '=', company_id)], limit=1)
+        config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company_id)], limit=1)
         if not config:
             return json.dumps({'state': False, 'error': '该公司未设置扫码登录'})
         redirect_url = "{}/web/dingtalk/mc/login/action".format(local_url)
@@ -82,13 +82,13 @@ class DingTalkMcLogin(Controller):
         params_data = request.params.copy()
         code = params_data.get('code')
         company_id = params_data.get('state')
-        company = request.env['res.company'].sudo().search([('id', '=', int(company_id))], limit=1)
+        company = request.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', int(company_id))], limit=1)
         _logger.info(">>>钉钉登录返回code参数为：{}".format(code))
         try:
             user_info = dt.user_info_by_dingtalk_code(request, code, company)
             _logger.info(">>>用户身份信息:{}".format(user_info))
             domain = [('din_unionid', '=', user_info.get('unionid')), ('company_id', '=', int(company_id))]
-            employee = request.env['hr.employee'].sudo().search(domain, limit=1)
+            employee = request.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
             if not employee:
                 return self.do_error_redirect(_("钉钉用户: '{name}' 在当前系统中不存在,或许管理员暂未添加登陆账号。".format(name=user_info.get('nick'))))
         except Exception as e:
@@ -110,7 +110,7 @@ class DingTalkMcLogin(Controller):
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, {})
-                credentials = env['res.users'].sudo().auth_oauth('dingtalk', employee.ding_id)
+                credentials = env['res.users'].with_user(SUPERUSER_ID).auth_oauth('dingtalk', employee.ding_id)
                 cr.commit()
                 url = '/web'
                 resp = login_and_redirect(*credentials, redirect_url=url)
@@ -170,7 +170,7 @@ class OAuthController(Controller):
             except AccessError as e:
                 _logger.info("AccessError: {}".format(str(e)))
         # 获取用于免登的公司corp_id
-        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('m_login', '=', True)], limit=1)
         data = {'corp_id': config.corp_id}
         if request.session.uid:
             request.session.uid = False
@@ -188,11 +188,11 @@ class OAuthController(Controller):
         """
         auth_code = kw.get('authCode')
         logging.info(">>>免登授权码: %s", auth_code)
-        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('m_login', '=', True)], limit=1)
         client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
         result = client.user.getuserinfo(auth_code)
         domain = [('ding_id', '=', result.userid), ('company_id', '=', config.company_id.id)]
-        employee = request.env['hr.employee'].sudo().search(domain, limit=1)
+        employee = request.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
         if not employee:
             _logger.info(_("系统对应员工不存在!"))
             return self._do_err_redirect(_("系统对应员工不存在!"))
@@ -210,7 +210,7 @@ class OAuthController(Controller):
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, {})
-                credentials = env['res.users'].sudo().auth_oauth('dingtalk', employee.ding_id)
+                credentials = env['res.users'].with_user(SUPERUSER_ID).auth_oauth('dingtalk', employee.ding_id)
                 cr.commit()
                 url = '/web'
                 resp = login_and_redirect(*credentials, redirect_url=url)

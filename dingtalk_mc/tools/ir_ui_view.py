@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-from odoo import models, api
-
+from odoo import models, api, SUPERUSER_ID
 
 fields_view_get_origin = models.BaseModel.fields_view_get
 
@@ -138,9 +137,9 @@ def view_get_approval_flow(self, view_type, result):
     flow_obj = self.env.get('dingtalk.approval.control')
     if flow_obj is None:
         return
-    model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)]).id
+    model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', self._name)]).id
     domain = [('company_id', '=', self.env.user.company_id.id), ('oa_model_id', '=', model_id)]
-    flows = flow_obj.with_context(active_test=False).sudo().search(domain)
+    flows = flow_obj.with_context(active_test=False).with_user(SUPERUSER_ID).search(domain)
     if not flows:
         return
     if view_type == 'tree':

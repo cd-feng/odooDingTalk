@@ -2,7 +2,7 @@
 # Copyright (C) 2020 SuXueFeng GNU
 
 import logging
-from odoo import api, fields, models, http, _
+from odoo import api, fields, models, http, _, SUPERUSER_ID
 import inspect
 from odoo.http import request
 import sys
@@ -74,10 +74,10 @@ class DingTalkApprovalControl(models.Model):
         """
         if len(self.line_ids) < 1:
             raise UserError("注意：你还没有配置单据对应的字段，请完整配置odoo单据与钉钉单据的字段对应关系，否则提交审批时会失败！")
-        module_name = self.oa_model_id.sudo().modules
+        module_name = self.oa_model_id.with_user(SUPERUSER_ID).modules
         module_names = module_name.replace(' ', '').split(',')
-        current_module = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])
-        current_module.sudo().button_immediate_upgrade()
+        current_module = self.env['ir.module.module'].with_user(SUPERUSER_ID).search([('name', 'in', module_names)])
+        current_module.with_user(SUPERUSER_ID).button_immediate_upgrade()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.depends('template_id')
@@ -252,7 +252,7 @@ class DingTalkApprovalControlList(models.Model):
     @api.onchange('line_field_id')
     def onchange_line_field_id(self):
         for rec in self:
-            model = self.env['ir.model'].sudo().search([('model', '=', rec.line_field_id.relation)], limit=1)
+            model = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', rec.line_field_id.relation)], limit=1)
             domain = [('model_id', '=', model.id), ('ttype', 'not in', ['one2many', 'binary', 'boolean'])]
             return {'domain': {'field_id': domain}}
 
@@ -333,11 +333,11 @@ class DingDingDataSet(DataSet):
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
     def call_button(self, model, method, args, kwargs):
-        ir_model = request.env['ir.model'].sudo().search([('model', '=', model)], limit=1)
+        ir_model = request.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', model)], limit=1)
         uid = kwargs.get('context').get('uid')
         user = request.env['res.users'].search([('id', '=', uid)])
         domain = [('oa_model_id', '=', ir_model.id), ('company_id', '=', user.company_id.id)]
-        approval = request.env['dingtalk.approval.control'].sudo().search(domain, limit=1)
+        approval = request.env['dingtalk.approval.control'].with_user(SUPERUSER_ID).search(domain, limit=1)
         if approval:
             # 获取当前单据的id
             if args[0]:
@@ -346,7 +346,7 @@ class DingDingDataSet(DataSet):
                 params = args[1].get('params')
                 res_id = params.get('id')
             # 获取当前单据
-            now_model = request.env[model].sudo().search([('id', '=', res_id)])
+            now_model = request.env[model].with_user(SUPERUSER_ID).search([('id', '=', res_id)])
             if now_model and now_model.dd_approval_state == 'draft':
                 start_but_functions = list()
                 for button in approval.model_start_button_ids:

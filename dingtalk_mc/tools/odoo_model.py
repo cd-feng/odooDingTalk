@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from odoo import models, api, fields, _
+from odoo import models, api, fields, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -67,8 +67,8 @@ def dingtalk_approval_write(self, vals):
     if len(vals.keys()) == 1 and list(vals.keys())[0] == 'message_follower_ids':
         return
     for res in self:
-        model_id = self.env['ir.model'].sudo().search([('model', '=', res._name)]).id
-        flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
+        model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', res._name)]).id
+        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
         if not flows:
             continue
         if not flows[0].is_ing_write and res.dd_approval_state == 'approval':
@@ -98,8 +98,8 @@ def dingtalk_approval_unlink(self):
     if res_state_obj is None:
         return
     for res in self:
-        model_id = self.env['ir.model'].sudo().search([('model', '=', res._name)]).id
-        flows = res_state_obj.sudo().search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
+        model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', res._name)]).id
+        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
         if not flows:
             continue
         if res.dd_approval_state != 'draft':
