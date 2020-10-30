@@ -138,7 +138,7 @@ class CalculateMonthAttendance(models.TransientModel):
     _description = '计算考勤统计'
     _rec_name = 'start_date'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.ref('base.main_company'))
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     end_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)
 
@@ -194,7 +194,7 @@ class DingtalkUsersDuration(models.TransientModel):
     _name = 'dingtalk.users.duration'
     _description = '员工预计算时长'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.ref('base.main_company'))
     duration_type = fields.Selection(string="计算方法", selection=[('0', '按自然日计算'), ('1', '按工作日计算')], default='1')
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     end_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)

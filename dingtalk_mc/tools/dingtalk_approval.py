@@ -145,6 +145,11 @@ def get_form_values(self, approval):
             field_name = line.field_id.name
             type_dict = dict(self.env[model_name].fields_get(allfields=[field_name])[field_name]['selection'])
             fcv_list.append({'name': line.dd_field, 'value': type_dict.get(self[line.field_id.name])})
+        # 图片链接类型
+        elif line.ttype in ['image_url']:
+            url = self[line.field_id.name]
+            url = url.split(',')
+            fcv_list.append({'name': line.dd_field, 'value': url})
         # one2many类型
         elif line.ttype == 'one2many':
             model_lines = self[line.field_id.name]
@@ -161,7 +166,8 @@ def get_form_values(self, approval):
                             try:
                                 fcv_line_list.append({'name': list_id.dd_field, 'value': list_ding_field.name})
                             except Exception:
-                                fcv_line_list.append({'name': list_id.dd_field, 'value': list_ding_field.sudo().name_get()[0][1]})
+                                fcv_line_list.append(
+                                    {'name': list_id.dd_field, 'value': list_ding_field.sudo().name_get()[0][1]})
                     # many2many类型
                     elif list_id.field_id.ttype == 'many2many':
                         list_id_models = model_line[list_id.field_id.name]
@@ -185,7 +191,8 @@ def get_form_values(self, approval):
                     elif list_id.field_id.ttype == 'datetime':
                         old_date = model_line[list_id.field_id.name]
                         line_bj_datetime = old_date.astimezone(timezone(timedelta(hours=8)))
-                        fcv_line_list.append({'name': list_id.dd_field, 'value': line_bj_datetime.strftime('%Y-%m-%d %H:%M')})
+                        fcv_line_list.append(
+                            {'name': list_id.dd_field, 'value': line_bj_datetime.strftime('%Y-%m-%d %H:%M')})
                     # char、text、integer、float、monetary类型
                     elif list_id.field_id.ttype in ['char', 'text', 'integer', 'float', 'monetary']:
                         fcv_line_list.append({'name': list_id.dd_field, 'value': model_line[list_id.field_id.name]})
@@ -193,8 +200,10 @@ def get_form_values(self, approval):
                     elif list_id.field_id.ttype in ['selection']:
                         model_name = list_id.field_id.model_id.model
                         field_name = list_id.field_id.name
-                        type_dict = dict(self.env[model_name].fields_get(allfields=[field_name])[field_name]['selection'])
-                        fcv_line_list.append({'name': list_id.dd_field, 'value': type_dict.get(model_line[list_id.field_id.name])})
+                        type_dict = dict(self.env[model_name].fields_get(
+                            allfields=[field_name])[field_name]['selection'])
+                        fcv_line_list.append(
+                            {'name': list_id.dd_field, 'value': type_dict.get(model_line[list_id.field_id.name])})
                 fcv_line.append(fcv_line_list)
             fcv_list.append({'name': line.dd_field, 'value': fcv_line})
     return fcv_list
@@ -276,5 +285,4 @@ def _action_dingtalk_approval_record(self):
 
 
 setattr(Model, 'action_dingtalk_approval_record', _action_dingtalk_approval_record)
-
 

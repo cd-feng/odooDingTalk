@@ -11,7 +11,8 @@ class EmployeeRosterSynchronous(models.TransientModel):
     _name = 'dingtalk.employee.roster.synchronous'
     _description = "智能人事花名册同步"
 
-    company_ids = fields.Many2many("res.company", string="同步的公司", required=True, default=lambda self: self.env.ref('base.main_company'))
+    company_ids = fields.Many2many("res.company", string="同步的公司", required=True,
+                                   default=lambda self: self.env.ref('base.main_company'))
 
     def start_synchronous_data(self):
         """
@@ -94,12 +95,12 @@ class EmployeeRosterSynchronous(models.TransientModel):
                                 domain = [('company_id', '=', company_id), ('name', '=', fie['label'])]
                                 hr_job = self.env['hr.job'].sudo().search(domain, limit=1)
                                 if not hr_job and fie['label']:
-                                    hr_job = self.env['hr.job'].sudo().create({'name': fie['label'], 'company_id': company_id})
+                                    hr_job = self.env['hr.job'].sudo().create(
+                                        {'name': fie['label'], 'company_id': company_id})
                                 roster_data.update({'position': hr_job.id or False})
-                            else:
-                                roster_data.update({
-                                    fie['field_code'][6:]: fie['label'] if "label" in fie else False
-                                })
+                            elif fie['field_code'][0:3] == 'sys' and 'label' in fie:
+                                roster_data.update({fie['field_code'][6:]: fie['label']})
+
                         domain = [('company_id', '=', company_id), ('ding_userid', '=', rec['userid'])]
                         roster = self.env['dingtalk.employee.roster'].search(domain)
                         if roster:
@@ -127,6 +128,3 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 emp.ding_id: emp.id,
             })
         return emp_data
-
-
-
