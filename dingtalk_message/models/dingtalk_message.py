@@ -16,8 +16,6 @@ from babel.dates import format_date
 from odoo.addons.web.controllers.main import DataSet
 from odoo.http import request
 
-from source.odoo.exceptions import UserError
-
 _logger = logging.getLogger(__name__)
 try:
     from jinja2.sandbox import SandboxedEnvironment
