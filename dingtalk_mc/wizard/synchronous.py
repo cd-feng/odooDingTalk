@@ -108,6 +108,8 @@ class DingTalkMcSynchronous(models.TransientModel):
                 emp_offset = 0
                 emp_size = 100
                 while True:
+                    if dept.ding_id.find('-') != -1:
+                        break
                     _logger.info(">>>开始获取%s部门的员工", dept.name)
                     result_state = self.get_dingtalk_employees(client, dept, emp_offset, emp_size, company, repeat_type)
                     if result_state:
@@ -136,7 +138,7 @@ class DingTalkMcSynchronous(models.TransientModel):
                     'ding_id': user.get('userid'),  # 钉钉用户Id
                     'din_unionid': user.get('unionid'),  # 钉钉唯一标识
                     'mobile_phone': user.get('mobile'),  # 手机号
-                    'work_phone': user.get('tel'),  # 分机号
+                    'work_phone': user.get('mobile'),  # 分机号
                     'work_location': user.get('workPlace'),  # 办公地址
                     'notes': user.get('remark'),  # 备注
                     'job_title': user.get('position'),  # 职位
@@ -271,7 +273,7 @@ class CreateResUser(models.TransientModel):
     _description = "创建用户"
 
     company_id = fields.Many2one(comodel_name='res.company', string="所属公司", required=True,
-                                 default=lambda self: self.env.user.company_id)
+                                 default=lambda self: self.env.company)
     is_all = fields.Boolean(string=u'全部员工?')
     employee_ids = fields.Many2many(comodel_name='hr.employee', string=u'员工',
                                     domain="[('company_id', '=', company_id), ('user_id', '=', False)]")
@@ -340,7 +342,7 @@ class EmployeeToUser(models.TransientModel):
     _description = '批量关联用户'
 
     company_id = fields.Many2one(comodel_name='res.company', string="选择公司", required=True,
-                                 default=lambda self: self.env.user.company_id)
+                                 default=lambda self: self.env.company)
 
     def related_user(self):
         """

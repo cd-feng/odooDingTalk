@@ -18,7 +18,7 @@ class DingDingApprovalRecord(models.Model):
     approval_result = fields.Selection(string=u'审批结果', selection=APPROVALRESULT)
     approval_content = fields.Char(string="内容")
     approval_time = fields.Datetime(string="记录时间", default=fields.Datetime.now)
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company)
 
     @api.model
     def process_dingtalk_chat(self, model_id, rec_id, pi, emp_id, at, ar, ac, company_id):

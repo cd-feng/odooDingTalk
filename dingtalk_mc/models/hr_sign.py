@@ -11,7 +11,7 @@ class DingTalkSignList(models.Model):
     _description = "签到记录"
     _rec_name = 'emp_id'
 
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', required=True)
     checkin_time = fields.Datetime(string=u'签到时间')
     place = fields.Char(string='签到地址')

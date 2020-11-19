@@ -22,7 +22,7 @@ class DingtalkMsgConfig(models.Model):
         return [('model', 'not in', odoo_cls)]
 
     name = fields.Char(string="模板名称", required=True)
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
     state = fields.Selection(string="状态", selection=[('open', '开放'), ('close', '关闭')], default='close')
     MessageOpportunity = [
         ('normal', '常规操作触发'),
@@ -123,7 +123,7 @@ class DingtalkMsgConfigButton(models.Model):
     name = fields.Char(string="按钮名称", index=True)
     function = fields.Char(string='按钮方法', index=True)
     modifiers = fields.Char(string="按钮属性值")
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
 
     def name_get(self):
         return [(rec.id, "%s: %s" % (rec.model_id.name, rec.name)) for rec in self]

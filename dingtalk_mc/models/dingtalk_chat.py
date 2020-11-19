@@ -22,7 +22,7 @@ class DingTalkMcChat(models.Model):
     chat_id = fields.Char(string='群会话Id')
     chat_icon = fields.Char(string='群头像mediaId')
     name = fields.Char(string='群名称', required=True)
-    company_id = fields.Many2one(comodel_name='res.company', string='公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one(comodel_name='res.company', string='公司', default=lambda self: self.env.company)
     employee_id = fields.Many2one(comodel_name='hr.employee', string='群主', required=True)
     show_history_type = fields.Selection(string='聊天历史消息', selection=[('0', '否'), ('1', '是'), ], default='0')
     searchable = fields.Selection(string='群可搜索', selection=[('0', '否'), ('1', '是'), ], default='0')

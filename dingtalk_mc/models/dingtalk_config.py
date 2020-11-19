@@ -8,7 +8,7 @@ class DingTalkConfig(models.Model):
     _description = "参数配置"
     _rec_name = 'name'
 
-    company_id = fields.Many2one('res.company', string='关联公司', default=lambda self: self.env.user.company_id, index=True)
+    company_id = fields.Many2one('res.company', string='关联公司', default=lambda self: self.env.company, index=True)
     name = fields.Char(string='钉钉企业名称', index=True, required=True)
     agent_id = fields.Char(string=u'AgentId')
     corp_id = fields.Char(string=u'CorpId')

@@ -23,7 +23,7 @@ class DingtalkMicroapp(models.Model):
     pc_link = fields.Char(string="PC端主页")
     state = fields.Selection(string="状态", selection=[('1', '启用'), ('0', '停用'), ('3', '未知')])
     oa_link = fields.Char(string="OA后台管理主页")
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company)
     is_hidden = fields.Boolean(string="管理员可见？")
     department_ids = fields.Many2many(comodel_name="hr.department", relation="miroapp_list_and_department_rel", string="可见部门")
     employee_ids = fields.Many2many(comodel_name="hr.employee", relation="miroapp_list_and_employee_rel", string="可见员工")

@@ -24,7 +24,7 @@ class DingTalkRobot(models.Model):
     _rec_name = 'name'
 
     active = fields.Boolean(string='有效', default=True)
-    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
     name = fields.Char(string='机器人名称', required=True, index=True)
     webhook = fields.Char(string='Hook地址', required=True)
     remarks = fields.Text(string='说明备注')

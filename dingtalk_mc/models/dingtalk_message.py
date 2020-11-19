@@ -13,7 +13,7 @@ class DingtalkLog(models.Model):
     _name = 'dingtalk.message.log'
     _order = 'id desc'
 
-    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
     name = fields.Char(string="名称")
     msg_type = fields.Selection(string="消息类型", selection=[('chat', '群消息'), ('work', '工作通知'), ('msg', '普通消息')])
     body = fields.Text(string="消息内容")

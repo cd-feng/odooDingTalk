@@ -37,7 +37,7 @@ class DingTalkCallback(models.Model):
         ('04', '考勤事件'),
     ]
 
-    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
     value_type = fields.Selection(string=u'事件类型', selection=ValueType, default='all', copy=False, required=True)
     token = fields.Char(string='Token', default=_get_default_token, size=50, required=True)
     aes_key = fields.Char(string='加密密钥', default=_get_default_aes_key, size=50, required=True)
@@ -136,7 +136,7 @@ class DingTalkCallbackLog(models.Model):
     _name = 'dingtalk.callback.log'
     _rec_name = 'create_date'
 
-    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
     event_type = fields.Char(string="类型代码")
     body = fields.Text(string="消息内容")
     type_id = fields.Many2one(comodel_name="dingtalk.callback.list", string="回调类型")

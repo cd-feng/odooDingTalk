@@ -36,7 +36,7 @@ class HrAttendanceResult(models.Model):
         ('AUTO_CHECK', '自动打卡')
     ]
 
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
     work_date = fields.Date(string=u'工作日')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
@@ -108,7 +108,7 @@ class AttendanceMonthResult(models.Model):
     _rec_name = 'employee_id'
 
     month_code = fields.Char(string="考勤年月", index=True, store=True, compute='_compute_month')
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
     start_date = fields.Date(string="开始日期", default=fields.Date.context_today, required=True)
     end_date = fields.Date(string="结束日期", default=fields.Date.context_today)

@@ -161,22 +161,10 @@ class OAuthController(Controller):
         ensure_db()
         logging.info(">>>用户正在使用免登...")
         if request.session.uid:
-            request.uid = request.session.uid
-            try:
-                context = request.env['ir.http'].webclient_rendering_context()
-                response = request.render('web.webclient_bootstrap', qcontext=context)
-                response.headers['X-Frame-Options'] = 'DENY'
-                return response
-            except AccessError as e:
-                _logger.info("AccessError: {}".format(str(e)))
+            return http.redirect_with_hash('/web')
         # 获取用于免登的公司corp_id
         config = request.env['dingtalk.mc.config'].with_user(SUPERUSER_ID).search([('m_login', '=', True)], limit=1)
-        data = {'corp_id': config.corp_id}
-        if request.session.uid:
-            request.session.uid = False
-        if request.session.login:
-            request.session.login = False
-        return request.render('dingtalk_mc.auto_login_signup', data)
+        return request.render('dingtalk_mc.auto_login_signup', {'corp_id': config.corp_id})
 
     @http.route('/web/dingtalk/mc/auto/login/action', type='http', auth='none', website=True, sitemap=False)
     @fragment_to_query_string

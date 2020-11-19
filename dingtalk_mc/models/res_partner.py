@@ -14,7 +14,7 @@ class ResPartnerCategory(models.Model):
 
     ding_id = fields.Char(string='钉钉标签ID', index=True)
     ding_category_type = fields.Char(string='标签分类名')
-    company_id = fields.Many2one('res.company', string='关联公司', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='关联公司', default=lambda self: self.env.company)
 
 
 class ResPartner(models.Model):

@@ -15,7 +15,7 @@ class DingTalkApprovalTemplate(models.Model):
     icon_avatar_url = fields.Text(string='图标url')
     process_code = fields.Char(string='模板唯一标识', required=True)
     url = fields.Text(string='模板跳转url')
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company)
 
     @api.depends('icon_avatar_url')
     def _compute_icon_url(self):

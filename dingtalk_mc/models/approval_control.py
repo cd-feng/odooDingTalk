@@ -26,7 +26,7 @@ class DingTalkApprovalControl(models.Model):
         return [('model', 'not in', odoo_cls)]
 
     name = fields.Char('名称', required=1, track_visibility='onchange')
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
     oa_model_id = fields.Many2one('ir.model', string=u'Odoo模型', index=True, ondelete="set null", domain=_compute_domain)
     template_id = fields.Many2one('dingtalk.approval.template', string=u'审批模板', index=True, ondelete="set null", domain="[('company_id', '=', company_id)]")
     template_icon = fields.Html(string='图标', compute='_compute_template_icon')
@@ -295,7 +295,7 @@ class DingDingApprovalButton(models.Model):
     name = fields.Char(string="按钮名称", index=True)
     function = fields.Char(string='按钮方法', index=True)
     modifiers = fields.Char(string="按钮属性值")
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
 
     def name_get(self):
         return [(rec.id, "%s:%s" % (rec.model_id.name, rec.name)) for rec in self]

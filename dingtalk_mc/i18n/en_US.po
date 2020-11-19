@@ -684,11 +684,6 @@ msgid "color"
 msgstr ""
 
 #. module: dingtalk_mc
-#: model:ir.model,name:dingtalk_mc.model_dingtalk_message_tool
-msgid "dingtalk.message.tool"
-msgstr ""
-
-#. module: dingtalk_mc
 #: selection:dingtalk.robot.send.message,msg_type:0
 msgid "feed_card"
 msgstr ""

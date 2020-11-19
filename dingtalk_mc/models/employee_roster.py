@@ -46,7 +46,7 @@ class EmployeeRoster(models.Model):
     ]
 
     emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
-    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.user.company_id.id, index=True)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     active = fields.Boolean('Active', default=True, store=True, readonly=False)
     color = fields.Integer(string=u'颜色标签')
     # 钉钉提供的标准字段
