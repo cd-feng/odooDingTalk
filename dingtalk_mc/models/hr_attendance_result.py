@@ -38,6 +38,7 @@ class HrAttendanceResult(models.Model):
 
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
+    department_id = fields.Many2one(comodel_name='hr.department', string=u'部门', related='employee_id.department_id', store=True)
     work_date = fields.Date(string=u'工作日')
     record_id = fields.Char(string='唯一标识ID', help="钉钉设置的值为id，odoo中为record_id")
     check_type = fields.Selection(string=u'考勤类型', selection=[('OnDuty', '上班'), ('OffDuty', '下班')], index=True)
@@ -110,6 +111,7 @@ class AttendanceMonthResult(models.Model):
     month_code = fields.Char(string="考勤年月", index=True, store=True, compute='_compute_month')
     company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True)
+    department_id = fields.Many2one('hr.department', '部门', related='employee_id.department_id', store=True)
     start_date = fields.Date(string="开始日期", default=fields.Date.context_today, required=True)
     end_date = fields.Date(string="结束日期", default=fields.Date.context_today)
     normal_count = fields.Float(string="正常打卡", digits=(16, 2))
@@ -129,54 +131,3 @@ class AttendanceMonthResult(models.Model):
         for res in self:
             str_date = str(res.start_date)
             res.month_code = "{}/{}".format(str_date[:4], str_date[5:7])
-
-
-# class HrAttendance(models.AbstractModel):
-#     _inherit = "hr.attendance"
-#
-#     TimeResult = [
-#         ('Normal', '正常'),
-#         ('Early', '早退'),
-#         ('Late', '迟到'),
-#         ('SeriousLate', '严重迟到'),
-#         ('Absenteeism', '旷工迟到'),
-#         ('NotSigned', '未打卡'),
-#     ]
-#     SourceType = [
-#         ('ATM', '考勤机'),
-#         ('BEACON', 'IBeacon'),
-#         ('DING_ATM', '钉钉考勤机'),
-#         ('USER', '用户打卡'),
-#         ('BOSS', '老板改签'),
-#         ('APPROVE', '审批系统'),
-#         ('SYSTEM', '考勤系统'),
-#         ('AUTO_CHECK', '自动打卡')
-#     ]
-#
-#     work_date = fields.Date(string=u'工作日')
-#     work_month = fields.Char(string='年月字符串', help="为方便其他模块按照月份获取数据时使用", index=True)
-#     source_type = fields.Selection(string=u'数据来源', selection=SourceType)
-#     time_result = fields.Selection(string="打卡结果", selection=TimeResult)
-#
-#     @api.model
-#     def create(self, vals):
-#         """
-#         创建时触发
-#         :param vals:
-#         :return:
-#         """
-#         if vals.get('work_date'):
-#             vals.update({'work_month': "{}/{}".format(vals['work_date'][:4], vals['work_date'][5:7])})
-#         return super(HrAttendance, self).create(vals)
-#
-#     @api.constrains('check_in', 'check_out', 'employee_id')
-#     def _check_validity(self):
-#         return
-#
-#     @api.constrains('check_in', 'check_out')
-#     def _check_validity_check_in_check_out(self):
-#         """ verifies if check_in is earlier than check_out. """
-#         for attendance in self:
-#             if attendance.check_in and attendance.check_out:
-#                 if attendance.check_out < attendance.check_in:
-#                     return

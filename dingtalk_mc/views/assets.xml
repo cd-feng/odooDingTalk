@@ -11,7 +11,7 @@
         </xpath>
     </template>
 
-    <menuitem name="钉钉" id="root_menu" web_icon="dingtalk_mc,static/description/icon.png" sequence="50"/>
+    <menuitem name="钉钉" id="root_menu" web_icon="dingtalk_mc,static/description/icon.png" sequence="15"/>
 
     <menuitem name="主数据" id="main_menu" parent="root_menu" sequence="5" groups="dingtalk_mc.manage_groups"/>
 

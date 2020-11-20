@@ -12,7 +12,7 @@ class DingTalkApprovalTemplateTran(models.TransientModel):
     _name = 'dingtalk.approval.template.tran'
     _description = "获取审批模板"
 
-    company_ids = fields.Many2many("res.company", string="选择公司", required=True)
+    company_ids = fields.Many2many("res.company", string="选择公司", required=True, default=lambda self: self.env.company)
 
     def get_template(self):
         """

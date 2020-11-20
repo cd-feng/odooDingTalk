@@ -15,7 +15,7 @@ class HrAttendanceResultTransient(models.TransientModel):
     _name = 'hr.attendance.tran'
     _description = '获取钉钉考勤结果'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.company)
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     stop_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)
 
@@ -30,21 +30,23 @@ class HrAttendanceResultTransient(models.TransientModel):
         for company in self.company_ids:
             # 获取该公司下所有员工
             emp_ids = self.env['hr.employee'].search([('ding_id', '!=', ''), ('company_id', '=', company.id)])
-            domain = [('employee_id', 'in', emp_ids.ids), ('work_date', '>=', self.start_date), ('work_date', '<=', self.stop_date)]
-            # 删除已存在的考勤信息
-            self.env['hr.attendance.result'].search(domain).unlink()
+            sql = """DELETE FROM hr_attendance_result WHERE work_date>='{}' and work_date<='{}' and company_id={}""".format(
+                self.start_date.strftime('%Y-%m-%d'), self.stop_date.strftime('%Y-%m-%d'), company.id)
+            self._cr.execute(sql)
             user_list = list()
+            user_dict = {}
             for emp in emp_ids:
                 user_list.append(emp.ding_id)
+                user_dict[emp.ding_id] = emp.id
             user_list = dt.list_cut(user_list, 50)
             for user in user_list:
                 date_list = dt.day_cut(self.start_date, self.stop_date, 7)
                 for d in date_list:
-                    self.start_pull_attendance_list(d[0], d[1], user, company)
+                    self.start_pull_attendance_list(d[0], d[1], user, company, user_dict)
         _logger.info(">>>获取打卡信息结束...")
         return {'type': 'ir.actions.act_window_close'}
 
-    def start_pull_attendance_list(self, from_date, to_date, user_list, company):
+    def start_pull_attendance_list(self, from_date, to_date, user_list, company, user_dict):
         """
         准备数据进行拉取考勤结果
         :return:
@@ -60,7 +62,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                 'offset': offset,
                 'limit': limit,
             }
-            has_more = self.send_post_dingtalk(data, company)
+            has_more = self.send_post_dingtalk(data, company, user_dict)
             logging.info(">>>是否还有剩余数据：{}".format(has_more))
             if not has_more:
                 break
@@ -69,19 +71,19 @@ class HrAttendanceResultTransient(models.TransientModel):
                 logging.info(">>>准备获取剩余数据中的第{}至{}条".format(offset + 1, offset + limit))
         return True
 
-    def send_post_dingtalk(self, data, company):
+    def send_post_dingtalk(self, data, company, user_dict):
         client = dt.get_client(self, dt.get_dingtalk_config(self, company))
         try:
             result = client.attendance.list(data.get('workDateFrom'), data.get('workDateTo'),
-                                            user_ids=data.get('userIdList'), offset=data.get('offset'), limit=data.get('limit'))
+                                            user_ids=data.get('userIdList'),
+                                            offset=data.get('offset'), limit=data.get('limit'))
             if result.get('errcode') == 0:
                 data_list = list()
                 for rec in result.get('recordresult'):
                     # 员工
-                    emp_id = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', rec.get('userId')), ('company_id', '=', company.id)], limit=1)
                     data_list.append({
                         'company_id': company.id,
-                        'employee_id': emp_id.id if emp_id else False,
+                        'employee_id': user_dict.get(rec.get('userId')),
                         'work_date': dt.timestamp_to_local_date(rec.get('workDate'), self),  # 工作日
                         'record_id': rec.get('id'),
                         'check_type': rec.get('checkType'),
@@ -92,10 +94,7 @@ class HrAttendanceResultTransient(models.TransientModel):
                         'sourceType': rec.get('sourceType'),  # 数据来源
                     })
                 self.env['hr.attendance.result'].with_user(SUPERUSER_ID).create(data_list)
-                if result.get('hasMore'):
-                    return True
-                else:
-                    return False
+                return result.get('hasMore')
             else:
                 raise UserError('请求失败,原因为:{}'.format(result.get('errmsg')))
         except Exception as e:
@@ -110,24 +109,26 @@ class HrAttendanceResultTransient(models.TransientModel):
         # 获取考勤公司
         configs = self.env['dingtalk.mc.config'].search([('cron_attendance', '=', True)])
         start_date = fields.date.today()  # 开始日期
-        end_date = fields.date.today()  # 结束日期
+        end_date = fields.date.today()    # 结束日期
         start_date = start_date - relativedelta(days=2)
         for config in configs:
             company = config.company_id
             try:
                 # 获取该公司下所有员工
                 emp_ids = self.env['hr.employee'].search([('ding_id', '!=', ''), ('company_id', '=', company.id)])
-                domain = [('employee_id', 'in', emp_ids.ids), ('work_date', '>=', start_date), ('work_date', '<=', end_date)]
-                # 删除已存在的考勤信息
-                self.env['hr.attendance.result'].search(domain).unlink()
+                sql = """DELETE FROM hr_attendance_result WHERE work_date>='{}' and work_date<='{}' and company_id={}""".format(
+                    start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'), company.id)
+                self._cr.execute(sql)
                 user_list = list()
+                user_dict = {}
                 for emp in emp_ids:
                     user_list.append(emp.ding_id)
+                    user_dict[emp.ding_id] = emp.id
                 user_list = dt.list_cut(user_list, 50)
                 for user in user_list:
                     date_list = dt.day_cut(start_date, end_date, 7)
                     for d in date_list:
-                        self.start_pull_attendance_list(d[0], d[1], user, company)
+                        self.start_pull_attendance_list(d[0], d[1], user, company, user_dict)
             except Exception as e:
                 _logger.info(">>>{}-同步考勤数据失败，失败原因：{}".format(company.name, e))
                 continue
@@ -138,7 +139,7 @@ class CalculateMonthAttendance(models.TransientModel):
     _description = '计算考勤统计'
     _rec_name = 'start_date'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.company)
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     end_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)
 
@@ -194,7 +195,7 @@ class DingtalkUsersDuration(models.TransientModel):
     _name = 'dingtalk.users.duration'
     _description = '员工预计算时长'
 
-    company_ids = fields.Many2many("res.company", string="公司", required=True)
+    company_ids = fields.Many2many("res.company", string="公司", required=True, default=lambda self: self.env.company)
     duration_type = fields.Selection(string="计算方法", selection=[('0', '按自然日计算'), ('1', '按工作日计算')], default='1')
     start_date = fields.Date(string=u'开始日期', required=True, default=fields.Date.context_today)
     end_date = fields.Date(string=u'结束日期', required=True, default=fields.Date.context_today)

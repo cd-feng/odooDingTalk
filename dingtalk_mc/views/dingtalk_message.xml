@@ -19,7 +19,7 @@
         <field name="name">消息日志</field>
         <field name="res_model">dingtalk.message.log</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'search_default_msg_type': True}</field>
+        <field name="context">{'search_default_msg_type': False}</field>
     </record>
 
     <record id="dingtalk_message_log_search" model="ir.ui.view">
@@ -30,12 +30,16 @@
                 <field name="create_date" string="触发时间"/>
                 <field name="company_id"/>
                 <field name="name"/>
+                <field name="msg_type"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="触发时间" name="create_date" domain="[]" context="{'group_by': 'create_date'}"/>
                     <filter string="公司" name="company_id" domain="[]" context="{'group_by': 'company_id'}"/>
                     <filter string="消息类型" name="msg_type" domain="[]" context="{'group_by': 'msg_type'}"/>
                 </group>
+                <searchpanel>
+                    <field name="msg_type" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

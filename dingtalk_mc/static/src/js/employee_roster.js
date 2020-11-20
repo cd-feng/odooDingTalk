@@ -44,7 +44,7 @@ odoo.define('dingtalk.mc.employee.roster.buttons', function (require) {
             let $buttons = this._super.apply(this, arguments);
             let tree_model = this.modelName;
             if (tree_model == 'dingtalk.employee.roster') {
-                let but = "<button type=\"button\" class=\"btn btn-secondary\">同步</button>";
+                let but = "<button type=\"button\" class=\"btn btn-secondary\">同步花名册</button>";
                 let button2 = $(but).click(this.proxy('getDingTalkMcKanbanButton'));
                 this.$buttons.append(button2);
             }
@@ -52,6 +52,11 @@ odoo.define('dingtalk.mc.employee.roster.buttons', function (require) {
         },
         getDingTalkMcKanbanButton: function () {
             var self = this;
+            self.call('notification', 'notify', {
+                title: "提示",
+                message: "同步获取钉钉上的员工花名册...",
+                sticky: false
+            });
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'dingtalk.employee.roster.synchronous',
@@ -62,8 +67,13 @@ odoo.define('dingtalk.mc.employee.roster.buttons', function (require) {
                 on_reverse_breadcrumb: function () {
                     self.reload();
                 },
-                  on_close: function () {
+                on_close: function () {
                     self.reload();
+                    self.call('notification', 'notify', {
+                        title: "提示",
+                        message: "刷新结果...",
+                        sticky: false
+                    });
                 }
             });
         },

@@ -4,7 +4,7 @@
     <t t-extend="ListView.buttons" t-name="ListView.DingtalkMcHrmRosterListButtons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
             <button type="button" class="btn btn-secondary get_dingtalk_mc_roster_class">
-                同步
+                同步花名册
             </button>
         </t>
     </t>

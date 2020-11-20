@@ -12,7 +12,8 @@ class GetCallbackList(models.TransientModel):
     _description = "获取回调列表"
     _rec_name = 'id'
 
-    company_ids = fields.Many2many('res.company', 'dingtalk_get_callback_rel', string="获取的公司", required=True)
+    company_ids = fields.Many2many('res.company', 'dingtalk_get_callback_rel', string="获取的公司", required=True,
+                                   default=lambda self: [(6, 0, [self.env.company.id])])
 
     def get_callback_list(self):
         for company in self.company_ids:

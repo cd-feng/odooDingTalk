@@ -135,7 +135,12 @@
         <field name="name">打卡结果</field>
         <field name="res_model">hr.attendance.result</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'search_default_groupby_timeResult': True}</field>
+        <field name="context">{
+            'search_default_domain_year': True,
+            'search_default_groupby_timeResult': True,
+            'search_default_groupby_work_date': False,
+            }
+        </field>
     </record>
 
     <record model="ir.ui.view" id="hr_attendance_result_search">
@@ -159,10 +164,17 @@
                 <separator/>
                 <filter name="groupby_employee_id" string="员工" context="{'group_by': 'employee_id'}"/>
                 <filter name="groupby_check_type" string="考勤类型" context="{'group_by': 'check_type'}"/>
+                <filter name="groupby_work_date" string="工作日" context="{'group_by': 'work_date'}"/>
+                <separator/>
                 <filter string="我的考勤" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]"/>
+                <filter string="签到日期" name="check_in_filter" date="check_in"/>
+                <filter string="近三月内" name="domain_3month" domain="[('work_date','&lt;=', datetime.date.today().strftime('%Y-%m-%d')),('work_date','&gt;=', (context_today()-relativedelta(months=3)).strftime('%Y-%m-%d') )]"/>
+                <filter string="近半年内" name="domain_6month" domain="[('work_date','&lt;=', datetime.date.today().strftime('%Y-%m-%d')),('work_date','&gt;=', (context_today()-relativedelta(months=6)).strftime('%Y-%m-%d') )]"/>
+                <filter string="当前年内" name="domain_year" domain="[('work_date','&lt;=', time.strftime('%%Y-12-31')),('work_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
-                <filter name="check_in_filter" string="签到日期" date="check_in"/>
-                <separator/>
+                <searchpanel>
+                    <field name="department_id" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -179,7 +191,7 @@
             <tree default_order="id" editable="top" js_class="calculate_month_attendance_class">
                 <field name="company_id" groups="base.group_multi_company" required="1"/>
                 <field name="employee_id" required="1"/>
-                <field name="month_code"/>
+                <field name="month_code" optional="hide"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="normal_count"/>
@@ -261,6 +273,9 @@
                 <separator/>
                 <filter name="groupby_company_id" string="公司" context="{'group_by': 'company_id'}"/>
                 <filter string="我的考勤" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]"/>
+                <searchpanel>
+                    <field name="department_id" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

@@ -11,7 +11,8 @@ class EmployeeRosterSynchronous(models.TransientModel):
     _name = 'dingtalk.employee.roster.synchronous'
     _description = "智能人事花名册同步"
 
-    company_ids = fields.Many2many("res.company", string="同步的公司", required=True)
+    company_ids = fields.Many2many("res.company", string="同步的公司", required=True,
+                                   default=lambda self: [(6, 0, [self.env.company.id])])
 
     def start_synchronous_data(self):
         """
@@ -21,7 +22,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
         self.ensure_one()
         for company in self.company_ids:
             client = dt.get_client(self, dt.get_dingtalk_config(self, company))
-
             emp_data = self.get_employee_to_dict(company.id)
             userid_list = self.get_onjob_userid_list(client)
             self.create_employee_roster(client, dt.list_cut(userid_list, 20), emp_data, company.id)
@@ -69,20 +69,26 @@ class EmployeeRosterSynchronous(models.TransientModel):
                 if result.get('emp_field_info_v_o'):
                     for rec in result.get('emp_field_info_v_o'):
                         roster_data = {
-                            'emp_id': emp_data[rec['userid']] if rec['userid'] in emp_data else False,
+                            'emp_id': emp_data.get(rec['userid']),
                             'ding_userid': rec['userid'],
                             'company_id': company_id
                         }
                         for fie in rec['field_list']['emp_field_v_o']:
+                            if len(fie['field_code']) > 30:
+                                continue
                             # 获取部门（可能会多个）
-                            if fie['field_code'][6:] == 'deptIds' and 'value' in fie:
+                            elif fie['field_code'][6:] == 'deptIds':
+                                if 'value' not in fie:
+                                    continue
                                 dept_ding_ids = fie['value'].split('|')
                                 domain = [('company_id', '=', company_id), ('ding_id', 'in', dept_ding_ids)]
                                 departments = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
                                 if departments:
                                     roster_data.update({'dept': [(6, 0, departments.ids)]})
                             # 获取主部门
-                            elif fie['field_code'][6:] == 'mainDeptId' and 'value' in fie:
+                            elif fie['field_code'][6:] == 'mainDeptId':
+                                if 'value' not in fie:
+                                    continue
                                 domain = [('company_id', '=', company_id), ('ding_id', '=', fie['value'])]
                                 dept = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain, limit=1)
                                 if dept:
@@ -90,7 +96,9 @@ class EmployeeRosterSynchronous(models.TransientModel):
                             elif fie['field_code'][6:] == 'dept' or fie['field_code'][6:] == 'mainDept':
                                 continue
                             # 同步工作岗位
-                            elif fie['field_code'][6:] == 'position' and 'label' in fie:
+                            elif fie['field_code'][6:] == 'position':
+                                if 'label' not in fie:
+                                    continue
                                 domain = [('company_id', '=', company_id), ('name', '=', fie['label'])]
                                 hr_job = self.env['hr.job'].with_user(SUPERUSER_ID).search(domain, limit=1)
                                 if not hr_job and fie['label']:
@@ -120,7 +128,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
         :return:
         """
         employees = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '!=', ''), ('company_id', '=', company_id)])
-        # result = self.env['hr.employee'].sudo().search_read([('ding_id', '!=', ''), ('company_id', '=', company_id)], ['ding_id', 'id'])
         emp_data = dict()
         for emp in employees:
             emp_data.update({

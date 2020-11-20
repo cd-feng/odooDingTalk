@@ -88,6 +88,9 @@
                 <separator/>
                 <filter name="groupby_create_date" string="触发时间" context="{'group_by': 'create_date'}"/>
                 <filter name="groupby_type_id" string="回调类型" context="{'group_by': 'type_id'}"/>
+                <searchpanel>
+                    <field name="type_id" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -96,7 +99,7 @@
         <field name="name">回调日志</field>
         <field name="res_model">dingtalk.callback.log</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'search_default_groupby_type_id': 1}</field>
+        <field name="context">{'search_default_groupby_type_id': False}</field>
     </record>
 
     <menuitem name="回调日志" id="dingtalk_callback_log_menu" parent="log_menu" sequence="2" action="dingtalk_callback_log_action"/>

@@ -143,6 +143,11 @@
                 <filter name="groupby_mainDept" string="主部门" context="{'group_by': 'mainDept'}"/>
                 <filter name="group_by_employee_status" string="员工状态" context="{'group_by': 'employeeStatus'}"/>
                 <filter name="group_by_employee_Type" string="员工类型" context="{'group_by': 'employeeType'}"/>
+                <searchpanel>
+                    <field name="mainDept" icon="fa-home" enable_counters="1"/>
+                    <field name="employeeStatus" icon="fa-home" enable_counters="1"/>
+                    <field name="employeeType" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
