@@ -41,6 +41,8 @@
 
     <template id="auto_login_signup" name="DingTalk MC Auto Login View">
         <t t-call="web.login_layout">
+            <script src="/dingtalk_mc/static/src/js/dingtalk.open.js" type="text/javascript" />
+<!--            <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>-->
             <form class="oe_signup_form">
                 <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...<br/> 若页面长时间无反应（一般不超过15秒），请尝试刷新页面.</p>
                 <p id="corp-id" style="display:none;">
@@ -50,7 +52,6 @@
                     <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
                 </div>
             </form>
-            <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
             <script>
                 dd.ready(function() {
                     // 获取CorpId
