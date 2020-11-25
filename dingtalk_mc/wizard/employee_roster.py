@@ -156,5 +156,6 @@ class EmployeeRosterSynchronous(models.TransientModel):
                     'study_school': res.graduateSchool,
                     'birthday': res.birthTime,
                     'place_of_birth': res.certAddress,
-                    'gender': gender
+                    'gender': gender,
+                    'job_id': res.position.id
                 })
