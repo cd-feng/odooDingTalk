@@ -45,7 +45,10 @@ odoo.define('dingtalk.mc.employee.roster.buttons', function (require) {
             let tree_model = this.modelName;
             if (tree_model == 'dingtalk.employee.roster') {
                 let but = "<button type=\"button\" class=\"btn btn-secondary\">同步花名册</button>";
-                let button2 = $(but).click(this.proxy('getDingTalkMcKanbanButton'));
+                let button1 = $(but).click(this.proxy('getDingTalkMcKanbanButton'));
+                this.$buttons.append(button1);
+                let but2 = "<button type=\"button\" class=\"btn btn-secondary\">同步到员工</button>";
+                let button2 = $(but2).click(this.proxy('syncToEmployees'));
                 this.$buttons.append(button2);
             }
             return $buttons;
@@ -76,6 +79,18 @@ odoo.define('dingtalk.mc.employee.roster.buttons', function (require) {
                     });
                 }
             });
+        },
+
+        syncToEmployees: function (){
+            let self = this
+            self._rpc({
+                model: 'dingtalk.employee.roster.synchronous',
+                method: 'sync_to_employees',
+                args: [],
+                context: self.odoo_context,
+            }).then(function(result){
+                self.reload();
+            })
         },
     });
     let DingTalkMcEmployeeRosterKanbanView = KanbanView.extend({

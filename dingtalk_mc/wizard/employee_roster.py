@@ -135,5 +135,26 @@ class EmployeeRosterSynchronous(models.TransientModel):
             })
         return emp_data
 
-
-
+    @api.model
+    def sync_to_employees(self):
+        """
+        将部分字段同步到系统员工
+        :return:
+        """
+        for res in self.env['dingtalk.employee.roster'].search([]):
+            if res.emp_id:
+                if res.sexType == '男':
+                    gender = 'male'
+                elif res.sexType == '女':
+                    gender = 'female'
+                else:
+                    gender = 'other'
+                res.emp_id.write({
+                    'identification_id': res.certNo,
+                    'work_location': res.workPlace,
+                    'phone': res.mobile,
+                    'study_school': res.graduateSchool,
+                    'birthday': res.birthTime,
+                    'place_of_birth': res.certAddress,
+                    'gender': gender
+                })
