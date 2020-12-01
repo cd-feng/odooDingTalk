@@ -144,13 +144,10 @@ class HrDepartment(models.Model):
                     'manager_user_ids': [(6, 0, manage_users.ids)],
                     'manager_id': manage_users[0].id
                 })
-            domain = [('ding_id', '=', result.get('id')), ('company_id', '=', company.id)]
-            if event_type == 'org_dept_create':
-                h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
-                if not h_department:
-                    self.env['hr.department'].with_user(SUPERUSER_ID).create(data)
-            elif event_type == 'org_dept_modify':
-                h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
-                if h_department:
-                    h_department.with_user(SUPERUSER_ID).write(data)
+            domain = [('ding_id', '=', dept_id), ('company_id', '=', company.id)]
+            h_department = self.env['hr.department'].with_user(SUPERUSER_ID).search(domain)
+            if h_department:
+                h_department.with_user(SUPERUSER_ID).write(data)
+            else:
+                self.env['hr.department'].with_user(SUPERUSER_ID).create(data)
         return True

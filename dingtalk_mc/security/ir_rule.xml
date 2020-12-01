@@ -31,6 +31,16 @@
 		<field name="perm_unlink" eval="True"/>
 	 </record>
 
+	<record id="dingtalk_leaving_employee_roster_company_rule" model="ir.rule">
+		<field name="name">离职员工信息-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_leaving_employee_roster"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	 </record>
+
 	<record id="dingtalk_approval_template_company_rule" model="ir.rule">
 		<field name="name">审批模板-公司过滤</field>
 		<field name="model_id" ref="model_dingtalk_approval_template"/>

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
-import json
 import logging
 import requests
-from requests import ReadTimeout
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.addons.dingtalk_mc.tools import dingtalk_tool as dt
@@ -213,12 +211,14 @@ class HrEmployee(models.Model):
                 self = self.with_env(self.env(cr=new_cr))
                 event_type = result_msg.get('EventType')  # 消息类型
                 user_ids = result_msg.get('UserId')       # 用户id
-                if event_type == 'user_leave_org':
-                    # 用户离职
-                    domain = [('ding_id', 'in', user_ids), ('company_id', '=', company.id)]
-                    employees = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain)
-                    if employees:
-                        employees.with_user(SUPERUSER_ID).write({'active': False})
+                if event_type == 'user_leave_org':   # 用户离职
+                    for user_id in user_ids:
+                        domain = [('ding_id', '=', user_id), ('company_id', '=', company.id)]
+                        employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain, limit=1)
+                        if not employee:
+                            return
+                        self.get_dimission_info(user_id, company, employee)
+                        employee.with_user(SUPERUSER_ID).write({'work_status': '3'})
                 else:
                     # 用户增加和变更时获取该用户详情
                     for user_id in user_ids:
@@ -229,9 +229,6 @@ class HrEmployee(models.Model):
     def get_employee_info(self, user_id, event_type, company):
         """
         获取用户详情执行函数
-        :param user_id:
-        :param event_type:
-        :param company:
         :return:
         """
         try:
@@ -272,19 +269,54 @@ class HrEmployee(models.Model):
                 data.update({'din_hiredDate': date_str})
             if result.get('department'):
                 dep_ding_ids = result.get('department')
-                dep_list = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', 'in', dep_ding_ids), ('company_id', '=', company.id)])
+                dep_list = self.env['hr.department'].with_user(SUPERUSER_ID).search([('ding_id', 'in', dep_ding_ids),
+                                                                                     ('company_id', '=', company.id)])
                 data.update({'department_ids': [(6, 0, dep_list.ids)], 'department_id': dep_list[0].id if dep_list else False})
-            # 当为新建时以名称进行搜索
-            if event_type == 'user_add_org':
-                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('name', '=', result.get('name')), ('company_id', '=', company.id)], limit=1)
-                if not employee:
-                    self.env['hr.employee'].with_user(SUPERUSER_ID).create(data)
-                else:
-                    employee.with_user(SUPERUSER_ID).write(data)
+            employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(
+                [('ding_id', '=', user_id), ('company_id', '=', company.id)], limit=1)
+            if not employee:
+                self.env['hr.employee'].with_user(SUPERUSER_ID).create(data)
             else:
-                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search([('ding_id', '=', user_id), ('company_id', '=', company.id)], limit=1)
-                if employee:
-                    employee.with_user(SUPERUSER_ID).write(data)
+                employee.with_user(SUPERUSER_ID).write(data)
         else:
             _logger.info("从钉钉同步员工时发生意外，原因为:{}".format(result.get('errmsg')))
         return True
+
+    @api.model
+    def get_dimission_info(self, user_id, company, employee):
+        """
+        获取离职信息详情
+        :return:
+        """
+        try:
+            client = dt.get_client(self, dt.get_dingtalk_config(self, company))
+            req_result = client.post('topapi/smartwork/hrm/employee/listdimission', {
+                'userid_list': user_id,
+            })
+            if req_result.get('errcode') != 0:
+                return
+            result = req_result.get('result')
+            for res in result:
+                data = {
+                    'emp_id': employee.id,
+                    'reason_memo': res.get('reason_memo'),
+                    'main_dept_name': res.get('main_dept_name'),
+                    'main_dept_id': res.get('main_dept_id'),
+                }
+                if res.get('last_work_day'):
+                    data['last_work_day'] = dt.get_time_stamp(res.get('last_work_day'))
+                if res.get('reason_type'):
+                    data['reason_type'] = str(res.get('reason_type'))
+                if res.get('pre_status'):
+                    data['pre_status'] = str(res.get('pre_status'))
+                if res.get('status'):
+                    data['status'] = str(res.get('status'))
+                e_roster = self.env['dingtalk.leaving.employee.roster'].with_user(SUPERUSER_ID).\
+                    search([('emp_id', '=', employee.id)])
+                if e_roster:
+                    e_roster.with_user(SUPERUSER_ID).write(data)
+                else:
+                    self.env['dingtalk.leaving.employee.roster'].with_user(SUPERUSER_ID).create(data)
+        except Exception as e:
+            _logger.info('钉钉回调时：获取离职信息详情失败：{}'.format(str(e)))
+            return

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Odoo集成钉钉-多公司版本",
+    'name': "Odoo集成钉钉-多公司",
     'summary': """支持多个钉钉企业到Odoo进行信息管理""",
     'description': """支持多个钉钉企业到Odoo进行信息管理""",
     'author': "XueFeng.Su",
@@ -51,7 +51,7 @@
     'qweb': [
         'static/xml/*.xml',
     ],
-    'price': 450,
+    'price': 500,
     'currency': 'EUR',
     'images': [
         'static/description/icon.png',

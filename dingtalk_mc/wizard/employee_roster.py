@@ -11,8 +11,7 @@ class EmployeeRosterSynchronous(models.TransientModel):
     _name = 'dingtalk.employee.roster.synchronous'
     _description = "智能人事花名册同步"
 
-    company_ids = fields.Many2many("res.company", string="同步的公司", required=True,
-                                   default=lambda self: [(6, 0, [self.env.company.id])])
+    company_ids = fields.Many2many("res.company", string="同步的公司", required=True, default=lambda self: [(6, 0, [self.env.company.id])])
 
     def start_synchronous_data(self):
         """
@@ -159,3 +158,113 @@ class EmployeeRosterSynchronous(models.TransientModel):
                     'gender': gender,
                     'job_id': res.position.id
                 })
+
+
+class SynchronizeLeavingEmployees(models.TransientModel):
+    _name = 'dingtalk.synchronize.leaving.employees'
+    _description = "同步离职员工信息"
+    
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, required=True)
+
+    def on_synchronous(self):
+        """
+        开始同步离职员工信息
+        :return:
+        """
+        self.ensure_one()
+        client = dt.get_client(self, dt.get_dingtalk_config(self, self.company_id))
+        leaving_user_list = self.get_leaving_user_list(client, self.company_id)
+        self.get_dimission_list(client, leaving_user_list, self.company_id)
+        return {'type': 'ir.actions.act_window_close'}
+
+    def get_all_employee_dict(self, company_id):
+        """
+        返回员工钉钉iddict
+        :return:
+        """
+        emp_dict = {}
+        domain = [('ding_id', '!=', False), ('company_id', '=', company_id.id)]
+        for emp in self.env['hr.employee'].search(domain):
+            emp_dict[emp.ding_id] = emp.id
+        return emp_dict
+
+    def get_leaving_user_list(self, client, company_id):
+        # 获取离职员工列表
+        offset = 0
+        size = 50
+        leaving_user_list = []
+        new_leaving_user_list = []
+        try:
+            while True:
+                req_result = client.post('topapi/smartwork/hrm/employee/querydimission', {
+                    'offset': offset,
+                    'size': size,
+                })
+                if req_result.get('errcode') != 0:
+                    raise UserError(req_result.get('errmsg'))
+                result = req_result.get('result')
+                leaving_user_list.extend(result.get('data_list'))
+                if not result.get('next_cursor'):
+                    break
+                offset = result.get('next_cursor')
+        except Exception as e:
+            raise UserError("获取失败！原因:{}".format(e))
+        emp_ding_ids = []
+        domain = [('ding_id', '!=', False), ('company_id', '=', company_id.id)]
+        for emp in self.env['hr.employee'].search(domain):
+            emp_ding_ids.append(emp.ding_id)
+        # 去掉中不在系统的员工
+        for leaving_user in leaving_user_list:
+            if leaving_user in emp_ding_ids:
+                new_leaving_user_list.append(leaving_user)
+        return new_leaving_user_list
+
+    def get_dimission_list(self, client, leaving_user_list, company_id):
+        """
+        获取离职员工详情
+        :return:
+        """
+        leaving_user_list = dt.list_cut(leaving_user_list, 50)
+        emp_dict = self.get_all_employee_dict(company_id)
+        for leaving_user in leaving_user_list:
+            userid_list = str()
+            for leaving_id in leaving_user:
+                if userid_list:
+                    userid_list = "{},{}".format(userid_list, leaving_id)
+                else:
+                    userid_list = leaving_id
+            try:
+                req_result = client.post('topapi/smartwork/hrm/employee/listdimission', {
+                    'userid_list': userid_list,
+                })
+                if req_result.get('errcode') != 0:
+                    raise UserError(req_result.get('errmsg'))
+                result = req_result.get('result')
+                for res in result:
+                    userid = res.get('userid')
+                    try:
+                        emp_id = emp_dict[userid]
+                    except KeyError:
+                        continue
+                    data = {
+                        'emp_id': emp_id,
+                        'reason_memo': res.get('reason_memo'),
+                        'handover_userid': emp_dict.get(res.get('handover_userid')),
+                        'main_dept_name': res.get('main_dept_name'),
+                        'main_dept_id': res.get('main_dept_id'),
+                    }
+                    if res.get('last_work_day'):
+                        data['last_work_day'] = dt.get_time_stamp(res.get('last_work_day'))
+                    if res.get('reason_type'):
+                        data['reason_type'] = str(res.get('reason_type'))
+                    if res.get('pre_status'):
+                        data['pre_status'] = str(res.get('pre_status'))
+                    if res.get('status'):
+                        data['status'] = str(res.get('status'))
+                    e_roster = self.env['dingtalk.leaving.employee.roster'].search([('emp_id', '=', emp_id)])
+                    if e_roster:
+                        e_roster.write(data)
+                    else:
+                        self.env['dingtalk.leaving.employee.roster'].create(data)
+            except Exception as e:
+                raise UserError("获取失败！原因:{}".format(e))

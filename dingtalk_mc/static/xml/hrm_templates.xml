@@ -2,9 +2,34 @@
 <templates>
 
     <t t-extend="ListView.buttons" t-name="ListView.DingtalkMcHrmRosterListButtons">
-        <t t-jquery="button.o_list_button_add" t-operation="after">
-            <button type="button" class="btn btn-secondary get_dingtalk_mc_roster_class">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <button type="button" class="btn btn-primary synchronize_insured_scheme_employee">
                 同步花名册
+            </button>
+            <button type="button" class="btn btn-secondary synchronize_hrm_to_employee">
+                关联到员工
+            </button>
+        </t>
+    </t>
+
+    <t t-extend="KanbanView.buttons" t-name="DingtalkMcHrmRosterKanbanView.buttons">
+        <t t-jquery="button" t-operation="replace">
+            <button type="button" class="btn btn-primary synchronize_insured_scheme_employee">
+                同步花名册
+            </button>
+            <button type="button" class="btn btn-secondary synchronize_hrm_to_employee">
+                更新到员工
+            </button>
+        </t>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="DingtalkMcLeavingEmployeesListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <button type="button" class="btn btn-primary synchronize_leaving_employees">
+                同步离职员工
+            </button>
+            <button type="button" class="btn btn-secondary synchronize_leaving_to_employee">
+                更新到员工
             </button>
         </t>
     </t>

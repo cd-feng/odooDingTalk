@@ -37,3 +37,5 @@ access_calculate_month_attendance,calculate.month.attendance,model_calculate_mon
 access_dingtalk_users_duration,dingtalk.users.duration,model_dingtalk_users_duration,dingtalk_mc.manage_groups,1,1,1,1
 access_dingtalk_miroapp_list_wizard,dingtalk.miroapp.list.wizard,model_dingtalk_miroapp_list_wizard,dingtalk_mc.manage_groups,1,1,1,1
 access_dingtalk_miroapp_set_visible_scopes,dingtalk.miroapp.set.visible.scopes,model_dingtalk_miroapp_set_visible_scopes,dingtalk_mc.manage_groups,1,1,1,1
+access_dingtalk_synchronize_leaving_employees,dingtalk.synchronize.leaving.employees,model_dingtalk_synchronize_leaving_employees,dingtalk_mc.dingtalk_mc_roster_group,1,1,1,1
+access_dingtalk_leaving_employee_roster,dingtalk.leaving.employee.roster,model_dingtalk_leaving_employee_roster,,1,1,1,1

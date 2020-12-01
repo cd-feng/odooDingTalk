@@ -8,6 +8,7 @@
             <script type="text/javascript" src="/dingtalk_mc/static/src/js/dingtalk_callback.js"></script>
             <script type="text/javascript" src="/dingtalk_mc/static/src/js/hr_attendance_result.js"></script>
             <script type="text/javascript" src="/dingtalk_mc/static/src/js/dingtalk_miroapp.js"></script>
+            <script type="text/javascript" src="/dingtalk_mc/static/src/js/leaving_employee_roster.js"></script>
         </xpath>
     </template>
 

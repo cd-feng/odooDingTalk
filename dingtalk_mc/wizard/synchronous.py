@@ -19,7 +19,7 @@ class DingTalkMcSynchronous(models.TransientModel):
                                    default=lambda self: [(6, 0, [self.env.user.company_id.id])])
     department = fields.Boolean(string=u'钉钉部门', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
-    repeat_type = fields.Selection(string=u'判断唯一', selection=RepeatType, default='name')
+    repeat_type = fields.Selection(string=u'判断唯一', selection=RepeatType, default='id')
     employee = fields.Boolean(string=u'钉钉员工', default=True)
 
     def start_synchronous_data(self):

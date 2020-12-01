@@ -118,3 +118,57 @@ class EmployeeRoster(models.Model):
         """
         return [(res.id, '%s-%s' % (res.mainDept.name, res.name)) for res in self]
 
+
+class LeavingEmployees(models.Model):
+    _name = 'dingtalk.leaving.employee.roster'
+    _description = "离职员工信息"
+    _rec_name = 'emp_id'
+    _order = 'last_work_day'
+
+    REASONTYPE = [
+        ('1', '家庭原因'),
+        ('2', '个人原因'),
+        ('3', '发展原因'),
+        ('4', '合同到期不续签'),
+        ('5', '协议解除'),
+        ('6', '无法胜任工作'),
+        ('7', '经济性裁员'),
+        ('8', '严重违法违纪'),
+        ('9', '其他'),
+    ]
+    PRESTATUS = [
+        ('1', '待入职'),
+        ('2', '试用期'),
+        ('3', '正式'),
+    ]
+    STATUS = [
+        ('1', '待离职'),
+        ('2', '已离职'),
+        ('3', '未离职'),
+    ]
+
+    emp_id = fields.Many2one(comodel_name='hr.employee', string=u'员工', index=True, required=True)
+    company_id = fields.Many2one('res.company', '公司', default=lambda self: self.env.company, index=True)
+    last_work_day = fields.Date(string="最后工作日")
+    reason_memo = fields.Text(string="离职原因")
+    reason_type = fields.Selection(string="离职原因类型", selection=REASONTYPE)
+    pre_status = fields.Selection(string="离职前状态", selection=PRESTATUS)
+    handover_userid = fields.Many2one(comodel_name="hr.employee", string="离职交接人")
+    status = fields.Selection(string="离职状态", selection=STATUS)
+    main_dept_name = fields.Char(string="前主部门名称")
+    main_dept_id = fields.Char(string="离职前主部门ID")
+
+    @api.model
+    def sync_to_employees(self):
+        """
+        同步到员工
+        :return:
+        """
+        for res in self.search([]):
+            data = dict()
+            if res.status == '2':
+                data['work_status'] = '3'
+            elif res.status == '3':
+                data['work_status'] = '2'
+            res.emp_id.write(data)
+
