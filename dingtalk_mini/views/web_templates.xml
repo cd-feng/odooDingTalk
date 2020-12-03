@@ -59,7 +59,7 @@
                         corpId: corpId, // 企业id
                         onSuccess: function (result) {
                             $("#message-result").html("身份已确认! 正在执行登陆...");
-                            window.location.replace("/web/dingtalk/mini/auto/login?authCode=" + result.code);
+                            window.location.replace("/web/dingtalk/mini/auto/login/action?authCode=" + result.code);
                         },
                         onFail: function(err) {
                             $("#message-result").attr("class", "alert alert-danger");

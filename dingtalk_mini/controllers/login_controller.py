@@ -151,7 +151,7 @@ class DingTalkMiniLogin(DingTalkMcLogin):
 
 class MiniOAuthController(OAuthController):
 
-    @http.route('/web/dingtalk/mini/auto/login', type='http', auth='public', website=True)
+    @http.route('/web/dingtalk/mini/auto/login', type='http', auth='public', website=True, csrf=False)
     def web_dingtalk_mini_auto_login(self, **kw):
         """
         钉钉小程序免登入口
@@ -170,7 +170,8 @@ class MiniOAuthController(OAuthController):
             except AccessError as e:
                 _logger.info("AccessError: {}".format(str(e)))
         # 获取用于免登的公司corp_id
-        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        agent_id = kw.get('agentId')
+        config = request.env['dingtalk.mini.config'].sudo().search([('agent_id', '=', agent_id)], limit=1)
         data = {'corp_id': config.corp_id}
         if request.session.uid:
             request.session.uid = False
@@ -178,7 +179,7 @@ class MiniOAuthController(OAuthController):
             request.session.login = False
         return request.render('dingtalk_mini.auto_login_signup', data)
 
-    @http.route('/web/dingtalk/mini/auto/login', type='http', auth='none', website=True, sitemap=False)
+    @http.route('/web/dingtalk/mini/auto/login/action', type='http', auth='none', website=True, sitemap=False)
     @fragment_to_query_string
     def web_dingtalk_mini_auto_signin(self, **kw):
         """
@@ -187,9 +188,9 @@ class MiniOAuthController(OAuthController):
         :return:
         """
         auth_code = kw.get('authCode')
-        agent_id = kw.get('agent_id')
+        agent_id = kw.get('agentId')
         logging.info(">>>免登授权码: %s", auth_code)
-        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        config = request.env['dingtalk.mini.config'].sudo().search([('agent_id', '=', agent_id)], limit=1)
         client = dt.get_client(request, dt.get_dingtalk_mini_config(request, agent_id, config.company_id))
         result = client.user.getuserinfo(auth_code)
         domain = [('ding_id', '=', result.userid), ('company_id', '=', config.company_id.id)]
