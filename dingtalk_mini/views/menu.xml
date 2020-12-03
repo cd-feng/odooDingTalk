@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="小程序" id="dingtalk_mini_menu" parent="dingtalk_mc.root_menu" sequence="50"/>
+    <menuitem name="配置" id="config_menu" parent="dingtalk_mini_menu" sequence="99"/>
+</odoo>
