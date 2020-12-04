@@ -2,16 +2,7 @@
 <odoo>
 
     <template id="dingtalk_mini_login_result_signup" name="DingTalk mini Login Result Signup">
-        <t t-call="web.html_container">
-            <form class="oe_signup_form">
-                <p t-if="ding_error" class="alert alert-danger text-center">
-                    <t t-raw="ding_error"/>
-                </p>
-                <div class="text-center oe_login_buttons pt-3">
-                    <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">使用账号登录</a>
-                </div>
-            </form>
-        </t>
+        <t t-raw="ding_error"/>
     </template>
 
     <template id="dingtalk_mini_login_signup" name="Dingtalk mini Login Signup">
@@ -42,7 +33,8 @@
     <template id="auto_login_signup" name="DingTalk mini Auto Login View">
         <t t-call="web.login_layout">
             <form class="oe_signup_form">
-                <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...<br/> 若页面长时间无反应（一般不超过15秒），请尝试刷新页面.</p>
+                <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...                    <br/>
+ 若页面长时间无反应（一般不超过15秒），请尝试刷新页面.</p>
                 <p id="corp-id" style="display:none;">
                     <t t-esc="corp_id"/>
                 </p>
