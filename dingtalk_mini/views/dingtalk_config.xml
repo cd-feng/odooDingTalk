@@ -8,6 +8,7 @@
             <tree default_order="id desc">
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="name"/>
+                <field name="corp_id"/>
                 <field name="agent_id"/>
                 <field name="app_key"/>
                 <field name="m_login" widget="boolean_toggle"/>
@@ -42,6 +43,7 @@
                     </div>
                     <group col="1">
                         <group>
+                            <field name="corp_id" required="1" placeholder="请输入CorpId"/>
                             <field name="agent_id" required="1" placeholder="请输入AgentId"/>
                             <field name="app_key" required="1" placeholder="请输入AppKey"/>
                             <field name="app_secret" password="password" required="1" placeholder="请输入AppSecret"/>
