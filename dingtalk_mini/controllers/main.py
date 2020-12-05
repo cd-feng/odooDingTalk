@@ -162,7 +162,7 @@ class MiniOAuthController(OAuthController):
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
 
-    @http.route('/dingtalk/eapp/login', type='http', auth='none', csrf=False)
+    @http.route('/dingtalk/eapp/login', type='http', auth='none', methods=['get', 'post'], csrf=False)
     # @fragment_to_query_string
     def dingtalk_eapp_login_v1(self, **kw):
         """
@@ -170,8 +170,8 @@ class MiniOAuthController(OAuthController):
         :param kw:
         :return:
         """
-
-        auth_code = kw.get('authCode')
+        params_data = request.params.copy()
+        auth_code = params_data.get('code')
         logging.info(">>>免登授权码: %s", auth_code)
         config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
         client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
@@ -181,62 +181,50 @@ class MiniOAuthController(OAuthController):
         employee = request.env['hr.employee'].sudo().search(domain, limit=1)
         if not employee:
             _logger.info(_("系统对应员工不存在!"))
-            return self._do_err_redirect_dd(_("系统对应员工不存在!"))
+            return json.dumps({'state': False, 'msg': '系统对应员工不存在!'})
         _logger.info(">>>员工：{}正在尝试登录系统".format(employee.name))
         if not employee.ding_id:
             _logger.info(_("员工不存在钉钉ID，请维护后再试!"))
-            return self._do_err_redirect_dd(_("员工不存在钉钉ID，请维护后再试!"))
+            return json.dumps({'state': False, 'msg': '员工不存在钉钉ID，请维护后再试!'})
         if not employee.user_id:
-            return self._do_err_redirect_dd(_("你还没有关联系统用户，请联系管理员处理！"))
-        dd_info = {'dd_user_info':
-                   {'Userid': result.userid,
-                    'Name': result.name,
-                    'Avatar': '',
-                    },
+            return json.dumps({'state': False, 'msg': '你还没有关联系统用户，请联系管理员处理！'})
+        dd_info = {'dd_user_info': {'Userid': result.userid,
+                                    'Name': result.name,
+                                    'Avatar': '',
+                                    },
                    'token': client.get_access_token().access_token
                    }
         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>dd_user_info', dd_info)
         return json.dumps(dd_info)
 
-        # ensure_db()
-        # dbname = request.session.db
-        # if not http.db_filter([dbname]):
-        #     return BadRequest()
-        # registry = registry_get(dbname)
-        # with registry.cursor() as cr:
-        #     try:
-        #         env = api.Environment(cr, SUPERUSER_ID, {})
-        #         credentials = env['res.users'].sudo().auth_oauth('dingtalk', employee.ding_id)
-        #         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>credentials',credentials)
-        #         cr.commit()
-        #         url = '../odoo-web/odoo'
-        #         resp = login_and_redirect(*credentials, redirect_url=url)
-        #         if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
-        #             resp.location = '/'
-        #         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>resp',resp)
-        #         return resp
-        #     except AttributeError:
-        #         _logger.error(">>>未在数据库'%s'上安装auth_signup：oauth注册已取消。" % (dbname,))
-        #         url = "/web/login?oauth_error=1"
-        #     except AccessDenied:
-        #         _logger.info('>>>DingTalk-OAuth2: 访问被拒绝，在存在有效会话的情况下重定向到主页，而未设置Cookie')
-        #         url = "/web/login?oauth_error=3"
-        #         redirect = werkzeug.utils.redirect(url, 303)
-        #         redirect.autocorrect_location_header = False
-        #         return redirect
-        #     except Exception as e:
-        #         _logger.exception("OAuth2: %s" % str(e))
-        #         url = "/web/login?oauth_error=2"
-
-    def _do_err_redirect_dd(self, errmsg):
+    @http.route('/dingtalk/auth/refresh', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    # @fragment_to_query_string
+    def dingtalk_auth_refresh(self, **kw):
         """
-        返回信息errmsg
-        :param errmsg: 需要返回展示的信息
+        刷新token
+        :param kw:
         :return:
         """
-        ding_error = {}
-        ding_error.update({
-            'ding_error': errmsg
-        })
-        _logger.info("免密登陆失败,Error:{}".format(ding_error))
-        return request.render('dingtalk_mini.dingtalk_mini_login_result_signup', ding_error)
+        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
+        return json.dumps({'token': client.get_access_token().access_token})
+
+    @http.route('/dingtalk/eapp/users/menus', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    # @fragment_to_query_string
+    def dingtalk_eapp_users_menus(self, **kw):
+        """
+        初始化菜单
+        :param kw:
+        :return:
+        """
+        return json.dumps(['odoo', '测试'])
+
+    @http.route('/dingtalk/eapp/users/groups', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    # @fragment_to_query_string
+    def dingtalk_eapp_users_groups(self, **kw):
+        """
+        初始化菜单
+        :param kw:
+        :return:
+        """
+        return json.dumps([])
