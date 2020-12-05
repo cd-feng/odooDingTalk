@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="res_users_action">
+        <field name="name">用户管理</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('base.view_res_users_kanban')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_users_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_users_form')}),
+        ]"/>
+    </record>
+
+    <menuitem id="res_users_menu" name="用户管理" sequence="1" parent="users_menu" action="res_users_action"/>
+
+
+
+    <record id="get_authing_users_form_view" model="ir.ui.view">
+        <field name="name">get.authing.users.form</field>
+        <field name="model">get.authing.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>即将从Authing中获取所有的用户，确认继续？</p>
+                </div>
+                <footer>
+                    <button string="确认" name="get_authing_users" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="get_authing_users_action" model="ir.actions.act_window">
+        <field name="name">获取用户列表</field>
+        <field name="res_model">get.authing.users</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="获取用户列表" id="get_authing_users_menu" parent="users_menu" sequence="2" action="get_authing_users_action"/>
+
+</odoo>

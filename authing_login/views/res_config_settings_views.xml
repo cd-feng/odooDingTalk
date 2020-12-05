@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (C) 2020 SuXueFeng GNU-->
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="52"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block authing_login_block" string="Authing" data-string="Authing" data-key="authing_login" groups="authing_login.manage_group">
+                    <h2>快捷链接</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12">
+                            <a href="https://authing.cn/" icon="fa-arrow-right" role="button" target="_blank">Authing官网</a>
+                        </div>
+                    </div>
+                    <h2>常规设置</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="authing_is_open"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="authing_is_open"/>
+                                <div class="text-muted">
+                                   是否开启Authing登录
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Authing应用信息</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">
+                                    AppID
+                                </span>
+                                <div class="text-muted">
+                                    请填写Oauth应用ID
+                                </div>
+                                <div class="text-muted">
+                                    <field name="authing_app_id"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">
+                                    用户池ID
+                                </span>
+                                <div class="text-muted">
+                                    请输入用户池ID
+                                </div>
+                                <div class="text-muted">
+                                    <field name="authing_client_id"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">
+                                    应用秘钥
+                                </span>
+                                <div class="text-muted">
+                                    请输入应用秘钥
+                                </div>
+                                <div class="text-muted">
+                                    <field name="authing_secret" password="password"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">
+                                    新用户权限
+                                </span>
+                                <div class="text-muted">
+                                    创建新用户时的默认权限，请谨慎分配！
+                                </div>
+                                <div class="text-muted">
+                                    <field name="authing_group_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="authing_login_settings_configuration_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'authing_login'}</field>
+    </record>
+
+    <menuitem id="authing_config_settings_menu" name="常规设置" parent="authing_config" sequence="1"
+              action="authing_login_settings_configuration_action" groups="authing_login.manage_group"/>
+
+</odoo>

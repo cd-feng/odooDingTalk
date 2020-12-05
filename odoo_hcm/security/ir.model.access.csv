@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api_alow_access,api.alow.access,model_api_alow_access,odoo_hcm.manage_groups,1,1,1,1
+access_applet_home_images,applet.home.images,model_applet_home_images,odoo_hcm.manage_groups,1,1,1,1
+access_applet_enterprise_dynamic_tag,applet.enterprise.dynamic.tag,model_applet_enterprise_dynamic_tag,odoo_hcm.manage_groups,1,1,1,1
+access_applet_enterprise_dynamic,applet.enterprise.dynamic,model_applet_enterprise_dynamic,odoo_hcm.manage_groups,1,1,1,1
+access_hcm_user_checkin,hcm.user.checkin,model_hcm_user_checkin,odoo_hcm.manage_groups,1,1,1,1
+access_hcm_qq_map,hcm.qq.map,model_hcm_qq_map,odoo_hcm.manage_groups,1,1,1,1
+access_hcm_location_manage,hcm.location.manage,model_hcm_location_manage,odoo_hcm.manage_groups,1,1,1,1
+access_hcm_attendance_location,hcm.attendance.location,model_hcm_attendance_location,odoo_hcm.manage_groups,1,1,1,1
+access_hcm_employee_location,hcm.employee.location,model_hcm_employee_location,odoo_hcm.manage_groups,1,1,1,1
+

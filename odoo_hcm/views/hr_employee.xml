@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2019 SuXueFeng
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+
+    <record id="odoo_hcm.view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='public']" position='after'>
+                <page string="HCM信息" groups="odoo_hcm.manage_groups">
+                    <group col="2">
+                        <group string="基本信息">
+                            <field name="number"/>
+                            <field name="name"/>
+                            <field name="gender"/>
+                            <field name="education"/>
+                            <field name="birthday"/>
+                            <field name="marital"/>
+                            <field name="nationality"/>
+                            <field name="birthplace"/>
+                        </group>
+                        <group string="联系方式">
+                            <field name="mobile_phone"/>
+                            <field name="work_phone"/>
+                            <field name="work_email"/>
+                        </group>
+                        <group string="微信">
+                            <field name="wx_openid" readonly="1"/>
+                            <field name="wx_nick_name" readonly="1"/>
+<!--                            <field name="wx_avatar_url" readonly="1"/>-->
+                        </group>
+                        <group string="职位信息">
+                            <field name="company_id"/>
+                            <field name="department_id"/>
+                            <field name="serve_start_date"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

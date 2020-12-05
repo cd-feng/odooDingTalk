@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+
+     <template id="odoo_hcm_assets" name="Odoo Hcm Asset" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo_hcm/static/src/js/user_location.js"></script>
+        </xpath>
+    </template>
+
+    <menuitem name="HCM系统" id="api_main_menu" web_icon="odoo_hcm,static/description/icon.png" sequence="20"/>
+
+    <menuitem name="签到" id="checkin_menu" parent="api_main_menu" sequence="2"/>
+
+    <menuitem name="首页" id="home_menu" parent="api_main_menu" sequence="5"/>
+
+    <menuitem name="考勤点" id="location_menu" parent="api_main_menu" sequence="7"/>
+
+    <menuitem name="配置" id="config_menu" parent="odoo_hcm.api_main_menu" sequence="100"/>
+
+</odoo>

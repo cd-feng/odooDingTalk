@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template id="odoo_hcm_template" xml:space="preserve">
+
+    <t t-name="odoo_hcm.user_location_tree_but">
+        <button type="button" class="btn btn-secondary get_user_location_tran">
+            获取位置
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="odoo_hcm.user_location_tree_buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="odoo_hcm.user_location_tree_but"/>
+        </t>
+    </t>
+
+</template>
+
+

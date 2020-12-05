@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (C) 2020 SuXueFeng GNU-->
+<odoo>
+    <data noupdate="1">
+
+        <record id="provider_authing" model="auth.oauth.provider">
+            <field name="name">Authing</field>
+            <field name="auth_endpoint">https://sso.authing.cn/authorize/</field>
+            <field name="scope">user</field>
+            <field name="validation_endpoint">https://sso.authing.cn/authenticate/</field>
+            <field name="data_endpoint">https://users.authing.cn/oauth/user/userinfo/</field>
+            <field name="css_class">fa fa-retweet</field>
+            <field name="body">Authing登录</field>
+            <field name="enabled" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

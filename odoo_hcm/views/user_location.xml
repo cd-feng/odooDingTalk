@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2019 SuXueFeng
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<odoo>
+    <data>
+
+        <record id="hcm_attendance_location_tree_view" model="ir.ui.view">
+            <field name="name">考勤点管理</field>
+            <field name="model">hcm.attendance.location</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="location_id"/>
+                    <field name="deviation"/>
+                    <field name="manage_user_id"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hcm_attendance_location_form_view" model="ir.ui.view">
+            <field name="name">考勤点管理</field>
+            <field name="model">hcm.attendance.location</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <div class="oe_title" name="title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="name" placeholder="标题..."/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="location_id" required="1" options="{'no_create': True}"/>
+                                <field name="deviation"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}"/>
+                                <field name="manage_user_id" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="hcm_attendance_location_action" model="ir.actions.act_window">
+            <field name="name">考勤点管理</field>
+            <field name="res_model">hcm.attendance.location</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="考勤点管理" id="hcm_attendance_location_menu" parent="location_menu" sequence="2" action="hcm_attendance_location_action"/>
+
+
+        <record id="hcm_location_manage_tree_view" model="ir.ui.view">
+            <field name="name">考勤位置</field>
+            <field name="model">hcm.location.manage</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" js_class="hcm_location_manage_class">
+                    <field name="adcode"/>
+                    <field name="province"/>
+                    <field name="city"/>
+                    <field name="district"/>
+                    <field name="address"/>
+                    <field name="category"/>
+                    <field name="latitude"/>
+                    <field name="longitude"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hcm_location_manage_action" model="ir.actions.act_window">
+            <field name="name">考勤位置</field>
+            <field name="res_model">hcm.location.manage</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_group_by_province': True, 'search_default_group_by_city': True, 'search_default_group_by_district': True}</field>
+        </record>
+
+        <record model="ir.ui.view" id="hcm_location_manage_search">
+            <field name="model">hcm.location.manage</field>
+            <field name="arch" type="xml">
+                <search string="考勤位置">
+                    <field name="adcode"/>
+                    <field name="province"/>
+                    <field name="city"/>
+                    <field name="district"/>
+                    <field name="address"/>
+                    <field name="category"/>
+                    <field name="latitude"/>
+                    <field name="longitude"/>
+                    <separator/>
+                    <group expand="0" string="分组">
+                        <filter name="group_by_province" string="省份" context="{'group_by':'province'}"/>
+                        <filter name="group_by_city" string="城市" context="{'group_by':'city'}"/>
+                        <filter name="group_by_district" string="地区" context="{'group_by':'district'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <menuitem name="考勤位置" id="hcm_location_manage_menu" parent="location_menu" sequence="3" action="hcm_location_manage_action"/>
+
+
+
+        <record id="hcm_employee_location_tree_view" model="ir.ui.view">
+            <field name="name">员工考勤点</field>
+            <field name="model">hcm.employee.location</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="emp_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="location_ids"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hcm_employee_location_form_view" model="ir.ui.view">
+            <field name="name">员工考勤点</field>
+            <field name="model">hcm.employee.location</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="emp_id" required="1" options="{'no_create': True}"/>
+                                <field name="department_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="job_id" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="考勤点">
+                                <group>
+                                    <field name="location_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="hcm_employee_location_action" model="ir.actions.act_window">
+            <field name="name">员工考勤点</field>
+            <field name="res_model">hcm.employee.location</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="员工考勤点" id="hcm_employee_location_menu" parent="location_menu" sequence="1" action="hcm_employee_location_action"/>
+
+    </data>
+</odoo>

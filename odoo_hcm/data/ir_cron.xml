@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+		<record id="get_weixinxcx_token_ir_cron" model="ir.cron">
+			<field name="name">微信小程序-更新Token</field>
+			<field name="model_id" ref="model_api_alow_access"/>
+			<field name="type">ir.actions.server</field>
+			<field name="active">True</field>
+			<field name="state">code</field>
+			<field name="code">env['api.alow.access']._get_access_token()</field>
+			<field name="interval_number">90</field>
+			<field name="interval_type">minutes</field>
+			<field name="numbercall">-1</field>
+		</record>
+
+    </data>
+</odoo>

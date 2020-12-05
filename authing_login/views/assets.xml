@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2019 SuXueFeng GNU
+-->
+<odoo>
+
+    <menuitem id="root_menu" name="Authing" sequence="30" groups="authing_login.manage_group" web_icon="authing_login,static/description/icon.png"/>
+
+    <menuitem id="users_menu" name="用户管理" sequence="3" parent="root_menu" groups="authing_login.manage_group"/>
+
+    <menuitem id="authing_config" name="配置" parent="root_menu" sequence="100" groups="authing_login.manage_group"/>
+
+</odoo>

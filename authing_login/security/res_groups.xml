@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (C) 2020 SuXueFeng GNU-->
+<odoo>
+
+    <record model="ir.module.category" id="authing_login_category">
+        <field name="name">Authing</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="manage_group" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="authing_login_category"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

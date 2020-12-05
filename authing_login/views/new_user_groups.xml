@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="authing_user_groups_tree_view" model="ir.ui.view">
+        <field name="name">用户权限</field>
+        <field name="model">authing.user.groups</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="name"/>
+                <field name="groups_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="authing_user_groups_form_view" model="ir.ui.view">
+        <field name="name">用户权限</field>
+        <field name="model">authing.user.groups</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="为该权限组取一个名字吧..."/>
+                        <field name="groups_ids" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="authing_user_groups_action">
+        <field name="name">用户权限</field>
+        <field name="res_model">authing.user.groups</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="authing_user_groups_menu" name="用户权限" parent="root_menu" sequence="90" action="authing_user_groups_action"/>
+
+</odoo>
