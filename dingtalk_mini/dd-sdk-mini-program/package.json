@@ -1,0 +1,49 @@
+{
+  "name": "@zsqk/dd-sdk-mini-program",
+  "version": "0.1.7",
+  "description": "钉钉小程序 JSAPI SDK. Promise 封装, 类型提示.",
+  "keywords": [
+    "dingding",
+    "dingtalk",
+    "mini-program",
+    "jsapi"
+  ],
+  "main": "build/index.js",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir build --extensions \".ts,.tsx\" --source-maps inline",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zsqk/dd-sdk-mini-program.git"
+  },
+  "author": "zsqk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zsqk/dd-sdk-mini-program/issues"
+  },
+  "homepage": "https://github.com/zsqk/dd-sdk-mini-program#readme",
+  "contributors": [
+    "iugo <npm@iugo.dev> (https://iugo.dev/)"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/lodash": "^4.14.149",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "eslint": "^6.8.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {}
+}
