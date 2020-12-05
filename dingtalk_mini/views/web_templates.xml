@@ -5,7 +5,7 @@
         <t t-raw="ding_error"/>
     </template>
 
-    <template id="dingtalk_mini_login_signup" name="Dingtalk mini Login Signup">
+    <!-- <template id="dingtalk_mini_login_signup" name="Dingtalk mini Login Signup">
         <t t-call="web.login_layout">
             <form class="oe_signup_form" role="form" method="post" t-if="not message">
                 <select name="env_company" id="env_company" class="form-control">
@@ -28,9 +28,9 @@
                 </div>
             </form>
         </t>
-    </template>
+    </template> -->
 
-    <template id="auto_login_signup" name="DingTalk mini Auto Login View">
+    <!-- <template id="auto_login_signup" name="DingTalk mini Auto Login View">
         <t t-call="web.login_layout">
             <form class="oe_signup_form">
                 <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...                    <br/>
@@ -61,6 +61,6 @@
                 });
             </script>
         </t>
-    </template>
+    </template> -->
 
 </odoo>

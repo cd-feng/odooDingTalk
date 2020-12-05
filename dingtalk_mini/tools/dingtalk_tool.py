@@ -12,14 +12,14 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-def get_dingtalk_mini_config(self, agent_id, company):
+def get_dingtalk_mini_config(self, company):
     """
     获取小程序配置项
     :return:
     """
-    config = self.env['dingtalk.mini.config'].sudo().search([('agent_id', '=', agent_id),('company_id', '=', company.id)])
+    config = self.env['dingtalk.mini.config'].sudo().search([('company_id', '=', company.id)])
     if not config:
-        raise UserError("没有为:(%s)配置钉钉小程序(%s)参数！" % (company.name, agent_id))
+        raise UserError("没有为:(%s)配置钉钉小程序参数！" % company.name)
     return config
 
 

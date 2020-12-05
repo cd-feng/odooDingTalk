@@ -15,9 +15,9 @@
     'application': True,
     'auto_install': False,
     'data': [
-        'security/ir.model.access.csv',
-        'views/menu.xml',
-        'views/dingtalk_config.xml',
+        # 'security/ir.model.access.csv',
+        # 'views/menu.xml',
+        # 'views/dingtalk_config.xml',
         'views/web_templates.xml',
     ],
     'qweb': [
@@ -25,8 +25,6 @@
     'price': 450,
     'currency': 'EUR',
     'images': [
-        'static/description/icon.png',
-        'static/description/index.jpg',
     ],
     'license': 'AGPL-3',
 }
