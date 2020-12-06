@@ -162,9 +162,9 @@ class MiniOAuthController(OAuthController):
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
 
-    @http.route('/dingtalk/eapp/login', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    @http.route('/miniapp/dd/login', type='http', auth='none', methods=['get', 'post'], csrf=False)
     # @fragment_to_query_string
-    def dingtalk_eapp_login_v1(self, **kw):
+    def miniapp_dd_login_v1(self, **kw):
         """
         通过获得的钉钉小程序免登授权码获取用户信息后auth登录odoo
         :param kw:
@@ -197,8 +197,37 @@ class MiniOAuthController(OAuthController):
         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>dd_user_info', dd_info)
         return json.dumps(dd_info)
 
-    @http.route('/dingtalk/auth/refresh', type='http', auth='none', methods=['get', 'post'], csrf=False)
-    # @fragment_to_query_string
+    @http.route('/miniapp/dd/authenticate', type='http', auth='none', methods=["GET", "POST"], csrf=False, website=True)
+    def dingtalk_authenticate(self, **kw):
+
+        params_data = request.params.copy()
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>params_data', params_data)
+        auth_code = params_data.get('code')
+
+        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
+        result = client.user.getuserinfo(auth_code)
+        domain = [('ding_id', '=', result.userid), ('company_id', '=', config.company_id.id)]
+        employee = request.env['hr.employee'].sudo().search(domain, limit=1)
+        if employee:
+            userid = result.userid
+            uid = request.session.authenticate(request.session.db, employee.user_id.login, userid)
+            request.session.dd_user_id = userid
+            if uid:
+                values = {'status': 'success', 'dd_user_id': userid, 'uid': uid, 'name': result.name,
+                          'session_id': request.session.sid}
+            else:
+                return json.dumps({'status': 'error', 'errmsg': u'您没有绑定Odoo用户,请联系管理员！'})
+            _logger.info("values:" + str(values))
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>values', values)
+            return json.dumps(values)
+        else:
+            return json.dumps({'status': 'error', 'errmsg': u'您没有绑定Odoo用户,请联系管理员！'})
+
+
+class MiniAppController(http.Controller):
+
+    @http.route('/miniapp/dd/token/refresh', type='http', auth='none', methods=['get', 'post'], csrf=False)
     def dingtalk_auth_refresh(self, **kw):
         """
         刷新token
@@ -209,8 +238,7 @@ class MiniOAuthController(OAuthController):
         client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
         return json.dumps({'token': client.get_access_token().access_token})
 
-    @http.route('/dingtalk/eapp/users/menus', type='http', auth='none', methods=['get', 'post'], csrf=False)
-    # @fragment_to_query_string
+    @http.route('/miniapp/dd/users/menus', type='http', auth='none', methods=['get', 'post'], csrf=False)
     def dingtalk_eapp_users_menus(self, **kw):
         """
         初始化菜单
@@ -219,12 +247,36 @@ class MiniOAuthController(OAuthController):
         """
         return json.dumps(['odoo', '测试'])
 
-    @http.route('/dingtalk/eapp/users/groups', type='http', auth='none', methods=['get', 'post'], csrf=False)
-    # @fragment_to_query_string
+    @http.route('/miniapp/dd/users/groups', type='json', auth='none', methods=['get', 'post'], csrf=False)
     def dingtalk_eapp_users_groups(self, **kw):
         """
-        初始化菜单
+        初始化权限
         :param kw:
         :return:
         """
         return json.dumps([])
+
+    @http.route('/miniapp/dd/test', type='http', auth='public', methods=['get', 'post'], cors='*', csrf=False, website=True)
+    # 接受外部系统推送过来的凭证信息并新增凭证
+    def create_voucher(self, *args, **kw):
+        '''接受推送的凭证'''
+
+        params_data = request.params.copy()
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>params_data', params_data)
+
+        # data = request.data
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>data',data)
+        # data = json.loads(data)['postdata']
+        # 检查权限
+        # self.env = request.env
+        # user = self._check_access(loginUser, pw, mark)
+        # # 检查凭证逻辑
+        # self._check_voucher_logic(data)
+        # # 构建符合格式的凭证
+        # voucher = self._build_voucher(autoCreate, data, user)
+        # v = self.env['accountcore.voucher'].sudo().create(voucher)
+        # return {"uniqueNumber": v.uniqueNumber}
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>name',name)
+        return json.dumps({'status': 'success', 'message': u'数据已成功录入！'})
+
+    # 检查权限
