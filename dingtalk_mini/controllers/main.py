@@ -245,7 +245,8 @@ class MiniAppController(http.Controller):
         :param kw:
         :return:
         """
-        return json.dumps(['odoo', '测试'])
+        menu = [{}]
+        return json.dumps(menu)
 
     @http.route('/miniapp/dd/users/groups', type='json', auth='none', methods=['get', 'post'], csrf=False)
     def dingtalk_eapp_users_groups(self, **kw):
@@ -280,3 +281,12 @@ class MiniAppController(http.Controller):
         return json.dumps({'status': 'success', 'message': u'数据已成功录入！'})
 
     # 检查权限
+    @http.route('/', type='json', auth='none', methods=['get', 'post'], csrf=False)
+    def dingtalk_eapp_users_menus(self, idField, limit, orderBy, page, pageable, params, **kw):
+        """
+        通用搜索方法
+        :param kw:
+        :return:
+        """
+        menu = [{}]
+        return json.dumps(menu)
