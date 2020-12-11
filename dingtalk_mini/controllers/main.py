@@ -287,6 +287,9 @@ class MiniAppController(http.Controller):
         通用搜索方法
         :param kw:
         :return:
+        http://cnongood.vaiwan.comurl/?idField=id&limit=20&orderBy=id&page=1&pageable=true&params={"name":"5555"}&sort=desc
+
+http://cnongood.vaiwan.comurl/?idField=id&limit=20&orderBy=id&page=1&pageable=true&params=%7B%22name%22%3A%225555%22%7D&sort=desc
         """
         menu = [{}]
         return json.dumps(menu)
