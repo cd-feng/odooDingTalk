@@ -280,9 +280,10 @@ class MiniAppController(http.Controller):
         # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>name',name)
         return json.dumps({'status': 'success', 'message': u'数据已成功录入！'})
 
-    # 检查权限
-    @http.route('/', type='json', auth='none', methods=['get', 'post'], csrf=False)
-    def dingtalk_eapp_users_menus(self, idField, limit, orderBy, page, pageable, params, **kw):
+    # 搜索
+    @http.route('/miniapp/search', type='http', auth='none', methods=['get', 'post'], csrf=False, cors='*')
+    # def dingtalk_eapp_users_menus(self, idField, limit, orderBy, page, pageable, params, **kw):
+    def dingtalk_eapp_users_menus(self, **kw):
         """
         通用搜索方法
         :param kw:
@@ -291,5 +292,156 @@ class MiniAppController(http.Controller):
 
 http://cnongood.vaiwan.comurl/?idField=id&limit=20&orderBy=id&page=1&pageable=true&params=%7B%22name%22%3A%225555%22%7D&sort=desc
         """
-        menu = [{}]
-        return json.dumps(menu)
+        # json_str = request.jsonrequest
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',request.jsonrequest)
+        # params_data = request.params.copy()
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>params_data', params_data)
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>kw', kw)
+        data = kw.get('params')
+        print('>>>>>>>>>>>>>>>>>data', data)
+        search_result = [
+            {'型号': 'D01',
+             '工序编号': 'D0101',
+             '工序名称': '贴',
+             '工价': '0.1'},
+            {'型号': '001',
+             '工序编号': '002',
+             '工序名称': '12',
+             '工价': '0.2'},
+        ]
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>json', json.dumps(search_result))
+        return json.dumps(search_result)
+
+
+# 以下尝试适配e-app的小程序前端
+class EAppController(http.Controller):
+
+    @http.route('/uaa/auth/refresh', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def dingtalk_auth_refresh(self, **kw):
+        """
+        刷新token
+        :param kw:
+        :return:
+        """
+        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
+
+        dd_info = {
+            'status': 0,
+            'data': {'token': client.get_access_token().access_token,
+                     }
+        }
+
+        return json.dumps(dd_info)
+
+    @http.route('/dingding/v1/login', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    # @fragment_to_query_string
+    def miniapp_dd_login_v2(self, code, **kw):
+        """
+        通过获得的钉钉小程序免登授权码获取用户信息后auth登录odoo
+        :param kw:
+        :return:
+        """
+        params_data = request.params.copy()
+        auth_code = params_data.get('code')
+        logging.info(">>>免登授权码: %s", auth_code)
+        config = request.env['dingtalk.mc.config'].sudo().search([('m_login', '=', True)], limit=1)
+        client = dt.get_client(request, dt.get_dingtalk_config(request, config.company_id))
+        result = client.user.getuserinfo(auth_code)
+        logging.info(">>>获取员工结果: %s", result)
+        domain = [('ding_id', '=', result.userid), ('company_id', '=', config.company_id.id)]
+        employee = request.env['hr.employee'].sudo().search(domain, limit=1)
+        if not employee:
+            _logger.info(_("系统对应员工不存在!"))
+            return json.dumps({'state': False, 'msg': '系统对应员工不存在!'})
+        _logger.info(">>>员工：{}正在尝试登录系统".format(employee.name))
+        if not employee.ding_id:
+            _logger.info(_("员工不存在钉钉ID，请维护后再试!"))
+            return json.dumps({'state': False, 'msg': '员工不存在钉钉ID，请维护后再试!'})
+        if not employee.user_id:
+            return json.dumps({'state': False, 'msg': '你还没有关联系统用户，请联系管理员处理！'})
+        dd_info = {
+            'status': 0,
+            'data': {'dd_user_info': {'Userid': result.userid,
+                                      'Name': result.name,
+                                      'Avatar': '',
+                                      },
+                     'token': client.get_access_token().access_token,
+                     }
+        }
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>dd_user_info', dd_info)
+        return json.dumps(dd_info)
+
+    @http.route('/system/v1/role-action/users/menus', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def dingtalk_eapp_users_menus(self, **kw):
+        """
+        初始化菜单
+        :param kw:
+        :return:
+        """
+        menutree = [{
+            'menu_name': '根节点',
+            'children': [
+                {
+                    'menu_name': '1',
+                    'children': [
+                        {
+                            'menu_name': '1-1',
+                            'children': [
+                                {'menu_name': '1-1-1'},
+                                {'menu_name': '1-1-2'}
+                            ]
+                        },
+                        {'menu_name': '1-2'},
+                        {'menu_name': '1-3'}
+                    ]
+                },
+                {
+                    'menu_name': '2',
+                    'children': [
+                        {'menu_name': '2-1'},
+                        {'menu_name': '2-2'},
+                        {'menu_name': '2-3'}
+                    ]
+                },
+                {
+                    'menu_name': '3',
+                    'children': []
+                }
+            ]
+        }]
+        dd_info = {
+            'status': 0,
+            'data': {
+                'menus': {
+                    'children': [{
+                        'icon_cls': 'cube',
+                        'menu_name': '物品申请',
+                        'mobile_url': '/pages/hy/base/cons/form/index',
+                        'id': 'purchasing',
+                        'permission': [{
+                            "position": 1,
+                            "action_name": "提交",
+                            "xtype": "primary",
+                            "handler": 'handleSubmit'}]
+                    }]
+                }
+            },
+        }
+
+        return json.dumps(dd_info)
+
+    @http.route('/system/v1/role-action/users/actions/groups', type='http', auth='none', methods=['get', 'post'], csrf=False)
+    def dingtalk_eapp_users_groups(self, **kw):
+        """
+        初始化权限
+        :param kw:
+        :return:
+        """
+        dd_info = {
+            'status': 0,
+            'data': {
+
+            }
+        }
+        return json.dumps(dd_info)
