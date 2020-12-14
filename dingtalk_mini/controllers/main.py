@@ -336,7 +336,7 @@ class EAppController(http.Controller):
 
     @http.route('/dingding/v1/login', type='http', auth='none', methods=['get', 'post'], csrf=False)
     # @fragment_to_query_string
-    def miniapp_dd_login_v2(self, code, **kw):
+    def miniapp_dd_login_v2(self, **kw):
         """
         通过获得的钉钉小程序免登授权码获取用户信息后auth登录odoo
         :param kw:
@@ -353,13 +353,12 @@ class EAppController(http.Controller):
         employee = request.env['hr.employee'].sudo().search(domain, limit=1)
         if not employee:
             _logger.info(_("系统对应员工不存在!"))
-            return json.dumps({'state': False, 'msg': '系统对应员工不存在!'})
+            return json.dumps({'msg': '系统对应员工不存在!'})
         _logger.info(">>>员工：{}正在尝试登录系统".format(employee.name))
         if not employee.ding_id:
             _logger.info(_("员工不存在钉钉ID，请维护后再试!"))
-            return json.dumps({'state': False, 'msg': '员工不存在钉钉ID，请维护后再试!'})
-        if not employee.user_id:
-            return json.dumps({'state': False, 'msg': '你还没有关联系统用户，请联系管理员处理！'})
+            return json.dumps({'msg': '员工不存在钉钉ID，请维护后再试!'})
+
         dd_info = {
             'status': 0,
             'data': {'dd_user_info': {'Userid': result.userid,
@@ -380,53 +379,112 @@ class EAppController(http.Controller):
         :return:
         """
         menutree = [{
-            'menu_name': '根节点',
+            'menu_name': '耗材管理系统',
             'children': [
                 {
-                    'menu_name': '1',
+                    'menu_name': '基础资料',
                     'children': [
                         {
-                            'menu_name': '1-1',
-                            'children': [
-                                {'menu_name': '1-1-1'},
-                                {'menu_name': '1-1-2'}
-                            ]
+                            'menu_name': '分类资料',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/base/class/tree/index',
+                                        'id': 'purchasing',
+                                        'xtype': "primary",
+                                        'permission': [
+                                            {
+                                                "position": 1,
+                                                "action_name": "提交",
+                                                "xtype": "primary",
+                                                "handler": 'handleSubmit'
+                                            }
+                                        ]
+
+                        }, {
+                            'menu_name': '耗材资料',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/base/cons/list/index',
+                                        'id': 'cons',
+                                        'xtype': "primary",
+                                        'permission': [
+                                            {
+                                                "position": 1,
+                                                "action_name": "提交",
+                                                "xtype": "primary",
+                                                "handler": 'handleSubmit'
+                                            }
+                                        ]
+                        }, {
+                            'menu_name': '仓库资料',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/base/wh/list/index',
+                                        'id': 'wh',
+                                        'xtype': "primary",
+                                        'permission': [
+                                            {
+                                                "position": 1,
+                                                "action_name": "提交",
+                                                "xtype": "primary",
+                                                "handler": 'handleSubmit'
+                                            }
+                                        ]
+                        }, {
+                            'menu_name': '供应商资料',
+                            'icon_cls': 'book',
+                                        'mobile_url': '/pages/hy/base/supplier/list/index',
+                                        'id': 'supplier',
+                                        'xtype': "primary",
+                                        'permission': [
+                                            {
+                                                "position": 1,
+                                                "action_name": "提交",
+                                                "xtype": "primary",
+                                                "handler": 'handleSubmit'
+                                            }
+                                        ]
                         },
-                        {'menu_name': '1-2'},
-                        {'menu_name': '1-3'}
                     ]
-                },
-                {
-                    'menu_name': '2',
+                }, {
+                    'menu_name': '耗材管理',
                     'children': [
-                        {'menu_name': '2-1'},
-                        {'menu_name': '2-2'},
-                        {'menu_name': '2-3'}
+                        {
+                            'menu_name': '请购单',
+                            'icon_cls': 'cube',
+                                        'xtype': "primary",
+                                        'mobile_url': '/pages/hy/request/list/index',
+                                        'id': 'request',
+                        }, {
+                            'menu_name': '采购单',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/po/form/index',
+                                        'id': 'po',
+                                        'xtype': "primary",
+                        }, {
+                            'menu_name': '入库单',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/in/list/index',
+                                        'id': 'in',
+                                        'xtype': "primary",
+                        }, {
+                            'menu_name': '领用单',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/out/list/index',
+                                        'id': 'out',
+                                        'xtype': "primary",
+                        }, {
+                            'menu_name': '库存',
+                            'icon_cls': 'cube',
+                                        'mobile_url': '/pages/hy/base/wh/form/index',
+                                        'id': 'wh4',
+                                        'xtype': "primary",
+                        }
                     ]
-                },
-                {
-                    'menu_name': '3',
-                    'children': []
                 }
             ]
         }]
+
         dd_info = {
             'status': 0,
-            'data': {
-                'menus': {
-                    'children': [{
-                        'icon_cls': 'cube',
-                        'menu_name': '物品申请',
-                        'mobile_url': '/pages/hy/base/cons/form/index',
-                        'id': 'purchasing',
-                        'permission': [{
-                            "position": 1,
-                            "action_name": "提交",
-                            "xtype": "primary",
-                            "handler": 'handleSubmit'}]
-                    }]
-                }
-            },
+            'data': menutree
         }
 
         return json.dumps(dd_info)
