@@ -330,12 +330,15 @@ class EAppController(http.Controller):
 
         dd_info = {
             'status': 0,
-            'data': {'dd_user_info': {'Userid': result.userid,
-                                      'Name': result.name,
-                                      'Avatar': '',
-                                      },
-                     'token': client.get_access_token().access_token,
-                     }
+            'data': {
+                'id': employee.user_id.id,
+                'dd_user_info': {
+                    'Userid': result.userid,
+                    'Name': result.name,
+                    'Avatar': '',
+                },
+                'token': client.get_access_token().access_token,
+            }
         }
         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>dd_user_info', dd_info)
         return json.dumps(dd_info)
