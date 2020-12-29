@@ -48,7 +48,12 @@ class DingTalkCallBackManage(http.Controller):
         if not encrypt_result or not corp_id or not callback:
             return False
         logging.info(">>>encrypt_result:{}".format(encrypt_result))
-        result_msg = json.loads(encrypt_result)   # 消息内容
+        # bug修复 截掉appkey
+        n = encrypt_result.index('}')
+        n_result = encrypt_result[0:n+1]
+        result_msg = json.loads(n_result)
+        
+        #result_msg = json.loads(encrypt_result)   # 消息内容
         event_type = result_msg.get('EventType')  # 消息类型
         # 创建回调日志
         self.create_callback_log(event_type, result_msg, now_company)
