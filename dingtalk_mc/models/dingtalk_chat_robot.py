@@ -47,7 +47,7 @@ class DingTalkRobot(models.Model):
             requests.post(url=res.webhook, headers=headers, data=json.dumps(data), timeout=1)
             # 创建消息日志
             self.env['dingtalk.message.log'].create({
-                'company_id': self.env.user.company_id.id,
+                'company_id': self.env.company.id,
                 'name': "机器人测试连接",
                 'msg_type': "msg",
                 'body': content,
@@ -161,7 +161,7 @@ class DingTalkRobotSendMessage(models.TransientModel):
                 message = 'feed_card消息'
                 # 创建消息日志
             self.env['dingtalk.message.log'].create({
-                'company_id': self.env.user.company_id.id,
+                'company_id': self.env.company.id,
                 'name': "群机器人发送消息",
                 'msg_type': "msg",
                 'body': message,

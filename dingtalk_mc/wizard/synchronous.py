@@ -16,7 +16,7 @@ class DingTalkMcSynchronous(models.TransientModel):
     RepeatType = [('name', '以名称判断'), ('id', '以钉钉ID')]
 
     company_ids = fields.Many2many('res.company', 'dingtalk_mc_companys_rel', string="要同步的公司", required=True,
-                                   default=lambda self: [(6, 0, [self.env.user.company_id.id])])
+                                   default=lambda self: [(6, 0, [self.env.company.id])])
     department = fields.Boolean(string=u'钉钉部门', default=True)
     synchronous_dept_detail = fields.Boolean(string=u'部门详情', default=False)
     repeat_type = fields.Selection(string=u'判断唯一', selection=RepeatType, default='id')
@@ -186,7 +186,7 @@ class DingTalkMCSynchronousPartner(models.TransientModel):
     _rec_name = 'id'
 
     company_ids = fields.Many2many('res.company', 'dingtalk_mc_partner_companys_rel', string="要同步的公司", required=True,
-                                   default=lambda self: [(6, 0, [self.env.user.company_id.id])])
+                                   default=lambda self: [(6, 0, [self.env.company.id])])
 
     def start_synchronous_partner(self):
         self.ensure_one()
@@ -285,7 +285,7 @@ class CreateResUser(models.TransientModel):
             if res.is_all:
                 domain = [
                     ('user_id', '=', False),
-                    ('company_id', '=', self.env.user.company_id.id),
+                    ('company_id', '=', self.env.company.id),
                     ('ding_id', '!=', False)
                 ]
                 emps = self.env['hr.employee'].search(domain)

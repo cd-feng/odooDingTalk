@@ -45,7 +45,7 @@ class DingTalkSendChatMessage(models.TransientModel):
             result = client.chat.send(ding_chat.chat_id, msg)
             # 创建消息日志
             self.env['dingtalk.message.log'].create({
-                'company_id': self.env.user.company_id.id,
+                'company_id': self.env.company.id,
                 'name': "发送群消息",
                 'msg_type': "chat",
                 'body': self.message,
