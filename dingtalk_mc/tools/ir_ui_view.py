@@ -138,7 +138,7 @@ def view_get_approval_flow(self, view_type, result):
     if flow_obj is None:
         return
     model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', self._name)]).id
-    domain = [('company_id', '=', self.env.user.company_id.id), ('oa_model_id', '=', model_id)]
+    domain = [('company_id', '=', self.env.company.id), ('oa_model_id', '=', model_id)]
     flows = flow_obj.with_context(active_test=False).with_user(SUPERUSER_ID).search(domain)
     if not flows:
         return

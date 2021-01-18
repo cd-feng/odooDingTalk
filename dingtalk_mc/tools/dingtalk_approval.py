@@ -17,7 +17,7 @@ def approval_result(self):
     """
     # 获取钉钉审批配置
     model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', self._name)]).id
-    domain = [('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)]
+    domain = [('oa_model_id', '=', model_id), ('company_id', '=', self.env.company.id)]
     approval = self.env['dingtalk.approval.control'].with_user(SUPERUSER_ID).search(domain, limit=1)
     _logger.info("提交'%s'单据至钉钉进行审批..." % approval.name)
     # 钉钉审批模型编码
@@ -46,7 +46,7 @@ def approval_result(self):
             'cc_position': cc_type     # 抄送时间
         })
     # ----提交至钉钉---
-    client = dt.get_client(self, dt.get_dingtalk_config(self, self.env.user.company_id))
+    client = dt.get_client(self, dt.get_dingtalk_config(self, self.env.company))
     try:
         url = 'topapi/processinstance/create'
         result = client.post(url, data)

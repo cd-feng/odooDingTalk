@@ -68,7 +68,7 @@ def dingtalk_approval_write(self, vals):
         return
     for res in self:
         model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', res._name)]).id
-        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
+        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.company.id)])
         if not flows:
             continue
         if not flows[0].is_ing_write and res.dd_approval_state == 'approval':
@@ -99,7 +99,7 @@ def dingtalk_approval_unlink(self):
         return
     for res in self:
         model_id = self.env['ir.model'].with_user(SUPERUSER_ID).search([('model', '=', res._name)]).id
-        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.user.company_id.id)])
+        flows = res_state_obj.with_user(SUPERUSER_ID).search([('oa_model_id', '=', model_id), ('company_id', '=', self.env.company.id)])
         if not flows:
             continue
         if res.dd_approval_state != 'draft':
