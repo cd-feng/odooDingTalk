@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="update_dingtalk_employee_avatar_form_view" model="ir.ui.view">
+        <field name="name">替换员工头像</field>
+        <field name="model">update.dingtalk.employee.avatar</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>替换过程中请<strong>保持网络通畅</strong>替换的时间可能较长，你可以继续做其他的事项，替换完成后系统会弹窗提示你！</p>
+                </div>
+                <group>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <footer>
+                    <button string="后台替换" name="on_update" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="update_dingtalk_employee_avatar_action" model="ir.actions.act_window">
+        <field name="name">替换员工头像</field>
+        <field name="res_model">update.dingtalk.employee.avatar</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="替换员工头像" id="update_dingtalk_employee_avatar_menu" parent="synchronous_menu" sequence="4"
+              action="update_dingtalk_employee_avatar_action" groups="dingtalk_base.manage_groups"/>
+
+</odoo>

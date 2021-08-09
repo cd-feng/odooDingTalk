@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingtalk_login.dingtalk_auto_login_signup" name="DingTalk Auto Login Signup">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            </t>
+            <div class="container text-center" style="width:400px;">
+                <div class="text-center" style="margin-top:150px;">
+                    <p class="alert alert-success" id="message-result">系统正在鉴定您的身份，请稍后...<br/> 若页面长时间无反应（一般不超过10秒），请尝试刷新页面.</p>
+                    <p id="corp-id" style="display:none;">
+                        <t t-esc="corp_id"/>
+                    </p>
+                </div>
+                <div class="text-center oe_login_buttons pt-3">
+                    <a t-attf-href="/web/login" class="btn btn-primary btn-sm" role="button">返回账号登录?</a>
+                </div>
+            </div>
+            <t t-call="web.layout">
+                <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                <script type="text/javascript" src="/dingtalk_login/static/src/js/dingtalk.open.js"/>
+                <script type="text/javascript" src="/dingtalk_login/static/src/js/dingtail_auto_login.js"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="dingtalk_login_signup" name="Dingtalk Login Signup">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            </t>
+            <div class="container text-center" style="width:400px;">
+                <div class="text-center" style="margin-top:150px;">
+                    <h3 class="text-center">选择登录公司：</h3>
+                </div>
+                <div class="text-center" style="margin-top:20px;">
+                    <select name="env_company" id="env_company" class="form-control"/>
+                </div>
+                <div class="text-center" style="margin-top:10px;">
+                    <hr/>
+                    <div id="login_container" class="login_container"/>
+                    <hr/>
+                </div>
+                <p class="alert alert-danger" t-if="error">
+                    <t t-raw="error"/>
+                </p>
+            </div>
+            <div class="text-center oe_login_buttons pt-3">
+                <a t-attf-href="/web/login" class="btn btn-primary btn-sm" role="button">返回账号登录?</a>
+            </div>
+            <t t-call="web.layout">
+                <script type="text/javascript" src="/dingtalk_login/static/src/js/ddLogin.js"/>
+                <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                <script type="text/javascript" src="/dingtalk_login/static/src/js/dingtalk_login.js"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

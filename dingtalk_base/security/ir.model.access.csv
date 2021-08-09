@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk_config,dingtalk.config,model_dingtalk_config,,1,1,1,1
+access_dingtalk_synchronous_department,dingtalk.synchronous.department,model_dingtalk_synchronous_department,,1,1,1,1
+access_dingtalk_synchronous_employee,dingtalk.synchronous.employee,model_dingtalk_synchronous_employee,,1,1,1,1
+access_dingtalk_synchronous_partner,dingtalk.synchronous.partner,model_dingtalk_synchronous_partner,,1,1,1,1
+access_update_dingtalk_employee_avatar,update.dingtalk.employee.avatar,model_update_dingtalk_employee_avatar,,1,1,1,1
+access_dingtalk_callback_list,dingtalk.callback.list,model_dingtalk_callback_list,,1,1,1,1
+access_dingtalk_callback_manage,dingtalk.callback.manage,model_dingtalk_callback_manage,,1,1,1,1
+access_get_dingtalk_callback,get.dingtalk.callback,model_get_dingtalk_callback,,1,1,1,1
+access_dingtalk_callback_log,dingtalk.callback.log,model_dingtalk_callback_log,,1,1,1,1
+

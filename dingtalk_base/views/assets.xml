@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingtalk_base_template" name="DingDing Hrm Template" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dingtalk_base/static/src/js/callback_manage.js"></script>
+        </xpath>
+    </template>
+
+    <menuitem name="钉钉" id="root_menu" web_icon="dingtalk_base,static/description/icon.png" sequence="15"/>
+
+    <menuitem name="主数据" id="main_menu" parent="root_menu" sequence="5"/>
+
+    <menuitem name="同步工具" id="synchronous_menu" parent="root_menu" sequence="6"/>
+
+    <menuitem name="日志记录" id="log_menu" parent="root_menu" sequence="98" groups="dingtalk_base.manage_groups"/>
+
+    <menuitem name="配置" id="config_menu" parent="root_menu" sequence="99" groups="dingtalk_base.manage_groups"/>
+
+
+    <record id="open_dingtalk_department_action" model="ir.actions.act_window">
+        <field name="name">部门</field>
+        <field name="res_model">hr.department</field>
+        <field name="domain">[('ding_id', '!=', '')]</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="hr.view_department_filter"/>
+    </record>
+
+    <menuitem name="部门" id="hr_department_menu" parent="main_menu" sequence="1"
+          action="open_dingtalk_department_action" groups="dingtalk_base.manage_groups"/>
+
+    <record id="open_dingtalk_employee_action" model="ir.actions.act_window">
+        <field name="name">员工</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('ding_id', '!=', '')]</field>
+        <field name="context">{}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+    </record>
+
+    <menuitem id="hr_employees_kanban_menu" name="员工" parent="main_menu" sequence="2"
+              action="open_dingtalk_employee_action" groups="dingtalk_base.manage_groups"/>
+
+    <record id="res_partner_act_window" model="ir.actions.act_window">
+        <field name="name">钉钉联系人</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('ding_id', '!=', False)]</field>
+    </record>
+
+    <menuitem id="res_partner_menu" name="联系人" parent="main_menu" sequence="3"
+              action="res_partner_act_window" groups="dingtalk_base.manage_groups"/>
+
+</odoo>

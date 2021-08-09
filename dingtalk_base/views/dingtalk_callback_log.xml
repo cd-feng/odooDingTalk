@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <record id="dingtalk_callback_log_tree_view" model="ir.ui.view">
+        <field name="name">回调日志</field>
+        <field name="model">dingtalk.callback.log</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" create="0" edit="0" import="0" delete="0">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="create_date" string="触发时间" widget="datetime"/>
+                <field name="type_id"/>
+                <field name="event_type"/>
+                <field name="body"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingtalk_callback_log_search">
+        <field name="model">dingtalk.callback.log</field>
+        <field name="arch" type="xml">
+            <search string="回调日志">
+                <field name="create_date" string="触发时间" widget="datetime"/>
+                <field name="type_id"/>
+                <field name="event_type"/>
+                <field name="body"/>
+                <field name="company_id"/>
+                <separator/>
+                <filter name="groupby_create_date" string="触发时间" context="{'group_by': 'create_date'}"/>
+                <filter name="groupby_type_id" string="回调类型" context="{'group_by': 'type_id'}"/>
+                <searchpanel>
+                    <field name="type_id" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="dingtalk_callback_log_action" model="ir.actions.act_window">
+        <field name="name">回调日志</field>
+        <field name="res_model">dingtalk.callback.log</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_groupby_type_id': 0}</field>
+    </record>
+
+    <menuitem name="回调日志" id="dingtalk_callback_log_menu" parent="log_menu" sequence="1" action="dingtalk_callback_log_action"/>
+
+</odoo>

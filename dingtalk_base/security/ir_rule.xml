@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+	<record id="dingtalk_config_company_rule" model="ir.rule">
+		<field name="name">钉钉参数配置-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_config"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	</record>
+
+	<record id="dingtalk_callback_manage_company_rule" model="ir.rule">
+		<field name="name">钉钉回调列表-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_callback_manage"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	</record>
+
+	<record id="dingtalk_callback_log_company_rule" model="ir.rule">
+		<field name="name">钉钉回调日志-公司过滤</field>
+		<field name="model_id" ref="model_dingtalk_callback_log"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+		<field name="perm_read" eval="True"/>
+		<field name="perm_write" eval="True"/>
+		<field name="perm_create" eval="True"/>
+		<field name="perm_unlink" eval="True"/>
+	</record>
+
+</odoo>

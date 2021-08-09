@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--联系人-->
+    <record id="partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="钉钉" groups="dingtalk_base.manage_groups">
+                    <group col="2">
+                        <group>
+                            <field name="ding_company_name"/>
+                            <field name="ding_employee_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="ding_id" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="dingtalk_synchronous_employee_form_view" model="ir.ui.view">
+        <field name="name">员工同步</field>
+        <field name="model">dingtalk.synchronous.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
+                </group>
+                <group col="2">
+                    <group string="同步选项">
+                        <field name="repeat_type" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即同步" name="on_synchronous" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_synchronous_employee_action" model="ir.actions.act_window">
+        <field name="name">员工同步</field>
+        <field name="res_model">dingtalk.synchronous.employee</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="员工同步" id="dingtalk_synchronous_employee_menu" parent="synchronous_menu" sequence="2"
+              action="dingtalk_synchronous_employee_action" groups="dingtalk_base.manage_groups"/>
+
+</odoo>

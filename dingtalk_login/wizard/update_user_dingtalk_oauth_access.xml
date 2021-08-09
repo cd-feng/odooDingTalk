@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="update_user_dingtalk_oauth_access_form_view" model="ir.ui.view">
+        <field name="name">修复员工登录失败</field>
+        <field name="model">update.user.dingtalk.oauth.access</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>本工具用于修复员工与系统登录用户关联的问题，系统会将员工钉钉id写入到关联的用户中，用于扫码和免登的判断。</p>
+                </div>
+                <footer>
+                    <button string="立即修复" name="on_update" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="update_user_dingtalk_oauth_access_action" model="ir.actions.act_window">
+        <field name="name">修复员工登录失败</field>
+        <field name="res_model">update.user.dingtalk.oauth.access</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="修复员工登录失败" id="update_user_dingtalk_oauth_access_menu" parent="dingtalk_base.synchronous_menu" sequence="5"
+              action="update_user_dingtalk_oauth_access_action" groups="dingtalk_base.manage_groups"/>
+
+</odoo>
