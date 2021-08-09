@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='public']" position='after'>
+                <page string="钉钉" groups="dingtalk_base.manage_groups">
+                    <group col="2">
+                        <group>
+                            <field name="din_jobnumber"/>
+                            <field name="mobile_phone" widget="phone"/>
+                            <field name="hired_date" widget="date"/>
+                        </group>
+                        <group>
+                            <field name="department_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="work_status"/>
+                            <field name="office_status" attrs="{'invisible': [('work_status', '!=', '2')]}"/>
+                        </group>
+                        <group>
+                            <field name="din_isAdmin"/>
+                            <field name="din_isBoss"/>
+                            <field name="din_isLeader"/>
+                            <field name="din_isSenior"/>
+                            <field name="din_isHide"/>
+                            <field name="real_authed" readonly="1"/>
+                            <field name="din_active" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="ding_id"/>
+                            <field name="din_unionid"/>
+<!--                            <field name="ding_avatar"/>-->
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

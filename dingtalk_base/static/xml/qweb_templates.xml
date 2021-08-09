@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingtalkMcCallbackListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button type="button" class="btn btn-primary get_dingtalk_callback_class">
+                获取回调列表
+            </button>
+        </t>
+    </t>
+
+</templates>
