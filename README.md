@@ -3,7 +3,7 @@
 ## 介绍
 本项目是一套基于`Odoo`平台的开源的一个集成阿里钉钉应用，主要应用功能包括基础数据同步、考勤数据同步、消息、智能人事等
 
-> 博客： https://sxfblog.com/index.php/archives/371.html
+> 博客： https://sxfblog.com/archives/64/
 >
 > 在使用本模块前，请先将钉钉中你创建的E应用或微应用权限放开和配置出口ip，得到钉钉应用的 **AppKey**和 **AppSecret**， 至于钉钉后台中的配置请参照：>https://open-doc.dingtalk.com/microapp/bgb96b 
 
@@ -31,11 +31,13 @@ QQ群：1019231617
 如果你觉得这个项目对你有所帮助，或许你可以资助鼓励一下作者~~ !
 
 **支付宝:**
-<p align="center"><img src="https://sxfblog.com/usr/uploads/2019/01/1838323992.png" alt="" style="max-width:50%;" width="200">
+
+<p align="center"><img src="https://sxfblog.com/usr/uploads/2020/12/2096443375.jpeg" alt="" style="max-width:50%;" width="200">
 </p>
 
 **微信：**
 
 <p align="center">
-  <img src="https://sxfblog.com/usr/uploads/2019/01/129181912.png" alt="" style="max-width:50%;" width="200">
+  <img src="https://sxfblog.com/usr/uploads/2020/12/358378720.jpeg" alt="" style="max-width:50%;" width="200">
 </p>
+
