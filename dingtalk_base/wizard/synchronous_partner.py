@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import threading
 from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, exceptions
 from odoo.addons.dingtalk_base.tools import dingtalk_tool as dt
 _logger = logging.getLogger(__name__)
-
-SYNCHRONOUSDINGTALKPARTNER = False
 
 
 class SynchronousPartner(models.TransientModel):
@@ -26,41 +23,25 @@ class SynchronousPartner(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        global SYNCHRONOUSDINGTALKPARTNER
-        if SYNCHRONOUSDINGTALKPARTNER:
-            raise exceptions.UserError('系统正在后台同步联系人信息，请勿再次发起！')
-        SYNCHRONOUSDINGTALKPARTNER = True  # 变为正在同步
-        # 当前操作用户
-        user_id = self.env.user.id
-        t = threading.Thread(target=self._synchronous_partner, args=(user_id, self.company_ids.ids))
-        t.start()
-        return self.env.user.notify_success(message="系统正在后台同步联系人信息，请耐心等待处理完成...")
+        self._synchronous_partner(self.company_ids.ids)
 
-    def _synchronous_partner(self, user_id, company_ids):
+    def _synchronous_partner(self, company_ids):
         """
         异步处理同步联系人信息
         :return:
         """
-        global SYNCHRONOUSDINGTALKPARTNER
-        with api.Environment.manage():
-            with self.pool.cursor() as new_cr:
-                new_cr.autocommit(True)
-                self = self.with_env(self.env(cr=new_cr))
-                start_time = datetime.now()  # 开始的时间
-                user = self.env['res.users'].with_user(SUPERUSER_ID).search([('id', '=', user_id)])
-                for company_id in company_ids:
-                    company = self.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', company_id)], limit=1)
-                    # 同步联系人标签
-                    self._synchronous_partner_category(company, user)
-                    # 同步联系人
-                    self._synchronous_partner_list(company, user)
-                SYNCHRONOUSDINGTALKPARTNER = False
-                end_time = datetime.now()
-                res_str = "同步钉钉联系人完成，共用时：{}秒".format((end_time - start_time).seconds)
-                _logger.info(res_str)
-                return user.with_user(SUPERUSER_ID).notify_success(message=res_str, sticky=True)
+        start_time = datetime.now()  # 开始的时间
+        for company_id in company_ids:
+            company = self.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', company_id)], limit=1)
+            # 同步联系人标签
+            self._synchronous_partner_category(company)
+            # 同步联系人
+            self._synchronous_partner_list(company)
+        end_time = datetime.now()
+        res_str = "同步钉钉联系人完成，共用时：{}秒".format((end_time - start_time).seconds)
+        _logger.info(res_str)
 
-    def _synchronous_partner_category(self, company, user):
+    def _synchronous_partner_category(self, company):
         """
         同步联系人标签
         :return:
@@ -85,14 +66,12 @@ class SynchronousPartner(models.TransientModel):
                 else:
                     self.env['res.partner.category'].with_user(SUPERUSER_ID).create(category)
         except Exception as e:
-            error_str = "同步联系人标签失败，原因：{}".format(str(e))
-            return user.with_user(SUPERUSER_ID).notify_success(message=error_str, sticky=True)
+            raise exceptions.UserError("同步联系人标签失败，原因：{}".format(str(e)))
 
-    def _synchronous_partner_list(self, company, user):
+    def _synchronous_partner_list(self, company):
         """
         同步联系人列表
         :param company:
-        :param user:
         :return:
         """
         client = dt.get_client(self, dt.get_dingtalk_config(self, company))
@@ -131,6 +110,5 @@ class SynchronousPartner(models.TransientModel):
                 else:
                     self.env['res.partner'].with_user(SUPERUSER_ID).create(data)
         except Exception as e:
-            error_str = "同步联系人失败，原因：{}".format(str(e))
-            return user.with_user(SUPERUSER_ID).notify_success(message=error_str, sticky=True)
+            raise exceptions.UserError("同步联系人失败，原因：{}".format(str(e)))
 

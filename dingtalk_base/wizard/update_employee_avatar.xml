@@ -13,7 +13,7 @@
                     <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
                 </group>
                 <footer>
-                    <button string="后台替换" name="on_update" type="object" class="oe_highlight"/>
+                    <button string="确认替换" name="on_update" type="object" class="oe_highlight"/>
                     <button string="取消" class="btn btn-default" special="cancel"/>
                 </footer>
             </form>

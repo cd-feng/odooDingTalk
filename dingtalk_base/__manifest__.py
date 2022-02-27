@@ -19,7 +19,7 @@
 
         'data/default_callback_list.xml',
 
-        'views/assets.xml',
+        'views/menu.xml',
         'views/dingtalk_config.xml',
         'views/hr_department.xml',
         'views/hr_employee.xml',
@@ -33,7 +33,13 @@
         'wizard/update_employee_avatar.xml',
         'wizard/dingtalk_callback_get.xml',
     ],
-    'qweb': [
-        'static/xml/*.xml',
-    ],
+
+    'assets': {
+        'web.assets_qweb': [
+            'dingtalk_base/static/xml/*.xml',
+        ],
+        'web.assets_backend': [
+            'dingtalk_base/static/src/js/callback_manage.js',
+        ],
+    }
 }

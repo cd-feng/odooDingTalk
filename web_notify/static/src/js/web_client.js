@@ -7,11 +7,13 @@ odoo.define("web_notify.WebClient", function(require) {
 
     WebClient.include({
         show_application: function() {
+            console.log('---  show_application ----')
             var res = this._super();
             this.start_polling();
             return res;
         },
         start_polling: function() {
+            console.log('---  start_polling ----')
             this.channel_success = "notify_success_" + session.uid;
             this.channel_danger = "notify_danger_" + session.uid;
             this.channel_warning = "notify_warning_" + session.uid;
@@ -37,6 +39,7 @@ odoo.define("web_notify.WebClient", function(require) {
         },
         bus_notification: function(notifications) {
             var self = this;
+            console.log('---  bus_notification ----')
             _.each(notifications, function(notification) {
                 var channel = notification[0];
                 var message = notification[1];
@@ -49,6 +52,7 @@ odoo.define("web_notify.WebClient", function(require) {
             });
         },
         on_message: function(message) {
+            console.log('---  on_message ----')
             return this.call("notification", "notify", {
                 type: message.type,
                 title: message.title,

@@ -12,8 +12,17 @@
     "website": "https://github.com/OCA/web",
     "depends": ["web", "bus", "base"],
     "data": [
+        "views/res_users_demo.xml",
         "views/web_notify.xml",
     ],
+
+    'assets': {
+        'web.assets_backend': [
+            'web_notify/static/src/scss/webclient.scss',
+            'web_notify/static/src/js/web_client.js',
+            'web_notify/static/src/js/widgets/notification.js',
+        ],
+    },
     "installable": True,
     'auto_install': True,
 }

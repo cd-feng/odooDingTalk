@@ -64,4 +64,5 @@ class DingTalkCallBackManage(Controller):
                 'encrypt': encrypt
             }
         }
+        _logger.info(return_data)
         return return_data

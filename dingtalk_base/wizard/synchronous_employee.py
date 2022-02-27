@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import threading
 from datetime import datetime
 from odoo import api, fields, models, SUPERUSER_ID, exceptions
 from odoo.addons.dingtalk_base.tools import dingtalk_tool as dt
 _logger = logging.getLogger(__name__)
-
-SYNCHRONOUSDINGTALKEMP = False
 
 
 class SynchronousEmployee(models.TransientModel):
@@ -26,58 +23,41 @@ class SynchronousEmployee(models.TransientModel):
         :return:
         """
         self.ensure_one()
-        global SYNCHRONOUSDINGTALKEMP
-        if SYNCHRONOUSDINGTALKEMP:
-            raise exceptions.UserError('系统正在后台同步员工信息，请勿再次发起！')
-        SYNCHRONOUSDINGTALKEMP = True  # 变为正在同步
-        # 当前操作用户
-        user_id = self.env.user.id
-        t = threading.Thread(target=self._synchronous_employee, args=(user_id, self.company_ids.ids, self.repeat_type))
-        t.start()
-        return self.env.user.notify_success(message="系统正在后台同步员工信息，请耐心等待处理完成...")
+        self._synchronous_employee(self.company_ids.ids, self.repeat_type)
 
-    def _synchronous_employee(self, user_id, company_ids, repeat_type):
+    def _synchronous_employee(self, company_ids, repeat_type):
         """
-        异步处理同步员工信息
+        处理同步员工信息
         :return:
         """
-        global SYNCHRONOUSDINGTALKEMP
-        with api.Environment.manage():
-            with self.pool.cursor() as new_cr:
-                new_cr.autocommit(True)
-                self = self.with_env(self.env(cr=new_cr))
-                start_time = datetime.now()  # 开始的时间
-                user = self.env['res.users'].with_user(SUPERUSER_ID).search([('id', '=', user_id)])
-                for company_id in company_ids:
-                    company = self.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', company_id)], limit=1)
-                    dept_domain = [('ding_id', '!=', ''), ('company_id', '=', company.id)]
-                    departments = self.env['hr.department'].with_user(SUPERUSER_ID).search(dept_domain)
-                    client = dt.get_client(self, dt.get_dingtalk_config(self, company))
-                    for department in departments:
-                        offset = 0
-                        size = 100
-                        while True:
-                            if department.ding_id.find('-') != -1:
-                                break
-                            _logger.info(">>>开始获取%s部门的员工", department.name)
-                            result_state = self._get_dingtalk_employee_list(client, department, offset, size,
-                                                                            company, repeat_type, user)
-                            if result_state:
-                                offset = offset + 1
-                            else:
-                                break
-                SYNCHRONOUSDINGTALKEMP = False
-                end_time = datetime.now()
-                res_str = "同步员工完成，共用时：{}秒".format((end_time - start_time).seconds)
-                _logger.info(res_str)
-                return user.notify_success(message=res_str, sticky=True)
+        start_time = datetime.now()  # 开始的时间
+        for company_id in company_ids:
+            company = self.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', company_id)], limit=1)
+            dept_domain = [('ding_id', '!=', ''), ('company_id', '=', company.id)]
+            departments = self.env['hr.department'].with_user(SUPERUSER_ID).search(dept_domain)
+            client = dt.get_client(self, dt.get_dingtalk_config(self, company))
+            for department in departments:
+                offset = 0
+                size = 100
+                while True:
+                    if department.ding_id.find('-') != -1:
+                        break
+                    _logger.info(">>>开始获取%s部门的员工", department.name)
+                    result_state = self._get_dingtalk_employee_list(client, department, offset, size,
+                                                                    company, repeat_type)
+                    if result_state:
+                        offset = offset + 1
+                    else:
+                        break
+        end_time = datetime.now()
+        res_str = "同步员工完成，共用时：{}秒".format((end_time - start_time).seconds)
+        _logger.info(res_str)
 
-    def _get_dingtalk_employee_list(self, client, department, offset, size, company, repeat_type, user_id):
+    def _get_dingtalk_employee_list(self, client, department, offset, size, company, repeat_type):
         """
         获取部门员工详情
         :return: 
         """
-        global SYNCHRONOUSDINGTALKEMP
         try:
             result = client.user.list(department.ding_id, offset, size, order='custom')
             for user in result.get('userlist'):
@@ -87,7 +67,6 @@ class SynchronousEmployee(models.TransientModel):
                     'din_unionid': user.get('unionid'),  # 钉钉唯一标识
                     'mobile_phone': user.get('mobile'),  # 手机号
                     'work_phone': user.get('mobile'),  # 分机号
-                    'work_location': user.get('workPlace'),  # 办公地址
                     'notes': user.get('remark'),  # 备注
                     'job_title': user.get('position'),  # 职位
                     'work_email': user.get('email'),  # email
@@ -118,13 +97,11 @@ class SynchronousEmployee(models.TransientModel):
                     domain = [('name', '=', user.get('name')), ('company_id', '=', company.id)]
                 else:
                     domain = [('ding_id', '=', user.get('userid')), ('company_id', '=', company.id)]
-                employee = self.env['hr.employee'].with_user(user_id.id).search(domain)
+                employee = self.env['hr.employee'].with_user(SUPERUSER_ID).search(domain)
                 if employee:
-                    employee.with_user(user_id.id).write(data)
+                    employee.with_user(SUPERUSER_ID).write(data)
                 else:
-                    self.env['hr.employee'].with_user(user_id.id).create(data)
+                    self.env['hr.employee'].with_user(SUPERUSER_ID).create(data)
             return result.get('hasMore')
         except Exception as e:
-            SYNCHRONOUSDINGTALKEMP = False
-            user_id.notify_warning(message="同步员工时发生异常：{}".format(str(e)), sticky=True)
-            return False
+            raise exceptions.UserError(message="同步员工时发生异常：{}".format(str(e)))

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="dingtalk_base_template" name="DingDing Hrm Template" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/dingtalk_base/static/src/js/callback_manage.js"></script>
-        </xpath>
-    </template>
-
     <menuitem name="钉钉" id="root_menu" web_icon="dingtalk_base,static/description/icon.png" sequence="15"/>
 
     <menuitem name="主数据" id="main_menu" parent="root_menu" sequence="5"/>

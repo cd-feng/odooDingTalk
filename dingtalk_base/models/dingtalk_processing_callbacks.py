@@ -34,9 +34,10 @@ class DingtalkProcessingCallbacks(models.AbstractModel):
         :return:
         """
         _logger.info(">回调消息内容：{}".format(encrypt_result))
+        # 由于这个函数在一个新线程中，我需要打开一个新的游标，因为旧的可能会被关闭
         with api.Environment.manage():
             with self.pool.cursor() as new_cr:
-                new_cr.autocommit(True)
+                new_cr.autocommit(False)
                 self = self.with_env(self.env(cr=new_cr))
                 company_id = self.env['res.company'].with_user(SUPERUSER_ID).search([('id', '=', company_id)])
                 try:

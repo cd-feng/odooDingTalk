@@ -9,7 +9,6 @@ class UpdateDingtalkEmployeeAvatar(models.TransientModel):
 
     def on_update(self):
         """
-        确认替换头像
         :return:
         """
         self.ensure_one()
@@ -17,7 +16,7 @@ class UpdateDingtalkEmployeeAvatar(models.TransientModel):
         for employee in self.env['hr.employee'].sudo().search([]):
             if employee.user_id and employee.ding_id:
                 employee.user_id.sudo().write({
-                    'oauth_uid': False,
+                    'oauth_uid': employee.ding_id,
                     'oauth_access_token': employee.ding_id
                 })
                 emp_count += 1

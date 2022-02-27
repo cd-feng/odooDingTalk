@@ -131,8 +131,8 @@ class OAuthController(OAuthLogin):
         """
         ensure_db()
         logging.info(">>>用户正在使用免登...")
-        if request.session.uid:
-            return http.redirect_with_hash('/web')
+        # if request.session.uid:
+        #     return request.redirect('/web')
         # 获取用于免登的公司corp_id
         config = request.env['dingtalk.config'].sudo().search([('m_login', '=', True)], limit=1)
         if not config:
@@ -179,10 +179,10 @@ class OAuthController(OAuthLogin):
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, {})
-                credentials = env['res.users'].with_user(SUPERUSER_ID).auth_oauth('dingtalk_login', employee.ding_id)
+                redentials = env['res.users'].sudo().auth_oauth('dingtalk_login', employee.ding_id)
                 cr.commit()
                 url = '/web'
-                resp = login_and_redirect(*credentials, redirect_url=url)
+                resp = login_and_redirect(*redentials, redirect_url=url)
                 if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
                     resp.location = '/'
                 return resp

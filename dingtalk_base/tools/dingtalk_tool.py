@@ -45,6 +45,19 @@ def get_dingtalk_config(self, company):
     return config
 
 
+def get_agent_id(self, company_id):
+    """
+    获取钉钉应用的AgentId
+    :param self:
+    :param company_id:
+    :return:
+    """
+    config = self.env['dingtalk.config'].with_user(SUPERUSER_ID).search([('company_id', '=', company_id.id)])
+    if not config:
+        raise UserError("没有为:(%s)配置钉钉参数！" % company_id.name)
+    return config.agent_id
+
+
 def get_userinfo_by_code(self, code, company_id):
     """
     根据code获取用户信息
@@ -80,7 +93,7 @@ def timestamp_to_local_date(self, time_num):
     to_second_timestamp = float(time_num / 1000)  # 毫秒转秒
     to_utc_datetime = time.gmtime(to_second_timestamp)  # 将时间戳转换为UTC时区（0时区）的时间元组struct_time
     to_str_datetime = time.strftime("%Y-%m-%d %H:%M:%S", to_utc_datetime)  # 将时间元组转成指定格式日期字符串
-    to_datetime = fields.Datetime.from_string(to_str_datetime)  # 将字符串转成datetime对象
+    to_datetime = fields.Datetime.from_string(to_str_datetime) + timedelta(hours=8)  # 将字符串转成datetime对象
     to_local_datetime = fields.Datetime.context_timestamp(self, to_datetime)  # 将原生的datetime值(无时区)转换为具体时区的datetime
     to_str_datetime = fields.Datetime.to_string(to_local_datetime)  # datetime 转成 字符串
     return to_str_datetime

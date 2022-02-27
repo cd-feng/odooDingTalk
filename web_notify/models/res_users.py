@@ -59,17 +59,18 @@ class ResUsers(models.Model):
         self._notify_channel(DEFAULT, message, title, sticky)
 
     def _notify_channel(self, type_message=DEFAULT, message=DEFAULT_MESSAGE, title=None, sticky=False):
-        # pylint: disable=protected-access
         if not self.env.user._is_admin() and any(user.id != self.env.uid for user in self):
             raise exceptions.UserError(
                 _("Sending a notification to another user is forbidden.")
             )
         channel_name_field = "notify_{}_channel_name".format(type_message)
-        bus_message = {
-            "type": type_message,
-            "message": message,
-            "title": title,
-            "sticky": sticky,
-        }
-        notifications = [(record[channel_name_field], bus_message) for record in self]
-        self.env["bus.bus"].sendmany(notifications)
+        notifications = []
+        for record in self:
+            notifications.append([record, record[channel_name_field], {
+                'id': record.id,
+                "type": type_message,
+                "message": message,
+                "title": title,
+                "sticky": sticky,
+            }])
+        self.env['bus.bus']._sendmany(notifications)

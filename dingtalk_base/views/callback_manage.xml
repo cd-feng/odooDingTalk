@@ -59,6 +59,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="回调管理" id="dingtalk_callback_manage_menu" parent="config_menu" sequence="3" action="dingtalk_callback_manage_action"/>
+<!--    <menuitem name="回调管理" id="dingtalk_callback_manage_menu" parent="config_menu" sequence="3" action="dingtalk_callback_manage_action"/>-->
 
 </odoo>
