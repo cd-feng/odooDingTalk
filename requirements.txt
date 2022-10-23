@@ -1,3 +1,2 @@
+alibabacloud_dingtalk
 pycryptodome
-dingtalk-sdk
-pendulum

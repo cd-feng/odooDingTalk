@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_update_user_dingtalk_oauth_access,update.user.dingtalk.oauth.access,model_update_user_dingtalk_oauth_access,,1,1,1,1
-
