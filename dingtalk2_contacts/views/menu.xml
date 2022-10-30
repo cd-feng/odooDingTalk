@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem name="通讯录" id="contacts_menu" parent="dingtalk2_base.dingtalk_root_menu" sequence="2"
+              groups="dingtalk2_base.manager_groups"/>
+
+    <menuitem name="同步工具" id="synchronous_menu" parent="dingtalk2_base.dingtalk_root_menu" sequence="6"
+              groups="dingtalk2_base.manager_groups"/>
+
+
+    <record id="action_dingtalk_department_window" model="ir.actions.act_window">
+        <field name="name">钉钉部门</field>
+        <field name="res_model">hr.department</field>
+        <field name="domain">[('ding_id', '!=', False)]</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="hr.view_department_filter"/>
+    </record>
+
+    <menuitem name="部门" id="hr_department_menu" parent="contacts_menu" sequence="1"
+        action="action_dingtalk_department_window"/>
+
+
+    <record id="action_dingtalk_employee_window" model="ir.actions.act_window">
+        <field name="name">钉钉员工</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('ding_id', '!=', False)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+    </record>
+
+    <menuitem id="hr_employees_menu" name="员工" parent="contacts_menu" sequence="2"
+        action="action_dingtalk_employee_window"/>
+
+
+    <record id="action_res_partner_window" model="ir.actions.act_window">
+        <field name="name">钉钉联系人</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('ding_id', '!=', False)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+    </record>
+
+    <menuitem id="res_partner_menu" name="联系人" parent="contacts_menu" sequence="3"
+              action="action_res_partner_window"/>
+
+</odoo>

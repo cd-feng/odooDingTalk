@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_dingtalk2_config_form_inherit" model="ir.ui.view">
+        <field name="name">dingtalk2.config.form</field>
+        <field name="model">dingtalk2.config</field>
+        <field name="inherit_id" ref="dingtalk2_base.view_dingtalk2_config_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='callback']" position='after'>
+                <page string="钉钉登录">
+                    <group col="2">
+                        <group>
+                            <field name="is_open_login" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="oauth_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="sync_employee_login_information" class="oe_highlight" type="object" string="同步员工登录信息" confirm="确定要修复/写入当前配置公司下员工的oauth的信息？"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

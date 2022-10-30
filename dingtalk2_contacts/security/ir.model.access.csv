@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk2_syn_department,dingtalk2.syn.department,model_dingtalk2_syn_department,,1,1,1,1
+access_dingtalk2_syn_employee,dingtalk2.syn.employee,model_dingtalk2_syn_employee,,1,1,1,1
+access_dingtalk2_syn_partner,dingtalk2.syn.partner,model_dingtalk2_syn_partner,,1,1,1,1

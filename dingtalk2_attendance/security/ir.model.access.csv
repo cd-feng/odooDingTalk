@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk2_attendance_list,dingtalk2.attendance.list,model_dingtalk2_attendance_list,,1,1,1,1
+access_dingtalk2_attendance_signs,dingtalk2.attendance.signs,model_dingtalk2_attendance_signs,,1,1,1,1
+
+access_dingtalk2_get_attendance_list,dingtalk2.get.attendance.list,model_dingtalk2_get_attendance_list,,1,1,1,1
+access_dingtalk2_get_attendance_signs,dingtalk2.get.attendance.signs,model_dingtalk2_get_attendance_signs,,1,1,1,1

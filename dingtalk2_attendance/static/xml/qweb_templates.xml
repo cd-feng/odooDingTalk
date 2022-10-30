@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-extend="ListView.buttons" t-name="ListView.Dingtalk2AttendanceListButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button type="button" class="btn btn-secondary dingtalk2_get_attendance_list">
+                获取打卡结果
+            </button>
+        </t>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="ListView.Dingtalk2AttendanceSignsButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button type="button" class="btn btn-secondary dingtalk2_get_attendance_signs">
+                获取签到记录
+            </button>
+        </t>
+    </t>
+
+</template>

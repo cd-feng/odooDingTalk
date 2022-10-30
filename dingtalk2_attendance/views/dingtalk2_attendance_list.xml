@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_dingtalk2_attendance_list_tree" model="ir.ui.view">
+        <field name="name">考勤打卡结果</field>
+        <field name="model">dingtalk2.attendance.list</field>
+        <field name="arch" type="xml">
+            <tree editable="top" js_class="class_dingtalk2_attendance_list">
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                <field name="name" options="{'no_create': True, 'no_open': True}"/>
+                <field name="department_id" optional="hide"/>
+                <field name="source_type"/>
+                <field name="base_check_time" optional="hide"/>
+                <field name="user_check_time"/>
+                <field name="location_result"/>
+                <field name="time_result"/>
+                <field name="check_type"/>
+                <field name="work_date"/>
+                <field name="record_id" optional="hide"/>
+                <field name="plan_id" optional="hide"/>
+                <field name="group_id" optional="hide"/>
+                <field name="ding_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dingtalk2_attendance_list_window" model="ir.actions.act_window">
+        <field name="name">考勤打卡结果</field>
+        <field name="res_model">dingtalk2.attendance.list</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="view_dingtalk2_attendance_list_filter" model="ir.ui.view">
+            <field name="name">考勤打卡结果</field>
+            <field name="model">dingtalk2.attendance.list</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="source_type"/>
+                    <field name="base_check_time"/>
+                    <field name="user_check_time"/>
+                    <field name="location_result"/>
+                    <field name="time_result"/>
+                    <field name="check_type"/>
+                    <field name="work_date"/>
+                    <field name="record_id"/>
+                    <field name="plan_id"/>
+                    <field name="group_id"/>
+                    <field name="ding_id"/>
+                    <separator/>
+                    <filter string="已归档" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="时间结果" name="time_result" context="{'group_by':'time_result'}"/>
+                        <filter string="数据来源" name="source_type" context="{'group_by':'source_type'}"/>
+                        <filter string="考勤类型" name="check_type" context="{'group_by':'check_type'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+    <menuitem id="menu_dingtalk2_attendance_list" name="考勤打卡结果" parent="attendance_menu"
+              sequence="1" action="action_dingtalk2_attendance_list_window"/>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="ir_dingtalk2_attendance_list_rule" model="ir.rule">
+		<field name="name">考勤打卡结果-多公司过滤</field>
+		<field name="model_id" ref="model_dingtalk2_attendance_list"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+	</record>
+
+	<record id="ir_dingtalk2_attendance_signs_rule" model="ir.rule">
+		<field name="name">签到记录-多公司过滤</field>
+		<field name="model_id" ref="model_dingtalk2_attendance_signs"/>
+		<field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+	</record>
+
+</odoo>

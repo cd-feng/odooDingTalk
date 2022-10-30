@@ -1,2 +1,3 @@
-alibabacloud_dingtalk
 pycryptodome
+dingtalk-sdk
+

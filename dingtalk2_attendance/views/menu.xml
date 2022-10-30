@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem name="考勤" id="attendance_menu" parent="dingtalk2_base.dingtalk_root_menu" sequence="10"
+              groups="dingtalk2_base.manager_groups"/>
+
+</odoo>

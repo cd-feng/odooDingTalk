@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_sync_today_attendance_list_cron" model="ir.cron">
+            <field name="name">阿里钉钉-定时每天同步考勤结果</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="model_id" ref="model_dingtalk2_get_attendance_list"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_get_attendance_list()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

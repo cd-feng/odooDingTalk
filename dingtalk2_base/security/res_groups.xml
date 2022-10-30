@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 分组 -->
+    <record model="ir.module.category" id="dingtalk2_category_root">
+        <field name="name">阿里-钉钉集成</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- 权限 -->
+    <record model="ir.module.category" id="dingtalk2_base_groups">
+        <field name="name">钉钉-参数配置</field>
+        <field name="parent_id" ref="dingtalk2_base.dingtalk2_category_root"/>
+    </record>
+
+    <record id="manager_groups" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="dingtalk2_base.dingtalk2_base_groups"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

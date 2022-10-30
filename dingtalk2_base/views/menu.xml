@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem name="钉钉" id="dingtalk_root_menu" web_icon="dingtalk2_base,static/description/icon.png"
+              sequence="190"/>
+
+    <menuitem name="配置" id="configure_menu" parent="dingtalk_root_menu"
+              sequence="100" groups="dingtalk2_base.manager_groups"/>
+
+</odoo>
