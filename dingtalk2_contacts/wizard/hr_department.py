@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
-import time
 from datetime import datetime
-from odoo import api, fields, models, SUPERUSER_ID, exceptions
+from odoo import fields, models, exceptions
 from odoo.addons.dingtalk2_base.tools import dingtalk2_tools as dt
 _logger = logging.getLogger(__name__)
 
@@ -38,29 +37,28 @@ class SynHrDepartment(models.TransientModel):
         for company_id in company_ids:
             try:
                 client = dt.get_client(self, dt.get_dingtalk2_config(self, company_id))
-                req_result = client.post('topapi/v2/department/listsub', {})
+                req_result = client.department.list(fetch_child=True)
             except Exception as e:
                 raise exceptions.UserError("同步部门时发生异常，原因为：{}".format(str(e)))
-            if req_result.get('errcode') == 0:
-                department_model = self.env['hr.department']
-                number = 1
-                for res in req_result.get('result'):
-                    _logger.info("正在处理第%s条数据，-> %s" % (number, res))
-                    data = {
-                        'company_id': company_id.id,
-                        'name': res.get('name'),
-                        'ding_id': res.get('dept_id'),
-                    }
-                    if self.repeat_type == 'name':
-                        domain = [('name', '=', res.get('name')), ('company_id', '=', company_id.id)]
-                    else:
-                        domain = [('ding_id', '=', res.get('dept_id')), ('company_id', '=', company_id.id)]
-                    hr_department = department_model.search(domain)
-                    if hr_department:
-                        hr_department.write(data)
-                    else:
-                        department_model.create(data)
-                    number += 1
+            department_model = self.env['hr.department']
+            number = 1
+            for res in req_result:
+                _logger.info("正在处理第%s条数据，-> %s" % (number, res))
+                data = {
+                    'company_id': company_id.id,
+                    'name': res.get('name'),
+                    'ding_id': res.get('id'),
+                }
+                if self.repeat_type == 'name':
+                    domain = [('name', '=', res.get('name')), ('company_id', '=', company_id.id)]
+                else:
+                    domain = [('ding_id', '=', res.get('id')), ('company_id', '=', company_id.id)]
+                hr_department = department_model.search(domain)
+                if hr_department:
+                    hr_department.write(data)
+                else:
+                    department_model.create(data)
+                number += 1
 
     def _get_department_info(self, company_ids):
         """
@@ -95,5 +93,4 @@ class SynHrDepartment(models.TransientModel):
                         value['manager_user_ids'] = [(6, 0, manager_user_ids.ids)]
                     if value:
                         department_id.write(value)
-                time.sleep(0.1)
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_return_approval_state_form_view" model="ir.ui.view">
+        <field name="name">恢复单据状态</field>
+        <field name="model">dingtalk.return.approval.state</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    <p><strong>请注意：</strong>本操作可强制清除通过钉钉审批的单据状态、描述、审批结果信息，非特殊情况下不用使用本工具！</p>
+                </div>
+                <group>
+                    <group>
+                        <field name="name" placeholder="例如：sale_order"/>
+                        <field name="dd_approval_state"/>
+                    </group>
+                    <group>
+                        <field name="res_id" placeholder="请输入单据ID..."/>
+                        <field name="dd_approval_result"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="确认恢复" name="confirm_return" type="object" class="btn-danger"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_return_approval_state_action" model="ir.actions.act_window">
+        <field name="name">恢复单据状态</field>
+        <field name="res_model">dingtalk.return.approval.state</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="恢复单据状态" id="dingtalk_return_approval_state_menu" parent="menu_approval_config"
+              sequence="1" action="dingtalk_return_approval_state_action"/>
+
+</odoo>

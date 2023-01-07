@@ -2,7 +2,6 @@
 import logging
 from odoo import api, models
 from odoo.exceptions import AccessDenied
-
 _logger = logging.getLogger(__name__)
 
 

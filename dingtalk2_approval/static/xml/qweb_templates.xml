@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-extend="ListView.buttons" t-name="ListView.DingTalkApprovalTemplateButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+            <button type="button" class="btn btn-primary get_dingtalk_approval_template_class">
+                获取钉钉审批模板
+            </button>
+        </t>
+    </t>
+
+</templates>

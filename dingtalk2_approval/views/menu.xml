@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem name="工作流" id="approval_main_menu" parent="dingtalk2_base.dingtalk_root_menu" sequence="9"
+              groups="dingtalk2_base.manager_groups"/>
+
+    <menuitem id="menu_approval_config" name="额外选项" sequence="10" parent="approval_main_menu"/>
+
+</odoo>

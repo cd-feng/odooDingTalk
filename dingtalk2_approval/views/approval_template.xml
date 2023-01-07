@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_approval_template_tree_view" model="ir.ui.view">
+        <field name="name">审批模板</field>
+        <field name="model">dingtalk.approval.template</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" js_class="dingtalk_approval_template_tree">
+                <field name="icon_url" width="10px" height="10px" widget="html"/>
+                <field name="name"/>
+                <field name="process_code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_approval_template_form_view" model="ir.ui.view">
+        <field name="name">审批模板</field>
+        <field name="model">dingtalk.approval.template</field>
+        <field name="arch" type="xml">
+            <form string="审批模板">
+                <sheet>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="name"/>
+                        <field name="icon_url" width="30px" height="30px" widget="html"/>
+                        <field name="process_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_approval_template_action" model="ir.actions.act_window">
+        <field name="name">审批模板</field>
+        <field name="res_model">dingtalk.approval.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="审批模板" id="dingtalk_approval_template_menu" parent="approval_main_menu"
+              sequence="1" action="dingtalk_approval_template_action"/>
+
+</odoo>

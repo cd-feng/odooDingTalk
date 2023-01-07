@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="dingtalk2_login_auth_oauth" model="auth.oauth.provider">
+            <field name="name">DingTalk Login</field>
+            <field name="client_id">none</field>
+            <field name="auth_endpoint">https://login.dingtalk.com/oauth2/auth</field>
+            <field name="scope">openid</field>
+            <field name="validation_endpoint">none</field>
+            <field name="css_class">fa fa-fw fa-connectdevelop</field>
+            <field name="body">钉钉登录</field>
+            <field name="enabled" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

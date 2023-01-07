@@ -15,6 +15,8 @@
     'auto_install': False,
 
     'data': [
+        'data/auth_oauth_data.xml',
+
         'views/dingtalk2_config.xml',
     ],
     'assets': {

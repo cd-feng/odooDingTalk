@@ -13,25 +13,11 @@ class DingTalk2Config(models.Model):
         """
         状态发生变化时，动态调整钉钉登录项（oauth）
         """
-        # TODO 需要改成新版的链接 https://open.dingtalk.com/document/orgapp-server/tutorial-obtaining-user-personal-information
-        oauth_obj = self.env['auth.oauth.provider'].sudo()
-        body = '钉钉登录[%s]' % self.name
-        value = {
-            'name': 'DingTalk Login',
+        oauth_id = self.env.ref('dingtalk2_login.dingtalk2_login_auth_oauth').sudo()
+        oauth_id.write({
             'client_id': self.app_key,
-            'auth_endpoint': 'https://oapi.dingtalk.com/connect/qrconnect',
-            'scope': 'snsapi_login',
-            'validation_endpoint': 'null',
-            'css_class': 'fa fa-fw fa-connectdevelop',
-            'body': body,
             'enabled': True if self.is_open_login else False,
-        }
-        oauth_id = oauth_obj.search([('body', '=', body)], limit=1)
-        if oauth_id:
-            oauth_id.write(value)
-        else:
-            oauth_id = oauth_obj.create(value)
-        self.oauth_id = oauth_id.id
+        })
 
     def sync_employee_login_information(self):
         """

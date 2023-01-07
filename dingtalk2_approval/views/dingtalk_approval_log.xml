@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_approval_log_tree_view" model="ir.ui.view">
+        <field name="name">审批日志</field>
+        <field name="model">dingtalk.approval.log</field>
+        <field name="arch" type="xml">
+            <tree default_order="approval_time desc" create="0" edit="0" delete="0" export_xlsx="0">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+                <field name="process_instance"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <field name="approval_content"/>
+                <field name="approval_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingtalk_approval_log_action">
+        <field name="name">审批日志</field>
+        <field name="res_model">dingtalk.approval.log</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+     <record model="ir.ui.view" id="dingtalk_approval_log_search">
+        <field name="model">dingtalk.approval.log</field>
+        <field name="arch" type="xml">
+            <search string="审批日志">
+                <field name="res_model"/>
+                <field name="res_id"/>
+                <field name="process_instance"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <field name="approval_content"/>
+                <field name="approval_time"/>
+                <separator/>
+                    <filter string="我审批的" name="domain_my" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="我创建的" name="domain_my" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <group expand="0" string="分组">
+                    <filter name="group_by_res_model" string="模型" context="{'group_by':'res_model'}"/>
+                    <filter name="group_by_process_instance" string="实例ID" context="{'group_by':'process_instance'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="审批日志" id="dingtalk_approval_log_menu" parent="approval_main_menu" sequence="99"
+              action="dingtalk_approval_log_action"/>
+
+</odoo>

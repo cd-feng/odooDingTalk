@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_approval_control_tree_view" model="ir.ui.view">
+        <field name="name">审批配置</field>
+        <field name="model">dingtalk.approval.control</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="name"/>
+                <field name="oa_model_id"/>
+                <field name="template_id"/>
+                <field name="ftype"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_approval_control_form_view" model="ir.ui.view">
+            <field name="name">审批配置</field>
+            <field name="model">dingtalk.approval.control</field>
+            <field name="arch" type="xml">
+                <form string="审批配置">
+                    <header>
+                        <button name="action_reload_current_page" string="立即生效" type="object" class="oe_highlight" states="open" confirm="确认配置该表单允许钉钉审批吗?"/>
+                        <button name="switch_state" type="object" confirm="确认开启?" class="oe_stat_button" states="close">开启配置</button>
+                        <button name="switch_state" type="object" confirm="确认关闭?" class="oe_stat_button" states="open">关闭配置</button>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title" name="title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="审批配置标题..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="oa_model_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                                <field name="template_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" required="1"/>
+                                <field name="oa_model_model" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" required="1" options="{'no_create': True, 'no_edit': 1, 'no_open': 1}"/>
+<!--                                <field name="ftype" help="OA单据审批完成后不可修改，业务单据可视情况修改" widget="radio" options="{'horizontal': true}"/>-->
+                                <field name="is_ing_write"/>
+                                <field name="is_end_write"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="审批字段">
+                                <field name="line_ids" context="{'default_model_id': oa_model_id}">
+                                    <tree default_order="sequence">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="model_id"/>
+                                        <field name="field_id"/>
+                                        <field name="ttype"/>
+                                        <field name="dd_field" required="1"/>
+                                        <field name="is_dd_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="高级设置">
+                                <div class="alert alert-success oe_edit_only" role="alert">
+                                    <p>如果Odoo的某一个模型存在多个视图，我们需求是只针对其中一个视图中的单据进行审批时，需设置字段进行判断，从而使系统能准确分辨出使用哪一个视图安装钉钉审批按钮。</p>
+                                    <p>比如供应商账单和客户发票都是同一个模型，而实际中我们只需要在审批供应商账单，我们就可以设置下面的字段便于系统识别。</p>
+                                </div>
+                                <group>
+                                    <field name="model_field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" placeholder="单表对应多视图时，可设置字段来便于系统识别."/>
+                                    <field name="model_field_value" attrs="{'required': [('model_field_id', '!=', False)]}" placeholder="该字段要对应的值，校验一致时方可使用钉钉审批."/>
+                                </group>
+                                <div class="alert alert-success oe_edit_only" role="alert">
+                                    <p>下面可以通过定义条件进行触发，从而达到根据条件是否触发钉钉审批</p>
+                                    <p>例如：当销售订单总金额大于500时，才需要提交到钉钉进行审批，那么则需要配置一个Domain表达式: [('amount_total', '>', 500)] </p>
+                                </div>
+                                <group>
+                                    <field name="approval_domain" placeholder="不填则默认所有单据均需审批"/>
+                                </group>
+                            </page>
+                            <page string="审批/抄送">
+                                <div class="alert alert-success oe_edit_only" role="alert">
+                                    <p>若已在钉钉服务端配置了审批流程和审批、抄送人，此处可不设置，提交后会自动按照服务端的流程进行节点审批。</p>
+                                    <p>注意：这里设置的审批人和抄送人优先级会高于钉钉服务端的设置。</p>
+                                </div>
+                                <group>
+                                    <field name="approval_type"/>
+                                    <field name="approval_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" attrs="{'invisible':[('approval_type', '!=', 'turn')]}"/>
+                                    <field name="huo_approval_user_ids" attrs="{'invisible':[('approval_type', '!=', 'huo')]}">
+                                        <tree editable="bottom">
+                                            <field name="employee_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" />
+                                            <field name="approval_type"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="cc_type"/>
+                                    <field name="cc_user_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                </group>
+                            </page>
+                            <page string="禁用功能">
+                                <group>
+                                    <field name="model_start_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_pass_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="model_end_button_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                </group>
+                            </page>
+                            <page string="可执行函数" name="code">
+                                <group col="2">
+                                    <group>
+                                        <field name="approval_start_function" placeholder="多个函数时用英文,号隔开"/>
+                                        <field name="approval_restart_function" placeholder="多个函数时用英文,号隔开"/>
+                                    </group>
+                                    <group>
+                                        <field name="approval_pass_function" placeholder="多个函数时用英文,号隔开"/>
+                                        <field name="approval_refuse_function" placeholder="多个函数时用英文,号隔开"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="帮助">
+                                    <div style="margin-top: 4px;">
+                                        <h3>可执行函数帮助</h3>
+                                        <p>在某些情况下，需要在提交审批时、审批结束后执行一些自定义功能，那么你可以在<code>可执行函数</code>中设置你已经定义好的Function</p>
+                                        <ul>
+                                            <li>定义的函数要存在于你选择的模型中，比如<code>员工</code>模型的<code>name_get()</code>函数。</li>
+                                            <li>只需要填写函数名即可。比如你定义了一个<code>def _test_print(self):...</code>函数，那么你只需要填写<code>_test_print</code></li>
+                                            <li>注意：函数不允许传递参数！否则会报<code>AttributeError</code>异常</li>
+                                        </ul>
+                                        <div>
+                                            <p>示例</p>
+                                            <code style='white-space: pre-wrap'>
+                                            name_get,create,write
+                                            </code>
+                                        </div>
+                                    </div>
+                            </page>
+                        </notebook>
+                        <group string="备注">
+                            <field name="remarks" placeholder="备注信息..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    <record id="dingtalk_approval_control_action" model="ir.actions.act_window">
+        <field name="name">钉钉审批配置</field>
+        <field name="res_model">dingtalk.approval.control</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            立即配置一个需要审批的模型！
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dingtalk_approval_control_kanban">
+        <field name="name">钉钉审批配置</field>
+        <field name="model">dingtalk.approval.control</field>
+        <field name="arch" type="xml">
+            <kanban class="o_modules_kanban">
+                <field name="name"/>
+                <field name="oa_model_id"/>
+                <field name="template_id"/>
+                <field name="ftype"/>
+                <field name="company_id"/>
+                <field name="template_icon"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_module_vignette oe_kanban_global_click">
+                            <div class="oe_kanban_avatar float-left mr-3">
+                                <field name="template_icon" widget="html"/>
+                            </div>
+                            <div class="oe_module_desc">
+                                <h4 class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </h4>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="ftype"/> - <field name="company_id"/>
+                                    </span>
+                                </div>
+                                <div class="oe_module_action" t-if="!selection_mode">
+                                    <button type="object" class="btn btn-primary btn-sm" name="create_approval" context="{'category_id':'active_id'}">新建审批</button>
+                                    <button type="object" class="btn btn-sm btn-secondary float-right" name="action_approval_tree">审批列表</button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+     </record>
+
+    <menuitem name="审批配置" id="dingtalk_approval_control_menu" parent="approval_main_menu" sequence="2"
+              action="dingtalk_approval_control_action"/>
+
+    <record id="dingtalk_approval_control_line_form_view" model="ir.ui.view">
+        <field name="name">审批配置详情</field>
+        <field name="model">dingtalk.approval.control.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="field_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="dd_field" required="1"/>
+                            <field name="is_dd_id" attrs="{'invisible':[('ttype', 'not in', ['many2one','many2many'])]}"/>
+                        </group>
+                        <group>
+                            <field name="control_id" invisible="1"/>
+                            <field name="model_id" required="1"/>
+                            <field name="ttype" required="1"/>
+                        </group>
+                        <p class="text-warning" attrs="{'invisible':[('ttype', 'not in', ['many2one','many2many'])]}">若钉钉字段为关联组件时，请勾选"为关联组件"框，比如部门关联组件，传递时就不是名称而是部门ID; <br/>
+                            特别注意：关联组件至odoo中选择的对象必须具有ding_id并且不为空值，否则会提交报错或则钉钉返回"系统错误"！</p>
+                    </group>
+                    <field name="list_ids" context="{'default_line_field_id': field_id}" attrs="{'invisible':[('ttype','!=','one2many')]}">
+                        <tree default_order="sequence" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="line_field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="dd_field" required="1"/>
+                            <field name="is_dd_id"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

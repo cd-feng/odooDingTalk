@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
 from odoo import api, fields, models
 from odoo.addons.dingtalk2_base.tools import dingtalk2_tools as dt
-_logger = logging.getLogger(__name__)
 
 
 class HrEmployee(models.Model):

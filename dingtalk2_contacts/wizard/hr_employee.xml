@@ -6,15 +6,14 @@
         <field name="model">dingtalk2.syn.employee</field>
         <field name="arch" type="xml">
             <form>
-                <group>
-                    <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
-                </group>
                 <group col="2" string="同步选项">
                     <group>
+                        <field name="company_ids" widget="many2many_tags" options="{'no_create':1, 'no_open':1}"/>
                         <field name="repeat_type" widget="radio" options="{'horizontal': true}"/>
                     </group>
                     <group>
                         <field name="is_create_user"/>
+                        <field name="is_update_avatar"/>
                     </group>
                 </group>
                 <footer>

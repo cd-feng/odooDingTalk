@@ -36,7 +36,7 @@ class Dingtalk2Callbacks(models.AbstractModel):
         try:
             req_result = client.post('topapi/checkin/record/get', {
                 'start_time': sign_time,
-                'end_time': sign_time,
+                'end_time': sign_time + 100,
                 'userid_list': user_id,
                 'cursor': 0,
                 'size': 100,

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk_approval_template,dingtalk.approval.template,model_dingtalk_approval_template,,1,1,1,1
+access_dingtalk_approval_template_tran,dingtalk.approval.template.tran,model_dingtalk_approval_template_tran,,1,1,1,1
+access_dingtalk_approval_log,dingtalk.approval.log,model_dingtalk_approval_log,,1,1,1,1
+access_dingtalk_return_approval_state,dingtalk.return.approval.state,model_dingtalk_return_approval_state,,1,1,1,1
+access_dingtalk_approval_model_button,dingtalk.approval.model.button,model_dingtalk_approval_model_button,,1,1,1,1
+access_dingtalk_approval_control,dingtalk.approval.control,model_dingtalk_approval_control,,1,1,1,1
+access_dingtalk_approval_control_line,dingtalk.approval.control.line,model_dingtalk_approval_control_line,,1,1,1,1
+access_dingtalk_approval_control_list,dingtalk.approval.control.list,model_dingtalk_approval_control_list,,1,1,1,1
+access_dingtalk_approval_huo_user_line,dingtalk.approval.huo.user.line,model_dingtalk_approval_huo_user_line,,1,1,1,1
+

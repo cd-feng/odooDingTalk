@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 from datetime import datetime
+import requests
 from odoo import api, fields, models, exceptions
 from odoo.addons.dingtalk2_base.tools import dingtalk2_tools as dt
+import threading
 _logger = logging.getLogger(__name__)
 
 
@@ -13,8 +16,9 @@ class SyncEmployee(models.TransientModel):
     RepeatType = [('name', '以名称判断'), ('id', '以钉钉ID')]
     company_ids = fields.Many2many('res.company', 'dingtalk_synchronous_employee_rel', string="公司",
                                    required=True, default=lambda self: [(6, 0, [self.env.company.id])])
-    repeat_type = fields.Selection(string='主键判断', selection=RepeatType, default='id')
+    repeat_type = fields.Selection(string='判断唯一', selection=RepeatType, default='id')
     is_create_user = fields.Boolean(string="创建系统用户")
+    is_update_avatar = fields.Boolean(string="是否替换为钉钉头像")
 
     def on_synchronous(self):
         """
@@ -43,6 +47,10 @@ class SyncEmployee(models.TransientModel):
         end_time = datetime.now()
         res_str = "同步员工完成，共用时：{}秒".format((end_time - start_time).seconds)
         _logger.info(res_str)
+        self._cr.commit()
+        # 检查是否同步头像, 同步头像可能比较多，也比较费时，新开线程来跑
+        if self.is_update_avatar:
+            threading.Thread(target=self.update_dingtalk_employee_avatar, args=()).start()
 
     def _get_dingtalk_employee_list(self, client, department, cursor, size, company):
         """
@@ -96,3 +104,23 @@ class SyncEmployee(models.TransientModel):
             except:
                 continue
             employee_id.write({'user_id': user_id.id})
+
+    @api.model
+    def update_dingtalk_employee_avatar(self):
+        """
+        同步头像
+        """
+        with self.pool.cursor() as cr:
+            new_cr = self.with_env(self.env(cr=cr))
+            employees = new_cr.env['hr.employee'].sudo().search([('ding_avatar', '!=', False)])
+            employees_len = len(employees)
+            number = 1
+            for employee in employees:
+                _logger.info("替换头像进度：%s / %s" % (number, employees_len))
+                try:
+                    binary_data = base64.b64encode(requests.get(employee.ding_avatar).content)
+                    employee.write({'image_1920': binary_data, 'image_128': binary_data})
+                    number += 1
+                except Exception:
+                    number += 1
+                    continue
