@@ -33,9 +33,9 @@ def setup_dingtalk_approval_state_fields(self):
         if len(res) != 0:
             APPROVALSTATE = [('draft', '等待审批'), ('approval', '审批中'), ('stop', '审批结束')]
             APPROVALRESULT = [('load', '等待'), ('agree', '同意'), ('refuse', '拒绝'), ('redirect', '转交'), ('terminate', '撤销')]
-            add('dd_doc_state', fields.Char(string=u'审批描述', copy=False))
-            add('dd_approval_state', fields.Selection(string=u'审批状态', selection=APPROVALSTATE, default='draft', copy=False))
-            add('dd_approval_result', fields.Selection(string=u'审批结果', selection=APPROVALRESULT, default='load', copy=False))
+            add('dd_doc_state', fields.Char(string='审批描述', copy=False))
+            add('dd_approval_state', fields.Selection(string='审批状态', selection=APPROVALSTATE, default='draft', copy=False))
+            add('dd_approval_result', fields.Selection(string='审批结果', selection=APPROVALRESULT, default='load', copy=False))
             add('dd_process_instance', fields.Char(string='钉钉审批实例id', copy=False))
     return True
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dingtalk2_login.dingtalk_signin" name="DingTalk Signin">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;width: 100%;text-align: center; padding: 50px;'}"/>
+            <t t-set="title">钉钉免密登录</t>
+            <div>
+                <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
+                    <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                </div>
+                <t t-out="0"/>
+                <div>
+                    <p class="alert alert-success" id="message-result">系统正在鉴定身份，请稍后...<br/> 若页面长时间无反应（一般不超过10秒），请尝试刷新.</p>
+                    <p id="corp-id" style="display:none;">
+                        <t t-esc="corp_id"/>
+                    </p>
+                </div>
+                <div>
+                    <a t-attf-href="/web/login" class="btn btn-primary btn-sm" role="button">返回账号登录?</a>
+                </div>
+            </div>
+            <t t-call="web.layout">
+                <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                <script type="text/javascript" src="/dingtalk2_login/static/src/js/dingtalk.open.js"/>
+                <script type="text/javascript" src="/dingtalk2_login/static/src/js/dingtalk_signin.js"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

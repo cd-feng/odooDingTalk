@@ -10,6 +10,7 @@ from odoo import registry as registry_get
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
+from odoo.addons.dingtalk2_base.tools import dingtalk2_tools as dt
 _logger = logging.getLogger(__name__)
 
 
@@ -129,4 +130,57 @@ class Dingtalk2OAuthController(OAuthController):
         redirect.autocorrect_location_header = False
         return redirect
 
+    @http.route('/dingtalk/signin', type='http', auth='none', website=True, sitemap=False)
+    @fragment_to_query_string
+    def dingtalk_signin(self, **kw):
+        """
+        钉钉应用内登录入口
+        """
+        logging.info(">>>用户正在使用免登...")
+        if request.session.uid:
+            return request.redirect('/web')
+        return request.render('dingtalk2_login.dingtalk_signin', {'corp_id': kw.get('corpId')})
 
+    @http.route('/dingtalk/signin/action', type='http', auth='none', website=True, sitemap=False)
+    def dingtalk_signin_action(self, **kw):
+        """
+        通过获得的【免登授权码或者临时授权码】获取用户信息
+        :param kw:
+        :return:
+        """
+        auth_code, corp_id = kw.get('authCode'), kw.get('corpId')
+        logging.info(">>>免登授权码: %s", auth_code)
+        logging.info(">>>corp_id: %s", corp_id)
+        config = request.env['dingtalk2.config'].sudo().search([('corp_id', '=', corp_id)], limit=1)
+        client = dt.get_client(request, dt.get_dingtalk2_config(request, config.company_id))
+        try:
+            result = client.user.getuserinfo(auth_code)
+        except Exception as e:
+            return str(e)
+        domain = [('ding_id', '=', result.userid), ('company_id', '=', config.company_id.id)]
+        employee = request.env['hr.employee'].sudo().search(domain, limit=1)
+        if not employee:
+            return "员工[{}]未关联系统登录用户，请联系管理员处理！".format(employee.name)
+        _logger.info(">>>员工：{}正在尝试钉钉免密系统".format(employee.name))
+        if not employee.ding_id:
+            return "员工[{}]不存在钉钉ID，请维护后再试!".format(employee.name)
+        if not employee.user_id:
+            return "没有关联系统用户，请联系管理员处理！"
+        ensure_db()
+        dbname = request.session.db
+        if not http.db_filter([dbname]):
+            return BadRequest()
+        registry = registry_get(dbname)
+        with registry.cursor() as cr:
+            try:
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                db, login, key = env['res.users'].sudo().auth_oauth('dingtalk2_login', employee.ding_unionid)
+                cr.commit()
+                pre_uid = request.session.authenticate(db, login, key)
+                resp = request.redirect(_get_login_redirect_url(pre_uid, '/web'), 303)
+                resp.autocorrect_location_header = False
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
+                    resp.location = '/'
+                return resp
+            except Exception as e:
+                return "登录时发生错误：{}".format(str(e))

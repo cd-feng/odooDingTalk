@@ -12,7 +12,7 @@ class DingDingApprovalButton(models.Model):
     name = fields.Char(string="按钮名称", index=True)
     function = fields.Char(string='按钮方法', index=True)
     modifiers = fields.Char(string="按钮属性值")
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
 
     def name_get(self):
         return [(rec.id, "%s:%s" % (rec.model_id.name, rec.name)) for rec in self]

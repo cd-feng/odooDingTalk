@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk_employee_roster,dingtalk.employee.roster,model_dingtalk_employee_roster,,1,1,1,1
+
+access_dingtalk_employee_roster_leaving,dingtalk.employee.roster.leaving,model_dingtalk_employee_roster_leaving,,1,1,1,1
+access_dingtalk_employee_roster_synchronous,dingtalk.employee.roster.synchronous,model_dingtalk_employee_roster_synchronous,,1,1,1,1
+access_dingtalk_addpreentry_roster,dingtalk.addpreentry.roster,model_dingtalk_addpreentry_roster,,1,1,1,1

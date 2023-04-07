@@ -23,34 +23,34 @@ class DingTalkApprovalControl(models.Model):
         return [('model', 'not in', odoo_cls)]
 
     name = fields.Char('名称', required=1, tracking=True)
-    company_id = fields.Many2one('res.company', string=u'公司', default=lambda self: self.env.company)
-    oa_model_id = fields.Many2one('ir.model', string=u'Odoo模型', ondelete="cascade", domain=_default_domain)
+    company_id = fields.Many2one('res.company', string='公司', default=lambda self: self.env.company)
+    oa_model_id = fields.Many2one('ir.model', string='Odoo模型', ondelete="cascade", domain=_default_domain)
     oa_model_model = fields.Char(string="模型名称", related='oa_model_id.model', store=True)
-    template_id = fields.Many2one('dingtalk.approval.template', string=u'审批模板', ondelete="set null", domain="[('company_id', '=', company_id)]")
+    template_id = fields.Many2one('dingtalk.approval.template', string='审批模板', ondelete="set null", domain="[('company_id', '=', company_id)]")
     template_icon = fields.Html(string='图标', compute='_compute_template_icon')
     ftype = fields.Selection(string='单据类型', selection=[('oa', 'OA单据'), ('bus', '业务单据')], default='bus')
 
-    line_ids = fields.One2many(comodel_name='dingtalk.approval.control.line', inverse_name='control_id', string=u'字段详情')
+    line_ids = fields.One2many(comodel_name='dingtalk.approval.control.line', inverse_name='control_id', string='字段详情')
     model_start_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_start_rel',
-                                              string=u'审批前禁用按钮',
+                                              string='审批前禁用按钮',
                                               domain="[('model_id', '=', oa_model_id), ('company_id', '=', company_id)]")
-    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string=u'审批中禁用按钮',
+    model_button_ids = fields.Many2many('dingtalk.approval.model.button', string='审批中禁用按钮',
                                         domain="[('model_id', '=', oa_model_id), ('company_id', '=', company_id)]")
     model_pass_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_pass_rel',
-                                            string=u'审批通过禁用按钮',
+                                            string='审批通过禁用按钮',
                                              domain="[('model_id', '=', oa_model_id), ('company_id', '=', company_id)]")
     model_end_button_ids = fields.Many2many('dingtalk.approval.model.button', 'dingtalk_approval_control_model_end_rel',
-                                            string=u'审批拒绝禁用按钮',
+                                            string='审批拒绝禁用按钮',
                                             domain="[('model_id', '=', oa_model_id), ('company_id', '=', company_id)]")
 
-    approval_start_function = fields.Char(string=u'提交审批-执行函数')
-    approval_restart_function = fields.Char(string=u'重新提交-执行函数')
-    approval_pass_function = fields.Char(string=u'审批通过-执行函数')
-    approval_refuse_function = fields.Char(string=u'审批拒绝-执行函数')
-    approval_end_function = fields.Char(string=u'审批结束-执行函数')
+    approval_start_function = fields.Char(string='提交审批-执行函数')
+    approval_restart_function = fields.Char(string='重新提交-执行函数')
+    approval_pass_function = fields.Char(string='审批通过-执行函数')
+    approval_refuse_function = fields.Char(string='审批拒绝-执行函数')
+    approval_end_function = fields.Char(string='审批结束-执行函数')
     is_ing_write = fields.Boolean(string="审批中允许编辑？", default=True)
     is_end_write = fields.Boolean(string="审批结束允许编辑？", default=True)
-    remarks = fields.Text(string=u'备注')
+    remarks = fields.Text(string='备注')
     approval_type = fields.Selection(string="审批类型", selection=[('turn', '依次审批'), ('huo', '会签/或签')])
     approval_user_ids = fields.Many2many('hr.employee', 'dingtalk_approval_employee_approval_rel', string="审批人列表",
                                          domain="[('ding_id', '!=', '')]")
@@ -158,7 +158,9 @@ class DingTalkApprovalControl(models.Model):
 
     @api.model
     def create(self, vals):
-        # 清除运行函数中的空格
+        """
+        清除运行函数中的空格
+        """
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
         if vals.get('approval_pass_function'):
@@ -170,7 +172,9 @@ class DingTalkApprovalControl(models.Model):
         return super(DingTalkApprovalControl, self).create(vals)
 
     def write(self, vals):
-        # 清除运行函数中的空格
+        """
+        清除运行函数中的空格
+        """
         if vals.get('approval_start_function'):
             vals['approval_start_function'] = vals['approval_start_function'].replace(' ', '')
         if vals.get('approval_pass_function'):
@@ -248,15 +252,15 @@ class DingTalkApprovalControlLine(models.Model):
     _name = 'dingtalk.approval.control.line'
     _rec_name = 'control_id'
 
-    sequence = fields.Integer(string=u'序号')
-    control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string=u'审批配置', ondelete="cascade")
-    model_id = fields.Many2one(comodel_name='ir.model', string=u'Odoo模型', related="control_id.oa_model_id")
-    field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段',
+    sequence = fields.Integer(string='序号')
+    control_id = fields.Many2one(comodel_name='dingtalk.approval.control', string='审批配置', ondelete="cascade")
+    model_id = fields.Many2one(comodel_name='ir.model', string='Odoo模型', related="control_id.oa_model_id")
+    field_id = fields.Many2one(comodel_name='ir.model.fields', string='模型字段',
                                domain="[('model_id', '=', model_id), ('ttype', 'not in', ['binary', 'boolean'])]")
-    ttype = fields.Selection(selection='_get_field_types', string=u'字段类型')
+    ttype = fields.Selection(selection='_get_field_types', string='字段类型')
     dd_field = fields.Char(string='钉钉单据字段名')
-    is_dd_id = fields.Boolean(string=u'为关联组件?', help="通常用于钉钉表单上选择的是钉钉提供的组件，比如部门,就需要传递部门id而不是名称")
-    list_ids = fields.One2many(comodel_name='dingtalk.approval.control.list', inverse_name='line_id', string=u'一对多列表字段')
+    is_dd_id = fields.Boolean(string='为关联组件?', help="通常用于钉钉表单上选择的是钉钉提供的组件，比如部门,就需要传递部门id而不是名称")
+    list_ids = fields.One2many(comodel_name='dingtalk.approval.control.list', inverse_name='line_id', string='一对多列表字段')
 
     @api.onchange('field_id')
     def _onchange_fisld_id(self):
@@ -274,12 +278,12 @@ class DingTalkApprovalControlList(models.Model):
     _name = 'dingtalk.approval.control.list'
     _rec_name = 'line_id'
 
-    sequence = fields.Integer(string=u'序号')
-    line_id = fields.Many2one(comodel_name='dingtalk.approval.control.line', string=u'审批配置详情', ondelete='cascade')
-    line_field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'字段列表字段')
-    field_id = fields.Many2one(comodel_name='ir.model.fields', string=u'模型字段')
+    sequence = fields.Integer(string='序号')
+    line_id = fields.Many2one(comodel_name='dingtalk.approval.control.line', string='审批配置详情', ondelete='cascade')
+    line_field_id = fields.Many2one(comodel_name='ir.model.fields', string='字段列表字段')
+    field_id = fields.Many2one(comodel_name='ir.model.fields', string='模型字段')
     dd_field = fields.Char(string='钉钉单据字段名')
-    is_dd_id = fields.Boolean(string=u'关联组件?')
+    is_dd_id = fields.Boolean(string='关联组件?')
 
     @api.onchange('line_field_id')
     def onchange_line_field_id(self):

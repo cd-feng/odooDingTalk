@@ -99,7 +99,7 @@ def _commit_dingtalk_approval(self):
             sql = """UPDATE {} SET dd_approval_state='{}', dd_doc_state='{}', dd_approval_result='{}' WHERE id={}""".format(model_name, 'stop', '无需审批', 'agree', self.id)
             self._cr.execute(sql)
             try:
-                self.message_post(body=u"单据无需提交至钉钉审批，已默认为审批通过。", message_type='notification')
+                self.message_post(body="单据无需提交至钉钉审批，已默认为审批通过。", message_type='notification')
             except Exception as e:
                 _logger.info(">>> 发送消息备注失败：{}".format(str(e)))
             _logger.info(message="单据无需提交至钉钉审批，已默认为审批通过！", sticky=True)
@@ -118,7 +118,7 @@ def _commit_dingtalk_approval(self):
             except Exception as e:
                 _logger.info("运行自定义审批函数失败，原因：{}".format(str(e)))
     try:
-        self.message_post(body=u"提交钉钉成功，请等待审批人进行审批！", message_type='notification')
+        self.message_post(body="提交钉钉成功，请等待审批人进行审批！", message_type='notification')
     except Exception as e:
         _logger.info(">>> 发送消息备注失败：{}".format(str(e)))
     _logger.info("已提交至钉钉，请等待审批完成！")
@@ -292,7 +292,7 @@ def _restart_commit_approval(self):
                 model_name, 'stop', '无需审批', 'agree', self.id)
             self._cr.execute(sql)
             try:
-                self.message_post(body=u"单据无需提交至钉钉审批，已默认为审批通过。", message_type='notification')
+                self.message_post(body="单据无需提交至钉钉审批，已默认为审批通过。", message_type='notification')
             except Exception as e:
                 _logger.info(">>> 发送消息备注失败：{}".format(str(e)))
             _logger.info("该单据无需提交至钉钉审批，已默认为审批通过！")
@@ -317,7 +317,7 @@ def _restart_commit_approval(self):
             except Exception as e:
                 _logger.info("运行自定义审批函数失败，原因：{}".format(str(e)))
     try:
-        self.message_post(body=u"已重新提交，请等待审批人审批！", message_type='notification')
+        self.message_post(body="已重新提交，请等待审批人审批！", message_type='notification')
     except Exception as e:
         _logger.info(">>> 重新提交审批时发送消息备注失败：{}".format(str(e)))
     _logger.info("已重新提交至钉钉，请等待审批完成！")
@@ -357,7 +357,7 @@ def _terminate_dingtalk_approval(self):
             'dd_approval_result': 'terminate',
         })
         try:
-            self.message_post(body=u"已手动撤回了申请！", message_type='notification')
+            self.message_post(body="已手动撤回了申请！", message_type='notification')
         except Exception as e:
             pass
         _logger.info("您已手动撤回了申请")

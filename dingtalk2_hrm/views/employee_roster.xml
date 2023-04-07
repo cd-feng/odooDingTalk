@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dingtalk_employee_roster_tree" model="ir.ui.view">
+        <field name="name">员工花名册</field>
+        <field name="model">dingtalk.employee.roster</field>
+        <field name="arch" type="xml">
+            <tree js_class="dingtalk_employee_roster_tree">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="name"/>
+                <field name="ding_userid" invisible="1"/>
+                <field name="jobNumber"/>
+                <field name="sexType"/>
+                <field name="dept" widget="many2many_tags"/>
+                <field name="mainDept"/>
+                <field name="email"/>
+                <field name="position"/>
+                <field name="mobile"/>
+                <field name="employeeStatus"/>
+                <field name="employeeType"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dingtalk_employee_roster_form" model="ir.ui.view">
+        <field name="name">员工花名册</field>
+        <field name="model">dingtalk.employee.roster</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="employee_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="employee_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                        </h1>
+                    </div>
+                    <group string="简要信息">
+                        <group>
+                            <field name="position" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="mobile"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                        <group>
+                            <field name="mainDept" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="jobNumber"/>
+                            <field name="employeeStatus"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="详细信息">
+                            <group>
+                                <group>
+                                    <field name="company_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="name"/>
+                                    <field name="dept" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="mainDept" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="position"/>
+                                    <field name="workPlace"/>
+                                    <field name="remark"/>
+                                    <field name="realName"/>
+                                    <field name="certNo"/>
+                                    <field name="birthTime"/>
+                                    <field name="sexType"/>
+                                    <field name="pre_status"/>
+                                </group>
+                                <group>
+                                    <field name="nationType"/>
+                                    <field name="certAddress"/>
+                                    <field name="certEndTime"/>
+                                    <field name="tel"/>
+                                    <field name="confirmJoinTime"/>
+                                    <field name="employeeType"/>
+                                    <field name="probationPeriodType"/>
+                                    <field name="planRegularTime"/>
+                                    <field name="regularTime"/>
+                                    <field name="positionLevel"/>
+                                    <field name="marriage"/>
+                                    <field name="joinWorkingTime"/>
+                                    <field name="last_work_day"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="其他信息">
+                            <group>
+                                <group>
+                                    <field name="residenceType"/>
+                                    <field name="address"/>
+                                    <field name="politicalStatus"/>
+                                    <field name="personalSi"/>
+                                    <field name="personalHf"/>
+                                    <field name="highestEdu"/>
+                                    <field name="graduateSchool"/>
+                                    <field name="graduationTime"/>
+                                    <field name="major"/>
+                                    <field name="urgentContactsName"/>
+                                    <field name="urgentContactsRelation"/>
+                                    <field name="urgentContactsPhone"/>
+                                    <field name="ding_userid"/>
+                                    <field name="reason_type"/>
+                                    <field name="status"/>
+                                </group>
+                                <group>
+                                    <field name="bankAccountNo"/>
+                                    <field name="accountBank"/>
+                                    <field name="contractCompanyName"/>
+                                    <field name="salaryCompanyName"/>
+                                    <field name="contractType"/>
+                                    <field name="firstContractStartTime"/>
+                                    <field name="firstContractEndTime"/>
+                                    <field name="nowContractStartTime"/>
+                                    <field name="nowContractEndTime"/>
+                                    <field name="contractPeriodType"/>
+                                    <field name="contractRenewCount"/>
+                                    <field name="haveChild"/>
+                                    <field name="childName"/>
+                                    <field name="childSex"/>
+                                    <field name="handover_userid"/>
+                                    <field name="main_dept_name"/>
+                                    <field name="reason_memo"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_employee_roster_search" model="ir.ui.view">
+        <field name="model">dingtalk.employee.roster</field>
+        <field name="arch" type="xml">
+            <search string="员工花名册">
+                <field name="name"/>
+                <field name="ding_userid"/>
+                <field name="mobile"/>
+                <field name="employeeStatus"/>
+                <filter string="在职" name="status_onjob" domain="[('employeeStatus','in',['正式','待离职','试用'])]"/>
+                <filter string="待入职" name="status_to_be_hired" domain="[('employeeStatus','=','待入职')]"/>
+                <filter string="试用期" name="status_on_trial" domain="[('employeeStatus','=','试用')]"/>
+                <filter string="正式" name="status_official" domain="[('employeeStatus','=','正式')]"/>
+                <separator/>
+                <filter string="待离职" name="status_will_dimission" domain="[('employeeStatus','=','待离职')]"/>
+                <filter string="已离职" name="status_dimission" domain="['|',('employeeStatus','=','离职'),('employeeStatus','=',None)]"/>
+                <separator/>
+                <filter name="groupby_mainDept" string="主部门" context="{'group_by': 'mainDept'}"/>
+                <filter name="group_by_employee_status" string="员工状态" context="{'group_by': 'employeeStatus'}"/>
+                <filter name="group_by_employee_Type" string="员工类型" context="{'group_by': 'employeeType'}"/>
+                <searchpanel>
+                    <field name="mainDept" icon="fa-home" enable_counters="1"/>
+                    <field name="employeeStatus" icon="fa-home" enable_counters="1"/>
+                    <field name="employeeType" icon="fa-home" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="dingtalk_employee_roster_kanban" model="ir.ui.view">
+        <field name="name">员工花名册看板</field>
+        <field name="model">dingtalk.employee.roster</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban" js_class="dingtalk_employee_roster_kanban">
+                <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="image_1920"/>
+                <field name="name"/>
+                <field name="ding_userid"/>
+                <field name="jobNumber"/>
+                <field name="sexType"/>
+                <field name="dept"/>
+                <field name="mainDept"/>
+                <field name="email"/>
+                <field name="position"/>
+                <field name="mobile"/>
+                <field name="employeeStatus"/>
+                <field name="employeeType"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <field name="image_1920" widget="image" class="o_kanban_image_fill_left" options='{"preview_image": "image", "size": [80, 80]}'/>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <strong class="col-2 text-right">
+                                            <field name="employeeStatus" widget="label_selection" options="{'classes': {'normal': 'success', 'close': 'warning'}}"/>
+                                        </strong>
+                                        <span class="o_kanban_record_subtitle">职位：<field name="position"/></span>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li id="last_login"/>
+                                    <li>入职日期： <field name="confirmJoinTime"/></li>
+                                    <li>员工类型：￥<field name="employeeType"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+           </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingtalk_employee_roster_action">
+        <field name="name">员工花名册</field>
+        <field name="res_model">dingtalk.employee.roster</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem name="员工花名册" id="dingtalk_employee_roster_menu" parent="hrm_main_menu"
+              sequence="1" action="dingtalk_employee_roster_action"/>
+
+</odoo>

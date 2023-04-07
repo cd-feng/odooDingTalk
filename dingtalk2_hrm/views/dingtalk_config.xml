@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_dingtalk2_config_form_inherit" model="ir.ui.view">
+        <field name="name">dingtalk2.config.form</field>
+        <field name="model">dingtalk2.config</field>
+        <field name="inherit_id" ref="dingtalk2_base.view_dingtalk2_config_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='callback']" position='after'>
+                <page string="智能人事">
+                    <group col="2">
+                        <group>
+                            <field name="is_get_dimission_hrm"/>
+                            <field name="auto_get_emp_roster"/>
+                        </group>
+                        <group>
+                            <field name="auto_sync_employees_system"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

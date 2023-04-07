@@ -18,6 +18,7 @@
         'data/auth_oauth_data.xml',
 
         'views/dingtalk2_config.xml',
+        'views/web_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [

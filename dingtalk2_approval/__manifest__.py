@@ -9,9 +9,8 @@
     'version': '16.0.0',
     'license': 'LGPL-3',
     'depends': ['dingtalk2_contacts'],
-
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'data': [
         'security/res_groups.xml',
