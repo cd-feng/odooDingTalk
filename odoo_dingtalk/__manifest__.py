@@ -15,6 +15,7 @@
     'data': [
         'security/res_groups.xml',
         'security/ir.model.access.csv',
+        'data/default_ir_cron.xml',
 
         'views/menu.xml',
         'views/dingtalk_setting.xml',

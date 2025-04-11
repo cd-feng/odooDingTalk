@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import base64
+import threading
 import requests
 from ..tools.dingtalk_hr import DingTalkHr
 from odoo import api, fields, models, exceptions
@@ -98,7 +99,7 @@ class HrEmployee(models.Model):
         self.env.cr.commit()
         _logger.info(f"钉钉员工同步完成，共更新 {len(updated_emp_ids)} 条，新增 {len(new_emp_values)} 条.")
 
-    def create_employee_user(self, company_id):
+    def create_employee_user(self, company_id, get_emp_avatar=True):
         """
         创建用户
         """
@@ -108,7 +109,7 @@ class HrEmployee(models.Model):
             if conf_id.is_create_dingtalk_user and conf_id.dingtalk_default_passwd:
                 self.create_res_users(company_id, conf_id.dingtalk_default_passwd)
                 self.env.cr.commit()
-            if conf_id.is_get_emp_avatar:
+            if conf_id.is_get_emp_avatar and get_emp_avatar:
                 self.get_emp_dingtalk_avatar(company_id)
 
     def get_emp_dingtalk_avatar(self, company_id):
@@ -173,3 +174,19 @@ class HrEmployee(models.Model):
             #     emp.user_id = user.id
             _logger.info(f"成功创建 {len(created_users)} 名新用户")
 
+    def _auto_sync_dingtalk_hr_cron(self):
+        """
+        Auto cron
+        """
+        department_model, employee_model = self.env['hr.department'].sudo(), self.env['hr.employee'].sudo()
+        for company_id in self.env['res.company'].sudo().search([]):
+            try:
+                department_data = department_model.request_dingtalk_department_data(company_id.id)
+                self.env['hr.department'].update_dingtalk_department_data(department_data, company_id.id)
+            except Exception as e:
+                raise exceptions.ValidationError(f"同步钉钉部门数据失败: {e}")
+            try:
+                employee_model.request_dingtalk_employee_data(company_id.id)
+                threading.Thread(target=employee_model.create_employee_user, args=[company_id.id, False]).start()
+            except Exception as e:
+                raise exceptions.ValidationError(f"同步钉钉员工数据失败：{e}")
