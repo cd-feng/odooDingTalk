@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dingtalk_setting,dingtalk.setting,model_dingtalk_setting,,1,1,1,1
+
+access_dingtalk_department_synchronous_wizard,dingtalk.department.synchronous.wizard,model_dingtalk_department_synchronous_wizard,hr.group_hr_manager,1,1,1,1
+access_dingtalk_employee_synchronous_wizard,dingtalk.employee.synchronous.wizard,model_dingtalk_employee_synchronous_wizard,hr.group_hr_manager,1,1,1,1
+

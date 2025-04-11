@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="钉钉">
+                    <group>
+                        <group>
+                            <field name="dingtalk_id" readonly="1"/>
+                            <field name="job_number"/>
+                            <field name="dingtalk_department_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="dingtalk_active"/>
+                            <field name="dingtalk_admin"/>
+                            <field name="dingtalk_boss"/>
+                            <field name="dingtalk_leader"/>
+                            <field name="dingtalk_exclusive_account"/>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="dingtalk_avatar_url"/>
+                        </group>
+                    </group>
+<!--                    <group string="头像">-->
+<!--                        <group>-->
+<!--                            <field name="wechat_avatar"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

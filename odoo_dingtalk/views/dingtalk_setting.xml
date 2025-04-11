@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_dingtalk_setting_tree">
+        <field name="name">应用配置</field>
+        <field name="model">dingtalk.setting</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="company_id" optional="show"/>
+                <field name="name"/>
+                <field name="corp_id"/>
+                <field name="agent_id"/>
+                <field name="app_key"/>
+                <field name="is_get_emp_avatar"/>
+                <field name="is_create_dingtalk_user"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dingtalk_setting_form" model="ir.ui.view">
+        <field name="name">应用配置</field>
+        <field name="model">dingtalk.setting</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="已存档" bg_color="bg-danger" invisible="active == True"/>
+                    <group col="2">
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="corp_id"/>
+                            <field name="agent_id"/>
+                            <field name="is_get_emp_avatar"/>
+                        </group>
+                        <group>
+                            <field name="app_key"/>
+                            <field name="app_secret" password="1"/>
+                            <field name="is_create_dingtalk_user"/>
+                            <field name="dingtalk_default_passwd" invisible="is_create_dingtalk_user != True" required="is_create_dingtalk_user == True" />
+                        </group>
+                    </group>
+                    <group string="备注">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="dingtalk_setting_act_window">
+        <field name="name">应用配置</field>
+        <field name="res_model">dingtalk.setting</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_dingtalk_setting" name="应用配置" parent="dingtalk_root_menu" sequence="1" action="dingtalk_setting_act_window"/>
+
+</odoo>

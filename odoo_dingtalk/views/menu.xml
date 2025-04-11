@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem name="钉钉" id="dingtalk_root_menu" sequence="5" groups="base.group_system" parent="base.menu_administration"/>
+
+    <menuitem id="dingtalk_sync_menu" name="数据同步" groups="hr.group_hr_manager" parent="hr.menu_hr_root" sequence="50"/>
+
+</odoo>

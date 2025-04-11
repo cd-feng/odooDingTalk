@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_dingtalk_employee_synchronous_form" model="ir.ui.view">
+        <field name="name">钉钉员工同步向导</field>
+        <field name="model">dingtalk.employee.synchronous.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="alert">
+                    <p>系统即将从钉钉中同步<strong>员工数据</strong>至系统中，请等待系统同步完成！</p>
+                </div>
+                <group col="1">
+                    <group>
+                        <field name="company_id" options="{'no_create': True, 'no_open': True}" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="立即同步" name="on_synchronous" type="object" class="oe_highlight"/>
+                    <button string="取消" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dingtalk_employee_synchronous_action" model="ir.actions.act_window">
+        <field name="name">钉钉员工同步向导</field>
+        <field name="res_model">dingtalk.employee.synchronous.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="员工数据同步" id="dingtalk_employee_synchronous_menu" parent="dingtalk_sync_menu" sequence="2" action="dingtalk_employee_synchronous_action"/>
+
+</odoo>
